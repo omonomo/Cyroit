@@ -13,7 +13,7 @@
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_version="1.0.3"
+font_version="1.0.4"
 fontforge_version="20230101"
 vendor_id="PfEd"
 
@@ -418,8 +418,11 @@ while (i < SizeOf(input_list))
 
     lookups = GetLookups("GSUB"); numlookups = SizeOf(lookups); j = 0
     while (j < numlookups)
-        Print("Remove GSUB_" + lookups[j])
-        RemoveLookup(lookups[j]); j++
+        if (j != 19 && j != 20) # sups subs 以外のLookupを削除
+            Print("Remove GSUB_" + lookups[j])
+            RemoveLookup(lookups[j])
+        endif
+        j++
     endloop
 
     lookups = GetLookups("GPOS"); numlookups = SizeOf(lookups); j = 0
@@ -1656,6 +1659,10 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
 
 # 上付き、下付き数字を置き換え
+    Print("Edit superscrips and subscripts")
+    Select(0u0031) # 1
+    lookups = GetPosSub("*") # フィーチャを取り出す
+
     Select(0u0031); Copy() # 1
     Select(0u00b9); Paste() # ¹
     Scale(${percent_super_sub}, 250, 0)
@@ -1687,6 +1694,9 @@ while (i < SizeOf(input_list))
     CorrectDirection()
     Move(0,${y_pos_super})
     SetWidth(500)
+    glyphName = GlyphInfo("Name") # sups フィーチャ追加
+    Select(0u0069) # i
+    AddPosSub(lookups[0][0],glyphName)
 
     # ⁰, ⁴-⁹
     j = 0
@@ -1714,8 +1724,16 @@ while (i < SizeOf(input_list))
         CorrectDirection()
         Move(0,${y_pos_super})
         SetWidth(500)
+        glyphName = GlyphInfo("Name") # sups フィーチャ追加
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
+
+    Select(0u207b) # ⁻
+    glyphName = GlyphInfo("Name") # sups フィーチャ追加
+    Select(0u002d) # -
+    AddPosSub(lookups[0][0],glyphName)
 
     # ₀-₉
     j = 0
@@ -1745,9 +1763,17 @@ while (i < SizeOf(input_list))
             CorrectDirection()
             Move(0,${y_pos_sub})
             SetWidth(500)
+            glyphName = GlyphInfo("Name") # subs フィーチャ追加
+            Select(norm[j])
+            AddPosSub(lookups[1][0],glyphName)
         endif
         j += 1
     endloop
+
+    Select(0u208b) # ₋
+    glyphName = GlyphInfo("Name") # subs フィーチャ追加
+    Select(0u002d) # -
+    AddPosSub(lookups[1][0],glyphName)
 
 # --------------------------------------------------
 
@@ -4683,8 +4709,36 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
 
 # ✂ (縦書き用ダミー、後でグリフ上書き)
-   Select(0020); Copy() # スペース
+   Select(0u0020); Copy() # スペース
    Select(0u2702); Paste() # ✂
+
+# ➀-➓ (下線を引く)
+    Select(0u005f); Copy() # _
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_kana_regular}")
+        Scale(115, 100)
+        Move(231, 133)
+    else
+        Scale(110, 70)
+        Move(231, 144)
+    endif
+    j = 0
+    while (j < 10)
+        Select(65552);  Copy() # Temporary glyph
+        Select(0u2780 + j); PasteInto()
+        RemoveOverlap()
+        SetWidth(1000)
+        j += 1
+    endloop
+    Select(65552); VFlip() # Temporary glyph
+    j = 0
+    while (j < 10)
+        Select(65552);  Copy() # Temporary glyph
+        Select(0u278a + j); PasteInto()
+        SetWidth(1000)
+        j += 1
+    endloop
+    Select(65552); Clear() # Temporary glyph
 
 # --------------------------------------------------
 
@@ -5003,7 +5057,9 @@ while (i < SizeOf(input_list))
     Select(1114112, 1114815)
     SelectMore(1114826, 1114830)
     SelectMore(1114841, 1115183)
-    SelectMore(1115493, 1115760)
+    SelectMore(1115493, 1115732)
+ #    SelectMore(1115733, 1115734) # ∭印
+    SelectMore(1115735, 1115760)
     SelectMore(1115764, 1115765)
     SelectMore(1115768, 1115769)
     SelectMore(1115772, 1115773)
@@ -5011,7 +5067,7 @@ while (i < SizeOf(input_list))
     SelectMore(1116304)
  #    SelectMore(1114112, 1115183) # 異体字のみ残す場合
  #    SelectMore(1115493, 1116304)
-		Clear(); DetachAndRemoveGlyphs()
+    Clear(); DetachAndRemoveGlyphs()
 
 # Clear kerns, position, substitutions
     Print("Clear kerns, position, substitutions")
@@ -5025,14 +5081,12 @@ while (i < SizeOf(input_list))
           || j == 5 \
           || j == 7 \
           || j == 9 \
-          || j == 13 \
-          || j == 14 \
           || j == 16 \
           || j == 17 \
           || j == 18 \
           || j == 21 \
           || j == 23 \
-          || j == 24) # aalt vert 異体字以外のLookupを削除
+          || j == 24) # aalt nalt vert 漢字異体字以外のLookupを削除
             Print("Remove GSUB_" + lookups[j])
             RemoveLookup(lookups[j])
         endif
@@ -5056,6 +5110,7 @@ while (i < SizeOf(input_list))
     SelectMore(1114112, 1115183) # 漢字以外
     SelectMore(1115493, 1116304)
 
+    SelectMore(0u303c) # 〼
     SelectMore(0u5973) # 女
     SelectMore(0u66c7) # 曇
     SelectMore(0u74f1) # 瓱 mg
@@ -5078,27 +5133,9 @@ while (i < SizeOf(input_list))
     SelectMore(0u97f3) # 音
     RemovePosSub("*")
 
-    # 1対1 (記号類を削除)
+    # aalt 1対1 (記号類を削除)
     Select(0u342e) # 㐮
     lookups = GetPosSub("*") # フィーチャを取り出す
-
- #    Select(0u97f3) # 音
- #    glyphName = GlyphInfo("Name")
- #    Select(0u303d); RemovePosSub("*") # 〽
- #    AddPosSub(lookups[0][0],glyphName)
- #    glyphName = GlyphInfo("Name")
- #    Select(0u97f3); RemovePosSub("*") # 音
- #    AddPosSub(lookups[0][0],glyphName)
-
-    Select(0u32a4) # ㊤
-    glyphName = GlyphInfo("Name")
-    Select(0u4e0a); RemovePosSub("*") # 上
-    AddPosSub(lookups[0][0],glyphName) # 1対1のaaltフィーチャを追加
-
-    Select(0u32a6) # ㊦
-    glyphName = GlyphInfo("Name")
-    Select(0u4e0b); RemovePosSub("*") # 下
-    AddPosSub(lookups[0][0],glyphName)
 
     Select(0u5713) # 圓
     glyphName = GlyphInfo("Name")
@@ -5108,14 +5145,14 @@ while (i < SizeOf(input_list))
     Select(0u5713); RemovePosSub("*") # 圓
     AddPosSub(lookups[0][0],glyphName)
 
-    Select(0u32a8) # ㊨
+    Select(0u67a1) # 枡
     glyphName = GlyphInfo("Name")
-    Select(0u53f3); RemovePosSub("*") # 右
+    Select(0u685d); RemovePosSub("*") # 桝
     AddPosSub(lookups[0][0],glyphName)
 
-    Select(0u32a7) # ㊧
+    Select(0u685d) # 桝
     glyphName = GlyphInfo("Name")
-    Select(0u5de6); RemovePosSub("*") # 左
+    Select(0u67a1); RemovePosSub("*") # 枡
     AddPosSub(lookups[0][0],glyphName)
 
     Select(0u76a8) # 皨
@@ -5126,7 +5163,7 @@ while (i < SizeOf(input_list))
     Select(0u76a8); RemovePosSub("*") # 皨
     AddPosSub(lookups[0][0],glyphName)
 
-    # 複数 (記号類を削除)
+    # aalt 複数 (記号類を削除)
     Select(0u3402) # 㐂
     lookups = GetPosSub("*") # フィーチャを取り出す
 
@@ -5147,6 +5184,95 @@ while (i < SizeOf(input_list))
     glyphName = GlyphInfo("Name")
     Select(0u6674) # 晴
     AddPosSub(lookups[0][0],glyphName)
+
+    # aalt nalt 1対1
+    Print("Edit aalt nalt lookups")
+    Select(0u4e2d) # 中
+    lookups = GetPosSub("*") # フィーチャを取り出す
+
+    Select(0u32a4) # ㊤
+    glyphName = GlyphInfo("Name")
+    Select(0u4e0a); RemovePosSub("*") # 上
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u32a6) # ㊦
+    glyphName = GlyphInfo("Name")
+    Select(0u4e0b); RemovePosSub("*") # 下
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u32a8) # ㊨
+    glyphName = GlyphInfo("Name")
+    Select(0u53f3); RemovePosSub("*") # 右
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u32a7) # ㊧
+    glyphName = GlyphInfo("Name")
+    Select(0u5de6); RemovePosSub("*") # 左
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u3241) # ㉁
+    glyphName = GlyphInfo("Name")
+    Select(0u4f11); RemovePosSub("*") # 休
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u322f) # ㈯
+    glyphName = GlyphInfo("Name")
+    Select(0u571f); RemovePosSub("*") # 土
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u3230) # ㈰
+    glyphName = GlyphInfo("Name")
+    Select(0u65e5); RemovePosSub("*") # 日
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u322a) # ㈪
+    glyphName = GlyphInfo("Name")
+    Select(0u6708); RemovePosSub("*") # 月
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u322d) # ㈭
+    glyphName = GlyphInfo("Name")
+    Select(0u6728); RemovePosSub("*") # 木
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u322c) # ㈬
+    glyphName = GlyphInfo("Name")
+    Select(0u6c34); RemovePosSub("*") # 水
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u322b) # ㈫
+    glyphName = GlyphInfo("Name")
+    Select(0u706b); RemovePosSub("*") # 火
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u3235) # ㈵
+    glyphName = GlyphInfo("Name")
+    Select(0u7279); RemovePosSub("*") # 特
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u3237) # ㈷
+    glyphName = GlyphInfo("Name")
+    Select(0u795d); RemovePosSub("*") # 祝
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u322e) # ㈮
+    glyphName = GlyphInfo("Name")
+    Select(0u91d1); RemovePosSub("*") # 金
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
 
 # Clear instructions, hints
     Print("Clear instructions, hints")
@@ -5469,6 +5595,13 @@ while (i < SizeOf(input_list))
     Select(0u222e) # ∮
     Move(-222, 0)
     SetWidth(512)
+
+# ∭ (半角にする)
+    Select(1115733); Copy()
+    Select(0u222d); Paste() # ∭
+    SetWidth(1024)
+    Select(1115733)
+    Clear(); DetachAndRemoveGlyphs()
 
 # ≒ (半角にする)
     Select(0u2252) # ≒
@@ -6334,8 +6467,8 @@ while (i < SizeOf(latin_sfd_list))
     j = 0
     while (j < 93)
         if (j != 62) # ＿
-            Select(33+j);    Copy()
-            Select(65281+j); Paste()
+            Select(0u0021 + j);    Copy()
+            Select(0uff01 + j); Paste()
             Move(230, 0)
         endif
         if (j == 7 || j == 58 || j == 90) # （ ［ ｛
@@ -6531,7 +6664,7 @@ while (i < SizeOf(latin_sfd_list))
     j = 0 # ！ - ｠
     while (j < 96)
         Select(65552); Copy()
-        Select(65281+j); PasteInto()
+        Select(0uff01 + j); PasteInto()
         SetWidth(1000)
         j += 1
     endloop
@@ -6539,7 +6672,7 @@ while (i < SizeOf(latin_sfd_list))
     j = 0 # ￠ - ￦
     while (j < 7)
         Select(65552); Copy()
-        Select(65504+j); PasteInto()
+        Select(0uffe0 + j); PasteInto()
         SetWidth(1000)
         j += 1
     endloop
@@ -6594,7 +6727,7 @@ while (i < SizeOf(latin_sfd_list))
     j = 0
     while (j < 63)
         Select(65552); Copy()
-        Select(65377+j); PasteInto() # ｡-ﾟ
+        Select(0uff61 + j); PasteInto() # ｡-ﾟ
 
         SetWidth(500)
         j += 1
@@ -7173,7 +7306,7 @@ while (i < \$argc)
     Copy()
     j = 0
     while (j < 32)
-        Select(9600+j); PasteInto()
+        Select(0u2580 + j); PasteInto()
         if ("${draft_flag}" == "false")
             OverlapIntersect()
         endif
@@ -7259,6 +7392,7 @@ while (i < \$argc)
 # --------------------------------------------------
 
 # 失われたLookupを追加
+    # vert
     Print("Add vert lookups")
     Select(0u3041) # ぁ
     lookups = GetPosSub("*") # フィーチャを取り出す
@@ -7287,7 +7421,7 @@ while (i < \$argc)
     # 組文字 (㍿-㋿)
     hori = [0u337f, 0u3316, 0u3305, 0u3333,\
             0u334e, 0u3315, 0u32ff]
-    vert = 1114641
+    vert = 1114642
     j = 0
     while (j < SizeOf(hori))
         Select(vert + j)
@@ -7297,7 +7431,210 @@ while (i < \$argc)
         j += 1
     endloop
 
-# .notdef加工
+    Print("Add aalt lookups")
+    # aalt 1対1
+    Select(0u342e) # 㐮
+    lookups = GetPosSub("*") # フィーチャを取り出す
+    norm = [0u0069, 0u0061, 0u0065, 0u006f,\
+            0u0078, 0u0259, 0u0068, 0u006b,\
+            0u006c, 0u006d, 0u0070, 0u0073,\
+            0u0074] #i-t
+    supb = [0u2071, 0u2090, 0u2091, 0u2092,\
+            0u2093, 0u2094, 0u2095, 0u2096,\
+            0u2097, 0u2098, 0u209a, 0u209b,\
+            0u209c] #ⁱ-ₜ
+    j = 0
+    while (j < SizeOf(norm))
+        Select(supb[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        j += 1
+    endloop
+    # aalt 複数
+    Select(0u3402) # 㐂
+    lookups = GetPosSub("*") # フィーチャを取り出す
+    norm = [0u0030, 0u0031, 0u0032, 0u0033,\
+            0u0034, 0u0035, 0u0036, 0u0037,\
+            0u0038, 0u0039, 0u002b, 0u002d,\
+            0u003d, 0u0028, 0u0029, 0u006e] # 0-n
+    sups = [0u2070, 0u00b9, 0u00b2, 0u00b3,\
+            0u2074, 0u2075, 0u2076, 0u2077,\
+            0u2078, 0u2079, 0u207a, 0u207b,\
+            0u207c, 0u207d, 0u207e, 0u207f] #⁰-ⁿ
+    subs = [0u2080, 0u2081, 0u2082, 0u2083,\
+            0u2084, 0u2085, 0u2086, 0u2087,\
+            0u2088, 0u2089, 0u208a, 0u208b,\
+            0u208c, 0u208d, 0u208e, 0u2099] #₀-ₙ
+    j = 0
+    while (j < SizeOf(norm))
+        Select(sups[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        Select(subs[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        j += 1
+    endloop
+
+    Print("Add aalt nalt lookups")
+    # aalt nalt 1対1
+    Select(0u4e2d) # 中
+    lookups = GetPosSub("*") # フィーチャを取り出す
+
+    Select(0u00a9) # ©
+    glyphName = GlyphInfo("Name")
+    Select(0u0043) # C
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u00ae) # ®
+    glyphName = GlyphInfo("Name")
+    Select(0u0052) # R
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    norm = [0u30a2, 0u30a4, 0u30a6, 0u30a8, 0u30aa,\
+            0u30ab, 0u30ad, 0u30af, 0u30b1, 0u30b3,\
+            0u30b5, 0u30b7, 0u30b9, 0u30bb, 0u30bd,\
+            0u30bf, 0u30c1, 0u30c4, 0u30c6, 0u30c8,\
+            0u30cb, 0u30cf, 0u30d8, 0u30db, 0u30ed] # ア-ロ
+    circ = [0u32d0, 0u32d1, 0u32d2, 0u32d3, 0u32d4,\
+            0u32d5, 0u32d6, 0u32d7, 0u32d8, 0u32d9,\
+            0u32da, 0u32db, 0u32dc, 0u32dd, 0u32de,\
+            0u32df, 0u32e0, 0u32e1, 0u32e2, 0u32e3,\
+            0u32e5, 0u32e9, 0u32ec, 0u32ed, 0u32fa] # ㋐-㋺
+    j = 0
+    while (j < SizeOf(norm))
+        Select(circ[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        j += 1
+    endloop
+
+    # aalt nalt 複数
+    Select(0u4f01) # 企
+    lookups = GetPosSub("*") # フィーチャを取り出す
+
+    Select(0u24ea) # ⓪
+    glyphName = GlyphInfo("Name")
+    Select(0uff10) # ０
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+    Select(0u24ff) # ⓿
+    glyphName = GlyphInfo("Name")
+    Select(0uff10) # ０
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    Select(0u3020) # 〠
+    glyphName = GlyphInfo("Name")
+    Select(0u3012) # 〒
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+    Select(0u3036) # 〶
+    glyphName = GlyphInfo("Name")
+    Select(0u3012) # 〒
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+
+    norm = [0uff11, 0uff12, 0uff13, 0uff14,\
+            0uff15, 0uff16, 0uff17, 0uff18, 0uff19] # １-９
+    circ = [0u2460, 0u2461, 0u2462, 0u2463,\
+            0u2464, 0u2465, 0u2466, 0u2467, 0u2468] # ①-⑨
+    pare = [0u2474, 0u2475, 0u2476, 0u2477,\
+            0u2478, 0u2479, 0u247a, 0u247b, 0u247c] # ⑴-⑼
+    peri = [0u2488, 0u2489, 0u248a, 0u248b,\
+            0u248c, 0u248d, 0u248e, 0u248f, 0u2490] # ⒈-⒐
+    cir2 = [0u24f5, 0u24f6, 0u24f7, 0u24f8,\
+            0u24f9, 0u24fa, 0u24fb, 0u24fc, 0u24fd] # ⓵-⓽
+    cirN = [0u2776, 0u2777, 0u2778, 0u2779,\
+            0u277a, 0u277b, 0u277c, 0u277d, 0u277e] # ❶-❾
+    cirS = [0u2780, 0u2781, 0u2782, 0u2783,\
+            0u2784, 0u2785, 0u2786, 0u2787, 0u2788] # ➀-➈
+    ciSN = [0u278a, 0u278b, 0u278c, 0u278d,\
+            0u278e, 0u278f, 0u2790, 0u2791, 0u2792] # ➊-➒
+    j = 0
+    while (j < SizeOf(norm))
+        Select(circ[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(pare[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(peri[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(cir2[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(cirN[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(cirS[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(ciSN[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        j += 1
+    endloop
+
+    norm = [0uff41, 0uff42, 0uff43, 0uff44,\
+            0uff45, 0uff46, 0uff47, 0uff48,\
+            0uff49, 0uff4a, 0uff4b, 0uff4c,\
+            0uff4d, 0uff4e, 0uff4f, 0uff50,\
+            0uff51, 0uff52, 0uff53, 0uff54,\
+            0uff55, 0uff56, 0uff57, 0uff58,\
+            0uff59, 0uff5a] # ａ-ｚ
+    pare =[0u249c, 0u249d, 0u249e, 0u249f,\
+           0u24a0, 0u24a1, 0u24a2, 0u24a3,\
+           0u24a4, 0u24a5, 0u24a6, 0u24a7,\
+           0u24a8, 0u24a9, 0u24aa, 0u24ab,\
+           0u24ac, 0u24ad, 0u24ae, 0u24af,\
+           0u24b0, 0u24b1, 0u24b2, 0u24b3,\
+           0u24b4, 0u24b5] # ⒜-⒵
+    circ = [0u24d0, 0u24d1, 0u24d2, 0u24d3,\
+           0u24d4, 0u24d5, 0u24d6, 0u24d7,\
+           0u24d8, 0u24d9, 0u24da, 0u24db,\
+           0u24dc, 0u24dd, 0u24de, 0u24df,\
+           0u24e0, 0u24e1, 0u24e2, 0u24e3,\
+           0u24e4, 0u24e5, 0u24e6, 0u24e7,\
+           0u24e8, 0u24e9] # ⓐ-ⓩ
+    j = 0
+    while (j < SizeOf(norm))
+        Select(pare[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        Select(circ[j])
+        glyphName = GlyphInfo("Name")
+        Select(norm[j])
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        j += 1
+    endloop
+
+ # .notdef加工
     Print("Edit .notdef")
     Select(1114112)
     Move(86, 0)
