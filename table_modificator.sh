@@ -105,10 +105,10 @@ echo "Edit tables"
 #  sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${line_gap}\"," "${P%%.ttf}.ttx"
 
   # hmtx (Widthのブレを修正)
-  sed -i.bak -e "s,width=\"3..\",width=\"0\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,width=\"4..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
+  sed -i.bak -e "s,width=\"3..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # .notdef
+  sed -i.bak -e "s,width=\"4..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # 半角
   sed -i.bak -e "s,width=\"5..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,width=\"9..\",width=\"${full_width}\"," "${P%%.ttf}.ttx"
+  sed -i.bak -e "s,width=\"9..\",width=\"${full_width}\"," "${P%%.ttf}.ttx" # 全角
   sed -i.bak -e "s,width=\"1...\",width=\"${full_width}\"," "${P%%.ttf}.ttx"
 
   # vmtx (中止)
@@ -116,39 +116,46 @@ echo "Edit tables"
 #  sed -i.bak -e "s,height=\"....\",height=\"${full_height}\"," "${P%%.ttf}.ttx"
 
   # GSUB (用字、言語全て共通に変更)
-  sed -i.bak -e '/FeatureIndex index=\"9\" value=\"..\"/d' "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,FeatureIndex index=\"0\" value=\".\",FeatureIndex index=\"0\" value=\"0\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,FeatureIndex index=\"1\" value=\".\",FeatureIndex index=\"1\" value=\"3\"," "${P%%.ttf}.ttx"
+  sed -i.bak -e '/FeatureIndex index=\"10\" value=\"..\"/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる
+  sed -i.bak -e '/FeatureIndex index=\"11\" value=\"..\"/d' "${P%%.ttf}.ttx"
+  sed -i.bak -e '/FeatureIndex index=\"12\" value=\"..\"/d' "${P%%.ttf}.ttx"
+
+  sed -i.bak -e "s,FeatureIndex index=\"0\" value=\".\",FeatureIndex index=\"0\" value=\"0\"," "${P%%.ttf}.ttx" # 始めの部分は上書き
+  sed -i.bak -e "s,FeatureIndex index=\"1\" value=\".\",FeatureIndex index=\"1\" value=\"1\"," "${P%%.ttf}.ttx"
   sed -i.bak -e "s,FeatureIndex index=\"2\" value=\".\",FeatureIndex index=\"2\" value=\"4\"," "${P%%.ttf}.ttx"
   sed -i.bak -e "s,FeatureIndex index=\"3\" value=\".\",FeatureIndex index=\"3\" value=\"5\"," "${P%%.ttf}.ttx"
   sed -i.bak -e "s,FeatureIndex index=\"4\" value=\".\",FeatureIndex index=\"4\" value=\"6\"," "${P%%.ttf}.ttx"
   sed -i.bak -e "s,FeatureIndex index=\"5\" value=\".\",FeatureIndex index=\"5\" value=\"7\"," "${P%%.ttf}.ttx"
   sed -i.bak -e "s,FeatureIndex index=\"6\" value=\".\",FeatureIndex index=\"6\" value=\"8\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,FeatureIndex index=\"7\" value=\".\",FeatureIndex index=\"7\" value=\"9\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,FeatureIndex index=\"7\" value=\"..\",FeatureIndex index=\"7\" value=\"9\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,<FeatureIndex index=\"8\" value=\".\"\/>,<FeatureIndex index=\"8\" value=\"10\"\/>\
-<FeatureIndex index=\"9\" value=\"11\"\/>," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,<FeatureIndex index=\"8\" value=\"..\"\/>,<FeatureIndex index=\"8\" value=\"10\"\/>\
-<FeatureIndex index=\"9\" value=\"11\"\/>," "${P%%.ttf}.ttx"
 
-  sed -i.bak -e '/<LangSys>/{n;n;n;n;d;}' "${P%%.ttf}.ttx"
+  sed -i.bak -e "s,FeatureIndex index=\"7\" value=\".\",FeatureIndex index=\"7\" value=\"9\"," "${P%%.ttf}.ttx" # index7 は valueが1桁と2桁の2つある
+  sed -i.bak -e "s,FeatureIndex index=\"7\" value=\"..\",FeatureIndex index=\"7\" value=\"9\"," "${P%%.ttf}.ttx"
+
+	sed -i.bak -e "s,FeatureIndex index=\"8\" value=\"..\",FeatureIndex index=\"8\" value=\"10\"," "${P%%.ttf}.ttx"
+
+  sed -i.bak -e "s,<FeatureIndex index=\"9\" value=\"..\"\/>,<FeatureIndex index=\"9\" value=\"11\"\/>\
+<FeatureIndex index=\"10\" value=\"12\"\/>\
+<FeatureIndex index=\"11\" value=\"13\"\/>\
+<FeatureIndex index=\"12\" value=\"14\"\/>," "${P%%.ttf}.ttx" # index9を上書き、以降は追加
+
+  sed -i.bak -e '/<LangSys>/{n;n;n;n;d;}' "${P%%.ttf}.ttx" # LangSysタグとその間を削除
   sed -i.bak -e '/<LangSys>/{n;n;n;d;}' "${P%%.ttf}.ttx"
   sed -i.bak -e '/<LangSys>/{n;n;d;}' "${P%%.ttf}.ttx"
   sed -i.bak -e '/<LangSys>/{n;d;}' "${P%%.ttf}.ttx"
   sed -i.bak -e '/<LangSys>/d' "${P%%.ttf}.ttx"
-
   sed -i.bak -e '/<\/LangSys>/d' "${P%%.ttf}.ttx"
-  sed -i.bak -e '/LangSysRecord/d' "${P%%.ttf}.ttx"
-  sed -i.bak -e '/LangSysTag/d' "${P%%.ttf}.ttx"
+
+  sed -i.bak -e '/LangSysRecord/d' "${P%%.ttf}.ttx" # LangSysRecordタグを削除
+  sed -i.bak -e '/LangSysTag/d' "${P%%.ttf}.ttx" # LangSysTagタグを削除
 
   # cmap (format14を置き換える)
-  sed -i.bak -e '/cmap_format_14/d' "${P%%.ttf}.ttx"
+  sed -i.bak -e '/cmap_format_14/d' "${P%%.ttf}.ttx" # cmap_format_14タグ以降を削除
   sed -i.bak -e '/map uv=/d' "${P%%.ttf}.ttx"
   sed -i.bak -e '/<\/cmap>/d'  "${P%%.ttf}.ttx"
   sed -i.bak -e '/<\/ttFont>/d' "${P%%.ttf}.ttx"
 
-  cat "${cmapList}.txt" >> "${P%%.ttf}.ttx"
-  echo "</cmap>" >> "${P%%.ttf}.ttx"
+  cat "${cmapList}.txt" >> "${P%%.ttf}.ttx" # cmap_format_14を置き換え
+  echo "</cmap>" >> "${P%%.ttf}.ttx" # 必要なタグを復活
   echo "</ttFont>" >> "${P%%.ttf}.ttx"
 
 done
