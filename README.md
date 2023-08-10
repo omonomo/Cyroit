@@ -4,8 +4,8 @@ Ricty生成スクリプトで遊んでいるうちに合成フォント製作の
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧の組み合わせが全角と半角になっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
 全角スペースを可視化しており、さらにSP版は半角・ノーブレークスペースも可視化しています。
 
-フォントサンプル ( [CotEditor](https://coteditor.com) にて)
-![ScreenShop](/images/SS.png)
+フォントサンプル ( [CotEditor](https://coteditor.com) にて)  
+<img alt="ScreenShot" src="./images/SS.png" width="764">
 
 ## ダウンロード
 最新版 (v1.0.5)
