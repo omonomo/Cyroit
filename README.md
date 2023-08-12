@@ -4,11 +4,13 @@ Ricty生成スクリプトで遊んでいるうちに合成フォント製作の
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧の組み合わせが全角と半角になっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
 全角スペースを可視化しており、さらにSP版は半角・ノーブレークスペースも可視化しています。
 
-フォントサンプル 
+フォントサンプル  
 [CotEditor](https://coteditor.com) にて  
 <img alt="ScreenShot" src="./images/SS_0.png" width="731">  
+
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) にて  
 <img alt="ScreenShot" src="./images/SS_1.png" width="694">  
+
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
 <img alt="ScreenShot" src="./images/SS_2.png" width="421">  
 
@@ -109,4 +111,4 @@ Cyroitの合成、製作にあたり、素晴らしいフォントやツール�
 
 ## リンク
 - [GitHubページ](https://github.com/omonomo/Cyroit): 過去のバージョンや更新履歴はこちらをご参照ください。
-- [小指の移動量が少ない日本語かな入力配列 「水草配列」](https://omonomo.github.io/Mizukusa/): オリジナル日本語かな入力配列を紹介しています。実際に愛用しています。
+- [小指の移動量が少ない日本語かな入力配列 「水草配列」](https://omonomo.github.io/Mizukusa/): オリジナル日本語かな入力配列を紹介しています。
