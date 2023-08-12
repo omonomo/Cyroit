@@ -6,11 +6,11 @@ Ricty生成スクリプトで遊んでいるうちに合成フォント製作の
 
 フォントサンプル 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="731">
+<img alt="ScreenShot" src="./images/SS_0.png" width="731">  
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) にて  
-<img alt="ScreenShot" src="./images/SS_1.png" width="694">
+<img alt="ScreenShot" src="./images/SS_1.png" width="694">  
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
-<img alt="ScreenShot" src="./images/SS_2.png" width="421">
+<img alt="ScreenShot" src="./images/SS_2.png" width="421">  
 
 ## ダウンロード
 最新版 (v1.0.5)
