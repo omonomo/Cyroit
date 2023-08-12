@@ -4,8 +4,13 @@ Ricty生成スクリプトで遊んでいるうちに合成フォント製作の
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧の組み合わせが全角と半角になっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
 全角スペースを可視化しており、さらにSP版は半角・ノーブレークスペースも可視化しています。
 
-フォントサンプル ( [CotEditor](https://coteditor.com) にて)  
-<img alt="ScreenShot" src="./images/SS.png" width="764">
+フォントサンプル 
+[CotEditor](https://coteditor.com) にて  
+<img alt="ScreenShot" src="./images/SS_0.png" width="731">
+[warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) にて  
+<img alt="ScreenShot" src="./images/SS_1.png" width="694">
+[egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
+<img alt="ScreenShot" src="./images/SS_2.png" width="421">
 
 ## ダウンロード
 最新版 (v1.0.5)
@@ -72,7 +77,7 @@ Cyroitは、以下の環境でビルドできることを確認しています�
 - FontTools: 4.41.1
 
 ### 実行方法
-あらかじめ、パッケージマネージャ等を利用してFontForgeとFontToolsをインストールしておいてください。
+あらかじめ、パッケージマネージャ等を利用して[FontForge](https://fontforge.org/en-US/)と[FontTools](https://github.com/fonttools/fonttools)をインストールし、使える状態にしてください。
 
 スクリプトのある場所をカレントディレクトリにして
 ```
