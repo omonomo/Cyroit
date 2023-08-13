@@ -15,9 +15,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 <img alt="ScreenShot" src="./images/SS_2.png" width="421">  
 
 ## ダウンロード
-最新版 (v1.0.5)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.0.5/Cyroit_v1.0.5.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.0.5.zip)
+最新版 (v1.0.6)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.0.6/Cyroit_v1.0.6.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.0.6.zip)
 
 ## その他の特徴
 - 主にラテン文字のグリフは [Inconsolata](https://github.com/googlefonts/Inconsolata) を使用しています。
@@ -59,9 +59,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 | 名称 | 説明 |
 |---|---|
-| Cyroit | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付きます。 |
+| Cyroit | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、文字が識別しやすいグリフになっています。 |
 | CyroitSP | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。簡易なエディタやコマンドランチャー等で使用すると便利かもしれません。 |
-| CyroitHB | 平凡版。全てのスペースが不可視のまま。全角・半角のアンダーラインも縦線やダッシュの破線化も無いバージョン。プリントアウト用にどうぞ。 |
+| CyroitHB | 平凡版。全てのスペースが不可視のまま。識別しやすくするためのグリフ改変をしていないバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
 - フォントのライセンス : [SIL Open Font License 1.1](build/OFL.txt)

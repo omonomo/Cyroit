@@ -15,9 +15,9 @@ gsubList="gsubList"
 half_width="512" # 半角文字幅
 full_width="1024" # 全角文字幅
 underline="-80" # アンダーライン位置
-#half_height="512"
-#full_height="1024"
-#line_gap="216"
+#vhea_ascent1024="994"
+#vhea_descent1024="256"
+#vhea_linegap1024="0"
 
 leaving_tmp_flag="false" # 一時ファイル残す
 
@@ -71,7 +71,7 @@ rm -f ${font_familyname}*.ttx ${font_familyname}*.ttx.bak
 
 for P in ${font_familyname}*.ttf; do
   ttx -t name -t head -t OS/2 -t post -t hmtx -t GSUB -t cmap "$P" # cmapは最後にする
-#  ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx -t vmtx -t GSUB -t cmap "$P" # cmapは最後にする (縦書き情報の取り扱いは中止)
+#  ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx -t GSUB -t cmap "$P" # cmapは最後にする (縦書き情報の取り扱いは中止)
 
 echo "Edit tables"
   # head, OS/2 (フォントスタイルを修正)
@@ -99,10 +99,10 @@ echo "Edit tables"
   sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
   sed -i.bak -e 's,isFixedPitch value=".",isFixedPitch value="1",' "${P%%.ttf}.ttx"
 
-  # vhea (中止)
-#  sed -i.bak -e "s,ascent value=\"...\",ascent value=\"${half_width}\"," "${P%%.ttf}.ttx"
-#  sed -i.bak -e "s,descent value=\"-...\",descent value=\"-${half_width}\"," "${P%%.ttf}.ttx"
-#  sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${line_gap}\"," "${P%%.ttf}.ttx"
+  # vhea
+  sed -i.bak -e "s,ascent value=\"...\",ascent value=\"${vhea_ascent1024}\"," "${P%%.ttf}.ttx"
+  sed -i.bak -e "s,descent value=\"-...\",descent value=\"-${vhea_descent1024}\"," "${P%%.ttf}.ttx"
+  sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${vhea_linegap1024}\"," "${P%%.ttf}.ttx"
 
   # hmtx (Widthのブレを修正)
   sed -i.bak -e "s,width=\"3..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # .notdef
@@ -110,10 +110,6 @@ echo "Edit tables"
   sed -i.bak -e "s,width=\"5..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
   sed -i.bak -e "s,width=\"9..\",width=\"${full_width}\"," "${P%%.ttf}.ttx" # 全角
   sed -i.bak -e "s,width=\"1...\",width=\"${full_width}\"," "${P%%.ttf}.ttx"
-
-  # vmtx (中止)
-#  sed -i.bak -e "s,height=\"...\",height=\"${full_height}\"," "${P%%.ttf}.ttx"
-#  sed -i.bak -e "s,height=\"....\",height=\"${full_height}\"," "${P%%.ttf}.ttx"
 
   # GSUB (用字、言語全て共通に変更)
   sed -i.bak -e '/FeatureIndex index=\"10\" value=\"..\"/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる

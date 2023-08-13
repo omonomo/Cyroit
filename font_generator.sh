@@ -13,7 +13,7 @@
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_version="1.0.5"
+font_version="1.0.6"
 fontforge_version="20230101"
 vendor_id="PfEd"
 
@@ -97,7 +97,7 @@ leaving_tmp_flag="false" # 一時ファイル残す
 visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
 underline_flag="true" # アンダーライン付き
-broken_line_flag="true" # ダッシュ破線化
+heibon_flag="true" # ダッシュ破線化
 draft_flag="false" # 下書きモード
 oblique_flag="false" # オブリーク作成
 nerd_flag="false" # Nerd fonts 追加
@@ -225,7 +225,7 @@ do
             ;;
         "b" )
             echo "Option: Disable broken dash and vertical line"
-            broken_line_flag="false"
+            heibon_flag="false"
             ;;
         "o" )
             echo "Option: Enable generate oblique style"
@@ -1396,7 +1396,7 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
 
 # ⁄ (/と区別するため分割)
-    if ("${broken_line_flag}" == "true")
+    if ("${heibon_flag}" == "true")
         Select(0u2044); Copy() # ⁄
         Select(65552);  Paste() # Temporary glyph
         Scale(120); Copy()
@@ -1639,7 +1639,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
 
 # | (破線にし、縦に伸ばして少し上へ移動) ※ ⌀⎈ の加工より後にすること
-    if ("${broken_line_flag}" == "true")
+    if ("${heibon_flag}" == "true")
         Select(0u00a6) # ¦
     else
         Select(0u007c) # |
@@ -2114,34 +2114,36 @@ while (i < SizeOf(input_list))
 # ひらがなのグリフ変更
     Print("Edit hiragana and katakana")
 # ゠ (左上を折り曲げる)
-    Select(0u25a0); Copy() # Black square
-    Select(65552);  Paste() # Temporary glyph
-    Move(250, 0)
-    PasteWithOffset(0, -350)
-    RemoveOverlap()
-    Copy()
-    Select(0u30a0); PasteInto() # ゠
-    OverlapIntersect()
-
-    Select(0u25a0); Copy() # Black square
-    Select(65552);  Paste() # Temporary glyph
-    Move(-500, 0)
-    Select(0u30fc); Copy() # ー
-    Select(65552);  PasteInto() # Temporary glyph
-    OverlapIntersect()
-    if (input_list[i] == "${input_kana_regular}")
-        Scale(84); Copy()
-        Select(0u30a0); PasteWithOffset(118, 101) # ゠
- #        Select(0u30a0); PasteWithOffset(133, 101) # ゠
-    else
-        Scale(80); Copy()
-        Select(0u30a0); PasteWithOffset(131, 106) # ゠
- #        Select(0u30a0); PasteWithOffset(146, 106) # ゠
+    if ("${heibon_flag}" == "true")
+        Select(0u25a0); Copy() # Black square
+        Select(65552);  Paste() # Temporary glyph
+        Move(250, 0)
+        PasteWithOffset(0, -350)
+        RemoveOverlap()
+        Copy()
+        Select(0u30a0); PasteInto() # ゠
+        OverlapIntersect()
+    
+        Select(0u25a0); Copy() # Black square
+        Select(65552);  Paste() # Temporary glyph
+        Move(-500, 0)
+        Select(0u30fc); Copy() # ー
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        if (input_list[i] == "${input_kana_regular}")
+            Scale(84); Copy()
+            Select(0u30a0); PasteWithOffset(118, 101) # ゠
+ #            Select(0u30a0); PasteWithOffset(133, 101) # ゠
+        else
+            Scale(80); Copy()
+            Select(0u30a0); PasteWithOffset(131, 106) # ゠
+ #            Select(0u30a0); PasteWithOffset(146, 106) # ゠
+        endif
+        SetWidth(1000)
+        RemoveOverlap()
+        Simplify()
+        Select(65552); Clear() # Temporary glyph
     endif
-    SetWidth(1000)
-    RemoveOverlap()
-    Simplify()
-    Select(65552); Clear() # Temporary glyph
 
 # ー (少し下げる)
     Select(0u30fc); Move(0, -14)
@@ -4510,25 +4512,27 @@ while (i < SizeOf(input_list))
     Print("Edit kanzi busyu")
 
 # ⼣
-    Select(0u30fb); Copy() # ・
-    Select(65552);  Paste() # Temporary glyph
-    if (input_list[i] == "${input_kana_regular}")
-        Scale(60, 48); Copy()
-        Select(0u2f23); PasteWithOffset(404, 285) # ⼣
-    else
-        Scale(65); Copy()
-        Select(0u2f23); PasteWithOffset(385, 269) # ⼣
+    if ("${heibon_flag}" == "true")
+        Select(0u30fb); Copy() # ・
+        Select(65552);  Paste() # Temporary glyph
+        if (input_list[i] == "${input_kana_regular}")
+            Scale(60, 48); Copy()
+            Select(0u2f23); PasteWithOffset(404, 285) # ⼣
+        else
+            Scale(65); Copy()
+            Select(0u2f23); PasteWithOffset(385, 269) # ⼣
+        endif
+        SetWidth(1000)
+        RemoveOverlap()
+        Simplify()
+        Select(65552); Clear() # Temporary glyph
     endif
-    SetWidth(1000)
-    RemoveOverlap()
-    Simplify()
-    Select(65552); Clear() # Temporary glyph
 
 # enダッシュ、emダッシュ加工
     Print("Edit en and em dashes")
 # –
     Select(0u2013) # –
-    if ("${broken_line_flag}" == "true")
+    if ("${heibon_flag}" == "true")
         Copy()
         PasteWithOffset(200, 0); PasteWithOffset(-200, 0)
         OverlapIntersect()
@@ -4538,7 +4542,7 @@ while (i < SizeOf(input_list))
 
 # —
     Select(0u2014) # —
-    if ("${broken_line_flag}" == "true")
+    if ("${heibon_flag}" == "true")
         Copy()
         PasteWithOffset(323, 0); PasteWithOffset(-647, 0)
         OverlapIntersect(); Copy()
@@ -4713,32 +4717,34 @@ while (i < SizeOf(input_list))
    Select(0u2702); Paste() # ✂
 
 # ➀-➓ (下線を引く)
-    Select(0u005f); Copy() # _
-    Select(65552);  Paste() # Temporary glyph
-    if (input_list[i] == "${input_kana_regular}")
-        Scale(115, 100)
-        Move(231, 133)
-    else
-        Scale(110, 70)
-        Move(231, 144)
+    if ("${heibon_flag}" == "true")
+        Select(0u005f); Copy() # _
+        Select(65552);  Paste() # Temporary glyph
+        if (input_list[i] == "${input_kana_regular}")
+            Scale(115, 100)
+            Move(231, 133)
+        else
+            Scale(110, 70)
+            Move(231, 144)
+        endif
+        j = 0
+        while (j < 10)
+            Select(65552);  Copy() # Temporary glyph
+            Select(0u2780 + j); PasteInto()
+            RemoveOverlap()
+            SetWidth(1000)
+            j += 1
+        endloop
+        Select(65552); VFlip() # Temporary glyph
+        j = 0
+        while (j < 10)
+            Select(65552);  Copy() # Temporary glyph
+            Select(0u278a + j); PasteInto()
+            SetWidth(1000)
+            j += 1
+        endloop
+        Select(65552); Clear() # Temporary glyph
     endif
-    j = 0
-    while (j < 10)
-        Select(65552);  Copy() # Temporary glyph
-        Select(0u2780 + j); PasteInto()
-        RemoveOverlap()
-        SetWidth(1000)
-        j += 1
-    endloop
-    Select(65552); VFlip() # Temporary glyph
-    j = 0
-    while (j < 10)
-        Select(65552);  Copy() # Temporary glyph
-        Select(0u278a + j); PasteInto()
-        SetWidth(1000)
-        j += 1
-    endloop
-    Select(65552); Clear() # Temporary glyph
 
 # --------------------------------------------------
 
@@ -5299,146 +5305,148 @@ while (i < SizeOf(input_list))
 
 # --------------------------------------------------
 
+    if ("${heibon_flag}" == "true")
 # Edit kanzi (漢字のグリフ変更)
-    Print("Edit kanzi")
-
+        Print("Edit kanzi")
+    
 # 〇 (上にうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u3007) # 〇
-    PasteWithOffset(319, 724)
-    SetWidth(1024)
-    RemoveOverlap()
-
-    Select(65552); Clear() # Temporary glyph
-
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u3007) # 〇
+        PasteWithOffset(319, 724)
+        SetWidth(1024)
+        RemoveOverlap()
+    
+        Select(65552); Clear() # Temporary glyph
+    
 # 一 (右にうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u4e00) # 一
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(695, 372)
-    else
-        PasteWithOffset(685, 385)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u4e00) # 一
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(695, 372)
+        else
+            PasteWithOffset(685, 385)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
 
 # 二 (一に合わす)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u4e8c) # 二
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(699, 77)
-    else
-        PasteWithOffset(689, 101)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
-
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u4e8c) # 二
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(699, 77)
+        else
+            PasteWithOffset(689, 101)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
+    
 # 三 (デザイン統一のため一二に合わす)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u4e09) # 三
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(693, 45)
-    else
-        PasteWithOffset(676, 57)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u4e09) # 三
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(693, 45)
+        else
+            PasteWithOffset(676, 57)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
 
 # 工 (右下にうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u5de5) # 工
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(706, 45)
-    else
-        PasteWithOffset(689, 62)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
-
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u5de5) # 工
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(706, 45)
+        else
+            PasteWithOffset(689, 62)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
+    
 # 力 (右上にうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u529b) # 力
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(647, 545)
-    else
-        PasteWithOffset(637, 552)
-        PasteWithOffset(622, 552)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u529b) # 力
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(647, 545)
+        else
+            PasteWithOffset(637, 552)
+            PasteWithOffset(622, 552)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
 
 # 夕 (右上にうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u5915) # 夕
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(665, 583)
-        PasteWithOffset(675, 583)
-    else
-        PasteWithOffset(659, 573)
-        PasteWithOffset(669, 573)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u5915) # 夕
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(665, 583)
+            PasteWithOffset(675, 583)
+        else
+            PasteWithOffset(659, 573)
+            PasteWithOffset(669, 573)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
 
 # 卜 (てっぺんにうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u535c) # 卜
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(168, 682)
-    else
-        PasteWithOffset(130, 668)
-    endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u535c) # 卜
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(168, 682)
+        else
+            PasteWithOffset(130, 668)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
 
 # 口 (右上にうろこを追加)
-    Select(0u002e); Copy() # Full stop
-    Select(65552);  Paste() # Temporary glyph
-    Scale(59); Copy()
-    Select(0u53e3) # 口
-    if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(629, 650)
- #        PasteWithOffset(11, 650)
-    else
-        PasteWithOffset(604, 653)
-        PasteWithOffset(616, 653)
- #        PasteWithOffset(3, 653)
- #        PasteWithOffset(15, 653)
+        Select(0u002e); Copy() # Full stop
+        Select(65552);  Paste() # Temporary glyph
+        Scale(59); Copy()
+        Select(0u53e3) # 口
+        if (input_list[i] == "${input_kanzi_regular}")
+            PasteWithOffset(629, 650)
+ #            PasteWithOffset(11, 650)
+        else
+            PasteWithOffset(604, 653)
+            PasteWithOffset(616, 653)
+ #            PasteWithOffset(3, 653)
+ #            PasteWithOffset(15, 653)
+        endif
+        RemoveOverlap()
+        Simplify()
+        SetWidth(1024)
+        Select(65552); Clear() # Temporary glyph
     endif
-    RemoveOverlap()
-    Simplify()
-    SetWidth(1024)
-    Select(65552); Clear() # Temporary glyph
 
 # 土吉 (追加)
     Select(0u25a0); Copy() # Black square
@@ -6931,12 +6939,6 @@ while (i < SizeOf(fontstyle_list))
  #    AutoHint()
  #    AutoInstr()
 
-# Vertical setting
- #  SetFontHasVerticalMetrics(1)
- #  RemoveAllVKerns()
- #  SelectWorthOutputting()
- #  SetVWidth(1024)
-
 # --------------------------------------------------
 
 # Save custom font
@@ -7330,12 +7332,6 @@ while (i < \$argc)
  #    AutoHint()
  #    AutoInstr()
 
-# Vertical setting
- #  SetFontHasVerticalMetrics(1)
- #  RemoveAllVKerns()
- #  SelectWorthOutputting()
- #  SetVWidth(1024)
-
 # --------------------------------------------------
 
 # Save merged font
@@ -7435,6 +7431,12 @@ while (i < \$argc)
     # aalt 1対1
     Select(0u342e) # 㐮
     lookups = GetPosSub("*") # フィーチャを取り出す
+
+    Select(0u1b001) # 𛀁
+    glyphName = GlyphInfo("Name")
+    Select(0u3048) # え
+    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+
     norm = [0u0069, 0u0061, 0u0065, 0u006f,\
             0u0078, 0u0259, 0u0068, 0u006b,\
             0u006c, 0u006d, 0u0070, 0u0073,\
@@ -7454,6 +7456,16 @@ while (i < \$argc)
     # aalt 複数
     Select(0u3402) # 㐂
     lookups = GetPosSub("*") # フィーチャを取り出す
+
+    Select(0u32d3) # ㋓
+    glyphName = GlyphInfo("Name")
+    Select(0u30a8) # エ
+    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+    Select(0u1b000) # 𛀀
+    glyphName = GlyphInfo("Name")
+    Select(0u30a8) # エ
+    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+
     norm = [0u0030, 0u0031, 0u0032, 0u0033,\
             0u0034, 0u0035, 0u0036, 0u0037,\
             0u0038, 0u0039, 0u002b, 0u002d,\
@@ -7512,7 +7524,9 @@ while (i < \$argc)
         glyphName = GlyphInfo("Name")
         Select(norm[j])
         AddPosSub(lookups[0][0],glyphName)
-        AddPosSub(lookups[1][0],glyphName)
+        if (j != 3) # エは𛀀があるため複数、前のルーチンで処理済
+            AddPosSub(lookups[1][0],glyphName)
+        endif
         j += 1
     endloop
 
@@ -7526,6 +7540,11 @@ while (i < \$argc)
     AddPosSub(lookups[0][0],glyphName)
     AddPosSub(lookups[1][0],glyphName)
     Select(0u24ff) # ⓿
+    glyphName = GlyphInfo("Name")
+    Select(0uff10) # ０
+    AddPosSub(lookups[0][0],glyphName)
+    AddPosSub(lookups[1][0],glyphName)
+    Select(0u1f100) # 🄀
     glyphName = GlyphInfo("Name")
     Select(0uff10) # ０
     AddPosSub(lookups[0][0],glyphName)
@@ -7634,11 +7653,146 @@ while (i < \$argc)
         j += 1
     endloop
 
- # .notdef加工
+# .notdef加工
     Print("Edit .notdef")
     Select(1114112)
     Move(86, 0)
     SetWidth(512)
+
+# 縦書きメトリクス追加 (問題が多いので中止)
+ #    Print("Set vertical metrics")
+ #    SetFontHasVerticalMetrics(1)
+ #    RemoveAllVKerns()
+ #    SelectWorthOutputting()
+ #    SetVWidth(1024)
+
+ #    j = 0u0020
+ #    while (j < 0u0500)
+ #        if (0 < SelectIf(j))
+ #            SetVWidth(512)
+ #        endif
+ #        j += 1
+ #    endloop
+
+ #    j = 0u1d00
+ #    while (j < 0u2000)
+ #        if (0 < SelectIf(j))
+ #            SetVWidth(512)
+ #        endif
+ #        j += 1
+ #    endloop
+
+ #    j = 0u2000
+ #    while (j < 0u2e80)
+ #        if (0 < SelectIf(j))
+ #            SetVWidth(GlyphInfo("Width"))
+ #            glyphWidth = GlyphInfo("Width")
+ #            SetVWidth(glyphWidth)
+ #        endif
+ #        j += 1
+ #    endloop
+
+ #    j = 0uff61
+ #    while (j < 0uffa0)
+ #        Select(j)
+ #        SetVWidth(512)
+ #        j += 1
+ #    endloop
+
+ #    Select(1114112) # .notdef
+ #    SetVWidth(512)
+
+ #    #  正立するグリフは高さ1024emにする
+ #    if (0 < SelectIf(0u00a7)); SetVWidth(1024); endif 
+ #    if (0 < SelectIf(0u00a9)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u00ae)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u00b1)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u00bc, 0u00be)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u00d7)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u00f7)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u02ea, 0u02eb)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u1100, 0u11ff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u1401, 0u166c)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u166d)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u166e)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u166f, 0u167f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u18b0, 0u18f5)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u18f6, 0u18ff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2016)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2020, 0u2021)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2030, 0u2031)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u203b, 0u203c)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2042)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2047, 0u2049)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2051)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2065)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u20dd, 0u20e0)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u20e2, 0u20e4)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2100, 0u2101)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2103, 0u2106)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2107)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2108, 0u2109)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u210f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2113)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2114)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2116, 0u2117)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u211e, 0u2123)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2125)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2127)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2129)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u212e)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2135, 0u2138)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2139)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u213a, 0u213b)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u213c, 0u213f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2145, 0u2149)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u214a)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u214c, 0u214d)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u214f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2150, 0u215f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2160, 0u2182)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2183, 0u2184)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2185, 0u2188)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2189)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u218c, 0u218f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u221e)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2234, 0u2235)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2300, 0u2307)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u230c, 0u231f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2324, 0u2328)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u232b)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u237d, 0u239a)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u23be, 0u23cd)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u23cf)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u23d1, 0u23db)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u23e2, 0u23ff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2400, 0u2422)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2424, 0u2426)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2427, 0u243f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2440, 0u244a)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u244b, 0u245f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2460, 0u249b)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u249c, 0u24e9)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u24ea, 0u24ff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u25a0, 0u25b6)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u25b7)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u25b8, 0u25c0)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u25c1)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u25c2, 0u25f7)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u25f8, 0u25ff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2600, 0u2619)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2620, 0u266e)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u266f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2670, 0u26ff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2700, 0u2767)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2776, 0u2793)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2b12, 0u2b2f)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2b50, 0u2b59)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2b97)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2bb8, 0u2bd1)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2bd3, 0u2beb)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2bf0, 0u2bff)); SetVWidth(1024); endif
+ #    if (0 < SelectIf(0u2e50, 0u2e51)); SetVWidth(1024); endif
 
 # --------------------------------------------------
 
