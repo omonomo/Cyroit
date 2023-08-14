@@ -70,11 +70,11 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 |   名称   | サンプル | 説明 |
 |----------|----------|------|
-| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="225"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
-| CyroitSP | <img alt="SP" src="./images/SP.png" width="225"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。簡易なエディタやコマンドランチャー等で使用すると便利かもしれません。 |
-| CyroitTM | <img alt="TM" src="./images/TM.png" width="225"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョンを復活。大文字の DVZ のグリフを改変しています。 |
-| CyroitTS | <img alt="TS" src="./images/TS.png" width="225"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版。 |
-| CyroitHB | <img alt="HB" src="./images/HB.png" width="225"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
+| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="450"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
+| CyroitSP | <img alt="SP" src="./images/SP.png" width="450"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。簡易なエディタやコマンドランチャー等で使用すると便利かもしれません。 |
+| CyroitTM | <img alt="TM" src="./images/TM.png" width="450"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョンを復活。大文字の DVZ のグリフを改変しています。 |
+| CyroitTS | <img alt="TS" src="./images/TS.png" width="450"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版。 |
+| CyroitHB | <img alt="HB" src="./images/HB.png" width="450"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
 
