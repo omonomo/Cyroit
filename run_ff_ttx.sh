@@ -8,6 +8,8 @@
 font_familyname="Cyroit"
 font_familyname_suffix0="SP"
 font_familyname_suffix1="HB"
+font_familyname_suffix2="TM"
+font_familyname_suffix3="TS"
 build_fonts_dir="build"
 
 forge_ttx_help()
@@ -29,34 +31,34 @@ if [ $# -eq 0 ]
 then
   echo "Normal Mode"
   rm -f ${font_familyname}*.ttf
-  sh font_generator.sh -N "${font_familyname}" auto
+  sh font_generator.sh -t -N "${font_familyname}" auto
 elif [ "$1" = "-d" ]
 then
   echo "Draft Mode"
   rm -f ${font_familyname}*.ttf
-  sh font_generator.sh -l -d -N "${font_familyname}" auto
+  sh font_generator.sh -l -d -t -N "${font_familyname}" auto
   exit 0 # 下書きモードの場合テーブルを編集しない
 elif [ "$1" = "-de" ]
 then
   echo "Draft Mode (add Nerd fonts)"
   rm -f ${font_familyname}*.ttf
-  sh font_generator.sh -l -d -e -N "${font_familyname}" auto
+  sh font_generator.sh -l -d -t -e -N "${font_familyname}" auto
   exit 0 # 下書きモードの場合テーブルを編集しない
 elif [ "$1" = "-e" ]
 then
   echo "Normal Mode (add Nerd fonts)"
   rm -f ${font_familyname}*.ttf
-  sh font_generator.sh -e -N "${font_familyname}" auto
+  sh font_generator.sh -t -e -N "${font_familyname}" auto
 elif [ "$1" = "-o" ]
 then
   echo "Normal Mode (also generate obliqe style)"
   rm -f ${font_familyname}*.ttf
-  sh font_generator.sh -o -N "${font_familyname}" auto
+  sh font_generator.sh -t -o -N "${font_familyname}" auto
 elif [ "$1" = "-eo" ]
 then
   echo "Normal Mode (also generate oblique style, Add Nerd fonts)"
   rm -f ${font_familyname}*.ttf
-  sh font_generator.sh -e -o -N "${font_familyname}" auto
+  sh font_generator.sh -t -e -o -N "${font_familyname}" auto
 elif [ "$1" = "-F" ]
 then
   echo "Complete Mode (generate finished fonts)"
@@ -69,6 +71,14 @@ then
   if [ -n "${font_familyname_suffix1}" ]
   then
     sh font_generator.sh -Z -z -u -b -o -e -N "${font_familyname}" -n "${font_familyname_suffix1}" auto
+  fi
+  if [ -n "${font_familyname_suffix2}" ]
+  then
+    sh font_generator.sh -z -t -o -e -N "${font_familyname}" -n "${font_familyname_suffix2}" auto
+  fi
+  if [ -n "${font_familyname_suffix3}" ]
+  then
+    sh font_generator.sh -t -o -e -N "${font_familyname}" -n "${font_familyname_suffix3}" auto
   fi
 elif [ "$1" = "-h" ]
 then
@@ -106,6 +116,14 @@ if [ "$1" = "-F" ]
 then
   echo "Move finished fonts"
   mkdir -p "${build_fonts_dir}"
+  mkdir -p "${build_fonts_dir}/${font_familyname_suffix0}"
+  mv -f ${font_familyname}${font_familyname_suffix0}*.ttf "${build_fonts_dir}/${font_familyname_suffix0}/."
+  mkdir -p "${build_fonts_dir}/${font_familyname_suffix1}"
+  mv -f ${font_familyname}${font_familyname_suffix1}*.ttf "${build_fonts_dir}/${font_familyname_suffix1}/."
+  mkdir -p "${build_fonts_dir}/${font_familyname_suffix2}"
+  mv -f ${font_familyname}${font_familyname_suffix2}*.ttf "${build_fonts_dir}/${font_familyname_suffix2}/."
+  mkdir -p "${build_fonts_dir}/${font_familyname_suffix3}"
+  mv -f ${font_familyname}${font_familyname_suffix3}*.ttf "${build_fonts_dir}/${font_familyname_suffix3}/."
   mv -f ${font_familyname}*.ttf "${build_fonts_dir}/."
   echo
 fi

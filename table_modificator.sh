@@ -100,9 +100,9 @@ echo "Edit tables"
   sed -i.bak -e 's,isFixedPitch value=".",isFixedPitch value="1",' "${P%%.ttf}.ttx"
 
   # vhea
-  sed -i.bak -e "s,ascent value=\"...\",ascent value=\"${vhea_ascent1024}\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,descent value=\"-...\",descent value=\"-${vhea_descent1024}\"," "${P%%.ttf}.ttx"
-  sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${vhea_linegap1024}\"," "${P%%.ttf}.ttx"
+#  sed -i.bak -e "s,ascent value=\"...\",ascent value=\"${vhea_ascent1024}\"," "${P%%.ttf}.ttx"
+#  sed -i.bak -e "s,descent value=\"-...\",descent value=\"-${vhea_descent1024}\"," "${P%%.ttf}.ttx"
+#  sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${vhea_linegap1024}\"," "${P%%.ttf}.ttx"
 
   # hmtx (Widthのブレを修正)
   sed -i.bak -e "s,width=\"3..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # .notdef

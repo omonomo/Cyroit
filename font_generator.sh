@@ -13,7 +13,7 @@
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_version="1.0.6"
+font_version="1.0.7"
 fontforge_version="20230101"
 vendor_id="PfEd"
 
@@ -98,6 +98,7 @@ visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
 underline_flag="true" # アンダーライン付き
 heibon_flag="true" # ダッシュ破線化
+too_much_flag="false" # DVZ改変
 draft_flag="false" # 下書きモード
 oblique_flag="false" # オブリーク作成
 nerd_flag="false" # Nerd fonts 追加
@@ -167,18 +168,19 @@ font_generator_help()
     echo "  -l                     Leave (do NOT remove) temporary files"
     echo "  -N string              Set fontfamily (\"string\")"
     echo "  -n string              Set fontfamily suffix (\"string\")"
-    echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
     echo "  -u                     Disable zenkaku and hankaku with underline"
-    echo "  -b                     Disable broken dash and vertical line"
+    echo "  -b                     Disable broken dash etc .."
+    echo "  -t                     Enable modified D, V and Z"
+    echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -o                     Enable generate oblique style"
     echo "  -e                     Enable add Nerd fonts"
     exit 0
 }
 
 # Get options
-while getopts hVf:vlN:n:dZzuboe OPT
+while getopts hVf:vlN:n:Zzubtdoe OPT
 do
     case "${OPT}" in
         "h" )
@@ -207,10 +209,6 @@ do
             echo "Option: Set fontfamily suffix: ${OPTARG}"
             font_familyname_suffix=`echo $OPTARG | tr -d ' '`
             ;;
-        "d" )
-            echo "Option: Enable draft mode (skip time-consuming processes)"
-            draft_flag="true"
-            ;;
         "Z" )
             echo "Option: Disable visible zenkaku space"
             visible_zenkaku_space_flag="false"
@@ -224,8 +222,16 @@ do
             underline_flag="false"
             ;;
         "b" )
-            echo "Option: Disable broken dash and vertical line"
+            echo "Option: Disable broken dash etc .."
             heibon_flag="false"
+            ;;
+        "t" )
+            echo "Option: Enable modified D, V and Z"
+            too_much_flag="true"
+            ;;
+        "d" )
+            echo "Option: Enable draft mode (skip time-consuming processes)"
+            draft_flag="true"
             ;;
         "o" )
             echo "Option: Enable generate oblique style"
@@ -681,37 +687,35 @@ while (i < SizeOf(input_list))
  #    Select(0u1e00) # Ḁ
 
 # D (クロスバーを付加することで少しくどい感じに)
- #    Select(0u00af); Copy()  # macron
- #    Select(65552);  Paste() # Temporary glyph
- #    Scale(83, 109); Copy()
- #    Select(0u0044) # D
- #    if (input_list[i] == "${input_latin_regular}")
- #        PasteWithOffset(-146, -279)
- #    else
- #        PasteWithOffset(-146, -287)
- #    endif
- #    SetWidth(500)
- #    RemoveOverlap()
- #
- #    Select(65552);  Clear() # Temporary glyph
+    if ("${too_much_flag}" == "true")
+        Select(0u00af); Copy()  # macron
+        Select(65552);  Paste() # Temporary glyph
+        Scale(80, 109); Copy()
+        Select(0u0044) # D
+        if (input_list[i] == "${input_latin_regular}")
+            PasteWithOffset(-146, -279)
+        else
+            PasteWithOffset(-146, -287)
+        endif
+        SetWidth(500)
+        RemoveOverlap()
 
- #    Select(0u2588); Copy() # Full block
- #    Select(0u010e); PasteWithOffset(0,  1035); OverlapIntersect() # Ď
- #    Select(0u1e0c); PasteWithOffset(0, -1020); OverlapIntersect() # Ḍ
- #    Select(0u1e0e); PasteWithOffset(0, -1020); OverlapIntersect() # Ḏ
- #    Select(0u0044); Copy() # D
- #    Select(0u010e); PasteInto(); SetWidth(500)
- #    Select(0u1e0c); PasteInto(); SetWidth(500)
- #    Select(0u1e0e); PasteInto(); SetWidth(500)
- #    コメントアウト外すならここまで
- #    Select(0u1e10) # Ḑ
- #    Select(0u1e0a) # Ḋ
- #    Select(0u0110) # Đ
- #    Select(0u018a) # Ɗ
- #    Select(0u018b) # Ƌ
- #    Select(0u01c5) # ǅ
- #    Select(0u01f2) # ǲ
- #    Select(0u1e12) # Ḓ
+        Select(65552);  Clear() # Temporary glyph
+
+ #        Select(0u0044); Copy() # D
+ #        Select(0u010e) # Ď
+ #        Select(0u1e0c) # Ḍ
+ #        Select(0u1e0e) # Ḏ
+
+ #        Select(0u1e10) # Ḑ
+ #        Select(0u1e0a) # Ḋ
+ #        Select(0u0110) # Đ
+ #        Select(0u018a) # Ɗ
+ #        Select(0u018b) # Ƌ
+ #        Select(0u01c5) # ǅ
+ #        Select(0u01f2) # ǲ
+ #        Select(0u1e12) # Ḓ
+    endif
 
 # G (折れ曲がったところを少し上げる)
     # 周り
@@ -867,59 +871,75 @@ while (i < SizeOf(input_list))
  #    Select(0ua758) # Ꝙ
 
 # V (左上にセリフを追加してYやレと区別しやすく)
- #    # 右上の先端を少し伸ばす
- #    Select(0u2588); Copy() # Full block
- #    Select(65552);  Paste() # Temporary glyph
- #    Move(350, 0)
- #    Select(0u0056); Copy() # V
- #    Select(65552);  PasteInto()
- #    OverlapIntersect()
- #    Copy()
- #    Select(0u0056) # V
- #    if (input_list[i] == "${input_latin_regular}")
- #        PasteWithOffset(4, 12) # V
- #    else
- #        PasteWithOffset(4, 13) # V
- #    endif
- #    # セリフ追加
- #    Select(0u00af); Copy() # macron
- #    Select(65552);  Paste() # Temporary glyph
- #    Scale(80, 105); Copy()
- #    Select(0u0056); # V
- #    if (input_list[i] == "${input_latin_regular}")
- #        PasteWithOffset(-163, 2) # V
- #    else
- #        PasteWithOffset(-148, -21) # V
- #    endif
- #
- #    SetWidth(500)
- #    RemoveOverlap()
- #    Simplify()
- #    RoundToInt()
- #
- #    Select(65552); Clear() # Temporary glyph
- #    コメントアウト外すならここまで
- #    Select(0u0056); Copy() # V
- #    Select(0u01b2) # Ʋ
- #    Select(0u1e7c) # Ṽ
- #    Select(0u1e7e) # Ṿ
- #    Select(0ua75e) # Ꝟ
+    if ("${too_much_flag}" == "true")
+        # 右上の先端を少し伸ばす
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Move(350, 0)
+        Select(0u0056); Copy() # V
+        Select(65552);  PasteInto()
+        OverlapIntersect()
+        Copy()
+        Select(0u0056) # V
+        if (input_list[i] == "${input_latin_regular}")
+            PasteWithOffset(4, 12) # V
+        else
+            PasteWithOffset(4, 13) # V
+        endif
+        # セリフ追加
+        Select(0u00af); Copy() # macron
+        Select(65552);  Paste() # Temporary glyph
+        Scale(80, 105); Copy()
+        Select(0u0056); # V
+        if (input_list[i] == "${input_latin_regular}")
+            PasteWithOffset(-163, 2) # V
+        else
+            PasteWithOffset(-148, -21) # V
+        endif
+
+        SetWidth(500)
+        RemoveOverlap()
+        Simplify()
+        RoundToInt()
+
+        Select(65552); Clear() # Temporary glyph
+
+ #        Select(0u0056); Copy() # V
+ #        Select(0u01b2) # Ʋ
+ #        Select(0u1e7c) # Ṽ
+ #        Select(0u1e7e) # Ṿ
+ #        Select(0ua75e) # Ꝟ
+    endif
 
 # Z (クロスバーを付加してゼェーットな感じに)
- #    Select(0u00af); Copy()  # macron
- #    Select(65552);  Paste() # Temporary glyph
- #    Scale(110, 109); Rotate(-2)
- #    Copy()
- #    Select(0u005a) # Z
- #    if (input_list[i] == "${input_latin_regular}")
- #        PasteWithOffset(6, -279)
- #    else
- #        PasteWithOffset(6, -287)
- #    endif
- #    SetWidth(500)
- #    RemoveOverlap()
- #    Select(65552);  Clear() # Temporary glyph
- #    コメントアウト外すならここまで
+    if ("${too_much_flag}" == "true")
+        Select(0u00af); Copy()  # macron
+        Select(65552);  Paste() # Temporary glyph
+        Scale(110, 109); Rotate(-2)
+        Copy()
+        Select(0u005a) # Z
+        if (input_list[i] == "${input_latin_regular}")
+            PasteWithOffset(6, -279)
+        else
+            PasteWithOffset(6, -287)
+        endif
+        SetWidth(500)
+        RemoveOverlap()
+        Select(65552);  Clear() # Temporary glyph
+
+ #        Select(0u005a); Copy() # Z
+ #        Select(0u0179) # Ź
+ #        Select(0u017b) # Ż
+ #        Select(0u017d) # Ž
+ #        Select(0u1e92) # Ẓ
+
+ #        Select(0u01b5) # Ƶ
+ #        Select(0u0224) # Ȥ
+ #        Select(0u1e90) # Ẑ
+ #        Select(0u1e94) # Ẕ
+ #        Select(0u2c6b) # Ⱬ
+ #        Select(0u2c7f) # Ɀ
+    endif
 
 # b (縦線を少し細くする)
     Select(0u2588); Copy() # Full block
@@ -1077,7 +1097,7 @@ while (i < SizeOf(input_list))
  #    Select(0uab47) # ꭇ
  #    Select(0uab49) # ꭉ
 
-# g をオープンテイルのグリフに変更するため、それに合わせてjpqyの尻尾を伸ばす
+# g をオープンテイルに変更するため、それに合わせてjpqyの尻尾を伸ばす
 # j
     # 下
     Select(0u2588); Copy() # Full block
@@ -1149,7 +1169,7 @@ while (i < SizeOf(input_list))
  #    Select(0ua753) # ꝓ
  #    Select(0ua755) # ꝕ
 
-# q (ついでに縦線を少し細くする)
+# q (ついでに縦線を少し細くする) ※ g のオープンテール化で使用するため改変時は注意
     # 下
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
@@ -1180,7 +1200,7 @@ while (i < SizeOf(input_list))
  #    Select(0ua757) # ꝗ
  #    Select(0ua759) # ꝙ
 
-# y (ついでに少し右にずらす)
+# y (ついでに少し右にずらす) ※ g のオープンテール化で使用するため改変時は注意
     # 下
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
@@ -5117,7 +5137,7 @@ while (i < SizeOf(input_list))
     SelectMore(1115493, 1116304)
 
     SelectMore(0u303c) # 〼
-    SelectMore(0u5973) # 女
+    SelectMore(0u5973) # 女 ♀
     SelectMore(0u66c7) # 曇
     SelectMore(0u74f1) # 瓱 mg
     SelectMore(0u7acf) # 竏 kL
@@ -5143,6 +5163,14 @@ while (i < SizeOf(input_list))
     Select(0u342e) # 㐮
     lookups = GetPosSub("*") # フィーチャを取り出す
 
+    Select(0u96f6) # 零
+    glyphName = GlyphInfo("Name")
+    Select(0u3007); RemovePosSub("*") # 〇
+    AddPosSub(lookups[0][0],glyphName)
+    glyphName = GlyphInfo("Name")
+    Select(0u96f6); RemovePosSub("*") # 零
+    AddPosSub(lookups[0][0],glyphName)
+
     Select(0u5713) # 圓
     glyphName = GlyphInfo("Name")
     Select(0u5186); RemovePosSub("*") # 円
@@ -5155,8 +5183,6 @@ while (i < SizeOf(input_list))
     glyphName = GlyphInfo("Name")
     Select(0u685d); RemovePosSub("*") # 桝
     AddPosSub(lookups[0][0],glyphName)
-
-    Select(0u685d) # 桝
     glyphName = GlyphInfo("Name")
     Select(0u67a1); RemovePosSub("*") # 枡
     AddPosSub(lookups[0][0],glyphName)
@@ -7436,6 +7462,9 @@ while (i < \$argc)
     glyphName = GlyphInfo("Name")
     Select(0u3048) # え
     AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+    glyphName = GlyphInfo("Name")
+    Select(0u1b001) # 𛀁
+    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
 
     norm = [0u0069, 0u0061, 0u0065, 0u006f,\
             0u0078, 0u0259, 0u0068, 0u006b,\
@@ -7457,6 +7486,58 @@ while (i < \$argc)
     Select(0u3402) # 㐂
     lookups = GetPosSub("*") # フィーチャを取り出す
 
+    Select(0u4e2a) # 个
+    glyphName = GlyphInfo("Name")
+    Select(0u30f6); RemovePosSub("*") # ヶ
+    AddPosSub(lookups[0][0],glyphName) # 1対複数のaaltフィーチャを追加
+    Select(0u500b) # 個
+    glyphName = GlyphInfo("Name")
+    Select(0u30f6) # ヶ
+    AddPosSub(lookups[0][0],glyphName)
+    Select(0u7b87) # 箇
+    glyphName = GlyphInfo("Name")
+    Select(0u30f6) # ヶ
+    AddPosSub(lookups[0][0],glyphName)
+
+    Select(0u30f6) # ヶ
+    glyphName = GlyphInfo("Name")
+    Select(0u4e2a); RemovePosSub("*") # 个
+    AddPosSub(lookups[0][0],glyphName) # 1対複数のaaltフィーチャを追加
+    Select(0u500b) # 個
+    glyphName = GlyphInfo("Name")
+    Select(0u4e2a) # 个
+    AddPosSub(lookups[0][0],glyphName)
+    Select(0u7b87) # 箇
+    glyphName = GlyphInfo("Name")
+    Select(0u4e2a) # 个
+    AddPosSub(lookups[0][0],glyphName)
+
+    Select(0u30f6) # ヶ
+    glyphName = GlyphInfo("Name")
+    Select(0u500b); RemovePosSub("*") # 個
+    AddPosSub(lookups[0][0],glyphName) # 1対複数のaaltフィーチャを追加
+    Select(0u4e2a) # 个
+    glyphName = GlyphInfo("Name")
+    Select(0u500b) # 個
+    AddPosSub(lookups[0][0],glyphName)
+    Select(0u7b87) # 箇
+    glyphName = GlyphInfo("Name")
+    Select(0u500b) # 個
+    AddPosSub(lookups[0][0],glyphName)
+
+    Select(0u30f6) # ヶ
+    glyphName = GlyphInfo("Name")
+    Select(0u7b87); RemovePosSub("*") # 箇
+    AddPosSub(lookups[0][0],glyphName) # 1対複数のaaltフィーチャを追加
+    Select(0u4e2a) # 个
+    glyphName = GlyphInfo("Name")
+    Select(0u7b87) # 箇
+    AddPosSub(lookups[0][0],glyphName)
+    Select(0u500b) # 個
+    glyphName = GlyphInfo("Name")
+    Select(0u7b87) # 箇
+    AddPosSub(lookups[0][0],glyphName)
+
     Select(0u32d3) # ㋓
     glyphName = GlyphInfo("Name")
     Select(0u30a8) # エ
@@ -7464,6 +7545,11 @@ while (i < \$argc)
     Select(0u1b000) # 𛀀
     glyphName = GlyphInfo("Name")
     Select(0u30a8) # エ
+    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+
+    Select(0u30a8) # エ
+    glyphName = GlyphInfo("Name")
+    Select(0u1b000) # 𛀀
     AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
 
     norm = [0u0030, 0u0031, 0u0032, 0u0033,\
