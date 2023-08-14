@@ -14,7 +14,7 @@ Copyright (c) 2023 omonomo (https://omonomo.github.io/Cyroit/)
 | 全角半角形下線         | ○ | ○ | ○ | ○ | ✕ |
 | サンセリフ囲み数字下線 | ○ | ○ | ○ | ○ | ✕ |
 | DVZ改変                | ✕ | ✕ | ○ | ○ | ✕ |
-| Nerd Fonts             | ○ | ○ | ○ | ○ | ✕ |
+| Nerd Fonts             | ○ | ○ | ○ | ○ | ○ |
 
 **無印**: 通常版  
 **SP**: スペシャルスペース版  
