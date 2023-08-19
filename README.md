@@ -1,4 +1,4 @@
-## 全角英数記号や半角カタカナが判別しやすい等幅フォント「Cyroit」
+# 全角英数記号や半角カタカナが判別しやすい等幅フォント「Cyroit」
 
 Cyroit (しろいと) はプログラミングにもお使いいただける等幅フォントです。  
 Ricty 生成スクリプトで遊んでいるうちに合成フォント製作の沼にはまったことで生まれました。  
@@ -132,3 +132,4 @@ Cyroit の合成、製作にあたり、素晴らしいフォントやツール�
 
 - [GitHubページ](https://github.com/omonomo/Cyroit): 過去のバージョンや更新履歴はこちらをご参照ください。
 - [小指の移動量が少ない日本語かな入力配列 「水草配列」](https://omonomo.github.io/Mizukusa/): オリジナル日本語かな入力配列を紹介しています。
+- [DefaultKeyBinding.dict サンプル](https://omonomo.github.io/DefaultKeyBinding/): タイトル通りです。
