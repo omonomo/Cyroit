@@ -9,7 +9,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ## フォントサンプル  
 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="733">  
+<img alt="ScreenShot" src="./images/SS_0.png" width="737">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
 <img alt="ScreenShot" src="./images/SS_1.png" width="746">  

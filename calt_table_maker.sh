@@ -312,7 +312,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る 左cかすでに逃げている寄せ付けない文字 中寄り以外の文字 移動しない
 backtrack=("${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${cC[@]}")
-input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityAC[@]}"  "${gravityVC[@]}")
+input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityAC[@]}"  "${gravityVC[@]}")
 lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
@@ -554,8 +554,8 @@ index=`expr ${index} + 1`
 
 # ===> <-
 
-# 右を見る 中寄り以外の文字 左に移動
-input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityAC[@]}" "${gravityVC[@]}")
+# 右を見る 幅広、中寄り以外の文字 左に移動
+input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityAC[@]}" "${gravityVC[@]}")
 lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
