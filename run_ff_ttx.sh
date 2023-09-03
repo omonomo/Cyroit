@@ -22,6 +22,7 @@ forge_ttx_help()
     echo "  -h  Display this information"
     echo "  -d  Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
     echo "  -C  End just before editing calt feature" # caltの編集・確認を繰り返す時用にcalt適用前のフォントを作成する
+    echo "  -p  Run calt patch only" # -C の続きを実行
     echo "  -c  Disable calt feature" # calt有無の見た目確認用
     echo "  -e  Disable add Nerd fonts" # NerdFonts無しの場合のサイズ確認用
     echo "  -F  Complete Mode (generate finished fonts)" # 完成品作成
@@ -38,6 +39,10 @@ elif [ "$1" = "-d" ]; then
 elif [ "$1" = "-C" ]; then
   echo "End just before editing calt feature"
   sh font_generator.sh -l -z -t -o -N "${font_familyname}" auto
+elif [ "$1" = "-p" ]; then
+  echo "Run calt patch only"
+  sh table_modificator.sh -p
+  exit 0
 elif [ "$1" = "-c" ]; then
   echo "Disable calt feature"
   sh font_generator.sh -l -z -t -c -o -N "${font_familyname}" auto
