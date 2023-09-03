@@ -13,9 +13,36 @@
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_version="1.0.7"
+font_version="1.1.0"
 fontforge_version="20230101"
 vendor_id="PfEd"
+
+# グリフ保管アドレス
+address_dvz_latin="64336" # 0ufb50 latinフォントのDVZアドレス
+address_visi_latin=`expr ${address_dvz_latin} + 18` # latinフォントの視認性向上アドレス ⁄|
+
+address_visi_kana=`expr ${address_visi_latin} + 2` # 仮名フォントの視認性向上アドレス ゠-➓
+address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
+
+address_visi_kanzi=`expr ${address_visi_kana} + 26` # 漢字フォントの視認性向上アドレス 〇-口
+address_calt_kanzi="1115493" # 漢字フォントのcalt置換アドレス
+
+address_dvz_latinkana=${address_dvz_latin} # latin仮名フォントのDVZアドレス
+address_zenhan_latinkana=`expr ${address_visi_kanzi} + 9` # latin仮名フォントの全角半角アドレス(縦書きの（-゠)
+address_vert_latinkana="65682" # latin仮名フォントのvert置換アドレス
+
+address_dvz=${address_dvz_latin} # DVZアドレス
+address_visi=${address_visi_latin} # 視認性向上アドレス
+address_zenhan=${address_zenhan_latinkana} # 全角半角アドレス
+address_store_end=`expr ${address_zenhan} + 281` # 保管グリフの最終アドレス(縦書きの゠)
+
+address_vert="1114179" # vert置換アドレス （
+address_vert_X=`expr ${address_vert} + 109` # vert置換アドレス ✂
+address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
+address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
+address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
+address_calt=`expr ${address_vert_kabu} + 7` # calt置換アドレス
+address_calt_end=`expr ${address_calt} + 103` # calt置換の最終アドレス(右に移動した z)
 
 buildNo=`date "+%s"`
 buildNo=`expr ${buildNo} % 315360000`
@@ -81,6 +108,9 @@ y_pos_super="273" # 上付きY座標移動量
 y_pos_sub="-166" # 下付きY座標移動量
 weight_extend_super_sub="12" # ウェイト調整
 
+# calt移動量
+x_pos_calt="20"
+
 # Set path to fontforge command
 fontforge_command="fontforge"
 
@@ -96,15 +126,16 @@ ${HOME}/Library/Fonts /Library/Fonts \
 leaving_tmp_flag="false" # 一時ファイル残す
 visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
-underline_flag="true" # アンダーライン付き
-heibon_flag="true" # ダッシュ破線化
-too_much_flag="false" # DVZ改変
+improve_visibility_flag="true" # ダッシュ破線化
+dvz_flag="true" # DVZ改変
+calt_flag="true" # calt対応
+nerd_flag="true" # Nerd fonts 追加
+oblique_flag="true" # オブリーク作成
 draft_flag="false" # 下書きモード
-oblique_flag="false" # オブリーク作成
-nerd_flag="false" # Nerd fonts 追加
+patch_flag="true" # パッチを当てる
+patch_only_flag="false" # パッチモード
 
 # Set filenames
-
 origin_latin_regular="Inconsolata-Regular.ttf"
 origin_latin_bold="Inconsolata-Bold.ttf"
 origin_kana_regular="circle-mplus-1m-regular.ttf"
@@ -140,6 +171,8 @@ modified_nerd="modified-nerd.ttf"
 
 merged_nerd_generator="merged_nerd_generator.pe"
 
+font_patcher="font_patcher.pe"
+
 ################################################################################
 # Pre-process
 ################################################################################
@@ -147,10 +180,10 @@ merged_nerd_generator="merged_nerd_generator.pe"
 # Print information message
 cat << _EOT_
 
----------------------
+----------------------------
 Custom font generator
 font version: ${font_version}
----------------------
+----------------------------
 
 _EOT_
 
@@ -170,17 +203,19 @@ font_generator_help()
     echo "  -n string              Set fontfamily suffix (\"string\")"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
-    echo "  -u                     Disable zenkaku and hankaku with underline"
-    echo "  -b                     Disable broken dash etc .."
-    echo "  -t                     Enable modified D, V and Z"
+    echo "  -b                     Disable glyphs with improved visibility"
+    echo "  -t                     Disable modified D, V and Z"
+    echo "  -c                     Disable calt feature"
+    echo "  -e                     Disable add Nerd fonts"
+    echo "  -o                     Disable generate oblique style"
     echo "  -d                     Enable draft mode (skip time-consuming processes)"
-    echo "  -o                     Enable generate oblique style"
-    echo "  -e                     Enable add Nerd fonts"
+    echo "  -P                     End just before patching"
+    echo "  -p                     Run font patch only"
     exit 0
 }
 
 # Get options
-while getopts hVf:vlN:n:Zzubtdoe OPT
+while getopts hVf:vlN:n:ZzbtceodPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -217,29 +252,37 @@ do
             echo "Option: Disable visible hankaku space"
             visible_hankaku_space_flag="false"
             ;;
-        "u" )
-            echo "Option: Disable zenkaku and hankaku with underline"
-            underline_flag="false"
-            ;;
         "b" )
-            echo "Option: Disable broken dash etc .."
-            heibon_flag="false"
+            echo "Option: Disable glyphs with improved visibility"
+            improve_visibility_flag="false"
             ;;
         "t" )
-            echo "Option: Enable modified D, V and Z"
-            too_much_flag="true"
+            echo "Option: Disable modified D, V and Z"
+            dvz_flag="false"
+            ;;
+        "c" )
+            echo "Option: Disable calt feature"
+            calt_flag="false"
+            ;;
+        "e" )
+            echo "Option: Disable add Nerd fonts"
+            nerd_flag="false"
+            ;;
+        "o" )
+            echo "Option: Disable generate oblique style"
+            oblique_flag="false"
             ;;
         "d" )
             echo "Option: Enable draft mode (skip time-consuming processes)"
             draft_flag="true"
             ;;
-        "o" )
-            echo "Option: Enable generate oblique style"
-            oblique_flag="true"
+        "P" )
+            echo "Option: End just before patching"
+            patch_flag="false"
             ;;
-        "e" )
-            echo "Option: Enable add Nerd fonts"
-            nerd_flag="true"
+        "p" )
+            echo "Option: Run font patch only"
+            patch_only_flag="true"
             ;;
         * )
             font_generator_help
@@ -250,109 +293,99 @@ done
 shift `expr $OPTIND - 1`
 
 # Get input fonts
-if [ $# -eq 1 -a "$1" = "auto" ]
-then
-    # Check existance of directories
-    tmp=""
-    for i in $fonts_directories
-    do
-        [ -d "${i}" ] && tmp="${tmp} ${i}"
-    done
-    fonts_directories=$tmp
-    # Search latin fonts
-    input_latin_regular=`find $fonts_directories -follow -name "${origin_latin_regular}" | head -n 1`
-    input_latin_bold=`find $fonts_directories -follow -name "${origin_latin_bold}" | head -n 1`
-    if [ -z "${input_latin_regular}" -o -z "${input_latin_bold}" ]
-    then
-        echo "Error: ${origin_latin_regular} and/or ${origin_latin_bold} not found" >&2
-        exit 1
-    fi
-    # Search kana fonts
-    input_kana_regular=`find $fonts_directories -follow -iname "${origin_kana_regular}" | head -n 1`
-    input_kana_bold=`find $fonts_directories -follow -iname "${origin_kana_bold}"    | head -n 1`
-    if [ -z "${input_kana_regular}" -o -z "${input_kana_bold}" ]
-    then
-        echo "Error: ${origin_kana_regular} and/or ${origin_kana_bold} not found" >&2
-        exit 1
-    fi
-    # Search kanzi fonts
-    input_kanzi_regular=`find $fonts_directories -follow -iname "${origin_kanzi_regular}" | head -n 1`
-    input_kanzi_bold=`find $fonts_directories -follow -iname "${origin_kanzi_bold}"    | head -n 1`
-    if [ -z "${input_kanzi_regular}" -o -z "${input_kanzi_bold}" ]
-    then
-        echo "Error: ${origin_kanzi_regular} and/or ${origin_kanzi_bold} not found" >&2
-        exit 1
-    fi
-    if [ ${nerd_flag} = "true" ]
-    then
-        # Search nerd fonts
-        input_nerd=`find $fonts_directories -follow -iname "${origin_nerd}" | head -n 1`
-        if [ -z "${input_nerd}" ]
-        then
-            echo "Error: ${origin_nerd} not found" >&2
+if [ "${patch_only_flag}" = "false" ]; then
+    if [ $# -eq 1 -a "$1" = "auto" ]; then
+        # Check existance of directories
+        tmp=""
+        for i in $fonts_directories
+        do
+            [ -d "${i}" ] && tmp="${tmp} ${i}"
+        done
+        fonts_directories=$tmp
+        # Search latin fonts
+        input_latin_regular=`find $fonts_directories -follow -name "${origin_latin_regular}" | head -n 1`
+        input_latin_bold=`find $fonts_directories -follow -name "${origin_latin_bold}" | head -n 1`
+        if [ -z "${input_latin_regular}" -o -z "${input_latin_bold}" ]; then
+            echo "Error: ${origin_latin_regular} and/or ${origin_latin_bold} not found" >&2
             exit 1
         fi
+        # Search kana fonts
+        input_kana_regular=`find $fonts_directories -follow -iname "${origin_kana_regular}" | head -n 1`
+        input_kana_bold=`find $fonts_directories -follow -iname "${origin_kana_bold}"    | head -n 1`
+        if [ -z "${input_kana_regular}" -o -z "${input_kana_bold}" ]; then
+            echo "Error: ${origin_kana_regular} and/or ${origin_kana_bold} not found" >&2
+            exit 1
+        fi
+        # Search kanzi fonts
+        input_kanzi_regular=`find $fonts_directories -follow -iname "${origin_kanzi_regular}" | head -n 1`
+        input_kanzi_bold=`find $fonts_directories -follow -iname "${origin_kanzi_bold}"    | head -n 1`
+        if [ -z "${input_kanzi_regular}" -o -z "${input_kanzi_bold}" ]; then
+            echo "Error: ${origin_kanzi_regular} and/or ${origin_kanzi_bold} not found" >&2
+            exit 1
+        fi
+        if [ ${nerd_flag} = "true" ]; then
+            # Search nerd fonts
+            input_nerd=`find $fonts_directories -follow -iname "${origin_nerd}" | head -n 1`
+            if [ -z "${input_nerd}" ]; then
+                echo "Error: ${origin_nerd} not found" >&2
+                exit 1
+            fi
+        fi
+    elif ( [ ${nerd_flag} = "false" ] && [ $# -eq 6 ] ) || ( [ ${nerd_flag} = "true" ] && [ $# -eq 7 ] )
+    then
+        # Get arguments
+        input_latin_regular=$1
+        input_latin_bold=$2
+        input_kana_regular=$3
+        input_kana_bold=$4
+        input_kanzi_regular=$5
+        input_kanzi_bold=$6
+        if [ ${nerd_flag} = "true" ]; then
+            input_nerd=$7
+        fi
+        # Check existance of files
+        if [ ! -r "${input_latin_regular}" ]; then
+            echo "Error: ${input_latin_regular} not found" >&2
+            exit 1
+        elif [ ! -r "${input_latin_bold}" ]; then
+            echo "Error: ${input_latin_bold} not found" >&2
+            exit 1
+        elif [ ! -r "${input_kana_regular}" ]; then
+            echo "Error: ${input_kana_regular} not found" >&2
+            exit 1
+        elif [ ! -r "${input_kana_bold}" ]; then
+            echo "Error: ${input_kana_bold} not found" >&2
+            exit 1
+        elif [ ! -r "${input_kanzi_regular}" ]; then
+            echo "Error: ${input_kanzi_regular} not found" >&2
+            exit 1
+        elif [ ! -r "${input_kanzi_bold}" ]; then
+            echo "Error: ${input_kanzi_bold} not found" >&2
+            exit 1
+        elif [ ${nerd_flag} = "true" ] && [ ! -r "${input_nerd}" ]; then
+            echo "Error: ${input_nerd} not found" >&2
+            exit 1
+        fi
+        # Check filename
+        [ "$(basename $input_latin_regular)" != "${origin_latin_regular}" ] &&
+            echo "Warning: ${input_latin_regular} does not seem to be ${origin_latin_regular}" >&2
+        [ "$(basename $input_latin_bold)" != "${origin_latin_bold}" ] &&
+            echo "Warning: ${input_latin_regular} does not seem to be ${origin_latin_bold}" >&2
+        [ "$(basename $input_kana_regular)" != "${origin_kana_regular}" ] &&
+            echo "Warning: ${input_kana_regular} does not seem to be ${origin_kana_regular}" >&2
+        [ "$(basename $input_kana_bold)" != "${origin_kana_bold}" ] &&
+            echo "Warning: ${input_kana_bold} does not seem to be ${origin_kana_bold}" >&2
+        [ "$(basename $input_kanzi_regular)" != "${origin_kanzi_regular}" ] &&
+            echo "Warning: ${input_kanzi_regular} does not seem to be ${origin_kanzi_regular}" >&2
+        [ "$(basename $input_kanzi_bold)" != "${origin_kanzi_bold}" ] &&
+            echo "Warning: ${input_kanzi_bold} does not seem to be ${origin_kanzi_bold}" >&2
+        [ ${nerd_flag} = "true" ] && [ "$(basename $input_nerd)" != "${origin_nerd}" ] &&
+            echo "Warning: ${input_nerd} does not seem to be ${origin_nerd}" >&2
+    else
+        echo "Error: missing arguments"
+        echo
+        font_generator_help
     fi
-elif ( [ ${nerd_flag} = "false" ] && [ $# -eq 6 ] ) || ( [ ${nerd_flag} = "true" ] && [ $# -eq 7 ] )
-then
-    # Get arguments
-    input_latin_regular=$1
-    input_latin_bold=$2
-    input_kana_regular=$3
-    input_kana_bold=$4
-    input_kanzi_regular=$5
-    input_kanzi_bold=$6
-    if [ ${nerd_flag} = "true" ]
-    then
-        input_nerd=$7
-    fi
-    # Check existance of files
-    if [ ! -r "${input_latin_regular}" ]
-    then
-        echo "Error: ${input_latin_regular} not found" >&2
-        exit 1
-    elif [ ! -r "${input_latin_bold}" ]
-    then
-        echo "Error: ${input_latin_bold} not found" >&2
-        exit 1
-    elif [ ! -r "${input_kana_regular}" ]
-    then
-        echo "Error: ${input_kana_regular} not found" >&2
-        exit 1
-    elif [ ! -r "${input_kana_bold}" ]
-    then
-        echo "Error: ${input_kana_bold} not found" >&2
-        exit 1
-    elif [ ! -r "${input_kanzi_regular}" ]
-    then
-        echo "Error: ${input_kanzi_regular} not found" >&2
-        exit 1
-    elif [ ! -r "${input_kanzi_bold}" ]
-    then
-        echo "Error: ${input_kanzi_bold} not found" >&2
-        exit 1
-    elif [ ${nerd_flag} = "true" ] && [ ! -r "${input_nerd}" ]
-    then
-        echo "Error: ${input_nerd} not found" >&2
-        exit 1
-    fi
-    # Check filename
-    [ "$(basename $input_latin_regular)" != "${origin_latin_regular}" ] &&
-        echo "Warning: ${input_latin_regular} does not seem to be ${origin_latin_regular}" >&2
-    [ "$(basename $input_latin_bold)" != "${origin_latin_bold}" ] &&
-        echo "Warning: ${input_latin_regular} does not seem to be ${origin_latin_bold}" >&2
-    [ "$(basename $input_kana_regular)" != "${origin_kana_regular}" ] &&
-        echo "Warning: ${input_kana_regular} does not seem to be ${origin_kana_regular}" >&2
-    [ "$(basename $input_kana_bold)" != "${origin_kana_bold}" ] &&
-        echo "Warning: ${input_kana_bold} does not seem to be ${origin_kana_bold}" >&2
-    [ "$(basename $input_kanzi_regular)" != "${origin_kanzi_regular}" ] &&
-        echo "Warning: ${input_kanzi_regular} does not seem to be ${origin_kanzi_regular}" >&2
-    [ "$(basename $input_kanzi_bold)" != "${origin_kanzi_bold}" ] &&
-        echo "Warning: ${input_kanzi_bold} does not seem to be ${origin_kanzi_bold}" >&2
-    [ ${nerd_flag} = "true" ] && [ "$(basename $input_nerd)" != "${origin_nerd}" ] &&
-        echo "Warning: ${input_nerd} does not seem to be ${origin_nerd}" >&2
-else
-    font_generator_help
 fi
 
 # Check fontforge existance
@@ -363,16 +396,14 @@ then
 fi
 
 # Make temporary directory
-if [ -w "/tmp" -a "${leaving_tmp_flag}" = "false" ]
-then
+if [ -w "/tmp" -a "${leaving_tmp_flag}" = "false" ]; then
     tmpdir=`mktemp -d /tmp/font_generator_tmpdir.XXXXXX` || exit 2
 else
     tmpdir=`mktemp -d ./font_generator_tmpdir.XXXXXX`    || exit 2
 fi
 
 # Remove temporary directory by trapping
-if [ "${leaving_tmp_flag}" = "false" ]
-then
+if [ "${leaving_tmp_flag}" = "false" ]; then
     trap "if [ -d \"$tmpdir\" ]; then echo 'Remove temporary files'; rm -rf $tmpdir; echo 'Abnormally terminated'; fi; exit 3" HUP INT QUIT
     trap "if [ -d \"$tmpdir\" ]; then echo 'Remove temporary files'; rm -rf $tmpdir; echo 'Abnormally terminated'; fi" EXIT
 else
@@ -687,7 +718,15 @@ while (i < SizeOf(input_list))
  #    Select(0u1e00) # Ḁ
 
 # D (クロスバーを付加することで少しくどい感じに)
-    if ("${too_much_flag}" == "true")
+    Select(0u0044); Copy() # D
+    Select(${address_dvz_latin}); Paste() # 避難所
+    Select(${address_dvz_latin} + 3); Paste()
+    Select(${address_dvz_latin} + 6); Paste()
+    Select(${address_dvz_latin} + 9); Paste()
+    Select(${address_dvz_latin} + 12); Paste()
+    Select(${address_dvz_latin} + 15); Paste()
+
+ #    if ("${dvz_flag}" == "true")
         Select(0u00af); Copy()  # macron
         Select(65552);  Paste() # Temporary glyph
         Scale(80, 109); Copy()
@@ -715,7 +754,7 @@ while (i < SizeOf(input_list))
  #        Select(0u01c5) # ǅ
  #        Select(0u01f2) # ǲ
  #        Select(0u1e12) # Ḓ
-    endif
+ #    endif
 
 # G (折れ曲がったところを少し上げる)
     # 周り
@@ -871,7 +910,15 @@ while (i < SizeOf(input_list))
  #    Select(0ua758) # Ꝙ
 
 # V (左上にセリフを追加してYやレと区別しやすく)
-    if ("${too_much_flag}" == "true")
+    Select(0u0056); Copy() # V
+    Select(${address_dvz_latin} + 1); Paste() # 避難所
+    Select(${address_dvz_latin} + 4); Paste()
+    Select(${address_dvz_latin} + 7); Paste()
+    Select(${address_dvz_latin} + 10); Paste()
+    Select(${address_dvz_latin} + 13); Paste()
+    Select(${address_dvz_latin} + 16); Paste()
+
+ #    if ("${dvz_flag}" == "true")
         # 右上の先端を少し伸ばす
         Select(0u2588); Copy() # Full block
         Select(65552);  Paste() # Temporary glyph
@@ -909,10 +956,18 @@ while (i < SizeOf(input_list))
  #        Select(0u1e7c) # Ṽ
  #        Select(0u1e7e) # Ṿ
  #        Select(0ua75e) # Ꝟ
-    endif
+ #    endif
 
 # Z (クロスバーを付加してゼェーットな感じに)
-    if ("${too_much_flag}" == "true")
+    Select(0u005a); Copy() # V
+    Select(${address_dvz_latin} + 2); Paste() # 避難所
+    Select(${address_dvz_latin} + 5); Paste()
+    Select(${address_dvz_latin} + 8); Paste()
+    Select(${address_dvz_latin} + 11); Paste()
+    Select(${address_dvz_latin} + 14); Paste()
+    Select(${address_dvz_latin} + 17); Paste()
+
+ #    if ("${dvz_flag}" == "true")
         Select(0u00af); Copy()  # macron
         Select(65552);  Paste() # Temporary glyph
         Scale(110, 109); Rotate(-2)
@@ -925,6 +980,7 @@ while (i < SizeOf(input_list))
         endif
         SetWidth(500)
         RemoveOverlap()
+
         Select(65552);  Clear() # Temporary glyph
 
  #        Select(0u005a); Copy() # Z
@@ -939,7 +995,7 @@ while (i < SizeOf(input_list))
  #        Select(0u1e94) # Ẕ
  #        Select(0u2c6b) # Ⱬ
  #        Select(0u2c7f) # Ɀ
-    endif
+ #    endif
 
 # b (縦線を少し細くする)
     Select(0u2588); Copy() # Full block
@@ -962,6 +1018,29 @@ while (i < SizeOf(input_list))
  #    Select(0u1e05) # ḅ
  #    Select(0u1e07) # ḇ
  #    Select(0ua797) # ꞗ
+
+# i (ほんの少し右へ移動)
+    Select(0u0069) # i
+    SelectMore(0u00ec) # ì
+    SelectMore(0u00ed) # í
+    SelectMore(0u00ee) # î
+    SelectMore(0u00ef) # ï
+    SelectMore(0u0129) # ĩ
+    SelectMore(0u012b) # ī
+    SelectMore(0u012d) # ĭ
+    SelectMore(0u012f) # į
+    SelectMore(0u0130) # ı
+    SelectMore(0u0268) # ɨ
+    SelectMore(0u0209) # ȉ
+    SelectMore(0u020b) # ȋ
+    SelectMore(0u1e2f) # ḯ
+    SelectMore(0u1ec9) # ỉ
+    SelectMore(0u1ecb) # ị
+ #    Select(0u01d0) # ǐ
+ #    Select(0u1d96) # ᶖ
+ #    Select(0u1e2d) # ḭ
+    Move(10, 0)
+    SetWidth(500)
 
 # l (左を少しカットして少し左へ移動)
     Select(0u2588); Copy() # Full block
@@ -1311,6 +1390,10 @@ while (i < SizeOf(input_list))
 
     Select(65552); Clear() # Temporary glyph
 
+# () 少し下げる
+    Select(0u0028); Move(0, -15); SetWidth(500) # (
+    Select(0u0029); Move(0, -15); SetWidth(500) # )
+
 # * (スポーク6つに変更)
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
@@ -1416,7 +1499,10 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
 
 # ⁄ (/と区別するため分割)
-    if ("${heibon_flag}" == "true")
+    Select(0u2044); Copy() # ⁄
+    Select(${address_visi_latin}); Paste() # 避難所
+
+ #    if ("${improve_visibility_flag}" == "true")
         Select(0u2044); Copy() # ⁄
         Select(65552);  Paste() # Temporary glyph
         Scale(120); Copy()
@@ -1425,7 +1511,7 @@ while (i < SizeOf(input_list))
         OverlapIntersect()
         SetWidth(500)
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # ⁑ (漢字フォントを置換)
     Select(0u002a); Copy() # *
@@ -1659,11 +1745,18 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
 
 # | (破線にし、縦に伸ばして少し上へ移動) ※ ⌀⎈ の加工より後にすること
-    if ("${heibon_flag}" == "true")
+    Select(0u007c); Copy() # |
+    Select(${address_visi_latin} + 1); Paste() # 避難所
+    Move(0, 85)
+    PasteWithOffset(0, 55)
+    SetWidth(500)
+    RemoveOverlap()
+
+ #    if ("${improve_visibility_flag}" == "true")
         Select(0u00a6) # ¦
-    else
-        Select(0u007c) # |
-    endif
+ #    else
+ #        Select(0u007c) # |
+ #    endif
     Copy()
     Select(0u007c); Paste() # |
     Move(0, 85)
@@ -2134,7 +2227,10 @@ while (i < SizeOf(input_list))
 # ひらがなのグリフ変更
     Print("Edit hiragana and katakana")
 # ゠ (左上を折り曲げる)
-    if ("${heibon_flag}" == "true")
+    Select(0u30a0); Copy() # ゠
+    Select(${address_visi_kana}); Paste() # 避難所
+
+ #    if ("${improve_visibility_flag}" == "true")
         Select(0u25a0); Copy() # Black square
         Select(65552);  Paste() # Temporary glyph
         Move(250, 0)
@@ -2143,7 +2239,7 @@ while (i < SizeOf(input_list))
         Copy()
         Select(0u30a0); PasteInto() # ゠
         OverlapIntersect()
-    
+
         Select(0u25a0); Copy() # Black square
         Select(65552);  Paste() # Temporary glyph
         Move(-500, 0)
@@ -2163,7 +2259,7 @@ while (i < SizeOf(input_list))
         RemoveOverlap()
         Simplify()
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # ー (少し下げる)
     Select(0u30fc); Move(0, -14)
@@ -4532,7 +4628,10 @@ while (i < SizeOf(input_list))
     Print("Edit kanzi busyu")
 
 # ⼣
-    if ("${heibon_flag}" == "true")
+    Select(0u2f23); Copy() # ⼣
+    Select(${address_visi_kana} + 1); Paste() # 避難所
+
+ #    if ("${improve_visibility_flag}" == "true")
         Select(0u30fb); Copy() # ・
         Select(65552);  Paste() # Temporary glyph
         if (input_list[i] == "${input_kana_regular}")
@@ -4546,38 +4645,58 @@ while (i < SizeOf(input_list))
         RemoveOverlap()
         Simplify()
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # enダッシュ、emダッシュ加工
     Print("Edit en and em dashes")
 # –
+    Select(0u2013); Copy() # –
+    Select(${address_visi_kana} + 2); Paste() # 避難所
+    Move(0, 58)
+    SetWidth(500)
+    Copy()
+    Select(${address_visi_kana} + 3); Paste() # 避難所
+    Rotate(90)
+    Move(230, 30)
+    SetWidth(1000)
+
     Select(0u2013) # –
-    if ("${heibon_flag}" == "true")
+ #    if ("${improve_visibility_flag}" == "true")
         Copy()
         PasteWithOffset(200, 0); PasteWithOffset(-200, 0)
         OverlapIntersect()
-    endif
+ #    endif
     Move(0, 58)
     SetWidth(500)
-
-# —
-    Select(0u2014) # —
-    if ("${heibon_flag}" == "true")
-        Copy()
-        PasteWithOffset(323, 0); PasteWithOffset(-647, 0)
-        OverlapIntersect(); Copy()
-        Rotate(180)
-        PasteInto()
-        OverlapIntersect()
-    endif
-    Move(0, 45)
-    SetWidth(1000)
 
 # ︲
     Select(0u2013); Copy() # –
     Select(0ufe32); Paste() # ︲
     Rotate(90)
     Move(230, 30)
+    SetWidth(1000)
+
+# —
+    Select(0u2014); Copy() # —
+    Select(${address_visi_kana} + 4); Paste() # 避難所
+    Move(0, 45)
+    SetWidth(1000)
+    Copy()
+    Select(${address_visi_kana} + 5); Paste() # 避難所
+    Rotate(90)
+    Move(0, 30)
+    SetWidth(1000)
+
+    Select(0u2014) # —
+ #    if ("${improve_visibility_flag}" == "true")
+        Copy()
+        PasteWithOffset(323, 0); PasteWithOffset(-647, 0)
+        OverlapIntersect(); Copy()
+        Rotate(180)
+        PasteInto()
+        OverlapIntersect()
+ #    endif
+    Move(0, 45)
     SetWidth(1000)
 
 # ︱
@@ -4700,6 +4819,14 @@ while (i < SizeOf(input_list))
     Move(230, 0)
     SetWidth(1000)
 
+# 〈〉⟨⟩⸨⸩ (少し上げる)
+    Select(0u2329); Move(0, 20); SetWidth(500) # 〈
+    Select(0u232a); Move(0, 20); SetWidth(500) # 〉
+    Select(0u27e8); Move(0, 20); SetWidth(500) # ⟨
+    Select(0u27e9); Move(0, 20); SetWidth(500) # ⟩
+    Select(0u2e28); Move(0, 20); SetWidth(500) # ⸨
+    Select(0u2e29); Move(0, 20); SetWidth(500) # ⸩
+
 # ⏏ (小さくして下に移動)
     Select(0u23cf) # ⏏
     Scale(90)
@@ -4737,7 +4864,14 @@ while (i < SizeOf(input_list))
    Select(0u2702); Paste() # ✂
 
 # ➀-➓ (下線を引く)
-    if ("${heibon_flag}" == "true")
+    j = 0
+    while (j < 20)
+        Select(0u2780 + j); Copy()
+        Select(${address_visi_kana} + 6 + j); Paste() # 避難所
+        j += 1
+    endloop
+
+ #    if ("${improve_visibility_flag}" == "true")
         Select(0u005f); Copy() # _
         Select(65552);  Paste() # Temporary glyph
         if (input_list[i] == "${input_kana_regular}")
@@ -4764,7 +4898,7 @@ while (i < SizeOf(input_list))
             j += 1
         endloop
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # --------------------------------------------------
 
@@ -4939,7 +5073,7 @@ while (i < SizeOf(input_list))
 # 全角横向 (後でグリフ上書き)
     hori = [0uff0d, 0uff1b, 0uff1c, 0uff1e,\
             0uff5f, 0uff60]  # －；＜＞,｟｠
-    vert = 1114129
+    vert = ${address_vert_kana}
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
@@ -5159,7 +5293,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u97f3) # 音
     RemovePosSub("*")
 
-    # aalt 1対1 (記号類を削除)
+# aalt 1対1 (記号類を削除)
     Select(0u342e) # 㐮
     lookups = GetPosSub("*") # フィーチャを取り出す
 
@@ -5195,7 +5329,7 @@ while (i < SizeOf(input_list))
     Select(0u76a8); RemovePosSub("*") # 皨
     AddPosSub(lookups[0][0],glyphName)
 
-    # aalt 複数 (記号類を削除)
+# aalt 複数 (記号類を削除)
     Select(0u3402) # 㐂
     lookups = GetPosSub("*") # フィーチャを取り出す
 
@@ -5217,7 +5351,7 @@ while (i < SizeOf(input_list))
     Select(0u6674) # 晴
     AddPosSub(lookups[0][0],glyphName)
 
-    # aalt nalt 1対1
+# aalt nalt 1対1
     Print("Edit aalt nalt lookups")
     Select(0u4e2d) # 中
     lookups = GetPosSub("*") # フィーチャを取り出す
@@ -5331,11 +5465,14 @@ while (i < SizeOf(input_list))
 
 # --------------------------------------------------
 
-    if ("${heibon_flag}" == "true")
+ #    if ("${improve_visibility_flag}" == "true")
 # Edit kanzi (漢字のグリフ変更)
         Print("Edit kanzi")
-    
+
 # 〇 (上にうろこを追加)
+        Select(0u3007); Copy() # 〇
+        Select(${address_visi_kanzi}); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5343,10 +5480,13 @@ while (i < SizeOf(input_list))
         PasteWithOffset(319, 724)
         SetWidth(1024)
         RemoveOverlap()
-    
+
         Select(65552); Clear() # Temporary glyph
-    
+
 # 一 (右にうろこを追加)
+        Select(0u4e00); Copy() # 一
+        Select(${address_visi_kanzi} + 1); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5362,6 +5502,9 @@ while (i < SizeOf(input_list))
         Select(65552); Clear() # Temporary glyph
 
 # 二 (一に合わす)
+        Select(0u4e8c); Copy() # 二
+        Select(${address_visi_kanzi} + 2); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5375,8 +5518,11 @@ while (i < SizeOf(input_list))
         Simplify()
         SetWidth(1024)
         Select(65552); Clear() # Temporary glyph
-    
+
 # 三 (デザイン統一のため一二に合わす)
+        Select(0u4e09); Copy() # 三
+        Select(${address_visi_kanzi} + 3); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5392,6 +5538,9 @@ while (i < SizeOf(input_list))
         Select(65552); Clear() # Temporary glyph
 
 # 工 (右下にうろこを追加)
+        Select(0u5de5); Copy() # 工
+        Select(${address_visi_kanzi} + 4); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5405,8 +5554,11 @@ while (i < SizeOf(input_list))
         Simplify()
         SetWidth(1024)
         Select(65552); Clear() # Temporary glyph
-    
+
 # 力 (右上にうろこを追加)
+        Select(0u529b); Copy() # 力
+        Select(${address_visi_kanzi} + 5); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5423,6 +5575,9 @@ while (i < SizeOf(input_list))
         Select(65552); Clear() # Temporary glyph
 
 # 夕 (右上にうろこを追加)
+        Select(0u5915); Copy() # 夕
+        Select(${address_visi_kanzi} + 6); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5440,6 +5595,9 @@ while (i < SizeOf(input_list))
         Select(65552); Clear() # Temporary glyph
 
 # 卜 (てっぺんにうろこを追加)
+        Select(0u535c); Copy() # 卜
+        Select(${address_visi_kanzi} + 7); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5455,6 +5613,9 @@ while (i < SizeOf(input_list))
         Select(65552); Clear() # Temporary glyph
 
 # 口 (右上にうろこを追加)
+        Select(0u53e3); Copy() # 口
+        Select(${address_visi_kanzi} + 8); Paste() # 避難所
+
         Select(0u002e); Copy() # Full stop
         Select(65552);  Paste() # Temporary glyph
         Scale(59); Copy()
@@ -5472,7 +5633,7 @@ while (i < SizeOf(input_list))
         Simplify()
         SetWidth(1024)
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # 土吉 (追加)
     Select(0u25a0); Copy() # Black square
@@ -6084,6 +6245,27 @@ while (i < SizeOf(input_list))
 
 # --------------------------------------------------
 
+# calt 対応 (スロットの確保、後でグリフ上書き)
+ #    if ("${calt_flag}" == "true")
+        j = 0
+        k = ${address_calt_kanzi} # この位置でないと最終的に上手く収録されないっぽい
+        while (j < 52)
+            Select(0u0041 + j % 26); Copy() # A
+            Select(k); Paste()
+            j += 1
+            k += 1
+        endloop
+        j = 0
+        while (j < 52)
+            Select(0u0061 + j % 26); Copy() # a
+            Select(k); Paste()
+            j += 1
+            k += 1
+        endloop
+ #    endif
+
+# --------------------------------------------------
+
 # ボールド漢字等のウェイト調整
     if ("${draft_flag}" == "false")
         if (input_list[i] == "${input_kanzi_bold}")
@@ -6210,7 +6392,7 @@ while (i < SizeOf(latin_sfd_list))
 # --------------------------------------------------
 
 # 全角スペース可視化
-    if ("${visible_zenkaku_space_flag}" == "true")
+ #    if ("${visible_zenkaku_space_flag}" == "true")
         Print("Edit zenkaku space")
         Select(0u25a0); Copy() # Black square
         Select(65552);  Paste()
@@ -6232,10 +6414,10 @@ while (i < SizeOf(latin_sfd_list))
         OverlapIntersect()
 
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # 半角スペース可視化
-    if ("${visible_hankaku_space_flag}" == "true")
+ #    if ("${visible_hankaku_space_flag}" == "true")
         Print("Edit hankaku space")
         Select(0u25a0); Copy() # Black square
         Select(65552);  Paste() # Temporary glyph
@@ -6259,7 +6441,7 @@ while (i < SizeOf(latin_sfd_list))
         SetWidth(500)
 
         Select(65552); Clear() # Temporary glyph
-    endif
+ #    endif
 
 # ~ (少し上へ移動、M+のグリフに置き換え)
     Print("Edit ~")
@@ -6473,7 +6655,7 @@ while (i < SizeOf(latin_sfd_list))
 
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
-    if ("${underline_flag}" == "true")
+ #    if ("${improve_visibility_flag}" == "true")
         # 下線作成
         Select(0u25a0); Copy() # Black square
         Select(65552);  Paste()
@@ -6494,14 +6676,14 @@ while (i < SizeOf(latin_sfd_list))
         Select(65553); Paste()
         Rotate(-90, 490, 340)
         SetWidth(1000)
-    endif
+ #    endif
 
     # 半角英数記号を全角形にコピー、加工
     # ! - }
     j = 0
     while (j < 93)
         if (j != 62) # ＿
-            Select(0u0021 + j);    Copy()
+            Select(0u0021 + j); Copy()
             Select(0uff01 + j); Paste()
             Move(230, 0)
         endif
@@ -6569,7 +6751,7 @@ while (i < SizeOf(latin_sfd_list))
 
 # 縦書き形句読点
     hori = [0uff0c, 0u3001, 0u3002] # ，、。
-    vert = 65040 # 0ufe10
+    vert = 0ufe10
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
@@ -6587,7 +6769,7 @@ while (i < SizeOf(latin_sfd_list))
 
 # CJK互換形括弧
     hori = [0u3016, 0u3017] # 〖〗
-    vert = 65047 # 0ufe17
+    vert = 0ufe17
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
@@ -6601,7 +6783,7 @@ while (i < SizeOf(latin_sfd_list))
             0u3014, 0u3015, 0u3010, 0u3011,\
             0u300a, 0u300b, 0u3008, 0u3009,\
             0u300c, 0u300d, 0u300e, 0u300f] # （）｛｝, 〔〕【】, 《》〈〉, 「」『』
-    vert = 65077 # 0ufe35
+    vert = 0ufe35
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
@@ -6612,7 +6794,7 @@ while (i < SizeOf(latin_sfd_list))
     endloop
 
     hori = [0uff3b, 0uff3d] # ［］
-    vert = 65095 # 0ufe47
+    vert = 0ufe47
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
@@ -6624,13 +6806,14 @@ while (i < SizeOf(latin_sfd_list))
 
 # 縦書き用全角形他 (vertフィーチャ用)
     Print("Edit vert glyphs")
+    k = 0
     hori = [0uff08, 0uff09, 0uff0c, 0uff0e,\
             0uff1a, 0uff1d, 0uff3b, 0uff3d,\
             0uff3f, 0uff5b, 0uff5c, 0uff5d,\
             0uff5e, 0uffe3,\
             0uff0d, 0uff1b, 0uff1c, 0uff1e,\
             0uff5f, 0uff60] # （），．, ：＝［］, ＿｛｜｝, ～￣, －；＜＞, ｟｠
-    vert = 65682
+    vert = ${address_vert_latinkana}
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
@@ -6640,6 +6823,7 @@ while (i < SizeOf(latin_sfd_list))
         else
             Rotate(-90, 490, 340)
         endif
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
         Select(65553);  Copy() # 縦線追加
         Select(vert + j); PasteInto()
         SetWidth(1000)
@@ -6682,6 +6866,7 @@ while (i < SizeOf(latin_sfd_list))
             VFlip()
             CorrectDirection()
         endif
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
         Select(65553);  Copy() # 縦線追加
         Select(vert + j); PasteInto()
         SetWidth(1000)
@@ -6697,6 +6882,8 @@ while (i < SizeOf(latin_sfd_list))
 # 横書き全角形に下線追加
     j = 0 # ！ - ｠
     while (j < 96)
+        Select(0uff01 + j)
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
         Select(65552); Copy()
         Select(0uff01 + j); PasteInto()
         SetWidth(1000)
@@ -6705,35 +6892,50 @@ while (i < SizeOf(latin_sfd_list))
 
     j = 0 # ￠ - ￦
     while (j < 7)
+        Select(0uffe0 + j)
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
         Select(65552); Copy()
         Select(0uffe0 + j); PasteInto()
         SetWidth(1000)
         j += 1
     endloop
 
-    Select(65552);  Copy()
-    Select(0u309b); PasteInto() # ゛
-    SetWidth(1000)
+    hori = [0u309b, 0u309c, 0u203c, 0u2047,\
+            0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+    j = 0
+    while (j < SizeOf(hori))
+        Select(hori[j])
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
+        Select(65552);  Copy()
+        Select(hori[j]); PasteInto()
+        SetWidth(1000)
+        j += 1
+    endloop
 
-    Select(65552);  Copy()
-    Select(0u309c); PasteInto() # ゜
-    SetWidth(1000)
-
-    Select(65552);  Copy()
-    Select(0u203c); PasteInto() # ‼
-    SetWidth(1000)
-
-    Select(65552);  Copy()
-    Select(0u2047); PasteInto() # ⁇
-    SetWidth(1000)
-
-    Select(65552);  Copy()
-    Select(0u2048); PasteInto() # ⁈
-    SetWidth(1000)
-
-    Select(65552);  Copy()
-    Select(0u2049); PasteInto() # ⁉
-    SetWidth(1000)
+# 保管しているDVZに下線追加
+    j = 0
+    while (j < 3)
+        Select(${address_dvz_latinkana} + j)
+        SetWidth(500)
+        Copy()
+        Select(${address_dvz_latinkana} + 9 + j); Paste()
+        SetWidth(500)
+        Select(${address_dvz_latinkana} + 3 + j); Paste()
+        Move(230, 0)
+        SetWidth(1000)
+        Copy()
+        Select(${address_dvz_latinkana} + 6 + j); Paste()
+        SetWidth(1000)
+        Select(${address_dvz_latinkana} + 12 + j); Paste()
+        Select(${address_dvz_latinkana} + 15 + j); Paste()
+        Select(65552); Copy() # 下線追加
+        Select(${address_dvz_latinkana} + 12 + j); PasteInto()
+        SetWidth(1000)
+        Select(65553); Copy() # 縦線追加
+        Select(${address_dvz_latinkana} + 15 + j); PasteInto()
+        SetWidth(1000)
+        j += 1
+    endloop
 
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
@@ -6742,7 +6944,7 @@ while (i < SizeOf(latin_sfd_list))
     Print("Edit hankaku")
 
     Select(65552); Clear() # Temporary glyph
-    if ("${underline_flag}" == "true")
+ #    if ("${improve_visibility_flag}" == "true")
         # 下線作成
         Select(0u25a0); Copy() # Black square
         Select(65552);  Paste() # Temporary glyph
@@ -6756,18 +6958,33 @@ while (i < SizeOf(latin_sfd_list))
         Select(65552); PasteWithOffset(-150, -510)
         Move(0, ${y_pos_space})
         OverlapIntersect()
-    endif
+ #    endif
 
     j = 0
     while (j < 63)
+        Select(0uff61 + j) # ｡-ﾟ
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(500); k += 1
         Select(65552); Copy()
         Select(0uff61 + j); PasteInto() # ｡-ﾟ
-
         SetWidth(500)
         j += 1
     endloop
 
     Select(65552); Clear() # Temporary glyph
+
+# 保管しているグリフを置き換え
+    Select(${address_visi_latin} + 1); Copy() # |
+    Select(${address_zenhan_latinkana} + 10); Paste()
+    Move(230, 0)
+    Rotate(-90, 490, 340)
+    SetWidth(1000)
+    Select(${address_zenhan_latinkana} + 200); Paste()
+    Move(230, 0)
+    SetWidth(1000)
+    Select(${address_visi_kana}); Copy() # ゠
+    Select(${address_zenhan_latinkana} + k); Paste()
+    Rotate(-90, 490, 340)
+    SetWidth(1000)
 
 # --------------------------------------------------
 
@@ -7273,7 +7490,7 @@ copyright         = "${copyright9}" \\
                   + "${copyright5}" \\
                   + "${copyright0}"
 
-usage = "Usage: merged_nerd_generator.pe fontfamily-fontstyle.ttf ..."
+usage = "Usage: ${merged_nerd_generator} fontfamily-fontstyle.ttf ..."
 
 # Get arguments
 if (\$argc == 1)
@@ -7379,7 +7596,7 @@ _EOT_
 cat > ${tmpdir}/${parameter_modificator} << _EOT_
 #!$fontforge_command -script
 
-usage = "Usage: parameter_modificator.pe fontfamily-fontstyle.ttf ..."
+usage = "Usage: ${parameter_modificator} fontfamily-fontstyle.ttf ..."
 
 # Get arguments
 if (\$argc == 1)
@@ -7420,10 +7637,10 @@ while (i < \$argc)
     lookups = GetPosSub("*") # フィーチャを取り出す
 
     # ✂
-    Select(1114288)
+    Select(${address_vert_X}) # グリフの数によって変更の必要あり
     glyphName = GlyphInfo("Name")
     Select(0u2702) # ✂
-    AddPosSub(lookups[0][0],glyphName) # vertフィーチャを追加
+    AddPosSub(lookups[0][0], glyphName) # vertフィーチャを追加
 
     # 組文字 (㍉-㍻)
     hori = [0u3349, 0u3314, 0u334d, 0u3327,\
@@ -7431,30 +7648,119 @@ while (i < \$argc)
             0u332b, 0u334a, 0u3322, 0u3303,\
             0u3318, 0u3357, 0u3323, 0u333b,\
             0u337e, 0u337d, 0u337c, 0u337b]
-    vert = 1114309
+    vert = ${address_vert_mm} # グリフの数によって変更の必要あり
     j = 0
     while (j < SizeOf(hori))
         Select(vert + j)
         glyphName = GlyphInfo("Name")
         Select(hori[j])
-        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[0][0], glyphName)
         j += 1
     endloop
     # 組文字 (㍿-㋿)
     hori = [0u337f, 0u3316, 0u3305, 0u3333,\
             0u334e, 0u3315, 0u32ff]
-    vert = 1114642
+    vert = ${address_vert_kabu} # グリフの数によって変更の必要あり
     j = 0
     while (j < SizeOf(hori))
         Select(vert + j)
         glyphName = GlyphInfo("Name")
         Select(hori[j])
-        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[0][0], glyphName)
         j += 1
     endloop
 
+# calt 対応
+ #    if ("${calt_flag}" == "true")
+        Print("Add calt lookups")
+        lookups = GetLookups("GSUB"); numlookups = SizeOf(lookups)
+
+        # グリフ変換用 lookup
+        lookupName = "単純置換 (中)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1]) # lookup の最後に追加
+        lookupSub0 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub0)
+
+        lookupName = "単純置換 (左)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+        k = vert + j # k は前 (㋿) の続き
+        j = 0
+        while (j < 26)
+            Select(0u0041 + j); Copy() # A
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Move(-${x_pos_calt}, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # 左→中
+            glyphName = GlyphInfo("Name")
+            Select(0u0041 + j) # A
+            AddPosSub(lookupSub1, glyphName) # 左←中
+            j += 1
+            k += 1
+        endloop
+        j = 0
+        while (j < 26)
+            Select(0u0061 + j); Copy() # a
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Move(-${x_pos_calt}, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # 左→中
+            glyphName = GlyphInfo("Name")
+            Select(0u0061 + j) # a
+            AddPosSub(lookupSub1, glyphName) # 左←中
+            j += 1
+            k += 1
+        endloop
+
+        lookupName = "単純置換 (右)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+        j = 0
+        while (j < 26)
+            Select(0u0041 + j); Copy() # A
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Move(${x_pos_calt}, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # 中←右
+            glyphName = GlyphInfo("Name")
+            Select(0u0041 + j) # A
+            AddPosSub(lookupSub1, glyphName) # 中→右
+            j += 1
+            k += 1
+        endloop
+        j = 0
+        while (j < 26)
+            Select(0u0061 + j); Copy() # a
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Move(${x_pos_calt}, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # 中←右
+            glyphName = GlyphInfo("Name")
+            Select(0u0061 + j) # a
+            AddPosSub(lookupSub1, glyphName) # 中→右
+            j += 1
+            k += 1
+        endloop
+
+        # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
+        lookupName = "'zero' 文脈依存の異体字に後で換える"
+        AddLookup(lookupName, "gsub_single", 0, [["zero",[["DFLT",["dflt"]]]]], lookups[numlookups - 1])
+        Select(0u00a0); glyphName = GlyphInfo("Name")
+        Select(0u0020)
+
+        lookupSub = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub)
+        AddPosSub(lookupSub, glyphName)
+ #    endif
+
     Print("Add aalt lookups")
-    # aalt 1対1
+# aalt 1対1
     Select(0u342e) # 㐮
     lookups = GetPosSub("*") # フィーチャを取り出す
 
@@ -7482,13 +7788,13 @@ while (i < \$argc)
         AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
-    # aalt 複数
+# aalt 複数
     Select(0u3402) # 㐂
     lookups = GetPosSub("*") # フィーチャを取り出す
 
     Select(0u4e2a) # 个
     glyphName = GlyphInfo("Name")
-    Select(0u30f6); RemovePosSub("*") # ヶ
+    Select(0u30f6); # ヶ vertフィーチャを消さないためにRemoveしない
     AddPosSub(lookups[0][0],glyphName) # 1対複数のaaltフィーチャを追加
     Select(0u500b) # 個
     glyphName = GlyphInfo("Name")
@@ -7578,7 +7884,7 @@ while (i < \$argc)
     endloop
 
     Print("Add aalt nalt lookups")
-    # aalt nalt 1対1
+# aalt nalt 1対1
     Select(0u4e2d) # 中
     lookups = GetPosSub("*") # フィーチャを取り出す
 
@@ -7616,7 +7922,7 @@ while (i < \$argc)
         j += 1
     endloop
 
-    # aalt nalt 複数
+# aalt nalt 複数
     Select(0u4f01) # 企
     lookups = GetPosSub("*") # フィーチャを取り出す
 
@@ -7789,7 +8095,7 @@ while (i < \$argc)
  #    SetVWidth(512)
 
  #    #  正立するグリフは高さ1024emにする
- #    if (0 < SelectIf(0u00a7)); SetVWidth(1024); endif 
+ #    if (0 < SelectIf(0u00a7)); SetVWidth(1024); endif
  #    if (0 < SelectIf(0u00a9)); SetVWidth(1024); endif
  #    if (0 < SelectIf(0u00ae)); SetVWidth(1024); endif
  #    if (0 < SelectIf(0u00b1)); SetVWidth(1024); endif
@@ -7902,7 +8208,7 @@ _EOT_
 cat > ${tmpdir}/${oblique_converter} << _EOT_
 #!$fontforge_command -script
 
-usage = "Usage: oblique_converter.pe fontfamily-fontstyle.ttf ..."
+usage = "Usage: ${oblique_converter} fontfamily-fontstyle.ttf ..."
 
 # Get arguments
 if (\$argc == 1)
@@ -7982,56 +8288,358 @@ Quit()
 _EOT_
 
 ################################################################################
+# Generate font patcher
+################################################################################
+
+cat > ${tmpdir}/${font_patcher} << _EOT_
+#!$fontforge_command -script
+
+usage = "Usage: ${font_patcher} fontfamily-fontstyle.nopatch.ttf ..."
+
+# Get arguments
+if (\$argc == 1)
+    Print(usage)
+    Quit()
+endif
+
+Print("- Patch the font -")
+
+# Begin loop
+i = 1
+while (i < \$argc)
+# Check filename
+     input_ttf = \$argv[i]
+    input_nop = input_ttf:t:r # :t:r ファイル名のみ抽出
+    if (input_ttf:t:e != "ttf") # :t:e 拡張子のみ抽出
+        Print(usage)
+        Quit()
+    endif
+    input     = input_nop:t:r # :t:r ファイル名のみ抽出
+    if (input_nop:t:e != "nopatch") # :t:e 拡張子のみ抽出
+        Print(usage)
+        Quit()
+    endif
+
+    hypen_index = Strrstr(input, '-') # '-'を後ろから探す('-'から前の文字数を取得、見つからないと-1)
+    if (hypen_index == -1)
+        Print(usage)
+        Quit()
+    endif
+
+# Get parameters
+    fontfamily = Strsub(input, 0, hypen_index) # 始めから'-'までを取得 (ファミリー名)
+    input_style  = Strsub(input, hypen_index + 1) # '-'から後ろを取得 (スタイル)
+
+    fontfamilysuffix = "${font_familyname_suffix}"
+    version = "${font_version}"
+
+    if (input_style == "BoldOblique")
+        output_style = input_style
+        style        = "Bold Oblique"
+		else
+		    output_style = input_style
+        style        = input_style
+    endif
+
+# Open file and set configuration
+    Print("Open " + input_ttf)
+    Open(input_ttf)
+
+    if (fontfamilysuffix != "")
+        SetFontNames(fontfamily + fontfamilysuffix + "-" + output_style, \
+                     \$familyname + " " + fontfamilysuffix, \
+                     \$familyname + " " + fontfamilysuffix + " " + style, \
+                     style, \
+                     "", version)
+    else
+        SetFontNames(fontfamily + "-" + output_style, \
+                     \$familyname, \
+                     \$familyname + " " + style, \
+                     style, \
+                     "", version)
+    endif
+    SetTTFName(0x409, 2, style)
+    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
+
+# --------------------------------------------------
+
+# 全角スペース消去
+    if ("${visible_zenkaku_space_flag}" == "false")
+        Print("Option: Disable visible zenkaku space")
+        Select(0u3000); Clear(); SetWidth(1024) # 全角スペース
+    endif
+
+# 半角スペース消去
+    if ("${visible_hankaku_space_flag}" == "false")
+        Print("Option: Disable visible hankaku space")
+        Select(0u0020); Clear(); SetWidth(512) # 半角スペース
+        Select(0u00a0); Clear(); SetWidth(512) # ノーブレークスペース
+    endif
+
+# 視認性向上グリフを元に戻す
+    if ("${improve_visibility_flag}" == "false")
+        Print("Option: Disable glyphs with improved visibility")
+        k = 0
+        # 全角縦書き
+        j = 0
+        while (j < 109)
+            Select(${address_zenhan} + k); Copy()
+            Select(${address_vert} + j); Paste()
+            SetWidth(1024)
+            j += 1
+            k += 1
+        endloop
+
+        Select(${address_store_end}); Copy() # ゠
+        Select(${address_vert_dh}); Paste()
+        SetWidth(1024)
+
+        # 全角横書き
+        j = 0 # ！-｠
+        while (j < 96)
+            Select(${address_zenhan} + k); Copy()
+            Select(0uff01 + j); Paste()
+            SetWidth(1024)
+            j += 1
+            k += 1
+        endloop
+        j = 0 # ￠-￦
+        while (j < 7)
+            Select(${address_zenhan} + k); Copy()
+            Select(0uffe0 + j); Paste()
+            SetWidth(1024)
+            j += 1
+            k += 1
+        endloop
+        orig = [0u309b, 0u309c, 0u203c, 0u2047,\
+                0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+        j = 0
+        while (j < SizeOf(orig))
+            Select(${address_zenhan} + k); Copy()
+            Select(orig[j]); Paste()
+            SetWidth(1024)
+            j += 1
+            k += 1
+        endloop
+
+        # 半角横書き
+        j = 0 # ｡-ﾟ
+        while (j < 63)
+            Select(${address_zenhan} + k); Copy();
+            Select(0uff61 + j); Paste()
+            SetWidth(512)
+            j += 1
+            k += 1
+        endloop
+
+        # 破線・ウロコ等
+        k = 0
+        orig = [0u2044, 0u007c,\
+                0u30a0, 0u2f23, 0u2013, 0ufe32, 0u2014, 0ufe31] # ⁄|゠⼣–︲—︱
+        j = 0
+        while (j < SizeOf(orig))
+            Select(${address_visi} + k); Copy()
+            Select(orig[j]); Paste()
+            if (j <= 1 || j == 4)
+                SetWidth(512)
+            else
+                SetWidth(1024)
+            endif
+            j += 1
+            k += 1
+        endloop
+        j = 0
+        while (j < 20) # ➀-➓
+            Select(${address_visi} + k); Copy()
+            Select(0u2780 + j); Paste()
+            SetWidth(1024)
+            j += 1
+            k += 1
+        endloop
+        orig = [0u3007, 0u4e00, 0u4e8c, 0u4e09,\
+                0u5de5, 0u529b, 0u5915, 0u535c,\
+                0u53e3] # 〇一二三工力夕卜口
+        j = 0
+        while (j < SizeOf(orig))
+            Select(${address_visi} + k); Copy()
+            Select(orig[j]); Paste()
+            SetWidth(1024)
+            j += 1
+            k += 1
+        endloop
+    endif
+
+# DVZのクロスバー等消去
+    if ("${dvz_flag}" == "false")
+        Print("Option: Disable modified D, V and Z")
+        if ("${improve_visibility_flag}" == "false")
+            k = 0
+        else
+            k = 9
+        endif
+        j = 0
+        orig = [0u0044, 0u0056, 0u005a,\
+                0uff24, 0uff36, 0uff3a,\
+               "uniFF24.vert", "uniFF36.vert", "uniFF3A.vert"] # DVZ
+        while (j < SizeOf(orig))
+            Select(${address_dvz} + j + k); Copy()
+            Select(orig[j]); Paste()
+            if (j <= 2)
+                SetWidth(512)
+            else
+                SetWidth(1024)
+            endif
+            j += 1
+        endloop
+    endif
+
+# calt用異体字上書き
+    if ("${calt_flag}" == "true")
+        Print("Overwrite calt glyphs")
+        k = ${address_calt}
+        j = 0
+        while (j < 26)
+            Select(0u0041 + j); Copy() # A
+            Select(k); Paste()
+            Move(-${x_pos_calt}, 0)
+            SetWidth(512)
+            j += 1
+            k += 1
+        endloop
+        j = 0
+        while (j < 26)
+            Select(0u0061 + j); Copy() # a
+            Select(k); Paste()
+            Move(-${x_pos_calt}, 0)
+            SetWidth(512)
+            j += 1
+            k += 1
+        endloop
+
+        j = 0
+        while (j < 26)
+            Select(0u0041 + j); Copy() # A
+            Select(k); Paste()
+            Move(${x_pos_calt}, 0)
+            SetWidth(512)
+            j += 1
+            k += 1
+        endloop
+        j = 0
+        while (j < 26)
+            Select(0u0061 + j); Copy() # a
+            Select(k); Paste()
+            Move(${x_pos_calt}, 0)
+            SetWidth(512)
+            j += 1
+            k += 1
+        endloop
+    else # calt非対応の場合ダミーのフィーチャを削除
+        Print("Remove calt lookups and glyphs")
+        Select(0u0020)
+        RemovePosSub("*")
+
+        Select(${address_calt}, ${address_calt_end})
+        RemovePosSub("*")
+        Clear(); DetachAndRemoveGlyphs()
+    endif
+
+# 保管したグリフ消去
+    Print("Remove stored glyphs")
+    Select(${address_dvz}, ${address_store_end}); Clear() # 保管したグリフを消去
+
+# --------------------------------------------------
+
+# Save oblique style font
+    Print("Save " + fontfamily + fontfamilysuffix + "-" + output_style + ".ttf")
+    Generate(fontfamily + fontfamilysuffix + "-" + output_style + ".ttf", "", 0x04)
+ #    Generate(fontfamily + fontfamilysuffix + "-" + output_style + ".ttf", "", 0x84)
+    Close()
+    Print("")
+
+    i += 1
+endloop
+
+Quit()
+_EOT_
+
+################################################################################
 # Generate custom fonts
 ################################################################################
 
-# Generate custom fonts
-$fontforge_command -script ${tmpdir}/${modified_latin_generator} \
-    2> $redirection_stderr || exit 4
-$fontforge_command -script ${tmpdir}/${modified_kana_generator} \
-    2> $redirection_stderr || exit 4
-$fontforge_command -script ${tmpdir}/${modified_kanzi_generator} \
-    2> $redirection_stderr || exit 4
-$fontforge_command -script ${tmpdir}/${modified_latin_kana_generator} \
-    2> $redirection_stderr || exit 4
-$fontforge_command -script ${tmpdir}/${custom_font_generator} \
-    2> $redirection_stderr || exit 4
 
-# Nerd fonts追加
-if [ "${nerd_flag}" = "true" ]
-then
-    $fontforge_command -script ${tmpdir}/${modified_nerd_generator} \
+if [ "${patch_only_flag}" = "false" ]; then
+    rm -f ${font_familyname}*.ttf
+
+    # カスタムフォント生成
+    $fontforge_command -script ${tmpdir}/${modified_latin_generator} \
         2> $redirection_stderr || exit 4
-    $fontforge_command -script ${tmpdir}/${merged_nerd_generator} \
+    $fontforge_command -script ${tmpdir}/${modified_kana_generator} \
+        2> $redirection_stderr || exit 4
+    $fontforge_command -script ${tmpdir}/${modified_kanzi_generator} \
+        2> $redirection_stderr || exit 4
+    $fontforge_command -script ${tmpdir}/${modified_latin_kana_generator} \
+        2> $redirection_stderr || exit 4
+    $fontforge_command -script ${tmpdir}/${custom_font_generator} \
+        2> $redirection_stderr || exit 4
+
+    # Nerd fonts追加
+    if [ "${nerd_flag}" = "true" ]; then
+        $fontforge_command -script ${tmpdir}/${modified_nerd_generator} \
+            2> $redirection_stderr || exit 4
+        $fontforge_command -script ${tmpdir}/${merged_nerd_generator} \
+            ${font_familyname}${font_familyname_suffix}-Regular.ttf \
+            2> $redirection_stderr || exit 4
+        $fontforge_command -script ${tmpdir}/${merged_nerd_generator} \
+            ${font_familyname}${font_familyname_suffix}-Bold.ttf \
+            2> $redirection_stderr || exit 4
+    fi
+
+    # パラメータ調整
+    $fontforge_command -script ${tmpdir}/${parameter_modificator} \
         ${font_familyname}${font_familyname_suffix}-Regular.ttf \
         2> $redirection_stderr || exit 4
-    $fontforge_command -script ${tmpdir}/${merged_nerd_generator} \
+    $fontforge_command -script ${tmpdir}/${parameter_modificator} \
         ${font_familyname}${font_familyname_suffix}-Bold.ttf \
         2> $redirection_stderr || exit 4
+
+    # オブリーク作成
+    if [ "${oblique_flag}" = "true" ]; then
+    $fontforge_command -script ${tmpdir}/${oblique_converter} \
+        ${font_familyname}${font_familyname_suffix}-Regular.ttf \
+        2> $redirection_stderr || exit 4
+    $fontforge_command -script ${tmpdir}/${oblique_converter} \
+        ${font_familyname}${font_familyname_suffix}-Bold.ttf \
+        2> $redirection_stderr || exit 4
+    fi
+
+    # ファイル名を変更
+    find . -not -name "*.*.ttf" -maxdepth 1 | \
+    grep -e "${font_familyname}${font_familyname_suffix}-.*\.ttf$" | while read line
+    do
+        style_ttf=${line#*-}; style=${style_ttf%%.ttf}
+        echo "Rename to ${font_familyname}-${style}.nopatch.ttf"
+        mv "${line}" "${font_familyname}-${style}.nopatch.ttf"
+    done
+    echo
 fi
 
-# パラメータ調整
- $fontforge_command -script ${tmpdir}/${parameter_modificator} \
-     ${font_familyname}${font_familyname_suffix}-Regular.ttf \
-     2> $redirection_stderr || exit 4
- $fontforge_command -script ${tmpdir}/${parameter_modificator} \
-     ${font_familyname}${font_familyname_suffix}-Bold.ttf \
-     2> $redirection_stderr || exit 4
-
-# オブリーク作成
-if [ "${oblique_flag}" = "true" ]
-then
-$fontforge_command -script ${tmpdir}/${oblique_converter} \
-    ${font_familyname}${font_familyname_suffix}-Regular.ttf \
-    2> $redirection_stderr || exit 4
-$fontforge_command -script ${tmpdir}/${oblique_converter} \
-    ${font_familyname}${font_familyname_suffix}-Bold.ttf \
-    2> $redirection_stderr || exit 4
+# パッチ適用
+if [ "${patch_flag}" = "true" ]; then
+  find . -name "${font_familyname}-*.nopatch.ttf" -maxdepth 1 | while read line
+      do
+        font_ttf=$(basename ${line})
+        $fontforge_command -script ${tmpdir}/${font_patcher} \
+          ${font_ttf} \
+          2> $redirection_stderr || exit 4
+    done
 fi
 
 # Remove temporary directory
-if [ "${leaving_tmp_flag}" = "false" ]
-then
+if [ "${patch_only_flag}" = "false" ] && [ "${patch_flag}" = "true" ]; then
+ rm -f "${font_familyname}*.nopatch.ttf"
+fi
+if [ "${leaving_tmp_flag}" = "false" ]; then
     echo "Remove temporary files"
     rm -rf $tmpdir
     echo

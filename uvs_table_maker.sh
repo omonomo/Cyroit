@@ -26,10 +26,10 @@ ${HOME}/Library/Fonts /Library/Fonts \
 /c/Windows/Fonts /cygdrive/c/Windows/Fonts"
 
 echo
-echo "- UVS [cmap_format_14] table maker -"
+echo "- UVS table [cmap_format_14] maker -"
 echo
 
-uvs_tablemaker_help()
+uvs_table_maker_help()
 {
     echo "Usage: uvs_table_maker.sh [options]"
     echo ""
@@ -45,7 +45,7 @@ while getopts hlN: OPT
 do
     case "${OPT}" in
         "h" )
-            uvs_tablemaker_help
+            uvs_table_maker_help
             ;;
         "l" )
             echo "Option: Leave (do NOT remove) temporary files"
@@ -60,7 +60,6 @@ do
             ;;
     esac
 done
-shift `expr $OPTIND - 1`
 
 toFontName="${font_familyname}-Regular" # 生成フォント名
 
@@ -77,7 +76,7 @@ then
   echo "Error: ${fromFontName} not found" >&2
   exit 1
 fi
-toFontName_ttf=`find . -name "${toFontName}.ttf" | head -n 1`
+toFontName_ttf=`find . -name "${toFontName}.ttf" -maxdepth 1 | head -n 1`
 if [ -z "${toFontName_ttf}" ]
 then
   echo "Error: ${toFontName} not found" >&2
@@ -104,9 +103,8 @@ echo
 
 # 元のフォントのcmapから異体字セレクタリスト(format_14)を取り出す
 echo "Make cmap List"
-grep "<cmap_format_14" "${fromFontName}.ttx" >> "${cmapList}.txt"
+
 grep "map uv=" "${fromFontName}.ttx" >> "${cmapList}.txt"
-echo "</cmap_format_14>" >> "${cmapList}.txt"
 
 # 取り出したリストから外字のみのリストを作成
 echo "Make external char list"
@@ -156,10 +154,12 @@ echo "Remove temporary files"
   rm -f ${cmapList}.txt.bak
   rm -f ${extList}.txt.bak
   rm -f ${gsubList}.txt.bak
-if [ "${leaving_tmp_flag}" = "false" ]
-then
-  rm -f ${fromFontName}.ttx
-  rm -f ${toFontName}.ttx
+if [ "${leaving_tmp_flag}" = "true" ]; then
+  mv "${fromFontName}.ttx" "${fromFontName}.cmap.orig.ttx"
+  mv "${toFontName}.ttx" "${toFontName}.GSUB.orig.ttx"
+else
+  rm -f ${fromFontName}*.ttx
+  rm -f ${toFontName}*.ttx
 fi
 echo
 

@@ -3,24 +3,28 @@
 Cyroit (しろいと) はプログラミングにもお使いいただける等幅フォントです。  
 Ricty 生成スクリプトで遊んでいるうちに合成フォント製作の沼にはまったことで生まれました。  
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧の組み合わせが全角と半角になっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
-全角スペースを可視化しており、さらに半角・ノーブレークスペースも可視化したバージョンも用意しています。
+全角スペースを可視化しており、さらに半角・ノーブレークスペースも可視化したバージョンも用意しています。  
+[Commit Mono](https://commitmono.com) に影響を受け、calt フィーチャを利用したカーニング機能に対応しました (v1.1.0以降)。  
 
 ## フォントサンプル  
 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="731">  
+<img alt="ScreenShot" src="./images/SS_0.png" width="733">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
-<img alt="ScreenShot" src="./images/SS_1.png" width="643">  
+<img alt="ScreenShot" src="./images/SS_1.png" width="746">  
 
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
-<img alt="ScreenShot" src="./images/SS_2.png" width="421">  
+<img alt="ScreenShot" src="./images/SS_2.png" width="426">  
+
+カーニングサンプル  
+<img alt="ScreenShot" src="./images/SS_3.gif" width="680">  
 
 ## ダウンロード
 
-最新版 (v1.0.7)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.0.7/Cyroit_v1.0.7.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.0.7.zip)
+最新版 (v1.1.0)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.0/Cyroit_v1.1.0.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.0.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -63,12 +67,13 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - IVS を利用した異体字表示に対応しています。
 - アイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
+- calt フィーチャを利用したカーニング機能は「基本ラテン文字」にのみ作用します。
 - リガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
 
 ## フォントファミリーの種類
 
-ちょっと違うだけなのに5つも作って無駄にファイルサイズを大きくしてしまい申し訳ございません。  
+見た目がちょっと違うだけなのに種類を増やして無駄にファイルサイズを大きくしてしまい、大変申し訳ございません。  
 それぞれにレギュラー、オブリーク、ボールド、ボールドオブリークの書体が含まれています。  
 
 |   名称   | サンプル | 説明 |
@@ -77,6 +82,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 | CyroitSP | <img alt="SP" src="./images/SP.png" width="450"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。簡易なエディタやコマンドランチャー等で使用すると便利かもしれません。 |
 | CyroitTM | <img alt="TM" src="./images/TM.png" width="450"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョンを復活。大文字の DVZ のグリフを改変しています。 |
 | CyroitTS | <img alt="TS" src="./images/TS.png" width="450"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版。 |
+| CyroitFX | <img alt="TS" src="./images/Normal.png" width="450"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
 | CyroitHB | <img alt="HB" src="./images/HB.png" width="450"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
@@ -84,49 +90,43 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - フォントのライセンス : [SIL Open Font License 1.1](build/OFL.txt)
 - スクリプトのライセンス : [MIT](./LICENSE.txt)
 
-素材元のフォントやスクリプトはライセンスが異なる場合があります。
+素材元のフォントやスクリプトはライセンスが異なる場合があります。  
 
 ## スクリプトの使い方
 
 ### ビルド環境
-Cyroit は、以下の環境でビルドできることを確認しています。
+Cyroit は、以下の環境でビルドできることを確認しています。  
 
 - OS: macOS Monterey (version 12.6.8)
 - Shell: zsh 5.8.1 (x86_64-apple-darwin21.0)
 - FontForge: 20230101
-- FontTools: 4.41.1
+- FontTools: 4.42.1
 
 ### 実行方法
-あらかじめ、パッケージマネージャ等を利用して [FontForge](https://fontforge.org/en-US/) と [FontTools](https://github.com/fonttools/fonttools) をインストールし、使える状態にしてください。
+あらかじめ、パッケージマネージャ等を利用して [FontForge](https://fontforge.org/en-US/) と [FontTools](https://github.com/fonttools/fonttools) をインストールし、使える状態にしておいてください。  
 
-スクリプトのある場所をカレントディレクトリにして
+スクリプトのある場所をカレントディレクトリにして  
 ```
 ./run_ff_ttx.sh -F
 ```
-異常なく完了した場合、直下の build フォルダにフォントが保存されます。
+異常なく完了した場合、直下の build フォルダにフォントが保存されます。  
 
-フォントをあれこれしたい人は以下のオプションが役に立つかもしれません。
+フォントをあれこれしたい人は以下のオプションが役に立つかもしれません。  
 
 `-h` ヘルプを表示します。  
 `-d` 下書きモード。時間のかかる処理を飛ばします。改変したグリフを確認するのに便利です。  
-`-de` 同じく下書きモードですが、Nerd Fonts を追加します。  
-`-e` 通常処理 (ウェイト調整、テーブル修正あり) で Nerd Fonts を追加します。  
-`-o` 通常処理でオブリーク体を追加で生成します。  
-`-eo` 通常処理で Nerd Fonts を追加した上、オブリーク体も追加で生成します。  
+`-C` calt フィーチャを設定する直前で処理を終了します。カーニングの設定変更・確認を繰り返すときに始めから生成せずに済みます。  
+`-c` カーニング機能を除いたフォントを生成します。  
+`-e` Nerd Fonts 無しのフォントを生成します。  
 `-F` 完成品を生成します。全てのバージョンを生成しますので時間がかかります。気長にお待ちください。  
 
-オプションなしの場合、通常処理で Nerd Fonts 無し、オブリーク体無しになります。  
-また`-F`オプション以外の時は、フォント名は Cyroit ですが TS 版を生成します。
+`-F`オプション以外の時は、グリフや機能に関係なくフォント名が Cyroit になり、オブリーク体を生成しません。  
+オプションなしの場合、通常処理でカーニングあり、Nerd Fonts ありになります。  
 
 ## メモ
 - 一部グリフが不統一なところがありますが、複数のフォントを合成しているためであり、仕様となります。
 - 行間が広めにとってあります。ダイアクリティカルマークがたくさん付いた文字もきちんと表示させるためです。
 - Powerline グリフを使用する際はフォントサイズを 12pt か 14pt にすると、よい感じに表示されるかもしれません。
-- 完成品の生成については、バージョン違いの差異分をパッチにすればもっと高速化できるはずですが、作る気力を失っております。
-
-## 謝辞
-
-Cyroit の合成、製作にあたり、素晴らしいフォントやツール類を提供してくださっております製作者の方々に感謝いたします。
 
 ## リンク
 
