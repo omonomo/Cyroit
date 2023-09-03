@@ -84,6 +84,7 @@ smallM=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 小文字(右に�
 capitalC=(T V Y I J) # 寄せ付ける大文字
 smallC=(f i j l r t v y) # 寄せ付ける小文字
 
+cC=("cC") # c 視認性向上のため特別扱い
 rC=("rC") # r 視認性向上のため特別扱い
 
 for S in ${gravityL[@]}; do
@@ -309,10 +310,10 @@ lookAhead=("${gravityCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左右を見る 左がすでに逃げている となりが移動していない時でも逃げる文字 移動しない
-backtrack=("${gravityWL[@]}" "${gravityEL[@]}" "${gravityRL[@]}")
-input=("${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityAC[@]}")
-lookAhead=("${gravityWC[@]}" "${gravityEC[@]}" "${gravityLC[@]}")
+# 左右を見る 左cかすでに逃げている寄せ付けない文字 中寄り以外の文字 移動しない
+backtrack=("${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${cC[@]}")
+input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityAC[@]}"  "${gravityVC[@]}")
+lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
