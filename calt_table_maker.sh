@@ -310,7 +310,7 @@ lookAhead=("${gravityCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左右を見る 左cかすでに逃げている寄せ付けない文字 中寄り以外の文字 移動しない
+# 左右を見る 左がcかすでに逃げている寄せ付けない文字の場合 中寄り以外の文字 移動しない
 backtrack=("${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${cC[@]}")
 input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityAC[@]}"  "${gravityVC[@]}")
 lookAhead=("${gravityWC[@]}")
