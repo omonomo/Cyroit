@@ -13,7 +13,7 @@
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_version="1.1.0"
+font_version="1.1.1"
 fontforge_version="20230101"
 vendor_id="PfEd"
 
