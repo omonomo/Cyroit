@@ -204,17 +204,17 @@ if [ "${cmap_flag}" = "true" ]; then
   do
     mv "$P" "${P%%.ttx}.cmap.ttx"
   done
-  echo
 fi
 
 gsubList_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
 if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
   caltNo=`grep 'Substitution in="A"' "${gsubList}.txt"`
-	if [ -n "${caltNo}" ]; then # calt用の異体字があった場合gSubListからglyphナンバーを取得
+  if [ -n "${caltNo}" ]; then # calt用の異体字があった場合gSubListからglyphナンバーを取得
     temp=${caltNo##*glyph} # glyphナンバーより前を削除
     glyphNo=${temp%\"*} # glyphナンバーより後を削除してオフセット値追加
   else
     echo "Not compatible with calt feature"
+    echo
   	calt_flag="false"
   fi
 else
@@ -241,17 +241,18 @@ if [ "${calt_flag}" = "true" ]; then
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
     ttx -t GSUB "$P"
+    echo
 
     # GSUB (用字、言語全て共通に変更)
     gpc=`grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx"`
     gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"`
     if [ -n "${gpc}" ]; then
-      echo "Already calt feature exist"
-  		calt_flag="true"
+      echo "Already calt feature exist. Do not overwrite the table."
+      calt_flag="true"
     elif [ -n "${gpz}" ]; then
-      echo "Compatible with calt feature"
-  		calt_flag="true"
-  		if [ "${calt_insert_flag}" = "true" ]; then
+      echo "Compatible with calt feature."
+      calt_flag="true"
+      if [ "${calt_insert_flag}" = "true" ]; then
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"の中を削除
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
@@ -262,8 +263,8 @@ if [ "${calt_flag}" = "true" ]; then
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="17"の後に挿入
       fi
     else
-      echo "Not compatible with calt feature"
-  		calt_flag="false"
+      echo "Not compatible with calt feature."
+      calt_flag="false"
     fi
 
     sed -i.bak -e '/FeatureIndex index="10" value=".."/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる
@@ -322,7 +323,6 @@ if [ "${calt_flag}" = "true" ]; then
   do
     mv "$P" "${P%%.ttx}.calt.ttx"
   done
-  echo
 fi
 
 # 一時ファイルを削除
@@ -334,8 +334,8 @@ if [ "${leaving_tmp_flag}" = "false" ]; then
   rm -f ${cmapList}.txt
   rm -f ${extList}.txt
   rm -f ${gsubList}.txt
+  echo
 fi
-echo
 
 # Exit
 echo "Finished modifying the font tables."

@@ -85,6 +85,7 @@ fi
 # テーブル加工
 if [ "$1" = "-C" ]; then
   sh table_modificator.sh -l -C -N "${font_familyname}"
+	exit 0
 elif [ "$1" = "-F" ]; then
   sh table_modificator.sh -N "${font_familyname}"
 else
