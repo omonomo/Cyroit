@@ -14,6 +14,17 @@ font_familyname_suffix3="TS"
 font_familyname_suffix4="FX"
 build_fonts_dir="build" # 完成品を保管するフォルダ
 
+font_version="0.1.0"
+
+version="version"
+version_txt=`find . -name "${version}.txt" -maxdepth 1 | head -n 1`
+if [ -n "${version_txt}" ]; then
+  font_v=`cat ${version_txt} | head -n 1`
+  if [ -n "${font_v}" ]; then
+    font_version=${font_v}
+  fi
+fi
+
 forge_ttx_help()
 {
     echo "Usage: run_ff_ttx.sh [options]"
@@ -121,9 +132,10 @@ if [ "$1" = "-F" ]; then
   fi
   mv -f ${font_familyname}*.ttf "${build_fonts_dir}/."
   echo
-fi
 
-# Exit
-echo "Succeeded in generating custom fonts!"
-echo
+  # Exit
+  echo "Succeeded in generating custom fonts!"
+  echo "Font version : ${font_version}"
+  echo
+fi
 exit 0

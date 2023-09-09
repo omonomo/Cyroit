@@ -13,9 +13,22 @@
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_version="1.1.1"
+font_version="0.1.0"
 fontforge_version="20230101"
 vendor_id="PfEd"
+
+version="version"
+version_txt=`find . -name "${version}.txt" -maxdepth 1 | head -n 1`
+if [ -n "${version_txt}" ]; then
+    font_v=`cat ${version_txt} | head -n 1`
+    fontforge_v=`cat ${version_txt} | head -n 2 | tail -n 1`
+    if [ -n "${font_v}" ]; then
+        font_version=${font_v}
+    fi
+    if [ -n "${fontforge_v}" ]; then
+        fontforge_version=${fontforge_v}
+    fi
+fi
 
 # グリフ保管アドレス
 address_dvz_latin="64336" # 0ufb50 latinフォントのDVZアドレス
@@ -182,7 +195,8 @@ cat << _EOT_
 
 ----------------------------
 Custom font generator
-font version: ${font_version}
+Font version: ${font_version}
+FontForge version: ${fontforge_version}
 ----------------------------
 
 _EOT_
