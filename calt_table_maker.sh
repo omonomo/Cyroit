@@ -66,14 +66,14 @@ rm -f ${dict}.txt
 
 # 各グリフの重心、形状の違いから、左寄り、右寄り、中央寄り、中央寄りと均等の中間、均等 (幅広)、Vの字形に分類する
 gravityL=(B D E F K L P R b h k p) # 左寄り(左に右寄り、均等があると離れようとする)
-gravityR=(a d g q) # 右寄り(右に左寄り、均等があると離れようとする)
+gravityR=(C G a d g q) # 右寄り(右に左寄り、均等があると離れようとする)
 gravityW=(M W m w) # 幅広通常(全てが離れようとする)
 gravityE=(H N O Q U n u) # 均等通常(左に右寄りか均等、幅広、右に左寄りか均等、幅広があると離れようとする)
-gravityM=(A C G S X Z c e o s x z) # 中-均等の中間通常
+gravityM=(A S X Z c e o s x z) # 中-均等の中間通常
 gravityV=(T V Y v y) # Vの字通常(均等、左にある右寄り、右にある左寄り以外は近づこうとする)
 gravityC=(I J f i j l r t) # 中寄り通常(全てが近づこうとする)
 
-gravityMl=(C G c e) # 寄せ付けないやや左寄り
+gravityMl=(c e) # 寄せ付けないやや左寄り
 gravityCl=(f r t y) # 寄せ付けるやや左寄り
 
 gravityMr=() # 寄せ付けないやや右寄り
