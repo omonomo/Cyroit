@@ -20,7 +20,7 @@ gsubList="gsubList"
 
 half_width="512" # 半角文字幅
 full_width="1024" # 全角文字幅
-underline="-80" # アンダーライン位置
+#underline="-80" # アンダーライン位置
 #vhea_ascent1024="994"
 #vhea_descent1024="256"
 #vhea_linegap1024="0"
@@ -100,7 +100,7 @@ done
 # ttxファイルを削除、パッチのみの場合フォントをリネームして再利用
 rm -f ${font_familyname}*.ttx ${font_familyname}*.ttx.bak
 if [ "${patch_only_flag}" = "true" ]; then
-  for P in ${font_familyname}*.orig.ttf
+  find . -name "${font_familyname}*.orig.ttf" -maxdepth 1 | while read P
   do
     mv -f "$P" "${P%%.orig.ttf}.ttf"
   done
@@ -116,7 +116,6 @@ fi
 if [ "${other_flag}" = "true" ]; then
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
-#  for P in ${font_familyname}*.ttf
   do
     ttx -t name -t head -t OS/2 -t post -t hmtx "$P"
 #      ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
@@ -142,8 +141,8 @@ if [ "${other_flag}" = "true" ]; then
     # OS/2 (全体のWidthの修正)
     sed -i.bak -e "s,xAvgCharWidth value=\"...\",xAvgCharWidth value=\"${half_width}\"," "${P%%.ttf}.ttx"
 
-    # post (アンダーラインの位置を指定、等幅フォントであることを示す)
-    sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
+    # post (アンダーラインの位置を指定(中止)、等幅フォントであることを示す)
+#    sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
     sed -i.bak -e 's,isFixedPitch value=".",isFixedPitch value="1",' "${P%%.ttf}.ttx"
 
     # vhea
@@ -171,7 +170,6 @@ if [ "${other_flag}" = "true" ]; then
   do
     mv "$P" "${P%%.ttx}.others.ttx"
   done
-  echo
 fi
 
 # cmapテーブル加工用ファイルの作成
@@ -226,33 +224,30 @@ else
   fi
 fi
 
-
-# caltテーブル加工用ファイルの作成
 if [ "${calt_flag}" = "true" ]; then
-  if [ "${calt_insert_flag}" = "true" ]; then
-    if [ "${leaving_tmp_flag}" = "true" ]; then
-      sh calt_table_maker.sh -l -n ${glyphNo}
-    else
-      sh calt_table_maker.sh -n ${glyphNo}
-    fi
-  fi
-
+  rm -f ${caltList}.txt
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
     ttx -t GSUB "$P"
-    echo
 
     # GSUB (用字、言語全て共通に変更)
     gpc=`grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx"`
     gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"`
     if [ -n "${gpc}" ]; then
       echo "Already calt feature exist. Do not overwrite the table."
-      calt_flag="true"
     elif [ -n "${gpz}" ]; then
       echo "Compatible with calt feature."
-      calt_flag="true"
+      # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
+        caltlist_txt=`find . -name "${caltList}.txt" -maxdepth 1 | head -n 1`
+        if [ -z "${caltlist_txt}" ]; then #caltListが無ければ作成
+          if [ "${leaving_tmp_flag}" = "true" ]; then
+            sh calt_table_maker.sh -l -n ${glyphNo}
+          else
+            sh calt_table_maker.sh -n ${glyphNo}
+          fi
+        fi
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"の中を削除
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
