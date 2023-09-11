@@ -71,14 +71,12 @@ do
 done
 fonts_directories=$tmp
 fromFontName_ttf=`find ${fonts_directories} -follow -name "${fromFontName}.ttf" | head -n 1`
-if [ -z "${fromFontName_ttf}" ]
-then
+if [ -z "${fromFontName_ttf}" ]; then
   echo "Error: ${fromFontName} not found" >&2
   exit 1
 fi
 toFontName_ttf=`find . -name "${toFontName}.ttf" -maxdepth 1 | head -n 1`
-if [ -z "${toFontName_ttf}" ]
-then
+if [ -z "${toFontName_ttf}" ]; then
   echo "Error: ${toFontName} not found" >&2
   exit 1
 fi
@@ -93,9 +91,9 @@ rm -f ${gsubList}.txt ${gsubList}.txt.bak
 # ttxファイルを生成
 ttx -t cmap "${fromFontName_ttf}"
 ttx -t GSUB "${toFontName_ttf}"
+# 元フォントがカレントディレクトリに無ければ生成したttxファイルを移動
 fromFontName_ttx=`find ${fonts_directories} -follow -name "${fromFontName}.ttx" | head -n 1`
-if [ -n "${fromFontName_ttx}" ] && [ ${fromFontName_ttx} != "./${fromFontName}.ttx" ]
-then # 元フォントがカレントディレクトリに無ければ生成したttxファイルを移動
+if [ -n "${fromFontName_ttx}" ] && [ ${fromFontName_ttx} != "./${fromFontName}.ttx" ]; then
 	echo "Move ${fromFontName}.ttx"
 	mv ${fromFontName_ttx} ./
 fi
