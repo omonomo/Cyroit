@@ -264,6 +264,24 @@ echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 # 同じ文字 (等間隔に並ばせる) ----------------------------------------
 
+# 左を見る 左寄りの文字 移動しない
+for i in ${!gravityL[@]}
+do
+  backtrack="${gravityLC[$i]}"
+  input="${gravityLC[$i]}"
+  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexC}"
+  index=`expr ${index} + 1`
+done
+
+# 左を見る 右寄りの文字 移動しない
+for i in ${!gravityR[@]}
+do
+  backtrack="${gravityRC[$i]}"
+  input="${gravityRC[$i]}"
+  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexC}"
+  index=`expr ${index} + 1`
+done
+
 # 左を見る 幅広な文字 左に移動
 for i in ${!gravityW[@]}
 do
@@ -505,7 +523,7 @@ index=`expr ${index} + 1`
 # 左を見る Vの字 右に移動
 backtrack=("${gravityWL[@]}" \
 "${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityVR[@]}" \
-"${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityVC[@]}")
+"${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
 input=("${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexR}"
 index=`expr ${index} + 1`
@@ -520,7 +538,7 @@ index=`expr ${index} + 1`
 
 # 右を見る 左寄りの文字、中間の文字、Vの字 左に移動
 input=("${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
+lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
@@ -530,7 +548,7 @@ lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 右を見る 幅広の文字 左に移動
+# 右を見る 右寄りの文字、幅広の文字 左に移動
 input=("${gravityWC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
