@@ -14,19 +14,14 @@ font_familyname="Cyroit"
 font_familyname_suffix=""
 
 font_version="0.1.0"
-fontforge_version="20230101"
 vendor_id="PfEd"
 
 version="version"
 version_txt=`find . -name "${version}.txt" -maxdepth 1 | head -n 1`
 if [ -n "${version_txt}" ]; then
     font_v=`cat ${version_txt} | head -n 1`
-    fontforge_v=`cat ${version_txt} | head -n 2 | tail -n 1`
     if [ -n "${font_v}" ]; then
         font_version=${font_v}
-    fi
-    if [ -n "${fontforge_v}" ]; then
-        fontforge_version=${fontforge_v}
     fi
 fi
 
@@ -57,12 +52,14 @@ address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
 address_calt=`expr ${address_vert_kabu} + 7` # calt置換アドレス
 address_calt_end=`expr ${address_calt} + 103` # calt置換の最終アドレス(右に移動した z)
 
+# フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
 buildNo=`expr ${buildNo} % 315360000`
 buildNo=`expr ${buildNo} / 60`
 buildNo=`echo "obase=16; ibase=10; ${buildNo}" | bc`
 font_version="${font_version} (${buildNo})"
 
+# 著作権
 copyright9="Copyright (c) 2023 omonomo\n\n"
 copyright5="[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre\n\n"
 copyright4="[BIZ UDGothic]\nCopyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-gothic)\n\n"
@@ -124,8 +121,9 @@ weight_extend_super_sub="12" # ウェイト調整
 # calt移動量
 x_pos_calt="20"
 
-# Set path to fontforge command
+# Set path to command
 fontforge_command="fontforge"
+ttx_command="ttx"
 
 # Set redirection of stderr
 redirection_stderr="/dev/null"
@@ -196,7 +194,6 @@ cat << _EOT_
 ----------------------------
 Custom font generator
 Font version: ${font_version}
-FontForge version: ${fontforge_version}
 ----------------------------
 
 _EOT_
@@ -408,6 +405,16 @@ then
     echo "Error: ${fontforge_command} command not found" >&2
     exit 1
 fi
+fontforge_v=`${fontforge_command} -version`
+fontforge_version=`echo ${fontforge_v} | cut -d ' ' -f2`
+
+# Check ttx existance
+if ! which $ttx_command > /dev/null 2>&1
+then
+    echo "Error: ${ttx_command} command not found" >&2
+    exit 1
+fi
+ttx_version=`${ttx_command} --version`
 
 # Make temporary directory
 if [ -w "/tmp" -a "${leaving_tmp_flag}" = "false" ]; then
@@ -7125,7 +7132,7 @@ while (i < SizeOf(fontstyle_list))
                      copyright, version)
     endif
     SetTTFName(0x409, 2, fontstyle_list[i])
-    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
+    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + "FontTools ${ttx_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
     ScaleToEm(${typo_ascent1024}, ${typo_descent1024})
     SetOS2Value("Weight", fontweight_list[i]) # Book or Bold
     SetOS2Value("Width",                   5) # Medium
@@ -8275,7 +8282,7 @@ while (i < \$argc)
                  \$familyname + " " + style, \
                  style)
     SetTTFName(0x409, 2, style)
-    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
+    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + "FontTools ${ttx_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
 
 # --------------------------------------------------
 
@@ -8373,7 +8380,7 @@ while (i < \$argc)
                      "", version)
     endif
     SetTTFName(0x409, 2, style)
-    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
+    SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + "FontTools ${ttx_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
 
 # --------------------------------------------------
 
