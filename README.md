@@ -9,10 +9,10 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ## フォントサンプル  
 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="690">  
+<img alt="ScreenShot" src="./images/SS_0.png" width="729">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
-<img alt="ScreenShot" src="./images/SS_1.png" width="726">  
+<img alt="ScreenShot" src="./images/SS_1.png" width="641">  
 
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
 <img alt="ScreenShot" src="./images/SS_2.png" width="426">  
@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.1.2)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.2/Cyroit_v1.1.2.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.2.zip)
+最新版 (v1.1.3)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.3/Cyroit_v1.1.3.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.3.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
