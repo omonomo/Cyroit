@@ -20,7 +20,7 @@ gsubList="gsubList"
 
 half_width="512" # 半角文字幅
 full_width="1024" # 全角文字幅
-#underline="-80" # アンダーライン位置
+underline="-80" # アンダーライン位置
 #vhea_ascent1024="994"
 #vhea_descent1024="256"
 #vhea_linegap1024="0"
@@ -141,8 +141,8 @@ if [ "${other_flag}" = "true" ]; then
     # OS/2 (全体のWidthの修正)
     sed -i.bak -e "s,xAvgCharWidth value=\"...\",xAvgCharWidth value=\"${half_width}\"," "${P%%.ttf}.ttx"
 
-    # post (アンダーラインの位置を指定(中止)、等幅フォントであることを示す)
-#    sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
+    # post (アンダーラインの位置を指定、等幅フォントであることを示す)
+    sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
     sed -i.bak -e 's,isFixedPitch value=".",isFixedPitch value="1",' "${P%%.ttf}.ttx"
 
     # vhea
