@@ -289,15 +289,6 @@ do
   index=`expr ${index} + 1`
 done
 
-# 左を見る 中寄りの字 移動しない
-for i in ${!gravityC[@]}
-do
-  backtrack="${gravityCC[$i]}"
-  input="${gravityCC[$i]}"
-  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexC}"
-  index=`expr ${index} + 1`
-done
-
 # 左右を見て移動させない例外処理 ----------------------------------------
 
 # 左右を見る 両方が右寄りの文字の場合 左寄りの文字他 左に移動しない
@@ -452,14 +443,15 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lo
 index=`expr ${index} + 1`
 
 # 左右を見る 幅広な文字 右に移動しない
-backtrack=("${gravityLL[@]}" "${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${gravityML[@]}" "${gravityVL[@]}")
+backtrack=("${gravityLL[@]}" "${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${gravityML[@]}" "${gravityVL[@]}" \
+"${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" )
 input=("${gravityWC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
 # 左右を見る 均等の文字 右に移動しない
-backtrack=("${gravityRL[@]}" "${gravityEL[@]}" \
+backtrack=("${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" \
 "${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 input=("${gravityEC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -536,15 +528,9 @@ lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 右を見る 右寄りの文字、均等な文字 左に移動
-input=("${gravityRC[@]}" "${gravityEC[@]}")
+# 右を見る 右寄りの文字、幅広の文字、均等な文字 左に移動
+input=("${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
-# 右を見る 右寄りの文字、幅広の文字 左に移動
-input=("${gravityWC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
@@ -564,24 +550,11 @@ lookAhead=("${gravityVC[@]}" "${gravityCC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
-# 右を見る 右寄りの文字、均等な文字 右に移動
-input=("${gravityRC[@]}" "${gravityEC[@]}")
+# 右を見る 右寄りの文字、均等な文字、Vの字、中寄りの文字 右に移動
+input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
 lookAhead=("${gravityCC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
-
-# 右を見る Vの字 右に移動
-input=("${gravityVC[@]}")
-lookAhead=("${gravityCC[@]}")
-#lookAhead=("${gravityRC[@]}" "${gravityMC[@]}" "${gravityCC[@]}")
-chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
-index=`expr ${index} + 1`
-
-# 右を見る 中寄りの文字 右に移動
-#input=("${gravityCC[@]}")
-#lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
-#chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
-#index=`expr ${index} + 1`
 
 # ---
 
