@@ -73,8 +73,11 @@ gravityM=(A S X Z c e o s x z) # 中-均等の中間通常
 gravityV=(T V Y v y) # Vの字通常(均等、左にある右寄り、右にある左寄り以外は近づこうとする)
 gravityC=(I J f i j l r t) # 中寄り通常(全てが近づこうとする)
 
-gravityMl=(c e) # 右を寄せ付けないやや左寄り
-gravityCl=(f r t y) # 左を寄せ付けるやや左寄り
+gravity_rC=(J j) # 引き寄せるやや右寄り
+gravity_rM=(j) # 引き寄せさせないやや右寄り
+
+gravity_lM=(c e t) # 引き寄せさせないやや左寄り
+gravity_lC=(f r t) # 引き寄せるやや左寄り
 
 capitalM=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) # 大文字(左にある小文字に近づかない)
 
@@ -122,12 +125,20 @@ for S in ${gravityC[@]}; do
   gravityCR+=("${S}R") # 中寄り右移動後
 done
 
-for S in ${gravityMl[@]}; do
-  gravityMlC+=("${S}C") # 寄せ付けないやや左寄り
+for S in ${gravity_rM[@]}; do
+  gravity_rMC+=("${S}C") # 引き寄せないやや右寄り
 done
 
-for S in ${gravityCl[@]}; do
-  gravityClC+=("${S}C") # 寄せ付けるやや左寄り
+for S in ${gravity_rC[@]}; do
+  gravity_rCC+=("${S}C") # 引き寄せるやや右寄り
+done
+
+for S in ${gravity_lM[@]}; do
+  gravity_lMC+=("${S}C") # 引き寄せないやや左寄り
+done
+
+for S in ${gravity_lC[@]}; do
+  gravity_lCC+=("${S}C") # 引き寄せるやや左寄り
 done
 
 for S in ${capitalM[@]}; do
@@ -251,17 +262,17 @@ echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 # 左右を見て移動させない例外処理 ----------------------------------------
 
-# 左右を見る 両方が右寄りの文字の場合 左寄りの文字他 左に移動しない
-backtrack=("${gravityRC[@]}")
+# 左右を見る 両方が少しでも右に寄っている文字の場合 左寄りの文字他 左に移動しない
+backtrack=("${gravityRC[@]}" "${gravity_rCC[@]}")
 input=("${gravityLC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityRC[@]}")
+lookAhead=("${gravityRC[@]}" "${gravity_rMC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
 # 左右を見る 両方が少しでも左に寄っている文字の場合 右寄りの文字他 右に移動しない
-backtrack=("${gravityLC[@]}" "${gravityMlC[@]}")
+backtrack=("${gravityLC[@]}" "${gravity_lMC[@]}")
 input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityClC[@]}")
+lookAhead=("${gravityLC[@]}" "${gravity_lCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
@@ -439,6 +450,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る 左寄りの文字、右に移動しない
 backtrack=("${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" \
+"${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
 "${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 input=("${gravityLC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
@@ -447,6 +459,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る 右寄りの文字 右に移動しない
 backtrack=("${gravityWL[@]}" \
+"${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
 "${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
 input=("${gravityRC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -463,6 +476,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る 均等の文字 右に移動しない
 backtrack=("${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" \
+"${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
 "${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 input=("${gravityEC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -471,6 +485,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る 中間の文字 右に移動しない
 backtrack=("${gravityWL[@]}" \
+"${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
 "${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
 input=("${gravityMC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
@@ -479,6 +494,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る Vの字 右に移動しない
 backtrack=("${gravityWL[@]}" \
+"${gravityRR[@]}" "${gravityER[@]}" "${gravityVR[@]}" \
 "${gravityRC[@]}" "${gravityEC[@]}" "${gravityVC[@]}")
 input=("${gravityVC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
