@@ -58,12 +58,12 @@ do
     esac
 done
 
-glyphNo=`expr ${glyphNo} - 1` # zshの配列対応
 # txtファイルを削除
 rm -f ${caltList}.txt
 rm -f ${listTemp}.txt
 rm -f ${dict}.txt
 
+# グリフ略号 作成 ========================================
 # 各グリフの重心、形状の違いから、左寄り、右寄り、中央寄り、中央寄りと均等の中間、均等 (幅広)、Vの字形に分類する
 gravityL=(B D E F K L P R b h k p) # 左寄り(左に右寄り、均等があると離れようとする)
 gravityR=(C G a d g q) # 右寄り(右に左寄り、均等があると離れようとする)
@@ -138,37 +138,38 @@ for S in ${smallM[@]}; do
   smallMC+=("${S}C") # 小文字
 done
 
-# グリフ名変換用辞書作成
+# グリフ名変換用辞書作成 ========================================
 # グリフ略号 (AC BC..yC zC AL BL..yL zL AR BR..yR zR 左に移動したグリフ, 右に移動したグリフ, 通常のグリフ)
 # グリフ名 (A B..y z glyphXXXXX..glyphYYYYY)
-alphabet=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
-a b c d e f g h i j k l m n o p q r s t u v w x y z)
+key=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
+a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字 (グリフのIDS順に並べること)
+normal=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
+a b c d e f g h i j k l m n o p q r s t u v w x y z) # 移動していない時のグリフ名
 
-for S in ${alphabet[@]}
+for i in ${!key[@]} # 移動していないグリフ
 do
-  echo "${S}C ${S}" >> "${dict}.txt"
+  echo "$i ${key[$i]}C ${normal[$i]}" >> "${dict}.txt"
 done
-i="1"
-for S in ${alphabet[@]}
+i=${glyphNo}
+for S in ${key[@]} # 左に移動したグリフ
 do
-  j=`expr ${glyphNo} + ${i}`
-  echo "${S}L glyph${j}" >> "${dict}.txt"
+  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
-for S in ${alphabet[@]}
+for S in ${key[@]} # 右に移動したグリフ
 do
-  j=`expr ${glyphNo} + ${i}`
-  echo "${S}R glyph${j}" >> "${dict}.txt"
+  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
-# 略号を名前に変換する関数
+# 略号を通し番号と名前に変換する関数 ========================================
 glyph_name() {
-  word=`grep "^${1}" "${dict}.txt" | head -n 1 | cut -d ' ' -f 2`
-  echo "${word}"
+  number=`grep " ${1} " "${dict}.txt" | head -n 1 | cut -d ' ' -f 1`
+  word=`grep " ${1} " "${dict}.txt" | head -n 1 | cut -d ' ' -f 3`
+  echo "${number} ${word}"
 }
 
-# LookupType 6 を作成するための関数
+# LookupType 6 を作成するための関数 ========================================
 chain_context() {
   local substIndex
   local backtrack
@@ -191,31 +192,29 @@ chain_context() {
     rm -f ${listTemp}.txt
     for S in ${backtrack[@]}
     do
-      T=`glyph_name "${S}"` # 略号からグリフ名を取得
-      if [ ${#T} -eq 1 ] # IDS順に正しくソートさせるための判定
-      then
-        echo " <Glyph value=\"${T}\"/>" >> "${listTemp}.txt" # グリフ名が1文字の場合
-      else
-        echo "<Glyph value=\"${T}\"/>" >> "${listTemp}.txt"
-      fi
+      T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
+      echo "${T}" >> "${listTemp}.txt"
     done
-    sort "${listTemp}.txt" >> "${caltList}.txt" # ソートしないとttxにしかられる
+    sort -n "${listTemp}.txt" | while read line  # ソートしないとttxにしかられる
+    do
+      T=`echo "${line}" | cut -d ' ' -f 2`
+     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+    done
     echo "</BacktrackCoverage>" >> "${caltList}.txt"
   fi
 
-  echo "<InputCoverage index=\"0\">" >> "${caltList}.txt"
+  echo "<InputCoverage index=\"0\">" >> "${caltList}.txt" # 入力した文字(グリフ変換対象)
   rm -f ${listTemp}.txt
-  for S in ${input[@]} # 入力した文字(グリフ変換対象)
-  do
-    T=`glyph_name "${S}"`
-    if [ ${#T} -eq 1 ]
-    then
-      echo " <Glyph value=\"${T}\"/>" >> "${listTemp}.txt"
-    else
-      echo "<Glyph value=\"${T}\"/>" >> "${listTemp}.txt"
-    fi
-  done
-  sort "${listTemp}.txt" >> "${caltList}.txt"
+  for S in ${input[@]}
+    do
+      T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
+      echo "${T}" >> "${listTemp}.txt"
+    done
+    sort -n "${listTemp}.txt" | while read line  # ソートしないとttxにしかられる
+    do
+      T=`echo "${line}" | cut -d ' ' -f 2`
+     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+    done
   echo "</InputCoverage>" >> "${caltList}.txt"
 
   if [ -n "${lookAhead}" ] # 入力した文字の右側
@@ -224,15 +223,14 @@ chain_context() {
     rm -f ${listTemp}.txt
     for S in ${lookAhead[@]}
     do
-      T=`glyph_name "${S}"`
-      if [ ${#T} -eq 1 ]
-      then
-        echo " <Glyph value=\"${T}\"/>" >> "${listTemp}.txt"
-      else
-        echo "<Glyph value=\"${T}\"/>" >> "${listTemp}.txt"
-      fi
+      T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
+      echo "${T}" >> "${listTemp}.txt"
     done
-    sort "${listTemp}.txt" >> "${caltList}.txt"
+    sort -n "${listTemp}.txt" | while read line  # ソートしないとttxにしかられる
+    do
+      T=`echo "${line}" | cut -d ' ' -f 2`
+     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+    done
     echo "</LookAheadCoverage>" >> "${caltList}.txt"
   fi
 
@@ -244,14 +242,41 @@ chain_context() {
   echo "</ChainContextSubst>" >> "${caltList}.txt"
 }
 
-# メインルーチン
+# メインルーチン ========================================
 echo "Make GSUB calt List"
 
 echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 
 index="0"
-# 同じ文字 (等間隔に並ばせる) ----------------------------------------
+# 左右を見て移動させない例外処理 ----------------------------------------
+
+# 左右を見る 両方が右寄りの文字の場合 左寄りの文字他 左に移動しない
+backtrack=("${gravityRC[@]}")
+input=("${gravityLC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
+lookAhead=("${gravityRC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 左右を見る 両方が少しでも左に寄っている文字の場合 右寄りの文字他 右に移動しない
+backtrack=("${gravityLC[@]}" "${gravityMlC[@]}")
+input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
+lookAhead=("${gravityLC[@]}" "${gravityClC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 左を見て右に移動させる例外処理 (同じ文字は等間隔にする) ----------------------------------------
+
+# 左を見る 中寄りな文字 右に移動
+for i in ${!gravityC[@]}
+do
+  backtrack="${gravityCR[$i]}"
+  input="${gravityCC[$i]}"
+  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexR}"
+  index=`expr ${index} + 1`
+done
+
+# 左を見て移動させない例外処理 (同じ文字は等間隔にする) ----------------------------------------
 
 # 左を見る 左寄りの文字 移動しない
 for i in ${!gravityL[@]}
@@ -271,41 +296,7 @@ do
   index=`expr ${index} + 1`
 done
 
-# 左を見る 幅広な文字 左に移動
-for i in ${!gravityW[@]}
-do
-  backtrack="${gravityWL[$i]}"
-  input="${gravityWC[$i]}"
-  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexL}"
-  index=`expr ${index} + 1`
-done
-
-# 左を見る 均等な文字 左に移動
-for i in ${!gravityE[@]}
-do
-  backtrack="${gravityEL[$i]}"
-  input="${gravityEC[$i]}"
-  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexL}"
-  index=`expr ${index} + 1`
-done
-
-# 左右を見て移動させない例外処理 ----------------------------------------
-
-# 左右を見る 両方が右寄りの文字の場合 左寄りの文字他 左に移動しない
-backtrack=("${gravityRC[@]}")
-input=("${gravityLC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityRC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 左右を見る 両方が少しでも左に寄っている文字の場合 右寄りの文字他 右に移動しない
-backtrack=("${gravityLC[@]}" "${gravityMlC[@]}")
-input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityClC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 左を見て絶対に移動させない通常処理 ----------------------------------------
+# 左を見て移動させない通常処理 ----------------------------------------
 
 # 左を見る 左寄りの文字、幅広な文字、均等な文字 移動しない
 backtrack=("${gravityCR[@]}")
@@ -387,6 +378,26 @@ backtrack=("${smallMC[@]}")
 input=("${capitalMC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexC}"
 index=`expr ${index} + 1`
+
+# 左を見て左に移動させる例外処理 (同じ文字は等間隔にする) ----------------------------------------
+
+# 左を見る 幅広な文字 左に移動
+for i in ${!gravityW[@]}
+do
+  backtrack="${gravityWL[$i]}"
+  input="${gravityWC[$i]}"
+  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexL}"
+  index=`expr ${index} + 1`
+done
+
+# 左を見る 均等な文字 左に移動
+for i in ${!gravityE[@]}
+do
+  backtrack="${gravityEL[$i]}"
+  input="${gravityEC[$i]}"
+  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexL}"
+  index=`expr ${index} + 1`
+done
 
 # 左を見て左に移動させる通常処理 ----------------------------------------
 
@@ -528,9 +539,15 @@ lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 右を見る 右寄りの文字、幅広の文字、均等な文字 左に移動
-input=("${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
+# 右を見る 右寄りの文字、均等な文字 左に移動
+input=("${gravityRC[@]}" "${gravityEC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
+chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# 右を見る 幅広の文字 左に移動
+input=("${gravityWC[@]}")
+lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
