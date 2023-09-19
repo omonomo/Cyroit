@@ -4926,7 +4926,7 @@ while (i < SizeOf(input_list))
 # ボールド仮名等のウェイト調整
     if ("${draft_flag}" == "false")
         if (input_list[i] == "${input_kana_bold}")
-            Print("Edit kana glyphs weight")
+            Print("Edit kana weight of glyphs")
  #            Select(0u2013, 0u2014) # –—
             Select(0u2025, 0u2026) # ‥…
             SelectMore(0u2e80, 0u2fdf) # 部首
@@ -4954,7 +4954,7 @@ while (i < SizeOf(input_list))
 
 # ラテン文字、ギリシア文字、キリル文字等のウェイト調整
     if ("${draft_flag}" == "false")
-        Print("Edit latin greek cyrillic glyphs weight")
+        Print("Edit latin greek cyrillic weight of glyphs")
         if (input_list[i] == "${input_kana_regular}")
             Select(0u00a1, 0u0173) # Latin
             SelectMore(0u174, 0u0175) # W
@@ -6290,7 +6290,7 @@ while (i < SizeOf(input_list))
 # ボールド漢字等のウェイト調整
     if ("${draft_flag}" == "false")
         if (input_list[i] == "${input_kanzi_bold}")
-            Print("Edit kanzi glyphs weight (it may take a few minutes)")
+            Print("Edit kanzi weight of glyphs (it may take a few minutes)")
             Select(0u2e80, 0u2fdf)
             SelectMore(0u3003) # 〃
             SelectMore(0u3005, 0u3007) # 々〆〇
@@ -6307,7 +6307,7 @@ while (i < SizeOf(input_list))
 
 # 記号等のウェイト調整
     if ("${draft_flag}" == "false")
-        Print("Edit symbol glyphs weight")
+        Print("Edit symbol weight of glyphs")
         if (input_list[i] == "${input_kanzi_regular}")
             Select(0u20a0, 0u2120) # 記号類
             SelectMore(0u2122, 0u213a) # 記号類
@@ -6560,7 +6560,7 @@ while (i < SizeOf(latin_sfd_list))
  #    Select(0ua7a1) # ꞡ
 
     if ("${draft_flag}" == "false") # 前の処理で実行しなかったウェイト調整を実行
-        Print("Edit some glyphs weight")
+        Print("Edit some weight of glyphs")
         if (latin_sfd_list[i] == "${tmpdir}/${modified_latin_regular}")
             Select(0u01f5) # ǵ
             ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2)
