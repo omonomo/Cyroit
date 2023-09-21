@@ -28,11 +28,12 @@ underline="-80" # アンダーライン位置
 leaving_tmp_flag="false" # 一時ファイル残す
 
 cmap_flag="true" # cmapを編集するか
-calt_flag="true" # caltを編集するか、対応しているか
+calt_flag="true" # caltを編集するか
 other_flag="true" # その他を編集するか
 
 calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # パッチモード
+calt_ok_flag="true" # caltに対応しているか
 
 echo
 echo "= Font tables Modificator ="
@@ -204,31 +205,29 @@ if [ "${cmap_flag}" = "true" ]; then
   done
 fi
 
-gsubList_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
-if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
-  caltNo=`grep 'Substitution in="A"' "${gsubList}.txt"`
-  if [ -n "${caltNo}" ]; then # calt用の異体字があった場合gSubListからglyphナンバーを取得
-    temp=${caltNo##*glyph} # glyphナンバーより前を削除
-    glyphNo=${temp%\"*} # glyphナンバーより後を削除してオフセット値追加
-  else
-    echo "Not compatible with calt feature"
-    echo
-  	calt_flag="false"
-  fi
-else
-   font_size=`wc -c "${fontName_ttf}" | cut -d' ' -f2` # フォントのサイズでNerdFontsが含まれているか判定
-   if [ ${font_size} -lt 4500000 ]; then # DraftModeでは正しく判定できないので注意
-    glyphNo="${glyphNo_without_nerd}" # 異体字の先頭glyphナンバー (Nerd Fontsなし)
-   else
-    glyphNo="${glyphNo_with_nerd}" # 異体字の先頭glyphナンバー (Nerd Fontsあり)
-  fi
-fi
-
 if [ "${calt_flag}" = "true" ]; then
   rm -f ${caltList}.txt
+  gsubList_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
+  if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
+    caltNo=`grep 'Substitution in="A"' "${gsubList}.txt"`
+    if [ -n "${caltNo}" ]; then # calt用の異体字があった場合gSubListからglyphナンバーを取得
+      temp=${caltNo##*glyph} # glyphナンバーより前を削除
+      glyphNo=${temp%\"*} # glyphナンバーより後を削除してオフセット値追加
+    else
+      echo "Can't find glyph number of \"A moved left\""
+      echo
+      exit 1
+    fi
+  else
+    echo "Can't find GSUB List"
+    echo
+    exit 1
+  fi
+
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
+    calt_ok_flag="true"
     ttx -t GSUB "$P"
 
     # GSUB (用字、言語全て共通に変更)
@@ -259,7 +258,7 @@ if [ "${calt_flag}" = "true" ]; then
       fi
     else
       echo "Not compatible with calt feature."
-      calt_flag="false"
+      calt_ok_flag="false"
     fi
 
     sed -i.bak -e '/FeatureIndex index="10" value=".."/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる
@@ -280,7 +279,7 @@ if [ "${calt_flag}" = "true" ]; then
 
   	sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
 
-    if [ "${calt_flag}" = "true" ]; then
+    if [ "${calt_ok_flag}" = "true" ]; then
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
       <FeatureIndex index="10" value="12"/>\
       <FeatureIndex index="11" value="13"/>\
