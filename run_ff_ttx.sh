@@ -52,7 +52,7 @@ elif [ "$1" = "-C" ]; then
   sh font_generator.sh -l -z -t -o -N "${font_familyname}" auto
 elif [ "$1" = "-p" ]; then
   echo "Run calt patch only"
-  sh table_modificator.sh -p
+  sh table_modificator.sh -p -l
   exit 0
 elif [ "$1" = "-c" ]; then
   echo "Disable calt feature"
