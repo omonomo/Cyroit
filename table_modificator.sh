@@ -28,12 +28,13 @@ underline="-80" # アンダーライン位置
 leaving_tmp_flag="false" # 一時ファイル残す
 
 cmap_flag="true" # cmapを編集するか
-calt_flag="true" # caltを編集するか
+gsub_flag="true" # GSUBを編集するか
 other_flag="true" # その他を編集するか
 
 calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # パッチモード
-calt_ok_flag="true" # caltに対応しているか
+calt_ok_flag_l="true" # calt対応に必要なファイル(gsubList)があるか
+calt_ok_flag_f="true" # フォントがcaltに対応しているか
 
 echo
 echo "= Font tables Modificator ="
@@ -48,7 +49,7 @@ table_modificator_help()
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -m         Disable edit cmap tables"
-    echo "  -c         Disable edit calt feature"
+    echo "  -g         Disable edit GSUB tables"
     echo "  -t         Disable edit other tables"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
@@ -56,7 +57,7 @@ table_modificator_help()
 }
 
 # Get options
-while getopts hlN:mctCp OPT
+while getopts hlN:mgtCp OPT
 do
     case "${OPT}" in
         "h" )
@@ -74,9 +75,9 @@ do
             echo "Option: Disable edit cmap tables"
             cmap_flag="false"
             ;;
-        "c" )
-            echo "Option: Disable edit calt feature"
-            calt_flag="false"
+        "g" )
+            echo "Option: Disable edit GSUB tables"
+            gsub_flag="false"
             ;;
         "t" )
             echo "Option: Disable edit other tables"
@@ -205,7 +206,7 @@ if [ "${cmap_flag}" = "true" ]; then
   done
 fi
 
-if [ "${calt_flag}" = "true" ]; then
+if [ "${gsub_flag}" = "true" ]; then
   rm -f ${caltList}.txt
   gsubList_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
   if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
@@ -216,23 +217,23 @@ if [ "${calt_flag}" = "true" ]; then
     else
       echo "Can't find glyph number of \"A moved left\""
       echo
-      exit 1
+      calt_ok_flag_l="false"
     fi
   else
     echo "Can't find GSUB List"
     echo
-    exit 1
+    calt_ok_flag_l="false"
   fi
 
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
-    calt_ok_flag="true"
+    calt_ok_flag_f="true"
     ttx -t GSUB "$P"
 
     # GSUB (用字、言語全て共通に変更)
-    gpc=`grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx"`
-    gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"`
+    gpc=`grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx"` # caltフィーチャがすでにあるか判定
+    gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"` # zeroフィーチャ(ダミー)があるか判定
     if [ -n "${gpc}" ]; then
       echo "Already calt feature exist. Do not overwrite the table."
     elif [ -n "${gpz}" ]; then
@@ -247,6 +248,7 @@ if [ "${calt_flag}" = "true" ]; then
             sh calt_table_maker.sh -n ${glyphNo}
           fi
         fi
+				# フォントがcaltフィーチャに対応していた場合フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"の中を削除
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
@@ -258,9 +260,9 @@ if [ "${calt_flag}" = "true" ]; then
       fi
     else
       echo "Not compatible with calt feature."
-      calt_ok_flag="false"
+      calt_ok_flag_f="false"
     fi
-
+    # calt対応に関係なくスクリプトリストを変更
     sed -i.bak -e '/FeatureIndex index="10" value=".."/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる
     sed -i.bak -e '/FeatureIndex index="11" value=".."/d' "${P%%.ttf}.ttx"
     sed -i.bak -e '/FeatureIndex index="12" value=".."/d' "${P%%.ttf}.ttx"
@@ -274,12 +276,12 @@ if [ "${calt_flag}" = "true" ]; then
     sed -i.bak -e 's,FeatureIndex index="5" value=".",FeatureIndex index="5" value="7",' "${P%%.ttf}.ttx"
     sed -i.bak -e 's,FeatureIndex index="6" value=".",FeatureIndex index="6" value="8",' "${P%%.ttf}.ttx"
 
-    sed -i.bak -e 's,FeatureIndex index="7" value=".",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx" # index7 は valueが1桁と2桁の2つある
+    sed -i.bak -e 's,FeatureIndex index="7" value=".",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx" # index7 は valueが1桁と2桁の2つの場合がある
     sed -i.bak -e 's,FeatureIndex index="7" value="..",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx"
 
   	sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
 
-    if [ "${calt_ok_flag}" = "true" ]; then
+    if [ "${calt_ok_flag_l}" = "true" ] && [ "${calt_ok_flag_f}" = "true" ]; then # calt対応であれば index13を追加
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
       <FeatureIndex index="10" value="12"/>\
       <FeatureIndex index="11" value="13"/>\
@@ -307,7 +309,7 @@ if [ "${calt_flag}" = "true" ]; then
     ttx -m "${P%%.ttf}.orig.ttf" "${P%%.ttf}.ttx"
     echo
   done
-  if [ "${patch_only_flag}" = "false" ] && [ "${calt_insert_flag}" = "true" ]; then
+  if [ "${patch_only_flag}" = "false" ] && [ "${calt_insert_flag}" = "true" ]; then # パッチのみの場合、再利用できるように元のファイルを残す
     rm -f ${font_familyname}*.orig.ttf
   fi
   rm -f ${font_familyname}*.ttx.bak
