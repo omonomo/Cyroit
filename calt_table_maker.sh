@@ -82,8 +82,9 @@ gravity_lC=(f r t) # 引き寄せるやや左寄り
 circleL=(C G O Q c d e g o q) # 左が丸い文字
 circleR=(D O Q b e o p) # 右が丸い文字
 
-small=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 小文字
+smallL=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 小文字
 smallM=(b e f h i j k l o p r s t v x y z) # 右を引き離さない小文字
+smallR=(f l) # 引き寄せる背の高い小文字
 capital=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) # 大文字
 
 for S in ${gravityL[@]}; do
@@ -152,13 +153,16 @@ for S in ${circleR[@]}; do
   circleRC+=("${S}C") # 右が丸い文字
 done
 
-for S in ${small[@]}; do
+for S in ${smallL[@]}; do
   smallML+=("${S}L") # 小文字左移動後
-  smallMR+=("${S}R") # 小文字左移動後
 done
 
 for S in ${smallM[@]}; do
   smallMC+=("${S}C") # 右を引き離さない小文字通常
+done
+
+for S in ${smallR[@]}; do
+  smallMR+=("${S}R") # 小文字右移動後
 done
 
 for S in ${capital[@]}; do
@@ -318,7 +322,8 @@ index=`expr ${index} + 1`
 
 # 左右を見る 左が引き離す文字 右が幅広の文字の場合 幅広な文字、左寄りの文字、均等な文字、中間の文字 移動しない
 backtrack=("${gravityWL[@]}" \
-"${gravityLR[@]}" "${gravityER[@]}" "${gravityMR[@]}")
+"${gravityLR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
+"${gravityWC[@]}")
 input=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
 lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
@@ -508,7 +513,7 @@ index=`expr ${index} + 1`
 
 # 左右を見る 幅広な文字 右に移動しない
 backtrack=("${gravityLL[@]}" "${gravityRL[@]}" "${gravityEL[@]}" "${gravityML[@]}" "${gravityVL[@]}" \
-"${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" )
+"${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" )
 input=("${gravityWC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
