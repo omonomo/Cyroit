@@ -50,7 +50,7 @@ address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
 address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
 address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
 address_calt=`expr ${address_vert_kabu} + 7` # calt置換アドレス
-address_calt_end=`expr ${address_calt} + 103` # calt置換の最終アドレス(右に移動した z)
+address_calt_end=`expr ${address_calt} + 104` # calt置換の最終アドレス(上に移動した:)
 
 # フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
@@ -118,8 +118,12 @@ y_pos_super="273" # 上付きY座標移動量
 y_pos_sub="-166" # 下付きY座標移動量
 weight_extend_super_sub="12" # ウェイト調整
 
+# 演算子移動量
+y_pos_math="-30"
+
 # calt移動量
 x_pos_calt="20"
+y_pos_calt="60"
 
 # Set path to command
 fontforge_command="fontforge"
@@ -1908,6 +1912,18 @@ while (i < SizeOf(input_list))
     glyphName = GlyphInfo("Name") # subs フィーチャ追加
     Select(0u002d) # -
     AddPosSub(lookups[1][0],glyphName)
+
+# 演算子を下に移動
+    math = [0u002a, 0u002b, 0u002d, 0u003c,\
+            0u003d, 0u003e, 0u00d7, 0u00f7,\
+            0u2212, 0u2217, 0u2260]
+    j = 0
+    while (j < SizeOf(math))
+        Select(math[j]);
+        Move(0,${y_pos_math})
+        SetWidth(500)
+        j += 1
+    endloop
 
 # --------------------------------------------------
 
@@ -4871,7 +4887,11 @@ while (i < SizeOf(input_list))
     Select(0u25a1); Copy() # □
     Select(0u25b1); Paste() # ▱
     Transform(80, 0, 40, 70, -4000, 10000)
-    ChangeWeight(16)
+    if (input_list[i] == "${input_kana_regular}")
+        ChangeWeight(22)
+    else
+        ChangeWeight(24)
+    endif
     CorrectDirection()
     SetWidth(1000)
 
@@ -4920,6 +4940,16 @@ while (i < SizeOf(input_list))
         endloop
         Select(65552); Clear() # Temporary glyph
  #    endif
+
+# 演算子を下に移動
+    math = [0u223c]
+    j = 0
+    while (j < SizeOf(math))
+        Select(math[j]);
+        Move(0,${y_pos_math})
+        SetWidth(500)
+        j += 1
+    endloop
 
 # --------------------------------------------------
 
@@ -6264,6 +6294,25 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
+# 演算子を下に移動
+    math = [0u2243, 0u2248, 0u2252]
+    j = 0
+    while (j < SizeOf(math))
+        Select(math[j]);
+        Move(0,${y_pos_math})
+        SetWidth(512)
+        j += 1
+    endloop
+
+    math = [0u226a, 0u226b]
+    j = 0
+    while (j < SizeOf(math))
+        Select(math[j]);
+        Move(0,${y_pos_math})
+        SetWidth(1024)
+        j += 1
+    endloop
+
 # --------------------------------------------------
 
 # calt 対応 (スロットの確保、後でグリフ上書き)
@@ -6283,6 +6332,10 @@ while (i < SizeOf(input_list))
             j += 1
             k += 1
         endloop
+
+        Select(0u003a); Copy() # :
+        Select(k); Paste()
+        k += 1
  #    endif
 
 # --------------------------------------------------
@@ -7768,6 +7821,21 @@ while (i < \$argc)
             j += 1
             k += 1
         endloop
+
+        lookupName = "単純置換 (上)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+        Select(0u003a); Copy() # :
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(0, ${y_pos_calt})
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 中←上
+        glyphName = GlyphInfo("Name")
+        Select(0u003a) # :
+        AddPosSub(lookupSub1, glyphName) # 中→上
+        k += 1
 
         # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
         lookupName = "'zero' 文脈依存の異体字に後で換える"
