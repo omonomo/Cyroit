@@ -317,7 +317,7 @@ if [ "${gsub_flag}" = "true" ]; then
   find . -not -name "*.*.ttx" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttx$" | while read P
   do
-    mv "$P" "${P%%.ttx}.calt.ttx"
+    mv "$P" "${P%%.ttx}.GSUB.ttx"
   done
 fi
 
