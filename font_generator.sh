@@ -4978,6 +4978,8 @@ while (i < SizeOf(input_list))
  #            SelectMore(0uff5f, 0uff9f) # 半角カタカナ
             SelectMore(0u1b000, 0u1b001) # 𛀀𛀁
             SelectMore(1114115, 1114128) # 合字カタカナ
+            SelectMore(${address_visi_kana}) # 避難した゠
+            SelectMore(${address_visi_kana} + 1) # 避難した⼣
             ChangeWeight(${weight_reduce_kana_bold}); CorrectDirection()
         endif
     endif
@@ -6354,6 +6356,7 @@ while (i < SizeOf(input_list))
             SelectMore(0uf900, 0ufaff)
             SelectMore(0u20000, 0u3ffff)
             SelectMore(1115184, 1115492) # 異体字
+            SelectMore(${address_visi_kanzi}, ${address_visi_kanzi} + 8) #避難した漢字
             ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
         endif
     endif
