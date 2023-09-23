@@ -171,8 +171,11 @@ for S in ${capital[@]}; do
 done
 
 # グリフ名変換用辞書作成 (グリフのIDS順に並べること) ========================================
-number=(0 1 2 3 4 5 6 7 8 9) # 略号
-number_name=("zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine") # 実際の名前
+space="SP" # 略号
+space_name="space" # 実際の名前
+
+number=(0 1 2 3 4 5 6 7 8 9)
+number_name=("zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine")
 
 colon=":"
 colon_name="colon"
@@ -182,14 +185,20 @@ colon_name="colon"
 latin=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
 a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字
 
+nbspace="NS"
+nbspace_name="uni00A0"
+
 i=0
+echo "$i ${space} ${space_name}" >> "${dict}.txt" # スペース
+i=`expr ${i} + 1`
+
 for j in ${!number[@]} # 数字
 do
   echo "$i ${number[j]} ${number_name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
-echo "$i ${colon} ${colon_name}" >> "${dict}.txt"
+echo "$i ${colon} ${colon_name}" >> "${dict}.txt" # :
 i=`expr ${i} + 1`
 
 for S in ${latin[@]} # 移動していないアルファベット
@@ -197,6 +206,9 @@ do
   echo "$i ${S}C ${S}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
+
+echo "$i ${nbspace} ${nbspace_name}" >> "${dict}.txt" # ノーブレークスペース
+i=`expr ${i} + 1`
 
 i=${glyphNo}
 for S in ${latin[@]} # 左に移動したアルファベット
@@ -324,38 +336,6 @@ input=("${capitalMC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
-# 左右を見て移動させない例外処理 ----------------------------------------
-
-# 左右を見る 両方が少しでも右に寄っている文字の場合 左寄りの文字他 左に移動しない
-backtrack=("${gravity_rCC[@]}")
-input=("${gravityLC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityRC[@]}" "${gravity_rMC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 左右を見る 両方が少しでも左に寄っている文字の場合 右寄りの文字他 右に移動しない
-backtrack=("${gravityLC[@]}" "${gravity_lMC[@]}")
-input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravity_lCC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 左右を見る 左が幅広、右が右が丸い文字 左が丸い文字 移動しない
-backtrack=("${gravityWL[@]}")
-input=("${circleLC[@]}")
-lookAhead=("${circleRC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 左右を見る 左が引き離す文字 右が幅広の文字の場合 幅広な文字、左寄りの文字、均等な文字、中間の文字 移動しない
-backtrack=("${gravityWL[@]}" \
-"${gravityLR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
-"${gravityWC[@]}")
-input=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
-lookAhead=("${gravityWC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
 # 左を見て左に移動させる例外処理 (同じ文字は等間隔にする) ----------------------------------------
 
 # 左を見る 幅広な文字 左に移動
@@ -406,6 +386,38 @@ do
   chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexC}"
   index=`expr ${index} + 1`
 done
+
+# 左右を見て移動させない例外処理 ----------------------------------------
+
+# 左右を見る 両方が少しでも右に寄っている文字の場合 左寄りの文字他 左に移動しない
+backtrack=("${gravity_rCC[@]}")
+input=("${gravityLC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
+lookAhead=("${gravityRC[@]}" "${gravity_rMC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 左右を見る 両方が少しでも左に寄っている文字の場合 右寄りの文字他 右に移動しない
+backtrack=("${gravityLC[@]}" "${gravity_lMC[@]}")
+input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
+lookAhead=("${gravity_lCC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 左右を見る 左が幅広、右が右が丸い文字 左が丸い文字 移動しない
+backtrack=("${gravityWL[@]}")
+input=("${circleLC[@]}")
+lookAhead=("${circleRC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 左右を見る 左が引き離す文字 右が幅広の文字の場合 幅広な文字、左寄りの文字、均等な文字、中間の文字 移動しない
+backtrack=("${gravityWL[@]}" \
+"${gravityLR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
+"${gravityWC[@]}")
+input=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
+lookAhead=("${gravityWC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
 
 # 左を見て移動させない(絶対移動させない)通常処理 ----------------------------------------
 
