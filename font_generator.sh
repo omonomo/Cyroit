@@ -6296,41 +6296,41 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-# 地球儀 (追加)
+# 🌐 (追加)
     Select(0u25cb); Copy() # ○
-    Select(0u1f310); Paste()
+    Select(0u1f310); Paste() # 🌐
 
     Select(0u25cb); Copy() # ○
     Select(65552); Paste() # Temporary glyph
     Scale(55, 100, 478, 338); Copy()
     Select(0u1f310)
-    PasteWithOffset(-14, 0)
-    PasteWithOffset( 14, 0)
+    PasteWithOffset(-12, 0)
+    PasteWithOffset( 12, 0)
 
     Select(0u25cb); Copy() # ○
     Select(65552); Paste() # Temporary glyph
     Scale(100, 45, 478, 338); Copy()
     Select(0u1f310)
     if (input_list[i] == "${input_kanzi_regular}")
-        PasteWithOffset(0,  340)
-        PasteWithOffset(0,  330)
-        PasteWithOffset(0,  310)
-        PasteWithOffset(0, -310)
-        PasteWithOffset(0, -330)
-        PasteWithOffset(0, -340)
+        PasteWithOffset(0,  338)
+        PasteWithOffset(0,  325)
+        PasteWithOffset(0,  312)
+        PasteWithOffset(0, -312)
+        PasteWithOffset(0, -325)
+        PasteWithOffset(0, -338)
     else
-        PasteWithOffset(0,  330)
-        PasteWithOffset(0,  300)
-        PasteWithOffset(0, -300)
-        PasteWithOffset(0, -330)
+        PasteWithOffset(0,  328)
+        PasteWithOffset(0,  302)
+        PasteWithOffset(0, -302)
+        PasteWithOffset(0, -328)
     endif
 
     Select(0u254b); Copy() # ╋
     Select(65552); Paste() # Temporary glyph
     if (input_list[i] == "${input_kanzi_regular}")
-        ChangeWeight(-38)
+        ChangeWeight(-50)
     else
-        ChangeWeight(-34)
+        ChangeWeight(-38)
     endif
     CorrectDirection()
     Copy()
@@ -6338,6 +6338,13 @@ while (i < SizeOf(input_list))
     RemoveOverlap()
 
     Select(0u25cf); Copy() # ●
+    Select(65552); Paste() # Temporary glyph
+    if (input_list[i] == "${input_kanzi_regular}")
+        Scale(99, 99, 478, 338)
+    else
+        Scale(97, 97, 478, 338)
+    endif
+    Copy()
     Select(0u1f310); PasteInto()
     SetWidth(1024)
     OverlapIntersect()
