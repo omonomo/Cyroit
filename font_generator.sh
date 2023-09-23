@@ -1916,7 +1916,7 @@ while (i < SizeOf(input_list))
 # 演算子を下に移動
     math = [0u002a, 0u002b, 0u002d, 0u003c,\
             0u003d, 0u003e, 0u00d7, 0u00f7,\
-            0u2212, 0u2217, 0u2260]
+            0u2212, 0u2217, 0u2260] # *+-<=>×÷−∗≠
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
@@ -4942,7 +4942,7 @@ while (i < SizeOf(input_list))
  #    endif
 
 # 演算子を下に移動
-    math = [0u223c]
+    math = [0u223c] # ∼
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
@@ -6353,7 +6353,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
 
 # 演算子を下に移動
-    math = [0u2243, 0u2248, 0u2252]
+    math = [0u2243, 0u2248, 0u2252] # ≃≈≒
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
@@ -6362,7 +6362,7 @@ while (i < SizeOf(input_list))
         j += 1
     endloop
 
-    math = [0u226a, 0u226b]
+    math = [0u226a, 0u226b] # ≪≫
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);

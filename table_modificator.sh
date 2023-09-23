@@ -4,7 +4,7 @@
 #
 # Copyright (c) 2023 omonomo
 
-# 各種テーブルの修正プログラム
+# 各種テーブルの修正・追加プログラム
 #
 
 font_familyname="Cyroit"

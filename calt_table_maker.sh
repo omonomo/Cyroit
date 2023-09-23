@@ -6,7 +6,7 @@
 
 # GSUB calt フィーチャテーブル作成プログラム
 #
-# 条件成立時に呼び出す異体字変換テーブルは font_generator で生成
+# 条件成立時に呼び出す異体字変換テーブルは font_generator にて生成済みであること
 
 #glyphNo="13704" # calt用異体字の先頭glyphナンバー (Nerd Fontsなし)
 glyphNo="22862" # calt用異体字の先頭glyphナンバー (Nerd Fontsあり)
