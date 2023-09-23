@@ -2,7 +2,7 @@
 
 Cyroit (しろいと) はプログラミングにもお使いいただける等幅フォントです。  
 Ricty 生成スクリプトで遊んでいるうちに合成フォント製作の沼にはまったことで生まれました。  
-全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧の組み合わせが全角と半角になっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
+全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧が全角と半角のの組み合わせになっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
 全角スペースを可視化しており、さらに半角・ノーブレークスペースも可視化したバージョンも用意しています。  
 [Commit Mono](https://commitmono.com) に影響を受け、calt フィーチャを利用したカーニング機能に対応しました (v1.1.0以降)。  
 
@@ -15,7 +15,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 <img alt="ScreenShot" src="./images/SS_1.png" width="820">  
 
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
-<img alt="ScreenShot" src="./images/SS_2.png" width="426">  
+<img alt="ScreenShot" src="./images/SS_2.png" width="420">  
 
 カーニングサンプル  
 <img alt="ScreenShot" src="./images/SS_3.gif" width="670">  
