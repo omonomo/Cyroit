@@ -6736,6 +6736,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u1e97) # ẗ
         SelectMore(0u1e9e) # ẞ
         SelectMore(0u1ea0, 0u1ef9) # Ạ - ỹ
+        SelectMore(${address_dvz_latin}, ${address_dvz_latin} + 17)# 避難したDVZ
         Scale(${width_percent_latin}, ${height_percent_latin}, 250, 0); SetWidth(500)
     endif
 
