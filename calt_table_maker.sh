@@ -341,7 +341,17 @@ index=`expr ${index} + 1`
 #chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexR}"
 #index=`expr ${index} + 1`
 
-# 左を見て左に移動させる例外処理 (同じ文字は等間隔にする) ----------------------------------------
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
+
+# 左右を見る 幅広な文字 右に移動
+for i in ${!gravityW[@]}
+do
+  backtrack="${gravityWL[$i]}"
+  input="${gravityWC[$i]}"
+  lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
+  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
+  index=`expr ${index} + 1`
+done
 
 # 左を見る 幅広な文字 左に移動
 for i in ${!gravityW[@]}
@@ -352,6 +362,8 @@ do
   index=`expr ${index} + 1`
 done
 
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
+
 # 左を見る 均等な文字 左に移動
 for i in ${!gravityE[@]}
 do
@@ -361,7 +373,27 @@ do
   index=`expr ${index} + 1`
 done
 
-# 左を見て右に移動させる例外処理 (同じ文字は等間隔にする) ----------------------------------------
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
+
+# 左右を見る 中寄りの文字 移動しない
+for i in ${!gravityC[@]}
+do
+  backtrack="${gravityCR[$i]}"
+  input="${gravityCC[$i]}"
+  lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
+  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexC}"
+  index=`expr ${index} + 1`
+done
+
+# 左右を見る 中寄りの文字 左に移動
+for i in ${!gravityC[@]}
+do
+  backtrack="${gravityCR[$i]}"
+  input="${gravityCC[$i]}"
+  lookAhead=("${gravityWC[@]}")
+  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexL}"
+  index=`expr ${index} + 1`
+done
 
 # 左を見る 中寄りの文字 右に移動
 for i in ${!gravityC[@]}
@@ -372,7 +404,17 @@ do
   index=`expr ${index} + 1`
 done
 
-# 左を見て移動させない例外処理 (同じ文字は等間隔にする) ----------------------------------------
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
+
+# 左右を見る 左寄りの文字 右に移動
+for i in ${!gravityL[@]}
+do
+  backtrack="${gravityLC[$i]}"
+  input="${gravityLC[$i]}"
+  lookAhead=("${gravityVC[@]}" "${gravityCC[@]}")
+  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
+  index=`expr ${index} + 1`
+done
 
 # 左を見る 左寄りの文字 移動しない
 for i in ${!gravityL[@]}
@@ -380,6 +422,18 @@ do
   backtrack="${gravityLC[$i]}"
   input="${gravityLC[$i]}"
   chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexC}"
+  index=`expr ${index} + 1`
+done
+
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
+
+# 左右を見る 右寄りの文字 右に移動
+for i in ${!gravityR[@]}
+do
+  backtrack="${gravityRC[$i]}"
+  input="${gravityRC[$i]}"
+  lookAhead=("${gravityCC[@]}")
+  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
   index=`expr ${index} + 1`
 done
 
@@ -392,7 +446,23 @@ do
   index=`expr ${index} + 1`
 done
 
-# 左を見て左に移動させない例外処理 ----------------------------------------
+# 大文字について左右を見て移動させる例外処理 ----------------------------------------
+
+# 左が FJPVY、右が W の場合 A 左に移動する
+backtrack=("FR" "JR" "PR" "VR" "YR")
+input=("AC")
+lookAhead=("WC")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# 左が W、右が VY の場合 A 右に移動する
+backtrack=("WR")
+input=("AC")
+lookAhead=("VC" "YC")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+index=`expr ${index} + 1`
+
+# 大文字について左を見て左に移動させない例外処理 ----------------------------------------
 
 # 左が FIJPTVWY の場合 A 移動しない
 backtrack=("FR" "IR" "JR" "PR" "TR" "VR" "WR" "YR")
@@ -412,7 +482,7 @@ input=("${capitalC[@]}" "${smallC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左を見て左に移動させる例外処理 ----------------------------------------
+# 大文字について左を見て左に移動させる例外処理 ----------------------------------------
 
 # 左が FIJPTVWY の場合 A 左に移動
 backtrack=("FL" "IL" "JL" "PL" "TL" "VL" "WL" "YL" \
@@ -435,7 +505,7 @@ input=("${capitalC[@]}" "${smallC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 右を見て右に移動させる例外処理 ----------------------------------------
+# 大文字について右を見て右に移動させる例外処理 ----------------------------------------
 
 # 右が ITVWY の場合 A 右に移動
 input=("AC")
