@@ -74,14 +74,16 @@ gravityM=(A S X Z e o s x z) # 基本的には幅広以外からは離れよう�
 gravityV=(T V Y v y) # Vの字(幅広、均等、左にある右寄り、右にある左寄り以外は近づこうとする)
 gravityC=(I J f i j l r t) # 中寄り(全てが近づこうとする)
 
-gravity_rC=(J j) # 引き寄せるやや右寄り
-gravity_rM=(j) # 引き寄せさせないやや右寄り
+gravityrC=(J j) # 引き寄せるやや右寄り
+gravityrM=(j) # 引き寄せさせないやや右寄り
 
-gravity_lM=(e t) # 引き寄せさせないやや左寄り
-gravity_lC=(f l r t) # 引き寄せるやや左寄り
+gravitylM=(e t) # 引き寄せさせないやや左寄り
+gravitylC=(f l r t) # 引き寄せるやや左寄り
 
 circleL=(C G O Q c d e g o q) # 左が丸い文字
 circleR=(D O Q b e o p) # 右が丸い文字
+lowL=(a c d e g i j m n o p q r s u v w x y z) # 左が低い文字
+lowR=(a b c e g h i j k m n o p q r s u v w x y z) # 右が低い文字
 
 small_=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 小文字
 small_L=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 左に移動した小文字(小文字)
@@ -131,20 +133,20 @@ for S in ${gravityC[@]}; do
   gravityCR+=("${S}R") # 中寄り右移動後
 done
 
-for S in ${gravity_rM[@]}; do
-  gravity_rMC+=("${S}C") # 引き寄せないやや右寄り
+for S in ${gravityrM[@]}; do
+  gravityrMC+=("${S}C") # 引き寄せないやや右寄り
 done
 
-for S in ${gravity_rC[@]}; do
-  gravity_rCC+=("${S}C") # 引き寄せるやや右寄り
+for S in ${gravityrC[@]}; do
+  gravityrCC+=("${S}C") # 引き寄せるやや右寄り
 done
 
-for S in ${gravity_lM[@]}; do
-  gravity_lMC+=("${S}C") # 引き寄せないやや左寄り
+for S in ${gravitylM[@]}; do
+  gravitylMC+=("${S}C") # 引き寄せないやや左寄り
 done
 
-for S in ${gravity_lC[@]}; do
-  gravity_lCC+=("${S}C") # 引き寄せるやや左寄り
+for S in ${gravitylC[@]}; do
+  gravitylCC+=("${S}C") # 引き寄せるやや左寄り
 done
 
 for S in ${circleL[@]}; do
@@ -153,6 +155,14 @@ done
 
 for S in ${circleR[@]}; do
   circleRC+=("${S}C") # 右が丸い文字
+done
+
+for S in ${lowL[@]}; do
+  lowLC+=("${S}C") # 左が低い文字
+done
+
+for S in ${lowR[@]}; do
+  lowRC+=("${S}C") # 右が低い文字
 done
 
 for S in ${small_L[@]}; do
@@ -318,7 +328,7 @@ index="0"
 
 # 左右を見て上に移動させる通常処理 ----------------------------------------
 
-# 左右を見る 両方が数字の場合 コロン 上に移動する
+# 左右を見る 両方が数字の場合 コロン 上に移動
 backtrack=("${number[@]}")
 input=("${colon[@]}")
 lookAhead=("${number[@]}")
@@ -335,32 +345,11 @@ index=`expr ${index} + 1`
 
 # 左を見て右に移動させる例外処理 ----------------------------------------
 
-# 左が小文字の場合 大文字 右に移動する
+# 左が小文字の場合 大文字 右に移動
 #backtrack=("${smallXR[@]}")
 #input=("${capitalC[@]}")
 #chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexR}"
 #index=`expr ${index} + 1`
-
-# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
-
-# 左右を見る 幅広な文字 右に移動
-for i in ${!gravityW[@]}
-do
-  backtrack="${gravityWL[$i]}"
-  input="${gravityWC[$i]}"
-  lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
-  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
-  index=`expr ${index} + 1`
-done
-
-# 左を見る 幅広な文字 左に移動
-for i in ${!gravityW[@]}
-do
-  backtrack="${gravityWL[$i]}"
-  input="${gravityWC[$i]}"
-  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexL}"
-  index=`expr ${index} + 1`
-done
 
 # 同じ文字を等間隔にさせる例外処理 ----------------------------------------
 
@@ -448,14 +437,14 @@ done
 
 # 大文字について左右を見て移動させる例外処理 ----------------------------------------
 
-# 左が FJPVY、右が W の場合 A 左に移動する
+# 左が FJPVY、右が W の場合 A 左に移動
 backtrack=("FR" "JR" "PR" "VR" "YR")
 input=("AC")
 lookAhead=("WC")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が W、右が VY の場合 A 右に移動する
+# 左が W、右が VY の場合 A 右に移動
 backtrack=("WR")
 input=("AC")
 lookAhead=("VC" "YC")
@@ -525,19 +514,60 @@ lookAhead=("${capitalC[@]}" "${smallC[@]}")
 chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
+# 小文字について左を見て左に移動させない例外処理 ----------------------------------------
+
+# 左が幅広以外の文字、j 左に移動しない
+backtrack=("gR" "qR")
+input=("jC")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 小文字について左を見て左に移動させる例外処理 ----------------------------------------
+
+# 左が幅広以外の文字、j 左に移動
+backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" "${gravityCR[@]}" \
+"${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
+input=("jC")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# 小文字について左を見て左に移動させない例外処理 ----------------------------------------
+
+# 左が左寄りの文字、中間の文字の場合 y 移動しない
+backtrack=("RC" "kC" "pC")
+input=("yC")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 小文字について右を見て右に移動させない例外処理 ----------------------------------------
+
+# 右が y の場合 左寄りの文字、中間の文字 右に移動しない
+input=("RC" "kC" "pC")
+lookAhead=("yC")
+chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 小文字について右を見て右に移動させる例外処理 ----------------------------------------
+
+# 右が、左が低い文字の場合 f 右に移動
+input=("fC")
+lookAhead=("${lowLC[@]}")
+chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+index=`expr ${index} + 1`
+
 # 左右を見て移動させない例外処理 ----------------------------------------
 
 # 左右を見る 両方が少しでも右に寄っている文字の場合 左寄りの文字他 左に移動しない
-backtrack=("${gravity_rCC[@]}")
+backtrack=("${gravityrCC[@]}")
 input=("${gravityLC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravityRC[@]}" "${gravity_rMC[@]}")
+lookAhead=("${gravityRC[@]}" "${gravityrMC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
 # 左右を見る 両方が少しでも左に寄っている文字の場合 右寄りの文字他 右に移動しない
-backtrack=("${gravityLC[@]}" "${gravity_lMC[@]}")
+backtrack=("${gravityLC[@]}" "${gravitylMC[@]}")
 input=("${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead=("${gravity_lCC[@]}")
+lookAhead=("${gravitylCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
@@ -556,6 +586,27 @@ input=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
 lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
+
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
+
+# 左右を見る 幅広な文字 右に移動
+for i in ${!gravityW[@]}
+do
+  backtrack="${gravityWL[$i]}"
+  input="${gravityWC[$i]}"
+  lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
+  chain_context "${index}" "${backtrack}" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
+  index=`expr ${index} + 1`
+done
+
+# 左を見る 幅広な文字 左に移動
+for i in ${!gravityW[@]}
+do
+  backtrack="${gravityWL[$i]}"
+  input="${gravityWC[$i]}"
+  chain_context "${index}" "${backtrack}" "${input}" "" "${lookupIndexL}"
+  index=`expr ${index} + 1`
+done
 
 # 左を見て移動させない(絶対移動させない)通常処理 ----------------------------------------
 
@@ -688,8 +739,7 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lo
 index=`expr ${index} + 1`
 
 # 左右を見る 右寄りの文字 右に移動しない
-backtrack=("${gravityWL[@]}" \
-"${gravityRR[@]}" "${gravityER[@]}" \
+backtrack=("${gravityRR[@]}" "${gravityER[@]}" \
 "${gravityRC[@]}" "${gravityEC[@]}")
 input=("${gravityRC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -731,14 +781,14 @@ index=`expr ${index} + 1`
 
 # 左右を見て右に移動させる通常処理 ----------------------------------------
 
-# 左右を見る 中寄りの字 右に移動する
+# 左右を見る 中寄りの字 右に移動
 backtrack=("${gravityRR[@]}" "${gravityER[@]}" "${gravityVR[@]}")
 input=("${gravityCC[@]}")
 lookAhead=("${gravityRC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
-# 左右を見る 中寄りの字 右に移動する
+# 左右を見る 中寄りの字 右に移動
 backtrack=("${gravityWC[@]}")
 input=("${gravityCC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
@@ -772,8 +822,7 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
 # 左を見る Vの字 右に移動
-backtrack=("${gravityWL[@]}" \
-"${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityVR[@]}" \
+backtrack=("${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityVR[@]}" \
 "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
 input=("${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexR}"
