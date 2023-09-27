@@ -983,6 +983,41 @@ while (i < SizeOf(input_list))
  #        Select(0ua75e) # Ꝟ
  #    endif
 
+# W (右の線を少し太く)
+    if (input_list[i] == "${input_latin_regular}")
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Scale(22, 45); Move(-50, 20); Copy()
+        PasteWithOffset(225, 0)
+        Select(0u0057); Copy() # W
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+
+        Select(0u0057) # W
+        PasteWithOffset(-3, 0)
+        SetWidth(500)
+        RemoveOverlap()
+        Simplify()
+
+        Select(65552);  Clear() # Temporary glyph
+
+        Select(0u2588); Copy() # Full block
+        Select(0u0174); PasteWithOffset(0,  1035); OverlapIntersect() # Ŵ
+        Select(0u1e80); PasteWithOffset(0,  1035); OverlapIntersect() # Ẁ
+        Select(0u1e82); PasteWithOffset(0,  1035); OverlapIntersect() # Ẃ
+        Select(0u1e84); PasteWithOffset(0,  1035); OverlapIntersect() # Ẅ
+        Select(0u0057); Copy() # W
+        Select(0u0174); PasteInto(); SetWidth(500) # Ŵ
+        Select(0u1e80); PasteInto(); SetWidth(500) # Ẁ
+        Select(0u1e82); PasteInto(); SetWidth(500) # Ẃ
+        Select(0u1e84); PasteInto(); SetWidth(500) # Ẅ
+ #        Select(0u1e86) # Ẇ
+ #        Select(0u1e88) # Ẉ
+ #        Select(0u2c72) # Ⱳ
+
+    endif
+
 # Z (クロスバーを付加してゼェーットな感じに)
     Select(0u005a); Copy() # V
     Select(${address_dvz_latin} + 2); Paste() # 避難所
