@@ -3005,8 +3005,9 @@ while (i < SizeOf(input_list))
     # 右下
     Select(0u25a0); Copy() # Black square
     Select(65554);  Paste() # Temporary glyph
-    Move(350, -273)
-    PasteWithOffset(20, -500)
+    Move(180, -500)
+    Rotate(2, 300, 0)
+    PasteWithOffset(350, -273)
     RemoveOverlap()
     Copy()
     Select(0u308a); PasteInto() # り
