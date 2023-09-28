@@ -614,25 +614,11 @@ input=("jC")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左が幅広以外の文字、j 左に移動
-backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" "${gravityCR[@]}" \
-"${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
+# 左が全ての文字、j 左に移動
+backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" "${gravityCR[@]}" \
+"${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${gravityCC[@]}")
 input=("jC")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
-# y に関する例外処理 ----------------------------------------
-
-# 左が Rkp の場合 y 左に移動しない
-backtrack=("RC" "kC" "pC")
-input=("yC")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 右が y の場合 Rkp 右に移動しない
-input=("RC" "kC" "pC")
-lookAhead=("yC")
-chain_context "${index}" "" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
 # 左を見て移動させない(絶対移動させない)通常処理 ----------------------------------------
