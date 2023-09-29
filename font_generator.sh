@@ -3091,6 +3091,62 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     Select(65552); Clear() # Temporary glyph
 
+# クグク゚
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-160, 350)
+    Rotate(-46)
+    PasteWithOffset(260, 280)
+    PasteWithOffset(210, 0)
+    PasteWithOffset(50, -500)
+    Rotate(8)
+    RemoveOverlap()
+    Copy()
+
+    Select(0u30af) # ク
+    PasteInto()
+    SetWidth(1000)
+    OverlapIntersect()
+
+    Select(0u30b0) # グ
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-21, -9)
+    else
+        PasteWithOffset(-46, -9)
+    endif
+    SetWidth(1000)
+    OverlapIntersect()
+
+    Select(1114122) # ク゚
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-30, -9)
+    else
+        PasteWithOffset(-37, -9)
+    endif
+    SetWidth(1000)
+    OverlapIntersect()
+
+    Select(65552); Clear() # Temporary glyph
+
+# ㇰ
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-160, 325)
+    Rotate(-46)
+    PasteWithOffset(260, 280)
+    PasteWithOffset(210, 0)
+    PasteWithOffset(100, -500)
+    Rotate(8)
+    RemoveOverlap()
+    Copy()
+
+    Select(0u31f0) # ㇰ
+    PasteInto()
+    SetWidth(1000)
+    OverlapIntersect()
+
+    Select(65552); Clear() # Temporary glyph
+
 # ス (左上を少し延ばす)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
@@ -3137,6 +3193,38 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
     RemoveOverlap()
     Simplify()
+    Select(65552); Clear() # Temporary glyph
+
+# タダ
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-160, 350)
+    Rotate(-46)
+    PasteWithOffset(260, 280)
+    PasteWithOffset(210, 0)
+    PasteWithOffset(50, -500)
+    Rotate(8)
+    RemoveOverlap()
+    Copy()
+
+    Select(0u30bf) # タ
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(5, -9)
+    else
+        PasteWithOffset(2, -9)
+    endif
+    SetWidth(1000)
+    OverlapIntersect()
+
+    Select(0u30c0) # ダ
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-18, -18)
+    else
+        PasteWithOffset(-52, -18)
+    endif
+    SetWidth(1000)
+    OverlapIntersect()
+
     Select(65552); Clear() # Temporary glyph
 
 # テ (Tの横棒を少し上に移動)
