@@ -3091,7 +3091,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     Select(65552); Clear() # Temporary glyph
 
-# クグク゚
+# クグク゚ (はらいの部分を少し短くする)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-160, 350)
@@ -3128,7 +3128,7 @@ while (i < SizeOf(input_list))
 
     Select(65552); Clear() # Temporary glyph
 
-# ㇰ
+# ㇰ (はらいの部分を少し短くする)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-160, 325)
@@ -3195,7 +3195,7 @@ while (i < SizeOf(input_list))
     Simplify()
     Select(65552); Clear() # Temporary glyph
 
-# タダ
+# タダ (はらいの部分を少し短くする)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-160, 350)
