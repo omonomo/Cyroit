@@ -535,6 +535,28 @@ while (i < SizeOf(input_list))
     Select(0ufeff); SetWidth(0)
 
     Print("Edit numbers")
+# 4 (縦線を少し細く)
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    Move(-112,0)
+    Select(0u0034); Copy() # 4
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    
+    Select(0u2588); Copy() # Full block
+    Select(0u0034); PasteWithOffset(400, 0) # 4
+    OverlapIntersect()
+    Copy()
+    PasteWithOffset(-20, 0)
+
+    Select(65552);  Copy() # Temporary glyph
+    Select(0u0034); PasteInto() # 4
+
+    RemoveOverlap()
+    SetWidth(500)
+
+    Select(65552); Clear() # Temporary glyph
+
 # 7 (左上を折り曲げる、太さ変更)
     # 折り曲げ
     Select(0u00af); Copy()  # macron
@@ -995,7 +1017,7 @@ while (i < SizeOf(input_list))
         Copy()
 
         Select(0u0057) # W
-        PasteWithOffset(-3, 0)
+        PasteWithOffset(-4, 0)
         SetWidth(500)
         RemoveOverlap()
         Simplify()
@@ -1102,7 +1124,11 @@ while (i < SizeOf(input_list))
     Move(10, 0)
     SetWidth(500)
 
-# l (左を少しカットして少し左へ移動)
+# l (縦線を少し細くし、左を少しカットして少し左へ移動)
+    Select(0u006c); Copy() # l
+    PasteWithOffset(-3, 0)
+    OverlapIntersect()
+
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
     if (input_list[i] == "${input_latin_regular}")
