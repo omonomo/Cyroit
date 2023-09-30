@@ -1126,7 +1126,7 @@ while (i < SizeOf(input_list))
 
 # l (縦線を少し細くし、左を少しカットして少し左へ移動)
     Select(0u006c); Copy() # l
-    PasteWithOffset(-3, 0)
+    PasteWithOffset(-2, 0)
     OverlapIntersect()
 
     Select(0u2588); Copy() # Full block
@@ -1177,6 +1177,42 @@ while (i < SizeOf(input_list))
  #    Select(0ua749) # ꝉ
  #    Select(0ua78e) # ꞎ
  #    Select(0uab37, 0uab39) # ꬷꬸꬹ
+
+# m (縦線を少し太く)
+    if (input_list[i] == "${input_latin_regular}")
+        Select(0u006d); Copy() # m
+        PasteWithOffset(-4,0) 
+        RemoveOverlap()
+
+        # 縦横比変更時にゴミが出るため、一旦脚を切って付け直す
+        Select(0u2588); Copy() # Full block
+        Select(0u006d); PasteWithOffset(0, 450) # m
+        OverlapIntersect()
+
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Move(0, -850)
+        Select(0u006d); Copy() # m
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+        Select(0u006d); PasteWithOffset(0, -50) # m
+
+        SetWidth(500)
+        RemoveOverlap()
+        Simplify()
+
+        Select(0u2588); Copy() # Full block
+        Select(0u1e43); PasteWithOffset(  0, -1020); OverlapIntersect() # ṃ
+        Select(0u006d); Copy() # m
+        Select(0u1e43); PasteInto(); SetWidth(500) # ṃ
+ #        Select(0u0271) # ɱ
+ #        Select(0u1d6f) # ᵯ
+ #        Select(0u1d86) # ᶆ
+ #        Select(0u1e3f) # ḿ
+ #        Select(0u1e41) # ṁ
+ #        Select(0uab3a) # ꬺ
+    endif
 
 # r (右端を少しカット、少し右にずらす)
     # 先っぽをコピー
@@ -1232,8 +1268,8 @@ while (i < SizeOf(input_list))
     Select(65552); Copy() # Temporary glyph
     Select(0u024d); PasteWithOffset(-465, 0) # ɍ
     OverlapIntersect()
-    SetWidth(500)
     Move(5, 0)
+    SetWidth(500)
     Simplify()
 
     Select(65552); Clear() # Temporary glyph
@@ -2630,7 +2666,8 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-# せ (アウトラインの修正)
+# せ ぜ (アウトラインの修正と右下を少しカット)
+    # せ のアウトライン修正
     if (input_list[i] == "${input_kana_bold}")
         Select(0u30fb); Copy() # ・
         Select(65552);  Paste() # Temporary glyph
@@ -2641,6 +2678,37 @@ while (i < SizeOf(input_list))
         RemoveOverlap()
         Select(65552); Clear() # Temporary glyph
     endif
+
+    # 右下カット
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-80, -100)
+    Rotate(6)
+    PasteWithOffset(-100, 140)
+    PasteWithOffset(-100, -100)
+    PasteWithOffset(190, 140)
+    RemoveOverlap()
+    Copy()
+
+    Select(0u305b) # せ
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-10, 0)
+    else
+        PasteWithOffset(0, 0)
+    endif
+    OverlapIntersect()
+    SetWidth(1000)
+
+    Select(0u305c) # ぜ
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-34, -9)
+    else
+        PasteWithOffset(-14, -9)
+    endif
+    OverlapIntersect()
+    SetWidth(1000)
+
+    Select(65552); Clear() # Temporary glyph
 
 # な (切り離す)
     # 左下
@@ -3091,7 +3159,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     Select(65552); Clear() # Temporary glyph
 
-# クグク゚ (はらいの部分を少し短くする)
+# ク グ ク゚ (はらいの部分を少し短くする)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-160, 350)
@@ -3195,7 +3263,35 @@ while (i < SizeOf(input_list))
     Simplify()
     Select(65552); Clear() # Temporary glyph
 
-# タダ (はらいの部分を少し短くする)
+# セ ゼ セ゚ (右下を少しカット)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-20, -100)
+    Rotate(5)
+    PasteWithOffset(-100, 140)
+    PasteWithOffset(-100, -100)
+    PasteWithOffset(190, 140)
+    RemoveOverlap()
+    Copy()
+
+    Select(0u30bb) # セ
+    PasteInto()
+    OverlapIntersect()
+    SetWidth(1000)
+
+    Select(0u30bc) # ゼ
+    PasteWithOffset(-9, -9)
+    OverlapIntersect()
+    SetWidth(1000)
+
+    Select(1114125) # セ゚
+    PasteWithOffset(-9, -9)
+    OverlapIntersect()
+    SetWidth(1000)
+
+    Select(65552); Clear() # Temporary glyph
+
+# タ ダ (はらいの部分を少し短くする)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-160, 350)
