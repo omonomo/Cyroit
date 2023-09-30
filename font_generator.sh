@@ -2682,7 +2682,7 @@ while (i < SizeOf(input_list))
     # 右下カット
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(-80, -100)
+    Move(-90, -100)
     Rotate(6)
     PasteWithOffset(-100, 140)
     PasteWithOffset(-100, -100)
@@ -2691,22 +2691,18 @@ while (i < SizeOf(input_list))
     Copy()
 
     Select(0u305b) # せ
-    if (input_list[i] == "${input_kana_regular}")
-        PasteWithOffset(-10, 0)
-    else
-        PasteWithOffset(0, 0)
-    endif
-    OverlapIntersect()
+    PasteWithOffset(10, 0)
     SetWidth(1000)
+    OverlapIntersect()
 
     Select(0u305c) # ぜ
     if (input_list[i] == "${input_kana_regular}")
-        PasteWithOffset(-34, -9)
+        PasteWithOffset(-24, -9)
     else
         PasteWithOffset(-14, -9)
     endif
-    OverlapIntersect()
     SetWidth(1000)
+    OverlapIntersect()
 
     Select(65552); Clear() # Temporary glyph
 
@@ -3276,18 +3272,18 @@ while (i < SizeOf(input_list))
 
     Select(0u30bb) # セ
     PasteInto()
-    OverlapIntersect()
     SetWidth(1000)
+    OverlapIntersect()
 
     Select(0u30bc) # ゼ
     PasteWithOffset(-9, -9)
-    OverlapIntersect()
     SetWidth(1000)
+    OverlapIntersect()
 
     Select(1114125) # セ゚
     PasteWithOffset(-9, -9)
-    OverlapIntersect()
     SetWidth(1000)
+    OverlapIntersect()
 
     Select(65552); Clear() # Temporary glyph
 
