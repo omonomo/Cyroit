@@ -1126,7 +1126,7 @@ while (i < SizeOf(input_list))
 
 # l (縦線を少し細くし、左を少しカットして少し左へ移動)
     Select(0u006c); Copy() # l
-    PasteWithOffset(-2, 0)
+    PasteWithOffset(-1, 0)
     OverlapIntersect()
 
     Select(0u2588); Copy() # Full block
@@ -1181,7 +1181,7 @@ while (i < SizeOf(input_list))
 # m (縦線を少し太く)
     if (input_list[i] == "${input_latin_regular}")
         Select(0u006d); Copy() # m
-        PasteWithOffset(-4,0) 
+        PasteWithOffset(-2,0) 
         RemoveOverlap()
 
         # 縦横比変更時にゴミが出るため、一旦脚を切って付け直す
