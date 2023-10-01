@@ -16,7 +16,7 @@ dict="dict" # 略字をグリフ名に変換する辞書
 
 # lookup の IndexNo. (GSUBフィーチャを変更すると変わる可能性あり)
 lookupIndex_calt="17" # caltフィーチャ条件の先頭テーブル
-lookupIndexS=`expr ${lookupIndex_calt} + 1` # 変換先(記号用)
+lookupIndexU=`expr ${lookupIndex_calt} + 1` # 変換先(上に移動させたグリフ)
 lookupIndexR=`expr ${lookupIndex_calt} + 2` # 変換先(右に移動させたグリフ)
 lookupIndexL=`expr ${lookupIndex_calt} + 3` # 変換先(左に移動させたグリフ)
 lookupIndexC=`expr ${lookupIndex_calt} + 4` # 変換先(移動させたグリフを元に戻す)
@@ -248,12 +248,20 @@ do
   echo "$i ${S}L glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
+echo "$i ${solidus}L glyph${i}" >> "${dict}.txt" # 左に移動した solidus
+i=`expr ${i} + 1`
+echo "$i ${rsolidus}L glyph${i}" >> "${dict}.txt" # 左に移動した reverse solidus
+i=`expr ${i} + 1`
 
 for S in ${latin[@]} # 右に移動したアルファベット
 do
   echo "$i ${S}R glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
+echo "$i ${solidus}R glyph${i}" >> "${dict}.txt" # 右に移動した solidus
+i=`expr ${i} + 1`
+echo "$i ${rsolidus}R glyph${i}" >> "${dict}.txt" # 右に移動した reverse solidus
+i=`expr ${i} + 1`
 
 # 略号を通し番号と名前に変換する関数 ========================================
 glyph_name() {
@@ -343,31 +351,62 @@ echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 
 index="0"
 
-# 記号に関する通常処理 ----------------------------------------
+# colon に関する処理 ----------------------------------------
 
-# 左右を見る 両方が数字の場合 colon 移動
+# 左右を見る 両方が数字の場合 colon 上に移動
 backtrack=("${number[@]}")
 input="${colon}"
 lookAhead=("${number[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexS}"
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexU}"
 index=`expr ${index} + 1`
 
-# 左右を見る 左が寄せない文字で 右が、左が低い文字の場合 solidus 移動
-backtrack=("${gravityLL[@]}" "${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${gravityML[@]}" \
-"${gravityLR[@]}" "${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
-"${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
-input="${solidus}"
-lookAhead=("${lowLC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexS}"
+# reverse solidus に関する処理 ----------------------------------------
+
+# 左が、右が低い文字か A で 右が ITVWYfiltv の場合 reverse solidus 移動しない
+backtrack=("${lowRL[@]}" "AL" \
+"${lowRC[@]}" "AC")
+input="${rsolidus}"
+lookAhead=("IC" "TC" "VC" "WC" "YC" "fC" "iC" "lC" "tC" "vC")
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左右を見る 左が、右が低い文字で 右が寄せない文字の場合 reverse solidus 移動
-backtrack=("${lowRL[@]}" \
-"${lowRR[@]}" \
-"${lowRC[@]}")
+# 右が ITVWYilv の場合 reverse solidus 右に移動
+input="${rsolidus}"
+lookAhead=("IC" "TC" "VC" "WC" "YC" "fC" "iC" "lC" "tC" "vC")
+chain_context "${index}" "" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
+index=`expr ${index} + 1`
+
+# 左が、右が低い文字か A で 右が寄せない文字の場合 reverse solidus 左に移動
+backtrack=("${lowRL[@]}" "AL" \
+"${lowRC[@]}" "AC")
 input="${rsolidus}"
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexS}"
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# solidus に関する処理 ----------------------------------------
+
+# 左が FIJPTVWYfijlrvy 右が、左が低い文字か A の場合 solidus 移動しない
+backtrack=("FR" "IR" "JR" "PR" "TR" "VR" "WR" "YR" "fR" "jR" "iR" "lR" "rR" "vR" "yR" \
+"FC" "IC" "JC" "PC" "TC" "VC" "WC" "YC" "fC" "jC" "iC" "lC" "rC" "vC" "yC")
+input="${solidus}"
+lookAhead=("${lowLC[@]}" "AC")
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
+# 左が FIJPTVWYfijlrvy の場合 solidus 左に移動
+backtrack=("FL" "IL" "JL" "PL" "TL" "VL" "WL" "YL" "fL" "jL" "iL" "lL" "rL" "vL" "yL" \
+"FC" "IC" "JC" "PC" "TC" "VC" "WC" "YC" "fC" "jC" "iC" "lC" "rC" "vC" "yC")
+input="${solidus}"
+chain_context "${index}" "${backtrack[*]}" "${input}" "" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# 左が寄せない文字で 右が、左が低い文字か A の場合 solidus 右に移動
+backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
+"${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
+input="${solidus}"
+lookAhead=("${lowLC[@]}" "AC")
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
 # 左を見て左に移動させない例外処理 ----------------------------------------
