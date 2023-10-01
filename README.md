@@ -9,7 +9,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ## フォントサンプル  
 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="730">  
+<img alt="ScreenShot" src="./images/SS_0.png" width="700">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
 <img alt="ScreenShot" src="./images/SS_1.png" width="780">  
@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.1.11)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.11/Cyroit_v1.1.11.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.11.zip)
+最新版 (v1.1.12)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.12/Cyroit_v1.1.12.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.12.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -47,7 +47,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ### 仮名文字について
 
-- 一部のひらがなを教科書体っぽく (跳ねたり突き抜けたり) しています。
+- 一部のひらがなを教科書体っぽく (跳ねたり突き抜けたり別れたり) しています。
 - 濁点、半濁点の大きさや位置を変えています。
 - イコールと区別しやすいようにダブルハイフンの先端を少し折っています。
 - その他のグリフについても、他の素材フォントとのバランスをとるための微調整を施しています。
@@ -68,19 +68,19 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - IVS を利用した異体字表示に対応しています。
 - アイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
-- 「基本ラテン文字」のみ、calt フィーチャを利用して等幅のまま文字間隔を調整します。
+- 「基本ラテン文字」のみ、calt フィーチャを利用して等幅のまま文字間隔を調整するようにしています。
 - リガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
 
 ## フォントファミリーの種類
 
-見た目がちょっと違うだけなのに種類を増やして無駄にファイルサイズを大きくしてしまい、大変申し訳ございません。  
+見た目がちょっと違うだけなのに種類を増やしたため、無駄にファイルサイズが大きくなってしまい大変申しわけございません。  
 それぞれにレギュラー、オブリーク、ボールド、ボールドオブリークの書体が含まれています。  
 
 |   名称   | サンプル | 説明 |
 |----------|----------|------|
 | Cyroit   | <img alt="Normal" src="./images/Normal.png" width="450"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
-| CyroitSP | <img alt="SP" src="./images/SP.png" width="450"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。簡易なエディタやコマンドランチャー等で使用すると便利かもしれません。 |
+| CyroitSP | <img alt="SP" src="./images/SP.png" width="450"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
 | CyroitTM | <img alt="TM" src="./images/TM.png" width="450"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョンを復活。大文字の DVZ のグリフを改変しています。 |
 | CyroitTS | <img alt="TS" src="./images/TS.png" width="450"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版。 |
 | CyroitFX | <img alt="TS" src="./images/Normal.png" width="450"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
@@ -98,10 +98,10 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ### ビルド環境
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Monterey (version 12.6.8)
+- OS: macOS Monterey (version 12.7)
 - Shell: zsh 5.8.1 (x86_64-apple-darwin21.0)
 - FontForge: 20230101
-- FontTools: 4.42.1
+- FontTools: 4.43.0
 
 ### 実行方法
 あらかじめ、パッケージマネージャ等を利用して [FontForge](https://fontforge.org/en-US/) と [FontTools](https://github.com/fonttools/fonttools) をインストールし、使える状態にしておいてください。  
