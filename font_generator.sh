@@ -50,7 +50,7 @@ address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
 address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
 address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
 address_calt=`expr ${address_vert_kabu} + 7` # calt置換アドレス
-address_calt_end=`expr ${address_calt} + 104` # calt置換の最終アドレス(上に移動した:)
+address_calt_end=`expr ${address_calt} + 106` # calt置換の最終アドレス(移動した reverse solidus)
 
 # フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
@@ -120,6 +120,7 @@ weight_extend_super_sub="12" # ウェイト調整
 
 # 演算子移動量
 y_pos_math="-30"
+y_pos_s_math="-10"
 
 # calt移動量
 x_pos_calt="20"
@@ -2018,6 +2019,16 @@ while (i < SizeOf(input_list))
     while (j < SizeOf(math))
         Select(math[j]);
         Move(0,${y_pos_math})
+        SetWidth(500)
+        j += 1
+    endloop
+
+    math = [0u207a, 0u207b, 0u207c,\
+            0u208a, 0u208b, 0u208c] # ⁺⁻⁼₊₋₌
+    j = 0
+    while (j < SizeOf(math))
+        Select(math[j]);
+        Move(0,${y_pos_s_math})
         SetWidth(500)
         j += 1
     endloop
@@ -6633,7 +6644,15 @@ while (i < SizeOf(input_list))
             k += 1
         endloop
 
+        Select(0u002f); Copy() # solidus
+        Select(k); Paste()
+        k += 1
+
         Select(0u003a); Copy() # :
+        Select(k); Paste()
+        k += 1
+
+        Select(0u005c); Copy() # reverse solidus
         Select(k); Paste()
         k += 1
  #    endif
@@ -8124,19 +8143,42 @@ while (i < \$argc)
             k += 1
         endloop
 
-        lookupName = "単純置換 (上)"
+        lookupName = "単純置換 (記号)"
         AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
         lookupSub1 = lookupName + "サブテーブル"
         AddLookupSubtable(lookupName, lookupSub1)
+
+        Select(0u002f); Copy() # solidus
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(${x_pos_calt}, 0)
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 移動前←後
+        glyphName = GlyphInfo("Name")
+        Select(0u002f) # solidus
+        AddPosSub(lookupSub1, glyphName) # 移動前→後
+        k += 1
+
         Select(0u003a); Copy() # :
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(0, ${y_pos_calt})
+        Move(20, ${y_pos_calt})
         SetWidth(512)
-        AddPosSub(lookupSub0, glyphName) # 中←上
+        AddPosSub(lookupSub0, glyphName) # 移動前←後
         glyphName = GlyphInfo("Name")
         Select(0u003a) # :
-        AddPosSub(lookupSub1, glyphName) # 中→上
+        AddPosSub(lookupSub1, glyphName) # 移動前→後
+        k += 1
+
+        Select(0u005c); Copy() # reverse solidus
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(-${x_pos_calt}, 0)
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 移動前←後
+        glyphName = GlyphInfo("Name")
+        Select(0u005c) # reverse solidus
+        AddPosSub(lookupSub1, glyphName) # 移動前→後
         k += 1
 
         # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする

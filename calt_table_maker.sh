@@ -16,7 +16,7 @@ dict="dict" # 略字をグリフ名に変換する辞書
 
 # lookup の IndexNo. (GSUBフィーチャを変更すると変わる可能性あり)
 lookupIndex_calt="17" # caltフィーチャ条件の先頭テーブル
-lookupIndexU=`expr ${lookupIndex_calt} + 1` # 変換先(上に移動させたグリフ)
+lookupIndexS=`expr ${lookupIndex_calt} + 1` # 変換先(記号用)
 lookupIndexR=`expr ${lookupIndex_calt} + 2` # 変換先(右に移動させたグリフ)
 lookupIndexL=`expr ${lookupIndex_calt} + 3` # 変換先(左に移動させたグリフ)
 lookupIndexC=`expr ${lookupIndex_calt} + 4` # 変換先(移動させたグリフを元に戻す)
@@ -85,50 +85,51 @@ circleR=(D O Q b e o p) # 右が丸い文字
 lowL=(a c d e g i j m n o p q r s u v w x y z) # 左が低い文字
 lowR=(a b c e g h i j k m n o p q r s u v w x y z) # 右が低い文字
 
-small_=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 小文字
 small_L=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 左に移動した小文字(小文字)
 small_C=(b e f h i j k l o p r s t v x y z) # 移動していない小文字(右を引き離さない小文字)
 small_R=(f i j l r t v y) # 右に移動した小文字(右を引き寄せる小文字)
+
+small_=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 小文字
 capital_=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) # 大文字
 
 for S in ${gravityL[@]}; do
-  gravityLC+=("${S}C") # 左寄り通常
+  gravityLC+=("${S}C") # 左寄り
   gravityLL+=("${S}L") # 左寄り左移動後
   gravityLR+=("${S}R") # 左寄り右移動後
 done
 
 for S in ${gravityR[@]}; do
-  gravityRC+=("${S}C") # 右寄り通常
+  gravityRC+=("${S}C") # 右寄り
   gravityRL+=("${S}L") # 右寄り左移動後
   gravityRR+=("${S}R") # 右寄り右移動後
 done
 
 for S in ${gravityW[@]}; do
-  gravityWC+=("${S}C") # 幅広通常
+  gravityWC+=("${S}C") # 幅広
   gravityWL+=("${S}L") # 幅広左移動後
   gravityWR+=("${S}R") # 幅広右移動後
 done
 
 for S in ${gravityE[@]}; do
-  gravityEC+=("${S}C") # 均等通常
+  gravityEC+=("${S}C") # 均等
   gravityEL+=("${S}L") # 均等左移動後
   gravityER+=("${S}R") # 均等右移動後
 done
 
 for S in ${gravityM[@]}; do
-  gravityMC+=("${S}C") # 中間通常
+  gravityMC+=("${S}C") # 中間
   gravityML+=("${S}L") # 中間左移動後
   gravityMR+=("${S}R") # 中間右移動後
 done
 
 for S in ${gravityV[@]}; do
-  gravityVC+=("${S}C") # Vの字通常
+  gravityVC+=("${S}C") # Vの字
   gravityVL+=("${S}L") # Vの字左移動後
   gravityVR+=("${S}R") # Vの字右移動後
 done
 
 for S in ${gravityC[@]}; do
-  gravityCC+=("${S}C") # 中寄り通常
+  gravityCC+=("${S}C") # 中寄り
   gravityCL+=("${S}L") # 中寄り左移動後
   gravityCR+=("${S}R") # 中寄り右移動後
 done
@@ -159,10 +160,14 @@ done
 
 for S in ${lowL[@]}; do
   lowLC+=("${S}C") # 左が低い文字
+  lowLL+=("${S}L") # 左が低い文字左移動後
+  lowLR+=("${S}R") # 左が低い文字右移動後
 done
 
 for S in ${lowR[@]}; do
   lowRC+=("${S}C") # 右が低い文字
+  lowRL+=("${S}L") # 右が低い文字左移動後
+  lowRR+=("${S}R") # 右が低い文字右移動後
 done
 
 for S in ${small_L[@]}; do
@@ -189,6 +194,9 @@ done
 space="SP" # 略号
 space_name="space" # 実際の名前
 
+solidus="/"
+solidus_name="slash"
+
 number=(0 1 2 3 4 5 6 7 8 9)
 number_name=("zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine")
 
@@ -200,11 +208,17 @@ colon_name="colon"
 latin=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
 a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字
 
+rsolidus="RS"
+rsolidus_name="backslash"
+
 nbspace="NS"
 nbspace_name="uni00A0"
 
 i=0
 echo "$i ${space} ${space_name}" >> "${dict}.txt" # スペース
+i=`expr ${i} + 1`
+
+echo "$i ${solidus} ${solidus_name}" >> "${dict}.txt" # solidus
 i=`expr ${i} + 1`
 
 for j in ${!number[@]} # 数字
@@ -221,6 +235,9 @@ do
   echo "$i ${S}C ${S}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
+
+echo "$i ${rsolidus} ${rsolidus_name}" >> "${dict}.txt" # reverse solidus
+i=`expr ${i} + 1`
 
 echo "$i ${nbspace} ${nbspace_name}" >> "${dict}.txt" # ノーブレークスペース
 i=`expr ${i} + 1`
@@ -326,13 +343,31 @@ echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 
 index="0"
 
-# 左右を見て上に移動させる通常処理 ----------------------------------------
+# 記号に関する通常処理 ----------------------------------------
 
-# 左右を見る 両方が数字の場合 コロン 上に移動
+# 左右を見る 両方が数字の場合 colon 移動
 backtrack=("${number[@]}")
-input=("${colon[@]}")
+input="${colon}"
 lookAhead=("${number[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexU}"
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexS}"
+index=`expr ${index} + 1`
+
+# 左右を見る 左が寄せない文字で 右が、左が低い文字の場合 solidus 移動
+backtrack=("${gravityLL[@]}" "${gravityRL[@]}" "${gravityWL[@]}" "${gravityEL[@]}" "${gravityML[@]}" \
+"${gravityLR[@]}" "${gravityRR[@]}" "${gravityWR[@]}" "${gravityER[@]}" "${gravityMR[@]}" \
+"${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
+input="${solidus}"
+lookAhead=("${lowLC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexS}"
+index=`expr ${index} + 1`
+
+# 左右を見る 左が、右が低い文字で 右が寄せない文字の場合 reverse solidus 移動
+backtrack=("${lowRL[@]}" \
+"${lowRR[@]}" \
+"${lowRC[@]}")
+input="${rsolidus}"
+lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input}" "${lookAhead[*]}" "${lookupIndexS}"
 index=`expr ${index} + 1`
 
 # 左を見て左に移動させない例外処理 ----------------------------------------
