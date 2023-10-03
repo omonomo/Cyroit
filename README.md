@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.1.12)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.12/Cyroit_v1.1.12.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.12.zip)
+最新版 (v1.1.13)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.13/Cyroit_v1.1.13.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.13.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -68,7 +68,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - IVS を利用した異体字表示に対応しています。
 - アイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
-- 「基本ラテン文字」のみ、calt フィーチャを利用して等幅のまま文字間隔を調整するようにしています。
+- calt フィーチャを利用して、「基本ラテン文字」のみ等幅のまま文字間隔を調整するようにしています。
 - リガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
 
