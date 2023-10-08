@@ -33,7 +33,7 @@ address_visi_kana=`expr ${address_visi_latin} + 2` # 仮名フォントの視認
 address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
 
 address_visi_kanzi=`expr ${address_visi_kana} + 26` # 漢字フォントの視認性向上アドレス 〇-口
-address_calt_kanzi="1115493" # 漢字フォントのcalt置換アドレス
+address_calt_kanzi="1115776" # 漢字フォントのcalt置換アドレス
 
 address_dvz_latinkana=${address_dvz_latin} # latin仮名フォントのDVZアドレス
 address_zenhan_latinkana=`expr ${address_visi_kanzi} + 9` # latin仮名フォントの全角半角アドレス(縦書きの（-゠)
@@ -49,8 +49,9 @@ address_vert_X=`expr ${address_vert} + 109` # vert置換アドレス ✂
 address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
 address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
 address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
-address_calt=`expr ${address_vert_kabu} + 7` # calt置換アドレス
-address_calt_end=`expr ${address_calt} + 108` # calt置換の最終アドレス(移動した colon)
+address_calt=`expr ${address_vert_kabu} + 7` # calt置換の先頭アドレス(左に移動した A)
+address_calt_middle=`expr ${address_calt} + 116` # calt置換の最終アドレス(右に移動した A)
+address_calt_end=`expr ${address_calt_middle} + 116` # calt置換の最終アドレス (上に移動した colon)
 
 # フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
@@ -3680,6 +3681,67 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
+# ラ (フの横棒を少し上に移動)
+    # フの横棒
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(130, 20)
+    if (input_list[i] == "${input_kana_regular}")
+        Move(0, 100)
+    else
+        Move(0, 64)
+    endif
+    Select(0u30e9); Copy() # ラ
+    Select(65552);  PasteInto()
+    OverlapIntersect()
+
+    # その他
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Move(-200, 500)
+    PasteWithOffset( 200, 500)
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-50, -299)
+        PasteWithOffset( 606, -200)
+    else
+        PasteWithOffset(-100, -334)
+        PasteWithOffset( 552, -200)
+    endif
+    RemoveOverlap()
+    Copy()
+    Select(0u30e9); PasteInto() # ラ
+    OverlapIntersect()
+
+    # 合成
+    Select(65552); Copy()
+    Select(0u30e9) # ラ
+    PasteWithOffset(0, 20)
+
+    RemoveOverlap()
+
+    # 加工で発生したゴミを除去
+    if (input_list[i] == "${input_kana_regular}")
+        Select(0u25a0); Copy() # Black square
+        Select(65552);  Paste() # Temporary glyph
+        Move(134, -160)
+        Rotate(9)
+        PasteWithOffset(-100, 140)
+        PasteWithOffset(190, 140)
+        RemoveOverlap()
+        Copy()
+
+        Select(0u30e9) # ラ
+        PasteWithOffset(-40, -10)
+        OverlapIntersect()
+    endif
+
+    SetWidth(1000)
+    Simplify()
+    RoundToInt()
+
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
 # 仮名の濁点を拡大移動、半濁点を移動
     Print("Edit kana voiced sound mark")
 # ゔ
@@ -4719,7 +4781,7 @@ while (i < SizeOf(input_list))
         RemoveOverlap()
         Select(0u30da); PasteWithOffset(0, 0) # ペ
         RemoveOverlap()
-        Select(0u30dd); PasteWithOffset(70, 73) # ポ
+        Select(0u30dd); PasteWithOffset(70, 53) # ポ
  #        Select(0u30dd); PasteWithOffset(40, 33) # ポ
         RemoveOverlap()
         Select(1114115); PasteWithOffset(66, 59) # か゚
@@ -6896,6 +6958,32 @@ while (i < SizeOf(input_list))
         Select(k); Paste()
         k += 1
 
+        j = 0
+        while (j < 128)
+            l = 0u00c0 + j % 64
+            if (l != 0u00c6\
+             && l != 0u00d7\
+             && l != 0u00e6\
+             && l != 0u00f7)
+                Select(l); Copy() # Á
+                Select(k); Paste()
+                k += 1
+            endif
+            j += 1
+        endloop
+
+        Select(0u0178); Copy() # Ÿ
+        Select(k); Paste()
+        k += 1
+        Select(k); Paste()
+        k += 1
+
+        Select(0u0020); Copy() # ẞ のダミー
+        Select(k); Paste()
+        k += 1
+        Select(k); Paste()
+        k += 1
+
         Select(0u003a); Copy() # :
         Select(k); Paste()
         k += 1
@@ -8376,6 +8464,49 @@ while (i < \$argc)
         AddPosSub(lookupSub1, glyphName) # 左→中
         k += 1
 
+        j = 0
+        while (j < 64)
+            l = 0u00c0 + j
+            if (l != 0u00c6\
+             && l != 0u00d7\
+             && l != 0u00e6\
+             && l != 0u00f7)
+                Select(l); Copy() # À
+                glyphName = GlyphInfo("Name")
+                Select(k); Paste()
+                Move(-${x_pos_calt}, 0)
+                SetWidth(512)
+                AddPosSub(lookupSub0, glyphName) # 左→中
+                glyphName = GlyphInfo("Name")
+                Select(l) # a
+                AddPosSub(lookupSub1, glyphName) # 左←中
+                k += 1
+            endif
+            j += 1
+        endloop
+
+        Select(0u0178); Copy() # Ÿ
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(-${x_pos_calt}, 0)
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 左←中
+        glyphName = GlyphInfo("Name")
+        Select(0u0178) # Ÿ
+        AddPosSub(lookupSub1, glyphName) # 左→中
+        k += 1
+
+        Select(0u1e9e); Copy() # ẞ
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(-${x_pos_calt}, 0)
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 左←中
+        glyphName = GlyphInfo("Name")
+        Select(0u1e9e) # ẞ
+        AddPosSub(lookupSub1, glyphName) # 左→中
+        k += 1
+
         lookupName = "単純置換 (右)"
         AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
         lookupSub1 = lookupName + "サブテーブル"
@@ -8428,6 +8559,49 @@ while (i < \$argc)
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
         Select(0u005c) # reverse solidus
+        AddPosSub(lookupSub1, glyphName) # 中→右
+        k += 1
+
+        j = 0
+        while (j < 64)
+            l = 0u00c0 + j
+            if (l != 0u00c6\
+             && l != 0u00d7\
+             && l != 0u00e6\
+             && l != 0u00f7)
+                Select(l); Copy() # À
+                glyphName = GlyphInfo("Name")
+                Select(k); Paste()
+                Move(${x_pos_calt}, 0)
+                SetWidth(512)
+                AddPosSub(lookupSub0, glyphName) # 中←右
+                glyphName = GlyphInfo("Name")
+                Select(l) # a
+                AddPosSub(lookupSub1, glyphName) # 中→右
+                k += 1
+            endif
+            j += 1
+        endloop
+
+        Select(0u0178); Copy() # Ÿ
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(${x_pos_calt}, 0)
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 中←右
+        glyphName = GlyphInfo("Name")
+        Select(0u0178) # Ÿ
+        AddPosSub(lookupSub1, glyphName) # 中→右
+        k += 1
+
+        Select(0u1e9e); Copy() # ẞ
+        glyphName = GlyphInfo("Name")
+        Select(k); Paste()
+        Move(${x_pos_calt}, 0)
+        SetWidth(512)
+        AddPosSub(lookupSub0, glyphName) # 中←右
+        glyphName = GlyphInfo("Name")
+        Select(0u1e9e) # ẞ
         AddPosSub(lookupSub1, glyphName) # 中→右
         k += 1
 
@@ -9215,18 +9389,7 @@ while (i < \$argc)
             k += 1
         endloop
 
-        Select(0u002f); Copy() # solidus
-        Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(512)
-        k += 1
-
-        Select(0u005c); Copy() # reverse solidus
-        Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(512)
-        k += 1
-
+        k = ${address_calt_middle}
         j = 0
         while (j < 26)
             Select(0u0041 + j); Copy() # A
@@ -9245,18 +9408,6 @@ while (i < \$argc)
             j += 1
             k += 1
         endloop
-
-        Select(0u002f); Copy() # solidus
-        Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(512)
-        k += 1
-
-        Select(0u005c); Copy() # reverse solidus
-        Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(512)
-        k += 1
 
     else # calt非対応の場合ダミーのフィーチャを削除
         Print("Remove calt lookups and glyphs")
