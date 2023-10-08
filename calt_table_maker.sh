@@ -88,6 +88,9 @@ gravity_lM=(e t \
 è é ê ë) # 引き寄せないやや左寄り
 gravity_lC=(f l r t y) # 引き寄せるやや左寄り
 
+grCapitalM=(A B C D E F G H K L M N O P Q R S U W X Z \
+À Á Â Ã Ä Å Æ Ç È É Ê Ë Ð Ñ Ò Ó Ô Õ Ö Ø Ù Ú Û Ü Þ Œ ẞ) # 引き寄せない大文字
+
 crCapitalL=(C G O Q \
 Ç Ò Ó Ô Õ Ö Ø) # 左が丸い大文字
 crSmallL=(c d e g o q \
@@ -206,6 +209,12 @@ for S in ${gravity_lC[@]}; do
   gravity_lCC+=("${S}C") # 引き寄せるやや左寄り
   gravity_lCL+=("${S}L") # 引き寄せるやや左寄り左移動後
   gravity_lCR+=("${S}R") # 引き寄せるやや左寄り右移動後
+done
+
+for S in ${grCapitalM[@]}; do
+  grCapitalMC+=("${S}C") # 引き寄せない大文字
+  grCapitalML+=("${S}L") # 引き寄せない大文字左移動後
+  grCapitalMR+=("${S}R") # 引き寄せない大文字右移動後
 done
 
 for S in ${crCapitalL[@]}; do
@@ -1106,24 +1115,6 @@ index=`expr ${index} + 1`
  #chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
  #index=`expr ${index} + 1`
 
-# BD に関する例外処理 ----------------------------------------
-
-# 両方が引き離す文字の場合 BD 移動しない
-backtrack=("${gravityWL[@]}" \
-"${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
-"${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-input=("${capitalBDC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
-# 右が引き離す文字の場合 BD 左に移動
-backtrack=("")
-input=("${capitalBDC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
 # J に関する例外処理 ----------------------------------------
 
 # 左が大文字の場合 J 移動しない
@@ -1141,24 +1132,24 @@ lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 右が大文字の場合 J 左に移動
+# 右が引き寄せない大文字の場合 J 左に移動
 backtrack=("")
 input=("${capitalJC[@]}")
-lookAhead=("${capital_C[@]}")
+lookAhead=("${grCapitalMC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が J の場合 大文字 移動しない
+# 左が J の場合 引き寄せない大文字 移動しない
 backtrack=("${capitalJL[@]}" \
 "${capitalJC[@]}")
-input=("${capital_C[@]}")
+input=("${grCapitalMC[@]}")
 lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左が J の場合 大文字 右に移動
+# 左が J の場合 引き寄せない大文字 右に移動
 backtrack=("${capitalJR[@]}")
-input=("${capital_C[@]}")
+input=("${grCapitalMC[@]}")
 lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
@@ -1493,6 +1484,15 @@ backtrack=("${gravityWR[@]}")
 input=("${gravityCC[@]}")
 lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+index=`expr ${index} + 1`
+
+# BD に関する例外処理 ----------------------------------------
+
+# 右が引き離す文字の場合 BD 左に移動
+backtrack=("")
+input=("${capitalBDC[@]}")
+lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
 # 右を見て左に移動させる通常処理 ----------------------------------------
