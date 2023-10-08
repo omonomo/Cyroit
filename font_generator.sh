@@ -4833,7 +4833,7 @@ while (i < SizeOf(input_list))
         RemoveOverlap()
         Select(0u30da); PasteWithOffset(0, 0) # ペ
         RemoveOverlap()
-        Select(0u30dd); PasteWithOffset(42, 52) # ポ
+        Select(0u30dd); PasteWithOffset(42, 32) # ポ
  #        Select(0u30dd); PasteWithOffset(12, 12) # ポ
         RemoveOverlap()
         Select(1114115); PasteWithOffset(62, 52) # か゚
