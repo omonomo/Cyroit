@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.1.13)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.1.13/Cyroit_v1.1.13.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.1.13.zip)
+最新版 (v1.2.0)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.2.0/Cyroit_v1.2.0.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.2.0.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -68,7 +68,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - IVS を利用した異体字表示に対応しています。
 - アイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
-- calt フィーチャを利用して、「基本ラテン文字」のみ等幅のまま文字間隔を調整するようにしています。
+- calt フィーチャを利用して、「基本ラテン文字」と「ラテン1補助」のみ等幅のまま文字間隔を調整するようにしています。
 - リガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
 
@@ -101,7 +101,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - OS: macOS Monterey (version 12.7)
 - Shell: zsh 5.8.1 (x86_64-apple-darwin21.0)
 - FontForge: 20230101
-- FontTools: 4.43.0
+- FontTools: 4.43.1
 
 ### 実行方法
 あらかじめ、パッケージマネージャ等を利用して [FontForge](https://fontforge.org/en-US/) と [FontTools](https://github.com/fonttools/fonttools) をインストールし、使える状態にしておいてください。  
