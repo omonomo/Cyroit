@@ -2529,7 +2529,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-# け げ こ ご (はねる)
+# け げ (はねる) こ ご (はねて左中を少しカット)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Scale(50, 45 ,153, 0); Move(-180, -60)
@@ -2582,6 +2582,27 @@ while (i < SizeOf(input_list))
     endif
     SetWidth(1000)
     RemoveOverlap()
+
+    # こごの左中カット
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-400, -310)
+    Rotate(-38)
+    PasteWithOffset(190, -500)
+    PasteWithOffset(-100, 420)
+    PasteWithOffset(190, 420)
+    RemoveOverlap()
+    Copy()
+
+    Select(0u3053) # こ
+    PasteInto()
+    SetWidth(1000)
+    OverlapIntersect()
+
+    Select(0u3054) # ご
+    PasteWithOffset(-9, 0)
+    SetWidth(1000)
+    OverlapIntersect()
 
     Select(65552); Clear() # Temporary glyph
 
@@ -3821,7 +3842,11 @@ while (i < SizeOf(input_list))
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-300, 50)
-    PasteWithOffset(-107, 9)
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-107, 9)
+    else
+        PasteWithOffset(-107, 4)
+    endif
  #    PasteWithOffset(-107, 39)
     PasteWithOffset(-113, -70)
     PasteWithOffset(70, -140)
@@ -3866,7 +3891,8 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_regular}")
         Move(27, -70)
     else
-        Move(35, -72)
+        Move(15, -72)
+ #        Move(35, -72)
         Rotate(2)
     endif
     PasteWithOffset(-204, 70)
@@ -3902,7 +3928,11 @@ while (i < SizeOf(input_list))
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-300, 60)
-    PasteWithOffset(-111, 25)
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-111, 25)
+    else
+        PasteWithOffset(-111, 15)
+    endif
  #    PasteWithOffset(-111, 55)
     PasteWithOffset(60, -90)
     RemoveOverlap()
@@ -4002,7 +4032,11 @@ while (i < SizeOf(input_list))
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-300, 50)
-    PasteWithOffset(-104, 13)
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-104, 13)
+    else
+        PasteWithOffset(-104, 8)
+    endif
  #    PasteWithOffset(-104, 43)
     PasteWithOffset(-113, -70)
     PasteWithOffset(70, -106)
@@ -4115,7 +4149,7 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_regular}")
         PasteWithOffset(-103, 20)
     else
-        PasteWithOffset(-113, 7)
+        PasteWithOffset(-113, 17)
     endif
     PasteWithOffset(-120, -70)
     PasteWithOffset(70, -140)
@@ -4301,7 +4335,11 @@ while (i < SizeOf(input_list))
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-300, 60)
-    PasteWithOffset(-106, 9)
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-106, 9)
+    else
+        PasteWithOffset(-106, 9)
+    endif
  #    PasteWithOffset(-106, 39)
     PasteWithOffset(80, -100)
     RemoveOverlap()
@@ -4450,10 +4488,13 @@ while (i < SizeOf(input_list))
 # バ
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(60, -190)
     if (input_list[i] == "${input_kana_regular}")
+        Move(60, -210)
+ #        Move(60, -190)
         Rotate(20)
     else
+        Move(60, -220)
+ #        Move(60, -190)
         Rotate(19)
     endif
     PasteWithOffset(-350, 0)
@@ -4652,7 +4693,11 @@ while (i < SizeOf(input_list))
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-300, 30)
-    PasteWithOffset(-115, -1)
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-115, -1)
+    else
+        PasteWithOffset(-115, 19)
+    endif
  #    PasteWithOffset(-115, 29)
     PasteWithOffset(-115, -80)
     PasteWithOffset(80, -80)
@@ -4763,107 +4808,107 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_regular}")
         Select(0u3071); PasteWithOffset(86, 59) # ぱ
  #        Select(0u3071); PasteWithOffset(46, 39) # ぱ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3074); PasteWithOffset(46, 59) # ぴ
  #        Select(0u3074); PasteWithOffset(46, 39) # ぴ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3077); PasteWithOffset(29, 59) # ぷ
  #        Select(0u3077); PasteWithOffset( 9, 39) # ぷ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u307d); PasteWithOffset(86, 69) # ぽ
  #        Select(0u307d); PasteWithOffset(46, 39) # ぽ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d1); PasteWithOffset( 13, 40) # パ
  #        Select(0u30d1); PasteWithOffset(-37, 30) # パ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d7); PasteWithOffset(80, 53) # プ
  #        Select(0u30d7); PasteWithOffset(40, 33) # プ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30da); PasteWithOffset(0, 0) # ペ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30dd); PasteWithOffset(70, 53) # ポ
  #        Select(0u30dd); PasteWithOffset(40, 33) # ポ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114115); PasteWithOffset(66, 59) # か゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114116); PasteWithOffset(96, 79) # き゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114117); PasteWithOffset(0, -140) # く゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114118); PasteWithOffset(86, 69) # け゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114119); PasteWithOffset(86, 79) # こ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114120); PasteWithOffset(86, 86) # カ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114121); PasteWithOffset(76, 83) # キ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114122); PasteWithOffset(86, 83) # ク゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114123); PasteWithOffset(81, 84) # ケ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114124); PasteWithOffset(88, 89) # コ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114125); PasteWithOffset(86, 84) # セ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114126); PasteWithOffset(86, 84) # ツ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114127); PasteWithOffset(-50, 0) # ト゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114128); PasteWithOffset(30, -40) # ㇷ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
     else
         Select(0u3071); PasteWithOffset(62, 42) # ぱ
  #        Select(0u3071); PasteWithOffset(12, 12) # ぱ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3074); PasteWithOffset(17, 32) # ぴ
  #        Select(0u3074); PasteWithOffset(7, 12) # ぴ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3077); PasteWithOffset(18, 52) # ぷ
  #        Select(0u3077); PasteWithOffset(-22, 12) # ぷ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u307d); PasteWithOffset(62, 52) # ぽ
  #        Select(0u307d); PasteWithOffset(12, 12) # ぽ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d1); PasteWithOffset(  2, 27) # パ
  #        Select(0u30d1); PasteWithOffset(-48, 17) # パ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d7); PasteWithOffset(52, 32) # プ
  #        Select(0u30d7); PasteWithOffset(12, 12) # プ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30da); PasteWithOffset(0, 0) # ペ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30dd); PasteWithOffset(42, 32) # ポ
  #        Select(0u30dd); PasteWithOffset(12, 12) # ポ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114115); PasteWithOffset(62, 52) # か゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114116); PasteWithOffset(82, 72) # き゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114117); PasteWithOffset(-5, -175) # く゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114118); PasteWithOffset(82, 72) # け゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114119); PasteWithOffset(72, 72) # こ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114120); PasteWithOffset(72, 85) # カ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114121); PasteWithOffset(62, 85) # キ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114122); PasteWithOffset(72, 72) # ク゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114123); PasteWithOffset(72, 72) # ケ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114124); PasteWithOffset(72, 77) # コ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114125); PasteWithOffset(72, 72) # セ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114126); PasteWithOffset(72, 72) # ツ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114127); PasteWithOffset(-50, 12) # ト゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(1114128); PasteWithOffset(18, -44) # ㇷ゚
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
     endif
 
 # ぺ
@@ -4880,11 +4925,10 @@ while (i < SizeOf(input_list))
     Select(65553); Copy()
     if (input_list[i] == "${input_kana_regular}")
         Select(0u307a); PasteWithOffset(  0,    0) # ぺ
-        RemoveOverlap()
     else
         Select(0u307a); PasteWithOffset(  0,    0) # ぺ
-        RemoveOverlap()
     endif
+    SetWidth(1000); RemoveOverlap()
 
 # ゛
     Select(0u25a0); Copy() # Black square
@@ -4893,300 +4937,330 @@ while (i < SizeOf(input_list))
     Select(0u3079); Copy()# べ
     Select(65553);  PasteInto()
     OverlapIntersect();
-    Scale(104, 104 ,610, 560); Copy()
+    Scale(104, 104 ,610, 560)
+
+    # 位置、間隔微調整
+    # 左下
+    Select(0u25a0); Copy() # Black square
+    Select(65554);  Paste() # Temporary glyph
+    Move(10, 0); Rotate(30)
+    Select(65553);  Copy()
+    Select(65554);  PasteInto() # Temporary glyph
+    OverlapIntersect();
+
+    # 右上
+    Select(0u25a0); Copy() # Black square
+    Select(65555);  Paste()
+    Move(575, 350); Rotate(30)
+    Select(65553);  Copy()
+    Select(65555);  PasteInto() # Temporary glyph
+    OverlapIntersect();
+    Copy()
+
+    # 合成
+    Select(65553);  Paste()
+    Move(5, 5)
+    Select(65554);  Copy()
+    Select(65553);  PasteWithOffset(-10, 0)
+
+    Select(65554); Clear() # Temporary glyph
+    Select(65555); Clear() # Temporary glyph
+
+    Select(65553); Copy()
 
     if (input_list[i] == "${input_kana_regular}")
         Select(0u3094); PasteWithOffset( 99,   78) # ゔ
  #        Select(0u3094); PasteWithOffset( 89,   78) # ゔ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u304c); PasteWithOffset( 71,   60) # が
+        Select(0u304c); PasteWithOffset( 81,   70) # が
  #        Select(0u304c); PasteWithOffset( 51,   60) # が
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u304e); PasteWithOffset(113,  128) # ぎ
  #        Select(0u304e); PasteWithOffset(103,  128) # ぎ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3050); PasteWithOffset( 14,  -93) # ぐ
  #        Select(0u3050); PasteWithOffset( 14, -143) # ぐ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3052); PasteWithOffset(151,  121) # げ
  #        Select(0u3052); PasteWithOffset(155,  111) # げ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3054); PasteWithOffset(145,  128) # ご
  #        Select(0u3054); PasteWithOffset( 55, -143) # ご
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u3056); PasteWithOffset(125,  128) # ざ
  #        Select(0u3056); PasteWithOffset(105,  131) # ざ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3058); PasteWithOffset(-43,   18) # じ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u305a); PasteWithOffset(145,  128) # ず
  #        Select(0u305a); PasteWithOffset( 90, -186) # ず
-        RemoveOverlap()
-        Select(0u305c); PasteWithOffset(149,  114) # ぜ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
+        Select(0u305c); PasteWithOffset(149,  124) # ぜ
+ #        Select(0u305c); PasteWithOffset(149,  114) # ぜ
+        SetWidth(1000); RemoveOverlap()
         Select(0u305e); PasteWithOffset(145,   -4) # ぞ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u3060); PasteWithOffset( 97,   98) # だ
  #        Select(0u3060); PasteWithOffset( 97,   88) # だ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3062); PasteWithOffset(108,  126) # ぢ
  #        Select(0u3062); PasteWithOffset(108,  131) # ぢ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3065); PasteWithOffset( 96,  122) # づ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3067); PasteWithOffset( 80, -180) # で
  #        Select(0u3067); PasteWithOffset( 80, -195) # で
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3069); PasteWithOffset( 14,   81) # ど
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u3070); PasteWithOffset(149,  122) # ば
  #        Select(0u3070); PasteWithOffset(149,  112) # ば
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3073); PasteWithOffset(107,   93) # び
  #        Select(0u3073); PasteWithOffset( 87,   93) # び
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3076); PasteWithOffset(117,   98) # ぶ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u307c); PasteWithOffset(149,  103) # ぼ
  #        Select(0u307c); PasteWithOffset(149,   93) # ぼ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30f4); PasteWithOffset(105,  128) # ヴ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30ac); PasteWithOffset( 91,  123) # ガ
  #        Select(0u30ac); PasteWithOffset( 81,  128) # ガ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30ae); PasteWithOffset( 81,  123) # ギ
  #        Select(0u30ae); PasteWithOffset( 81,  128) # ギ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b0); PasteWithOffset(115,  110) # グ
  #        Select(0u30b0); PasteWithOffset(105,  110) # グ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b2); PasteWithOffset( 81,  128) # ゲ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b4); PasteWithOffset(114,  121) # ゴ
  #        Select(0u30b4); PasteWithOffset(104,  121) # ゴ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u30b6); PasteWithOffset(151,  109) # ザ
+        Select(0u30b6); PasteWithOffset(151,  119) # ザ
  #        Select(0u30b6); PasteWithOffset(143,  109) # ザ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b8); PasteWithOffset(114,  119) # ジ
  #        Select(0u30b8); PasteWithOffset( 84,  119) # ジ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30ba); PasteWithOffset(103,  128) # ズ
  #        Select(0u30ba); PasteWithOffset( 93,  128) # ズ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30bc); PasteWithOffset( 96,  128) # ゼ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30be); PasteWithOffset(114,  116) # ゾ
  #        Select(0u30be); PasteWithOffset( 84,  116) # ゾ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30c0); PasteWithOffset(112,  121) # ダ
  #        Select(0u30c0); PasteWithOffset(102,  121) # ダ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c2); PasteWithOffset(103,  128) # ヂ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c5); PasteWithOffset(114,  116) # ヅ
  #        Select(0u30c5); PasteWithOffset( 84,  116) # ヅ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c7); PasteWithOffset(118,  101) # デ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c9); PasteWithOffset(-36,    9) # ド
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u30d0); PasteWithOffset( 76,   56) # バ
+        Select(0u30d0); PasteWithOffset( 86,   56) # バ
  #        Select(0u30d0); PasteWithOffset( -4,   56) # バ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d3); PasteWithOffset( 60,   86) # ビ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d6); PasteWithOffset(121,  128) # ブ
  #        Select(0u30d6); PasteWithOffset(101,  128) # ブ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d9); PasteWithOffset( 43,   14) # ベ
  #        Select(0u30d9); PasteWithOffset( 23,   14) # ベ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30dc); PasteWithOffset(103,  128) # ボ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30f7); PasteWithOffset(121,  128) # ヷ
  #        Select(0u30f7); PasteWithOffset(101,  129) # ヷ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30f8); PasteWithOffset(131,  128) # ヸ
  #        Select(0u30f8); PasteWithOffset(111,  129) # ヸ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30f9); PasteWithOffset(119,  128) # ヹ
  #        Select(0u30f9); PasteWithOffset( 99,  135) # ヹ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30fa); PasteWithOffset(122,  128) # ヺ
  #        Select(0u30fa); PasteWithOffset(102,  128) # ヺ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u3032); PasteWithOffset(  0, -143) # 〲
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3034); PasteWithOffset( 34, -343) # 〴
  #        Select(0u3034); PasteWithOffset( 14, -343) # 〴
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u309e); PasteWithOffset(-66,   -2) # ゞ
  #        Select(0u309e); PasteWithOffset(-86,  -22) # ゞ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30fe); PasteWithOffset(-86,  -22) # ヾ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
     else
-        Select(0u3094); PasteWithOffset( 77,   43) # ゔ
+        Select(0u3094); PasteWithOffset( 87,   63) # ゔ
  #        Select(0u3094); PasteWithOffset( 67,   43) # ゔ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u304c); PasteWithOffset( 70,   23) # が
+        Select(0u304c); PasteWithOffset( 90,   23) # が
  #        Select(0u304c); PasteWithOffset( 50,   13) # が
-        RemoveOverlap()
-        Select(0u304e); PasteWithOffset( 86,   93) # ぎ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u304e); PasteWithOffset( 86,  103) # ぎ
  #        Select(0u304e); PasteWithOffset( 76,   93) # ぎ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3050); PasteWithOffset(  9, -149) # ぐ
  #        Select(0u3050); PasteWithOffset(  9, -209) # ぐ
-        RemoveOverlap()
-        Select(0u3052); PasteWithOffset(105,   79) # げ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u3052); PasteWithOffset( 98,   89) # げ
  #        Select(0u3052); PasteWithOffset( 80,   79) # げ
-        RemoveOverlap()
-        Select(0u3054); PasteWithOffset( 80,   98) # ご
+        SetWidth(1000); RemoveOverlap()
+        Select(0u3054); PasteWithOffset( 80,  108) # ご
  #        Select(0u3054); PasteWithOffset( 30, -209) # ご
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u3056); PasteWithOffset( 95,   98) # ざ
+        Select(0u3056); PasteWithOffset(105,   88) # ざ
  #        Select(0u3056); PasteWithOffset( 75,   98) # ざ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3058); PasteWithOffset(-55,  -18) # じ
-        RemoveOverlap()
-        Select(0u305a); PasteWithOffset( 89,   98) # ず
+        SetWidth(1000); RemoveOverlap()
+        Select(0u305a); PasteWithOffset( 89,  108) # ず
  #        Select(0u305a); PasteWithOffset( 71, -228) # ず
-        RemoveOverlap()
-        Select(0u305c); PasteWithOffset(105,   93) # ぜ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u305c); PasteWithOffset( 94,  103) # ぜ
  #        Select(0u305c); PasteWithOffset( 76,   93) # ぜ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u305e); PasteWithOffset( 89,  -25) # ぞ
  #        Select(0u305e); PasteWithOffset( 79,  -15) # ぞ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u3060); PasteWithOffset( 67,   83) # だ
  #        Select(0u3060); PasteWithOffset( 67,   93) # だ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3062); PasteWithOffset( 67,   88) # ぢ
  #        Select(0u3062); PasteWithOffset( 67,   93) # ぢ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3065); PasteWithOffset( 67,   84) # づ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3067); PasteWithOffset( 66, -231) # で
  #        Select(0u3067); PasteWithOffset( 66, -246) # で
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3069); PasteWithOffset( 13,   50) # ど
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u3070); PasteWithOffset(105,   84) # ば
+        Select(0u3070); PasteWithOffset(101,  94) # ば
  #        Select(0u3070); PasteWithOffset( 80,   84) # ば
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3073); PasteWithOffset( 43,   59) # び
  #        Select(0u3073); PasteWithOffset( 23,   59) # び
-        RemoveOverlap()
-        Select(0u3076); PasteWithOffset( 75,   48) # ぶ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u3076); PasteWithOffset( 80,   58) # ぶ
  #        Select(0u3076); PasteWithOffset( 55,   38) # ぶ
-        RemoveOverlap()
-        Select(0u307c); PasteWithOffset(103,   54) # ぼ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u307c); PasteWithOffset(103,   74) # ぼ
  #        Select(0u307c); PasteWithOffset( 73,   34) # ぼ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30f4); PasteWithOffset( 65,   94) # ヴ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30ac); PasteWithOffset( 84,   89) # ガ
  #        Select(0u30ac); PasteWithOffset( 74,   94) # ガ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30ae); PasteWithOffset( 74,   89) # ギ
  #        Select(0u30ae); PasteWithOffset( 74,   94) # ギ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b0); PasteWithOffset( 88,   86) # グ
  #        Select(0u30b0); PasteWithOffset( 78,   86) # グ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b2); PasteWithOffset( 74,   94) # ゲ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b4); PasteWithOffset( 84,   94) # ゴ
  #        Select(0u30b4); PasteWithOffset( 74,   94) # ゴ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u30b6); PasteWithOffset(104,   90) # ザ
+        Select(0u30b6); PasteWithOffset( 99,  95) # ザ
  #        Select(0u30b6); PasteWithOffset( 79,   80) # ザ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30b8); PasteWithOffset(104,   85) # ジ
  #        Select(0u30b8); PasteWithOffset( 74,   85) # ジ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30ba); PasteWithOffset( 84,   94) # ズ
  #        Select(0u30ba); PasteWithOffset( 74,   94) # ズ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30bc); PasteWithOffset( 72,   99) # ゼ
-        RemoveOverlap()
-        Select(0u30be); PasteWithOffset(104,   85) # ゾ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u30be); PasteWithOffset(104,   95) # ゾ
  #        Select(0u30be); PasteWithOffset( 74,   85) # ゾ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u30c0); PasteWithOffset( 90,   95) # ダ
  #        Select(0u30c0); PasteWithOffset( 80,   95) # ダ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c2); PasteWithOffset( 86,   94) # ヂ
  #        Select(0u30c2); PasteWithOffset( 66,   94) # ヂ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c5); PasteWithOffset(104,   85) # ヅ
  #        Select(0u30c5); PasteWithOffset( 74,   85) # ヅ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c7); PasteWithOffset( 75,   83) # デ
  #        Select(0u30c7); PasteWithOffset( 65,   93) # デ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30c9); PasteWithOffset(-55,  -18) # ド
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u30d0); PasteWithOffset( 47,   31) # バ
+        Select(0u30d0); PasteWithOffset( 57,   31) # バ
  #        Select(0u30d0); PasteWithOffset(-23,   31) # バ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d3); PasteWithOffset( 54,   68) # ビ
-        RemoveOverlap()
-        Select(0u30d6); PasteWithOffset(104,   74) # ブ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u30d6); PasteWithOffset(104,   94) # ブ
  #        Select(0u30d6); PasteWithOffset( 84,   74) # ブ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30d9); PasteWithOffset( 45,    0) # ベ
  #        Select(0u30d9); PasteWithOffset( 25,    0) # ベ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30dc); PasteWithOffset( 74,   94) # ボ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
-        Select(0u30f7); PasteWithOffset(105,   84) # ヷ
+        Select(0u30f7); PasteWithOffset(105,   94) # ヷ
  #        Select(0u30f7); PasteWithOffset( 86,   74) # ヷ
-        RemoveOverlap()
-        Select(0u30f8); PasteWithOffset(105,   99) # ヸ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u30f8); PasteWithOffset( 81,  109) # ヸ
  #        Select(0u30f8); PasteWithOffset( 71,  102) # ヸ
-        RemoveOverlap()
-        Select(0u30f9); PasteWithOffset(105,   92) # ヹ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u30f9); PasteWithOffset(104,  102) # ヹ
  #        Select(0u30f9); PasteWithOffset( 86,   82) # ヹ
-        RemoveOverlap()
-        Select(0u30fa); PasteWithOffset(105,   80) # ヺ
+        SetWidth(1000); RemoveOverlap()
+        Select(0u30fa); PasteWithOffset(105,  100) # ヺ
  #        Select(0u30fa); PasteWithOffset( 87,   70) # ヺ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
 
         Select(0u3032); PasteWithOffset(  0, -189) # 〲
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u3034); PasteWithOffset( 20, -421) # 〴
  #        Select(0u3034); PasteWithOffset(  0, -421) # 〴
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u309e); PasteWithOffset(-56,  -33) # ゞ
  #        Select(0u309e); PasteWithOffset(-76,  -53) # ゞ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
         Select(0u30fe); PasteWithOffset(-75,  -53) # ヾ
-        RemoveOverlap()
+        SetWidth(1000); RemoveOverlap()
     endif
 
 # べ
@@ -5204,12 +5278,11 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_regular}")
         Select(0u3079); PasteWithOffset( 20,    0) # べ
  #        Select(0u3079); PasteWithOffset(  0,    0) # べ
-        RemoveOverlap()
     else
         Select(0u3079); PasteWithOffset( 20,    0) # べ
  #        Select(0u3079); PasteWithOffset(  0,    0) # べ
-        RemoveOverlap()
     endif
+        SetWidth(1000); RemoveOverlap()
 
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
