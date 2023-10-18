@@ -120,7 +120,7 @@ if [ "${other_flag}" = "true" ]; then
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
     ttx -t name -t head -t OS/2 -t post -t hmtx "$P"
-#      ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
+#    ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
 
     # head, OS/2 (フォントスタイルを修正)
     if [ "$(cat ${P%%.ttf}.ttx | grep "Bold Oblique")" ]; then
@@ -233,7 +233,7 @@ if [ "${gsub_flag}" = "true" ]; then
 
     # GSUB (用字、言語全て共通に変更)
     gpc=`grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx"` # caltフィーチャがすでにあるか判定
-    gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"` # zeroフィーチャ(ダミー)があるか判定
+    gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"` # zeroフィーチャ(caltのダミー)があるか判定
     if [ -n "${gpc}" ]; then
       echo "Already calt feature exist. Do not overwrite the table."
     elif [ -n "${gpz}" ]; then
@@ -248,7 +248,7 @@ if [ "${gsub_flag}" = "true" ]; then
             sh calt_table_maker.sh -n ${glyphNo}
           fi
         fi
-				# フォントがcaltフィーチャに対応していた場合フィーチャリストを変更
+        # フォントがcaltフィーチャに対応していた場合フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"の中を削除
         sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
