@@ -50,8 +50,8 @@ address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
 address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
 address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
 address_calt=`expr ${address_vert_kabu} + 7` # calt置換の先頭アドレス(左に移動した A)
-address_calt_middle=`expr ${address_calt} + 116` # calt置換の最終アドレス(右に移動した A)
-address_calt_end=`expr ${address_calt_middle} + 116` # calt置換の最終アドレス (上に移動した colon)
+address_calt_middle=`expr ${address_calt} + 241` # calt置換の中間アドレス(右に移動した A)
+address_calt_end=`expr ${address_calt_middle} + 241` # calt置換の最終アドレス (上に移動した colon)
 
 # フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
@@ -7045,11 +7045,29 @@ while (i < SizeOf(input_list))
             j += 1
         endloop
 
-        Select(0u0178); Copy() # Ÿ
-        Select(k); Paste()
-        k += 1
-        Select(k); Paste()
-        k += 1
+        j = 0
+        while (j < 256)
+            l = 0u0100 + j % 128
+            if (l != 0u0132\
+             && l != 0u0133\
+             && l != 0u0149\
+             && l != 0u0152\
+             && l != 0u0153\
+             && l != 0u017f)
+                Select(l); Copy() # Ā
+                Select(k); Paste()
+                k += 1
+            endif
+            j += 1
+        endloop
+
+        j = 0
+        while (j < 8)
+            Select(0u0020); Copy() # Ș-ț のダミー
+            Select(k); Paste()
+            k += 1
+            j += 1
+        endloop
 
         Select(0u0020); Copy() # ẞ のダミー
         Select(k); Paste()
@@ -8551,23 +8569,51 @@ while (i < \$argc)
                 SetWidth(512)
                 AddPosSub(lookupSub0, glyphName) # 左→中
                 glyphName = GlyphInfo("Name")
-                Select(l) # a
+                Select(l) # À
                 AddPosSub(lookupSub1, glyphName) # 左←中
                 k += 1
             endif
             j += 1
         endloop
 
-        Select(0u0178); Copy() # Ÿ
-        glyphName = GlyphInfo("Name")
-        Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(512)
-        AddPosSub(lookupSub0, glyphName) # 左←中
-        glyphName = GlyphInfo("Name")
-        Select(0u0178) # Ÿ
-        AddPosSub(lookupSub1, glyphName) # 左→中
-        k += 1
+        j = 0
+        while (j < 128)
+            l = 0u0100 + j
+            if (l != 0u0132\
+             && l != 0u0133\
+             && l != 0u0149\
+             && l != 0u0152\
+             && l != 0u0153\
+             && l != 0u017f)
+                Select(l); Copy() # Ā
+                glyphName = GlyphInfo("Name")
+                Select(k); Paste()
+                Move(-${x_pos_calt}, 0)
+                SetWidth(512)
+                AddPosSub(lookupSub0, glyphName) # 左→中
+                glyphName = GlyphInfo("Name")
+                Select(l) # Ā
+                AddPosSub(lookupSub1, glyphName) # 左←中
+                k += 1
+            endif
+            j += 1
+        endloop
+
+        j = 0
+        while (j < 4)
+            l = 0u0218 + j
+            Select(l); Copy() # Ș
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Move(-${x_pos_calt}, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # 左→中
+            glyphName = GlyphInfo("Name")
+            Select(l) # Ș
+            AddPosSub(lookupSub1, glyphName) # 左←中
+            k += 1
+            j += 1
+        endloop
 
         Select(0u1e9e); Copy() # ẞ
         glyphName = GlyphInfo("Name")
@@ -8649,23 +8695,51 @@ while (i < \$argc)
                 SetWidth(512)
                 AddPosSub(lookupSub0, glyphName) # 中←右
                 glyphName = GlyphInfo("Name")
-                Select(l) # a
+                Select(l) # À
                 AddPosSub(lookupSub1, glyphName) # 中→右
                 k += 1
             endif
             j += 1
         endloop
 
-        Select(0u0178); Copy() # Ÿ
-        glyphName = GlyphInfo("Name")
-        Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(512)
-        AddPosSub(lookupSub0, glyphName) # 中←右
-        glyphName = GlyphInfo("Name")
-        Select(0u0178) # Ÿ
-        AddPosSub(lookupSub1, glyphName) # 中→右
-        k += 1
+        j = 0
+        while (j < 128)
+            l = 0u0100 + j
+            if (l != 0u0132\
+             && l != 0u0133\
+             && l != 0u0149\
+             && l != 0u0152\
+             && l != 0u0153\
+             && l != 0u017f)
+                Select(l); Copy() # Ā
+                glyphName = GlyphInfo("Name")
+                Select(k); Paste()
+                Move(${x_pos_calt}, 0)
+                SetWidth(512)
+                AddPosSub(lookupSub0, glyphName) # 中←右
+                glyphName = GlyphInfo("Name")
+                Select(l) # Ā
+                AddPosSub(lookupSub1, glyphName) # 中→右
+                k += 1
+            endif
+            j += 1
+        endloop
+
+        j = 0
+        while (j < 4)
+            l = 0u0218 + j
+            Select(l); Copy() # Ș
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Move(${x_pos_calt}, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # 中←右
+            glyphName = GlyphInfo("Name")
+            Select(l) # Ș
+            AddPosSub(lookupSub1, glyphName) # 中→右
+            k += 1
+            j += 1
+        endloop
 
         Select(0u1e9e); Copy() # ẞ
         glyphName = GlyphInfo("Name")

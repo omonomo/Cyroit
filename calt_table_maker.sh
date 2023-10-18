@@ -22,6 +22,7 @@ lookupIndexL=`expr ${lookupIndex_calt} + 3` # 変換先(左に移動させたグ
 lookupIndexC=`expr ${lookupIndex_calt} + 4` # 変換先(移動させたグリフを元に戻す)
 
 leaving_tmp_flag="false" # 一時ファイル残す
+basic_only_flag="false" # 基本ラテン文字のみ
 
 echo
 echo "- GSUB table [calt, LookupType 6] maker -"
@@ -35,11 +36,12 @@ calt_table_maker_help()
     echo "  -h         Display this information"
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -n number  Set glyph number of \"A moved left\""
+    echo "  -b         Set only basic Latin characters"
     exit 0
 }
 
 # Get options
-while getopts hln: OPT
+while getopts hln:b OPT
 do
     case "${OPT}" in
         "h" )
@@ -53,6 +55,10 @@ do
             echo "Option: Set glyph number of \"A moved left\": glyph${OPTARG}"
             glyphNo="${OPTARG}"
             ;;
+        "b" )
+            echo "Option: Set only basic Latin characters"
+            basic_only_flag="true"
+            ;;
         * )
             exit 1
             ;;
@@ -65,47 +71,153 @@ rm -f ${listTemp}.txt
 rm -f ${dict}.txt
 
 # グリフ略号 作成 ========================================
-_A=(A À Á Â Ã Ä Å) # A
-_B=(B ẞ) # B ẞ
-_C=(C Ç) # C
-_D=(D Ð) # D Ð
-_E=(E È É Ê Ë) # E
-_I=(I Ì Í Î Ï) # I
-_N=(N Ñ) # N
-_O=(O Ò Ó Ô Õ Ö Ø) # O
-_U=(U Ù Ú Û Ü) # U
-_Y=(Y Ý Ÿ) # Y
+if [ "${basic_only_flag}" = "true" ]; then
+  _A=(A) # A
+  _B=(B) # B
+  _C=(C) # C
+  _D=(D) # D
+  _E=(E) # E
+  _F=(F) # F
+  _G=(G) # G
+  _H=(H) # H
+  _I=(I) # I
+  _J=(J) # J
+  _K=(K) # K
+  _L=(L) # L
+  _M=(M) # M
+  _N=(N) # N
+  _O=(O) # O
+  _P=(P) # P
+  _Q=(Q) # Q
+  _R=(R) # R
+  _S=(S) # S
+  _T=(T) # T
+  _U=(U) # U
+  _V=(V) # V
+  _W=(W) # W
+  _X=(X) # X
+  _Y=(Y) # Y
+  _Z=(Z) # Z
+  _AE=("") # Æ
+  _OE=("") # Œ
+  _TH=("") # Þ
 
-_a=(a à á â ã ä å) # a
-_c=(c ç) # c
-_e=(e è é ê ë) # e
-_i=(i ì í î ï) # i
-_n=(n ñ) # n
-_o=(o ò ó ô õ ö ø ð) # o ð
-_u=(u ù ú û ü) # u
-_y=(y ý ÿ) # y
+  _a=(a) # a
+  _b=(b) # b
+  _c=(c) # c
+  _d=(d) # d
+  _e=(e) # e
+  _f=(f) # f
+  _g=(g) # g
+  _h=(h) # h
+  _i=(i) # i
+  _j=(j) # j
+  _k=(k) # k
+  _l=(l) # l
+  _m=(m) # m
+  _n=(n) # n
+  _o=(o) # o
+  _p=(p) # p
+  _q=(q) # q
+  _r=(r) # r
+  _s=(s) # s
+  _t=(t) # t
+  _u=(u) # u
+  _v=(v) # v
+  _w=(w) # w
+  _x=(x) # x
+  _y=(y) # y
+  _z=(z) # z
+  _ae=("") # æ
+  _oe=("") # œ
+  _th=("") # þ
+  _ss=("") # ß
+  _kg=("") # ĸ
+else
+  _A=(A À Á Â Ã Ä Å Ā Ă Ą) # A
+  _B=(B ẞ) # B ẞ
+  _C=(C Ç Ć Ĉ Ċ Č) # C
+  _D=(D Ď Đ Ð) # D Ð
+  _E=(E È É Ê Ë Ē Ĕ Ė Ę Ě) # E
+  _F=(F) # F
+  _G=(G Ĝ Ğ Ġ Ģ) # G
+  _H=(H Ĥ Ħ) # H
+  _I=(I Ì Í Î Ï Ĩ Ī Ĭ Į İ) # I
+  _J=(J Ĵ) # J
+  _K=(K Ķ) # K
+  _L=(L Ĺ Ļ Ľ Ŀ Ł) # L
+  _M=(M) # M
+  _N=(N Ñ Ń Ņ Ň Ŋ) # N
+  _O=(O Ò Ó Ô Õ Ö Ø Ō Ŏ Ő) # O
+  _P=(P) # P
+  _Q=(Q) # Q
+  _R=(R Ŕ Ŗ Ř) # R
+  _S=(S Ś Ŝ Ş Š Ș) # S
+  _T=(T Ţ Ť Ŧ Ț) # T
+  _U=(U Ù Ú Û Ü Ũ Ū Ŭ Ů Ű Ų) # U
+  _V=(V) # V
+  _W=(W Ŵ) # W
+  _X=(X) # X
+  _Y=(Y Ý Ÿ Ŷ) # Y
+  _Z=(Z Ź Ż Ž) # Z
+  _AE=(Æ) # Æ
+  _OE=(Œ) # Œ
+  _TH=(Þ) # Þ
+
+  _a=(a à á â ã ä å ā ă ą) # a
+  _b=(b) # b
+  _c=(c ç ć ĉ ċ č) # c
+  _d=(d ď đ) # d
+  _e=(e è é ê ë ē ĕ ė ę ě) # e
+  _f=(f) # f
+  _g=(g ĝ ğ ġ ģ) # g
+  _h=(h ĥ ħ) # h
+  _i=(i ì í î ï ĩ ī ĭ į ı) # i
+  _j=(j ĵ) # j
+  _k=(k ķ) # k
+  _l=(l ĺ ļ ľ ŀ ł) # l
+  _m=(m) # m
+  _n=(n ñ ń ņ ň ŋ) # n
+  _o=(o ò ó ô õ ö ø ō ŏ ő ð) # o ð
+  _p=(p) # p
+  _q=(q) # q
+  _r=(r ŕ ŗ ř) # r
+  _s=(s ś ŝ ş š ș) # s
+  _t=(t ţ ť ŧ ț) # t
+  _u=(u ù ú û ü ũ ū ŭ ů ű ų) # u
+  _v=(v) # v
+  _w=(w ŵ) # w
+  _x=(x) # x
+  _y=(y ý ÿ ŷ) # y
+  _z=(z ź ż ž) # z
+  _ae=(æ) # æ
+  _oe=(œ) # œ
+  _th=(þ) # þ
+  _ss=(ß) # ß
+  _kg=(ĸ) # ĸ
+fi
 
 # 各グリフの重心、形状の違いから、左寄り、右寄り、中央寄り、中央寄りと均等の中間、均等、幅広、Vの字形に分類する
-grvyCapitalL=(F K L P R Þ "${_B[@]}" "${_D[@]}" "${_E[@]}") # 左寄りの大文字
-grvySmallL=(b h k p þ ß) # 左寄りの小文字
+grvyCapitalL=("${_B[@]}" "${_D[@]}" "${_E[@]}" "${_F[@]}" "${_K[@]}" "${_L[@]}" "${_P[@]}" "${_R[@]}" "${_TH[@]}") # 左寄りの大文字
+grvySmallL=("${_b[@]}" "${_h[@]}" "${_k[@]}" "${_p[@]}" "${_th[@]}" "${_ss[@]}" "${_kg[@]}") # 左寄りの小文字
 
-grvyCapitalR=(G "${_C[@]}") # 右寄りの大文字
-grvySmallR=(d g q "${_a[@]}" "${_c[@]}") # 右寄りの小文字
+grvyCapitalR=("${_C[@]}" "${_G[@]}") # 右寄りの大文字
+grvySmallR=("${_a[@]}" "${_c[@]}" "${_d[@]}" "${_g[@]}" "${_q[@]}") # 右寄りの小文字
 
-grvyCapitalW=(M W Æ Œ) # 幅広の大文字
-grvySmallW=(m w æ œ) # 幅広の小文字
+grvyCapitalW=("${_M[@]}" "${_W[@]}" "${_AE[@]}" "${_OE[@]}") # 幅広の大文字
+grvySmallW=("${_m[@]}" "${_w[@]}" "${_ae[@]}" "${_oe[@]}") # 幅広の小文字
 
-grvyCapitalE=(H Q "${_N[@]}" "${_O[@]}" "${_U[@]}") # 均等な大文字
+grvyCapitalE=("${_H[@]}" "${_N[@]}" "${_O[@]}" "${_Q[@]}" "${_U[@]}") # 均等な大文字
 grvySmallE=("${_n[@]}" "${_u[@]}") # 均等な小文字
 
-grvyCapitalM=(S X Z "${_A[@]}") # 中間の大文字
-grvySmallM=(s x z "${_e[@]}" "${_o[@]}") # 中間の小文字
+grvyCapitalM=("${_A[@]}" "${_S[@]}" "${_X[@]}" "${_Z[@]}") # 中間の大文字
+grvySmallM=("${_e[@]}" "${_o[@]}" "${_s[@]}" "${_x[@]}" "${_z[@]}") # 中間の小文字
 
-grvyCapitalV=(T V "${_Y[@]}") # Vの字の大文字
-grvySmallV=(v "${_y[@]}") # vの字の小文字
+grvyCapitalV=("${_T[@]}" "${_V[@]}" "${_Y[@]}") # Vの字の大文字
+grvySmallV=("${_v[@]}" "${_y[@]}") # vの字の小文字
 
-grvyCapitalC=(J "${_I[@]}") # 中寄りの大文字
-grvySmallC=(f j l r t "${_i[@]}") # 中寄りの小文字
+grvyCapitalC=("${_I[@]}" "${_J[@]}") # 中寄りの大文字
+grvySmallC=("${_f[@]}" "${_i[@]}" "${_j[@]}" "${_l[@]}" "${_r[@]}" "${_t[@]}") # 中寄りの小文字
 
 gravityL=("${grvyCapitalL[@]}" "${grvySmallL[@]}") # 左寄り(左に右寄り、幅広、均等があると離れようとする)
 gravityR=("${grvyCapitalR[@]}" "${grvySmallR[@]}") # 右寄り(右に左寄り、幅広、均等があると離れようとする)
@@ -117,24 +229,24 @@ gravityC=("${grvyCapitalC[@]}" "${grvySmallC[@]}") # 中寄り(全てが近づ�
 
 # --------------------
 
-gravity_rC=(J j) # 引き寄せるやや右寄り
-gravity_rM=(j) # 引き寄せないやや右寄り
+gravity_rC=("${_J[@]}" "${_j[@]}") # 引き寄せるやや右寄り
+gravity_rM=("${_j[@]}") # 引き寄せないやや右寄り(例外あり)
 
-gravity_lM=(t "${_e[@]}") # 引き寄せないやや左寄り
-gravity_lC=(f l r t "${_y[@]}") # 引き寄せるやや左寄り
+gravity_lM=("${_e[@]}" "${_t[@]}") # 引き寄せないやや左寄り(例外あり)
+gravity_lC=("${_f[@]}" "${_l[@]}" "${_r[@]}" "${_t[@]}" "${_y[@]}") # 引き寄せるやや左寄り
 
 grvyCapitalF=("${grvyCapitalL[@]}" "${grvyCapitalR[@]}" "${grvyCapitalW[@]}" "${grvyCapitalE[@]}" "${grvyCapitalM[@]}") # 引き寄せない大文字
 
 # --------------------
 
-crclCapitalC=(Q "${_O[@]}") # 丸い大文字
+crclCapitalC=("${_O[@]}" "${_Q[@]}") # 丸い大文字
 crclSmallC=("${_e[@]}" "${_o[@]}") # 丸い小文字
 
-crclCapitalL=(G "${_C[@]}" "${crclCapitalC[@]}") # 左が丸い大文字
-crclSmallL=(d g q "${_c[@]}" "${crclSmallC[@]}") # 左が丸い小文字
+crclCapitalL=("${_C[@]}" "${_G[@]}" "${crclCapitalC[@]}") # 左が丸い大文字
+crclSmallL=("${_c[@]}" "${_d[@]}" "${_g[@]}" "${_q[@]}" "${crclSmallC[@]}") # 左が丸い小文字
 
 crclCapitalR=("${_B[@]}" "${_D[@]}" "${crclCapitalC[@]}") # 右が丸い大文字
-crclSmallR=(b p þ "${crclSmallC[@]}") # 右が丸い小文字
+crclSmallR=("${_b[@]}" "${_p[@]}" "${_th[@]}" "${crclSmallC[@]}") # 右が丸い小文字
 
 circleC=("${crclCapitalC[@]}" "${crclSmallC[@]}") # 丸い文字
 circleL=("${crclCapitalL[@]}" "${crclSmallL[@]}") # 左が丸い文字
@@ -142,32 +254,33 @@ circleR=("${crclCapitalR[@]}" "${crclSmallR[@]}") # 右が丸い文字
 
 # --------------------
 
-lowC=(g j m p q r s v w x z æ œ "${_a[@]}" "${_c[@]}" "${_e[@]}" "${_i[@]}" "${_n[@]}" "${_o[@]}" "${_u[@]}" "${_y[@]}") # 低い文字
-lowL=(d "${lowC[@]}") # 左が低い文字
-lowR=(b h k þ "${lowC[@]}") # 右が低い文字
+lowC=("${_a[@]}" "${_c[@]}" "${_e[@]}" "${_g[@]}" "${_i[@]}" "${_j[@]}" "${_m[@]}" "${_n[@]}" "${_o[@]}" "${_p[@]}" "${_q[@]}" \
+"${_r[@]}" "${_s[@]}" "${_u[@]}" "${_v[@]}" "${_w[@]}" "${_x[@]}" "${_y[@]}" "${_z[@]}" "${_ae[@]}" "${_oe[@]}" "${_kg[@]}") # 低い文字
+lowL=("${_d[@]}" "${lowC[@]}") # 左が低い文字
+lowR=("${_b[@]}" "${_h[@]}" "${_k[@]}" "${_th[@]}" "${lowC[@]}") # 右が低い文字
 
 # --------------------
 
-spceCapitalL=(T V "${_I[@]}" "${_Y[@]}") # 左下が開いている大文字
-spceSmallL=(f l t v "${_i[@]}") # 左下が開いている小文字
+spceCapitalL=("${_I[@]}" "${_T[@]}" "${_V[@]}" "${_Y[@]}") # 左下が開いている大文字
+spceSmallL=("${_f[@]}" "${_i[@]}" "${_l[@]}" "${_t[@]}" "${_v[@]}") # 左下が開いている小文字
 
-spceCapitalR=(F J P T V Þ "${_I[@]}" "${_Y[@]}") # 右下が開いている大文字
-spceSmallR=(f j l r v "${_i[@]}" "${_y[@]}") # 右下が開いている小文字
+spceCapitalR=("${_F[@]}" "${_I[@]}" "${_J[@]}" "${_P[@]}" "${_T[@]}" "${_V[@]}" "${_Y[@]}" "${_TH[@]}") # 右下が開いている大文字
+spceSmallR=("${_f[@]}" "${_i[@]}" "${_j[@]}" "${_l[@]}" "${_r[@]}" "${_v[@]}" "${_y[@]}") # 右下が開いている小文字
 
 # --------------------
 
 capitalA=("${_A[@]}") # 大文字の A
-capitalG=(G) # 大文字の G
-capitalJ=(J) # 大文字の J
-capitalL=(L) # 大文字の L
-capitalW=(W) # 大文字の W
-capitalX=(X) # 大文字の X
-small_f=(f) # 小文字の f
-small_gq=(g q) # 小文字の g q
-small_j=(j) # 小文字の j
-small_rt=(r t) # 小文字の r t
-small_v=(v) # 小文字の v
-small_x=(x) # 小文字の x
+capitalG=("${_G[@]}") # 大文字の G
+capitalJ=("${_J[@]}") # 大文字の J
+capitalL=("${_L[@]}") # 大文字の L
+capitalW=("${_W[@]}") # 大文字の W
+capitalX=("${_X[@]}") # 大文字の X
+small_f=("${_f[@]}") # 小文字の f
+small_gq=("${_g[@]}" "${_q[@]}") # 小文字の g q
+small_j=("${_j[@]}") # 小文字の j
+small_rt=("${_r[@]}" "${_t[@]}") # 小文字の r t
+small_v=("${_v[@]}") # 小文字の v
+small_x=("${_x[@]}") # 小文字の x
 
 capitalAll=("${grvyCapitalL[@]}" "${grvyCapitalR[@]}" "${grvyCapitalW[@]}" "${grvyCapitalE[@]}" \
 "${grvyCapitalM[@]}" "${grvyCapitalV[@]}" "${grvyCapitalC[@]}") # 全ての大文字
@@ -456,9 +569,6 @@ for S in ${smallxR[@]}; do
 done
 
 # グリフ名変換用辞書作成 (グリフのIDS順に並べること) ========================================
- #space="SP" # 略号
- #space_name="space" # 実際の名前
-
 solidus="/"
 solidus_name="slash"
 
@@ -472,12 +582,10 @@ colon_name="colon"
 # グリフ名 (A B..y z glyphXXXXX..glyphYYYYY)
 latin=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z \
 a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字
+latin_name=("${latin[@]}")
 
 rSolidus="RS"
 rSolidus_name="backslash"
-
- #nbspace="NS"
- #nbspace_name="uni00A0"
 
 latinCx=(À Á Â Ã Ä Å)
 latinCx_name=("Agrave" "Aacute" "Acircumflex" "Atilde" "Adieresis" "Aring")
@@ -503,11 +611,53 @@ latinFx=(ð ñ ò ó ô õ ö ø ù ú û ü ý þ ÿ)
 latinFx_name=("eth" "ntilde" "ograve" "oacute" "ocircumflex" "otilde" "odieresis" "oslash" \
 "ugrave" "uacute" "ucircumflex" "udieresis" "yacute" "thorn" "ydieresis")
 
-latin15x=(Œ œ)
-latin15x_name=("OE" "oe")
+latin10x=(Ā ā Ă ă Ą ą Ć ć Ĉ ĉ Ċ ċ Č č Ď ď)
+latin10x_name=("Amacron" "amacron" "Abreve" "abreve" "Aogonek" "aogonek" "Cacute" "cacute" \
+"Ccircumflex" "ccircumflex" "Cdotaccent" "cdotaccent" "Ccaron" "ccaron" "Dcaron" "dcaron")
 
-latin17x=(Ÿ)
-latin17x_name=("Ydieresis")
+latin11x=(Đ đ Ē ē Ĕ ĕ Ė ė Ę ę Ě ě Ĝ ĝ Ğ ğ)
+latin11x_name=("Dcroat" "dcroat" "Emacron" "emacron" "Ebreve" "ebreve" "Edotaccent" "edotaccent" \
+"Eogonek" "eogonek" "Ecaron" "ecaron" "Gcircumflex" "gcircumflex" "Gbreve" "gbreve")
+
+latin12x=(Ġ ġ Ģ ģ Ĥ ĥ Ħ ħ Ĩ ĩ Ī ī Ĭ ĭ Į į)
+latin12x_name=("Gdotaccent" "gdotaccent" "uni0122" "uni0123" "Hcircumflex" "hcircumflex" "Hbar" "hbar" \
+"Itilde" "itilde" "Imacron" "imacron" "Ibreve" "ibreve" "Iogonek" "iogonek")
+
+latin13x=(İ ı Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ)
+latin13x_name=("Idotaccent" "dotlessi" "Jcircumflex" "jcircumflex" "uni0136" "uni0137" \
+"kgreenlandic" "Lacute" "lacute" "uni013B" "uni013C" "Lcaron" "lcaron" "Ldot")
+#latin13x=(İ ı Ĳ ĳ Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ)
+#latin13x_name=("Idotaccent" "dotlessi" "IJ" "ij" "Jcircumflex" "jcircumflex" "uni0136" "uni0137" \
+#"kgreenlandic" "Lacute" "lacute" "uni013B" "uni013C" "Lcaron" "lcaron" "Ldot")
+
+latin14x=(ŀ Ł ł Ń ń Ņ ņ Ň ň Ŋ ŋ Ō ō Ŏ ŏ)
+latin14x_name=("ldot" "Lslash" "lslash" "Nacute" "nacute" "uni0145" "uni0146" "Ncaron" \
+"ncaron" "Eng" "eng" "Omacron" "omacron" "Obreve" "obreve")
+#latin14x=(ŀ Ł ł Ń ń Ņ ņ Ň ň ŉ Ŋ ŋ Ō ō Ŏ ŏ)
+#latin14x_name=("ldot" "Lslash" "lslash" "Nacute" "nacute" "uni0145" "uni0146" "Ncaron" \
+#"ncaron" "napostrophe" "Eng" "eng" "Omacron" "omacron" "Obreve" "obreve")
+
+latin15x=(Ő ő)
+latin15x_name=("Ohungarumlaut" "ohungarumlaut")
+latin15y=(Œ œ)
+latin15y_name=("OE" "oe")
+latin15z=(Ŕ ŕ Ŗ ŗ Ř ř Ś ś Ŝ ŝ Ş ş)
+latin15z_name=("Racute" "racute" "uni0156" "uni0157" \
+"Rcaron" "rcaron" "Sacute" "sacute" "Scircumflex" "scircumflex" "Scedilla" "scedilla")
+
+latin16x=(Š š Ţ ţ Ť ť Ŧ ŧ Ũ ũ Ū ū Ŭ ŭ Ů ů)
+latin16x_name=("Scaron" "scaron" "uni0162" "uni0163" "Tcaron" "tcaron" "Tbar" "tbar" \
+"Utilde" "utilde" "Umacron" "umacron" "Ubreve" "ubreve" "Uring" "uring")
+
+latin17x=(Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž)
+latin17x_name=("Uhungarumlaut" "uhungarumlaut" "Uogonek" "uogonek" "Wcircumflex" "wcircumflex" "Ycircumflex" "ycircumflex" \
+"Ydieresis" "Zacute" "zacute" "Zdotaccent" "zdotaccent" "Zcaron" "zcaron")
+#latin17x=(Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž ſ)
+#latin17x_name=("Uhungarumlaut" "uhungarumlaut" "Uogonek" "uogonek" "Wcircumflex" "wcircumflex" "Ycircumflex" "ycircumflex" \
+#"Ydieresis" "Zacute" "zacute" "Zdotaccent" "zdotaccent" "Zcaron" "zcaron" "longs")
+
+latin21x=(Ș ș Ț ț)
+latin21x_name=("uni0218" "uni0219" "uni021A" "uni021B")
 
 latin1E9x=(ẞ)
 latin1E9x_name=("uni1E9E")
@@ -515,36 +665,31 @@ latin1E9x_name=("uni1E9E")
 # 移動していない文字 ----------------------------------------
 
 i=0
- #echo "$i ${space} ${space_name}" >> "${dict}.txt" # スペース
- #i=`expr ${i} + 1`
 
-echo "$i ${solidus} ${solidus_name}" >> "${dict}.txt" # solidus
-i=`expr ${i} + 1`
-
-for j in ${!number[@]} # 数字
+word=("${solidus}" "${number[@]}" "${colon}") # solidus 0-9 :
+neme=("${solidus_name}" "${number_name[@]}" "${colon_name}")
+for j in ${!word[@]}
 do
-  echo "$i ${number[j]} ${number_name[j]}" >> "${dict}.txt"
+  echo "$i ${word[j]} ${neme[j]}" >> "${dict}.txt" # C無し注意
   i=`expr ${i} + 1`
 done
 
-echo "$i ${colon} ${colon_name}" >> "${dict}.txt" # :
-i=`expr ${i} + 1`
-
-for S in ${latin[@]} # アルファベット基本
+word=("${latin[@]}") # A-z
+neme=("${latin_name[@]}")
+for j in ${!word[@]}
 do
-  echo "$i ${S}C ${S}" >> "${dict}.txt"
+  echo "$i ${word[j]}C ${neme[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
-echo "$i ${rSolidus} ${rSolidus_name}" >> "${dict}.txt" # reverse solidus
+echo "$i ${rSolidus} ${rSolidus_name}" >> "${dict}.txt" # reverse solidus (C無し注意)
 i=`expr ${i} + 1`
 
- #echo "$i ${nbspace} ${nbspace_name}" >> "${dict}.txt" # ノーブレークスペース
- #i=`expr ${i} + 1`
-
-for j in ${!latinCx[@]} # À-Å
+word=("${latinCx[@]}") # À-Å
+neme=("${latinCx_name[@]}")
+for j in ${!word[@]}
 do
-  echo "$i ${latinCx[j]}C ${latinCx_name[j]}" >> "${dict}.txt"
+  echo "$i ${word[j]}C ${neme[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
@@ -555,21 +700,11 @@ i=`expr ${i} + 1`
 echo "$i ${latinCy}R ${latinCy_name}" >> "${dict}.txt" # Æ は移動しないため
 i=`expr ${i} + 1`
 
-for j in ${!latinCz[@]} # Ç-Ï
+word=("${latinCz[@]}" "${latinDx[@]}" "${latinEx[@]}") # Ç-å
+neme=("${latinCz_name[@]}" "${latinDx_name[@]}" "${latinEx_name[@]}")
+for j in ${!word[@]}
 do
-  echo "$i ${latinCz[j]}C ${latinCz_name[j]}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for j in ${!latinDx[@]} # Ð-ß
-do
-  echo "$i ${latinDx[j]}C ${latinDx_name[j]}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for j in ${!latinEx[@]} # à-å
-do
-  echo "$i ${latinEx[j]}C ${latinEx_name[j]}" >> "${dict}.txt"
+  echo "$i ${word[j]}C ${neme[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
@@ -580,98 +715,43 @@ i=`expr ${i} + 1`
 echo "$i ${latinEy}R ${latinEy_name}" >> "${dict}.txt" # æ は移動しないため
 i=`expr ${i} + 1`
 
-for j in ${!latinEz[@]} # ç-ï
+word=("${latinEz[@]}" "${latinFx[@]}" "${latin10x[@]}" "${latin11x[@]}" \
+"${latin12x[@]}" "${latin13x[@]}" "${latin14x[@]}" "${latin15x[@]}") # ç-ő
+neme=("${latinEz_name[@]}" "${latinFx_name[@]}" "${latin10x_name[@]}" "${latin11x_name[@]}" \
+"${latin12x_name[@]}" "${latin13x_name[@]}" "${latin14x_name[@]}" "${latin15x_name[@]}")
+for j in ${!word[@]}
 do
-  echo "$i ${latinEz[j]}C ${latinEz_name[j]}" >> "${dict}.txt"
+  echo "$i ${word[j]}C ${neme[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
-for j in ${!latinFx[@]} # ð-ÿ
+for j in ${!latin15y[@]} # Œ œ
 do
-  echo "$i ${latinFx[j]}C ${latinFx_name[j]}" >> "${dict}.txt"
+  echo "$i ${latin15y[j]}C ${latin15y_name[j]}" >> "${dict}.txt"
+  i=`expr ${i} + 1`
+  echo "$i ${latin15y[j]}L ${latin15y_name[j]}" >> "${dict}.txt" # Œ œ は移動しないため
+  i=`expr ${i} + 1`
+  echo "$i ${latin15y[j]}R ${latin15y_name[j]}" >> "${dict}.txt" # Œ œ は移動しないため
   i=`expr ${i} + 1`
 done
 
-for j in ${!latin15x[@]} # Œ œ は移動しないため
+word=("${latin15z[@]}" "${latin16x[@]}" "${latin17x[@]}" "${latin21x[@]}" "${latin1E9x[@]}") # Ŕ-ẞ
+neme=("${latin15z_name[@]}" "${latin16x_name[@]}" "${latin17x_name[@]}" "${latin21x_name[@]}" "${latin1E9x_name[@]}")
+for j in ${!word[@]}
 do
-  echo "$i ${latin15x[j]}C ${latin15x_name[j]}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-  echo "$i ${latin15x[j]}L ${latin15x_name[j]}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-  echo "$i ${latin15x[j]}R ${latin15x_name[j]}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for j in ${!latin17x[@]} # Ÿ
-do
-  echo "$i ${latin17x[j]}C ${latin17x_name[j]}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for j in ${!latin1E9x[@]} # ẞ
-do
-  echo "$i ${latin1E9x[j]}C ${latin1E9x_name[j]}" >> "${dict}.txt"
+  echo "$i ${word[j]}C ${neme[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
 # 左に移動した文字 ----------------------------------------
 
+word=("${latin[@]}" "${solidus}" "${rSolidus}" "${latinCx[@]}" "${latinCz[@]}" "${latinDx[@]}" "${latinEx[@]}" "${latinEz[@]}" "${latinFx[@]}" \
+"${latin10x[@]}" "${latin11x[@]}" "${latin12x[@]}" "${latin13x[@]}" "${latin14x[@]}" "${latin15x[@]}" "${latin15z[@]}" \
+"${latin16x[@]}" "${latin17x[@]}" "${latin21x[@]}" "${latin1E9x[@]}") # A-ẞ
+
 i=${glyphNo}
-for S in ${latin[@]} # 左に移動したアルファベット
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
 
-echo "$i ${solidus}L glyph${i}" >> "${dict}.txt" # 左に移動した solidus
-i=`expr ${i} + 1`
-
-echo "$i ${rSolidus}L glyph${i}" >> "${dict}.txt" # 左に移動した reverse solidus
-i=`expr ${i} + 1`
-
-for S in ${latinCx[@]} # 左に移動した À-Å
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinCz[@]} # 左に移動した Ç-Ï
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinDx[@]} # 左に移動した Ð-ß
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinEx[@]} # 左に移動した à-å
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinEz[@]} # 左に移動した ç-ï
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinFx[@]} # 左に移動した ð-ÿ
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latin17x[@]} # 左に移動した Ÿ
-do
-  echo "$i ${S}L glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latin1E9x[@]} # 左に移動した ẞ
+for S in ${word[@]}
 do
   echo "$i ${S}L glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
@@ -679,63 +759,9 @@ done
 
 # 右に移動した文字 ----------------------------------------
 
-for S in ${latin[@]} # 右に移動したアルファベット
+for S in ${word[@]}
 do
   echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-echo "$i ${solidus}R glyph${i}" >> "${dict}.txt" # 右に移動した solidus
-i=`expr ${i} + 1`
-
-echo "$i ${rSolidus}R glyph${i}" >> "${dict}.txt" # 右に移動した reverse solidus
-i=`expr ${i} + 1`
-
-for S in ${latinCx[@]} # 右に移動した À-Å
-do
-  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinCz[@]} # 右に移動した Ç-Ï
-do
-  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinDx[@]} # 右に移動した Ð-ß
-do
-  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinEx[@]} # 右に移動した à-å
-do
-  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinEz[@]} # 右に移動した ç-ï
-do
-  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latinFx[@]} # 右に移動した ð-ÿ
-do
-  echo "$i ${S}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latin17x[@]} # 右に移動した Ÿ
-do
-  echo "$i ${latin17x[j]}R glyph${i}" >> "${dict}.txt"
-  i=`expr ${i} + 1`
-done
-
-for S in ${latin1E9x[@]} # 右に移動した ẞ
-do
-  echo "$i ${latin1E9x[j]}R glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
@@ -763,8 +789,7 @@ chain_context() {
 
   echo "<ChainContextSubst index=\"${substIndex}\" Format=\"3\">" >> "${caltList}.txt"
 
-  if [ -n "${backtrack}" ] # 入力した文字の左側
-  then
+  if [ -n "${backtrack}" ]; then # 入力した文字の左側
     echo "<BacktrackCoverage index=\"0\">" >> "${caltList}.txt"
     rm -f ${listTemp}.txt
     for S in ${backtrack[@]}
@@ -794,8 +819,7 @@ chain_context() {
     done
   echo "</InputCoverage>" >> "${caltList}.txt"
 
-  if [ -n "${lookAhead}" ] # 入力した文字の右側
-  then
+  if [ -n "${lookAhead}" ]; then # 入力した文字の右側
     echo "<LookAheadCoverage index=\"0\">" >> "${caltList}.txt"
     rm -f ${listTemp}.txt
     for S in ${lookAhead[@]}
@@ -1117,16 +1141,8 @@ lookAhead=("${circleLC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左が幅広の文字 右が引き離す文字の場合 中寄り以外の文字と rt 移動しない
-backtrack=("${gravityWL[@]}")
-input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${small_rtC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
-
 # 左が引き離す文字 右が幅広の文字の場合 中寄り以外の文字と rt 移動しない
-backtrack=("${gravityWL[@]}" \
-"${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
+backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
 "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
 input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}" "${small_rtC[@]}")
 lookAhead=("${gravityWC[@]}")
@@ -1331,6 +1347,13 @@ index=`expr ${index} + 1`
 
 # rt に関する例外処理 ----------------------------------------
 
+# 左が幅広の文字 右が引き離す文字の場合 rt 移動しない
+backtrack=("${gravityWL[@]}")
+input=("${small_rtC[@]}")
+lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
 # 右が幅広の文字の場合 rt 左に移動
 backtrack=("")
 input=("${small_rtC[@]}")
@@ -1486,7 +1509,8 @@ index=`expr ${index} + 1`
 # 左右を見て右に移動させない通常処理 ----------------------------------------
 
 # 左右を見る 左寄りの文字、右に移動しない
-backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
+backtrack=("${gravityWL[@]}" \
+"${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
 "${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 input=("${gravityLC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
@@ -1494,7 +1518,8 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lo
 index=`expr ${index} + 1`
 
 # 左右を見る 右寄りの文字 右に移動しない
-backtrack=("${gravityRR[@]}" "${gravityER[@]}" \
+backtrack=("${gravityWL[@]}" \
+"${gravityRR[@]}" "${gravityER[@]}" \
 "${gravityRC[@]}" "${gravityEC[@]}")
 input=("${gravityRC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -1502,7 +1527,8 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lo
 index=`expr ${index} + 1`
 
 # 左右を見る 幅広な文字 右に移動しない
-backtrack=("${gravityLL[@]}" "${gravityRL[@]}" "${gravityEL[@]}" "${gravityML[@]}" "${gravityVL[@]}" \
+backtrack=("${gravityWL[@]}" \
+"${gravityLL[@]}" "${gravityRL[@]}" "${gravityEL[@]}" "${gravityML[@]}" "${gravityVL[@]}" \
 "${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 input=("${gravityWC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -1510,7 +1536,8 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lo
 index=`expr ${index} + 1`
 
 # 左右を見る 均等の文字 右に移動しない
-backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
+backtrack=("${gravityWL[@]}" \
+"${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
 "${gravityLC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 input=("${gravityEC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -1518,7 +1545,8 @@ chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lo
 index=`expr ${index} + 1`
 
 # 左右を見る 中間の文字 右に移動しない
-backtrack=("${gravityRR[@]}" "${gravityER[@]}" \
+backtrack=("${gravityWL[@]}" \
+"${gravityRR[@]}" "${gravityER[@]}" \
 "${gravityRC[@]}" "${gravityEC[@]}")
 input=("${gravityMC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
@@ -1534,7 +1562,7 @@ lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityVC[@]
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左を見る Vの字 右に移動しない
+# 左右を見る Vの字 右に移動しない
 backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityCR[@]}")
 input=("${gravityVC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
@@ -1676,8 +1704,7 @@ index=`expr ${index} + 1`
 
 echo "Remove temporary files"
 rm -f ${listTemp}.txt
-if [ "${leaving_tmp_flag}" = "false" ]
-then
+if [ "${leaving_tmp_flag}" = "false" ]; then
   rm -f ${dict}.txt
 fi
 
