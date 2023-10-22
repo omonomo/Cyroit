@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.4.0)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.4.0/Cyroit_v1.4.0.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.4.0.zip)
+最新版 (v1.4.1)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.4.1/Cyroit_v1.4.1.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.4.1.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -83,7 +83,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 | CyroitSP | <img alt="SP" src="./images/SP.png" width="450"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
 | CyroitTM | <img alt="TM" src="./images/TM.png" width="450"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョンを復活。大文字の DVZ のグリフを改変しています。 |
 | CyroitTS | <img alt="TS" src="./images/TS.png" width="450"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版。 |
-| CyroitFX | <img alt="TS" src="./images/Normal.png" width="450"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
+| CyroitFX | <img alt="TS" src="./images/FX.png" width="450"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
 | CyroitHB | <img alt="HB" src="./images/HB.png" width="450"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
@@ -96,6 +96,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ## 生成スクリプトの使い方
 
 ### ビルド環境
+
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
 - OS: macOS Monterey (version 12.7)
@@ -104,6 +105,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - FontTools: 4.43.1
 
 ### 実行方法
+
 あらかじめ、パッケージマネージャ等を利用して [FontForge](https://fontforge.org/en-US/) と [FontTools](https://github.com/fonttools/fonttools) をインストールし、使える状態にしておいてください。  
 
 スクリプトのある場所をカレントディレクトリにして  
@@ -126,6 +128,8 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 オプションなしの場合、通常処理でカーニングあり、Nerd Fonts ありになります。  
 
 ## メモ
+
+- 使用するソフトウェアによって、縦書きや異体字、アイヌ語カナ表記が正しく表示されない、また文字間隔が調整されない場合があります。
 - 一部グリフが不統一なところがありますが、複数のフォントを合成しているためであり、仕様となります。
 - 行間が広めにとってあります。ダイアクリティカルマークがたくさん付いた文字もきちんと表示させるためです。
 - Powerline グリフを使用する際はフォントサイズを 12pt か 14pt にすると、よい感じに表示されるかもしれません。
