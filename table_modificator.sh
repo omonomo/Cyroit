@@ -242,10 +242,18 @@ if [ "${gsub_flag}" = "true" ]; then
       if [ "${calt_insert_flag}" = "true" ]; then
         caltlist_txt=`find . -name "${caltList}.txt" -maxdepth 1 | head -n 1`
         if [ -z "${caltlist_txt}" ]; then #caltListが無ければ作成
-          if [ "${leaving_tmp_flag}" = "true" ]; then
-            sh calt_table_maker.sh -l -n ${glyphNo}
+          if [ "${patch_only_flag}" = "true" ]; then
+            if [ "${leaving_tmp_flag}" = "true" ]; then
+              sh calt_table_maker.sh -b -l -n ${glyphNo}
+            else
+              sh calt_table_maker.sh -b -n ${glyphNo}
+            fi
           else
-            sh calt_table_maker.sh -n ${glyphNo}
+            if [ "${leaving_tmp_flag}" = "true" ]; then
+              sh calt_table_maker.sh -l -n ${glyphNo}
+            else
+              sh calt_table_maker.sh -n ${glyphNo}
+            fi
           fi
         fi
         # フォントがcaltフィーチャに対応していた場合フィーチャリストを変更
