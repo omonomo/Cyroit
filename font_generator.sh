@@ -1627,14 +1627,32 @@ while (i < SizeOf(input_list))
     Select(${address_visi_latin}); Paste() # 避難所
 
  #    if ("${improve_visibility_flag}" == "true")
+
+ #        Select(0u2044); Copy() # ⁄ ※ 破線ではなくへこませる場合追加
+ #        Select(65553);  Paste() # Temporary glyph
+ #        Scale(60)
+
         Select(0u2044); Copy() # ⁄
         Select(65552);  Paste() # Temporary glyph
         Scale(120); Copy()
         Select(0u2044) # ⁄
         PasteWithOffset(200, 435); PasteWithOffset(-200, -435)
         OverlapIntersect()
+
+ #        Select(65553);  Copy() # Temporary glyph ※ 破線ではなくへこませる場合追加
+ #        Select(0u2044) # ⁄
+ #        if (input_list[i] == "${input_latin_regular}")
+ #            PasteWithOffset(12, 0)
+ #        else
+ #            PasteWithOffset(17, 0)
+ #        endif
+
         SetWidth(500)
+ #        RemoveOverlap()
+ #        Simplify()
+
         Select(65552); Clear() # Temporary glyph
+ #        Select(65553); Clear() # Temporary glyph
  #    endif
 
 # ⁑ (漢字フォントを置換)
@@ -1871,10 +1889,19 @@ while (i < SizeOf(input_list))
 # | (破線にし、縦に伸ばして少し上へ移動) ※ ⌀⎈ の加工より後にすること
     Select(0u007c); Copy() # |
     Select(${address_visi_latin} + 1); Paste() # 避難所
-    Move(0, 85)
-    PasteWithOffset(0, 55)
+    if (input_list[i] == "${input_latin_regular}")
+        Move(0, 95)
+        PasteWithOffset(0, 45)
+    else
+        Move(0, 85)
+        PasteWithOffset(0, 55)
+    endif
     SetWidth(500)
     RemoveOverlap()
+
+ #    Select(0u007c); Copy()  # | ※ 破線ではなくへこませる場合追加
+ #    Select(65552);  Paste() # Temporary glyph
+ #    Scale(50, 100)
 
  #    if ("${improve_visibility_flag}" == "true")
         Select(0u00a6) # ¦
@@ -1883,15 +1910,37 @@ while (i < SizeOf(input_list))
  #    endif
     Copy()
     Select(0u007c); Paste() # |
-    Move(0, 85)
-    PasteWithOffset(0, 55)
+    if (input_list[i] == "${input_latin_regular}")
+        Move(0, 95)
+        PasteWithOffset(0, 45)
+    else
+        Move(0, 85)
+        PasteWithOffset(0, 55)
+    endif
+
+ #    Select(65552);  Copy() # Temporary glyph ※ 破線ではなくへこませる場合追加
+ #    Select(0u007c) # |
+ #    if (input_list[i] == "${input_latin_regular}")
+ #        PasteWithOffset(17, 65)
+ #    else
+ #        PasteWithOffset(26, 65)
+ #    endif
+
     SetWidth(500)
     RemoveOverlap()
+ #    Simplify()
+
+ #    Select(65552); Clear() # Temporary glyph
 
 # ¦ (隙間を開ける) ※ | の加工より後にすること
     Select(0u00a6); Copy() # ¦
-    PasteWithOffset(0, 55)
-    Scale(100, 111, 0, -96)
+    if (input_list[i] == "${input_latin_regular}")
+        PasteWithOffset(0, 45)
+        Scale(100, 113, 0, -106)
+    else
+        PasteWithOffset(0, 55)
+        Scale(100, 111, 0, -96)
+    endif
     SetWidth(500)
     OverlapIntersect()
 
@@ -4149,7 +4198,7 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_regular}")
         PasteWithOffset(-103, 20)
     else
-        PasteWithOffset(-113, 17)
+        PasteWithOffset(-113, 7)
     endif
     PasteWithOffset(-120, -70)
     PasteWithOffset(70, -140)
@@ -4157,6 +4206,7 @@ while (i < SizeOf(input_list))
     Copy()
     Select(0u307c); PasteInto() # ぼ
     OverlapIntersect()
+    Simplify()
 
     # ぽ
     # 左、右下
@@ -4434,16 +4484,18 @@ while (i < SizeOf(input_list))
     Select(0u30c2); PasteInto() # ヂ
     OverlapIntersect()
 
-    Select(0u25a0); Copy() # Black square
-    Select(65552);  Paste() # Temporary glyph
-    Move(-70, -70)
-    Rotate(15)
-    PasteWithOffset(-200, -2)
-    PasteWithOffset(70, -190)
-    RemoveOverlap()
-    Copy()
-    Select(0u30c2); PasteInto() # ヂ
-    OverlapIntersect()
+    if (input_list[i] == "${input_kana_regular}")
+        Select(0u25a0); Copy() # Black square
+        Select(65552);  Paste() # Temporary glyph
+        Move(-70, -70)
+        Rotate(15)
+        PasteWithOffset(-200, -2)
+        PasteWithOffset(70, -190)
+        RemoveOverlap()
+        Copy()
+        Select(0u30c2); PasteInto() # ヂ
+        OverlapIntersect()
+    endif
 
 # ヅツ゚
     Select(0u25a0); Copy() # Black square
@@ -4464,9 +4516,10 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_regular}")
         Move(-110, 3)
     else
-        Move(-95, 3)
+        Move(-120, 3)
+ #        Move(-95, 3)
     endif
-    PasteWithOffset(70, -90)
+    PasteWithOffset(70, -140)
     RemoveOverlap()
     Copy()
     Select(0u30c7); PasteInto() # デ
@@ -4573,6 +4626,11 @@ while (i < SizeOf(input_list))
 
 # ブ プ
     # ブ
+    if (input_list[i] == "${input_kana_bold}")
+        Select(0u25a0); Copy() # Black square
+        Select(0u30d6); PasteWithOffset(550, 606) # ブ
+        RemoveOverlap()
+    endif
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-200, 0)
@@ -4586,6 +4644,7 @@ while (i < SizeOf(input_list))
     Copy()
     Select(0u30d6); PasteInto() # ブ
     OverlapIntersect()
+    Simplify()
 
     # プ
     Copy()
@@ -4675,6 +4734,11 @@ while (i < SizeOf(input_list))
     Simplify()
 
 # ヷ
+    if (input_list[i] == "${input_kana_bold}")
+        Select(0u25a0); Copy() # Black square
+        Select(0u30f7); PasteWithOffset(550, 605) # ヷ
+        RemoveOverlap()
+    endif
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-200, 0)
@@ -4688,6 +4752,23 @@ while (i < SizeOf(input_list))
     Copy()
     Select(0u30f7); PasteInto() # ヷ
     OverlapIntersect()
+    Simplify()
+
+    # 加工で発生したゴミを除去
+    if (input_list[i] == "${input_kana_bold}")
+        Select(0u25a0); Copy() # Black square
+        Select(65552);  Paste() # Temporary glyph
+        Move(134, -160)
+        Rotate(10)
+        PasteWithOffset(-100, 140)
+        PasteWithOffset(190, 140)
+        RemoveOverlap()
+        Copy()
+
+        Select(0u30f7) # ヷ
+        PasteWithOffset(-52, -10)
+        OverlapIntersect()
+    endif
 
 # ヸ
     Select(0u25a0); Copy() # Black square
@@ -4707,6 +4788,11 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
 
 # ヹ
+    if (input_list[i] == "${input_kana_bold}")
+        Select(0u25a0); Copy() # Black square
+        Select(0u30f9); PasteWithOffset(550, 614) # ヹ
+        RemoveOverlap()
+    endif
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     if (input_list[i] == "${input_kana_regular}")
@@ -4722,6 +4808,11 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
 
 # ヺ
+    if (input_list[i] == "${input_kana_bold}")
+        Select(0u25a0); Copy() # Black square
+        Select(0u30fa); PasteWithOffset(550, 601) # ヺ
+        RemoveOverlap()
+    endif
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-200, 0)
@@ -4735,6 +4826,7 @@ while (i < SizeOf(input_list))
     Copy()
     Select(0u30fa); PasteInto() # ヺ
     OverlapIntersect()
+    Simplify()
 
 # 〲
     Select(0u25a0); Copy() # Black square
@@ -5212,7 +5304,7 @@ while (i < SizeOf(input_list))
         Select(0u30c0); PasteWithOffset( 90,   95) # ダ
  #        Select(0u30c0); PasteWithOffset( 80,   95) # ダ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30c2); PasteWithOffset( 86,   94) # ヂ
+        Select(0u30c2); PasteWithOffset( 84,   94) # ヂ
  #        Select(0u30c2); PasteWithOffset( 66,   94) # ヂ
         SetWidth(1000); RemoveOverlap()
         Select(0u30c5); PasteWithOffset(104,   85) # ヅ
@@ -5323,14 +5415,35 @@ while (i < SizeOf(input_list))
     Move(230, 30)
     SetWidth(1000)
 
+ #    Select(0u2013); Copy()  # – ※ 破線ではなくへこませる場合追加
+ #    Select(65552);  Paste() # Temporary glyph
+ #    Scale(99, 50)
+
     Select(0u2013) # –
  #    if ("${improve_visibility_flag}" == "true")
         Copy()
-        PasteWithOffset(200, 0); PasteWithOffset(-200, 0)
+        if (input_list[i] == "${input_kana_regular}")
+            PasteWithOffset(192, 0); PasteWithOffset(-192, 0)
+        else
+            PasteWithOffset(202, 0); PasteWithOffset(-202, 0)
+        endif
         OverlapIntersect()
  #    endif
+
+ #    Select(65552);  Copy() # Temporary glyph ※ 破線ではなくへこませる場合追加
+ #    Select(0u2013) # –
+ #    if (input_list[i] == "${input_kana_regular}")
+ #        PasteWithOffset(0, -11)
+ #    else
+ #        PasteWithOffset(0, -16)
+ #    endif
+
     Move(0, 58)
     SetWidth(500)
+ #    RemoveOverlap()
+ #    Simplify()
+
+ #    Select(65552); Clear() # Temporary glyph
 
 # ︲
     Select(0u2013); Copy() # –
@@ -5350,17 +5463,34 @@ while (i < SizeOf(input_list))
     Move(0, 30)
     SetWidth(1000)
 
+ #    Select(0u2014); Copy()  # — ※ 破線ではなくへこませる場合追加
+ #    Select(65552);  Paste() # Temporary glyph
+ #    Scale(99, 50)
+
     Select(0u2014) # —
  #    if ("${improve_visibility_flag}" == "true")
         Copy()
-        PasteWithOffset(323, 0); PasteWithOffset(-647, 0)
+        PasteWithOffset(313, 0); PasteWithOffset(-637, 0)
         OverlapIntersect(); Copy()
         Rotate(180)
         PasteInto()
         OverlapIntersect()
  #    endif
+
+ #    Select(65552);  Copy() # Temporary glyph ※ 破線ではなくへこませる場合追加
+ #    Select(0u2014) # —
+ #    if (input_list[i] == "${input_kana_regular}")
+ #        PasteWithOffset(0, -12)
+ #    else
+ #        PasteWithOffset(0, -16)
+ #    endif
+
     Move(0, 45)
     SetWidth(1000)
+ #    RemoveOverlap()
+ #    Simplify()
+
+ #    Select(65552); Clear() # Temporary glyph
 
 # ︱
     Select(0u2014); Copy() # —
@@ -6353,6 +6483,51 @@ while (i < SizeOf(input_list))
 # 記号のグリフを加工
     Print("Edit symbols")
 
+# 🎤 (追加) ※ ∪ の加工より前にすること
+    # マイク
+    Select(0u222a); Copy() # ∪
+    Select(65552);  Paste() # Temporary glyph
+    Scale(50, 50);  Copy()
+    Select(65553);  Paste() # Temporary glyph
+    VFlip(); CorrectDirection()
+    Copy()
+    Select(65552);  PasteWithOffset(0, 210) # Temporary glyph
+    RemoveOverlap()
+    ChangeWeight(28); CorrectDirection()
+    Copy()
+    Select(0u1f3a4); Paste() # 🎤
+    Move(0, 30)
+
+    # ホルダ
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, -280)
+    Select(0u222a); Copy() # ∪
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    if (input_list[i] == "${input_kanzi_bold}")
+        ChangeWeight(-6); CorrectDirection()
+    endif
+    Copy()
+    Select(0u1f3a4); PasteWithOffset(0, 30) # 🎤
+
+    # スタンド
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, -500)
+    Scale(60, 100, 478, 0)
+    Select(0u22a5); Copy() # ⊥
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Scale(95, 95, 478, 0)
+    Copy()
+    Select(0u1f3a4); PasteWithOffset(0, -70) # 🎤
+    RemoveOverlap()
+    SetWidth(1024)
+
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
 # ∅ (少し回転)
     Select(0u2205) # ∅
     Rotate(5, 256, 339)
@@ -6422,7 +6597,6 @@ while (i < SizeOf(input_list))
     SetWidth(512)
 
 # ⊂ (半角にする)
-    Select(0u2282) # ⊂
     Select(0u25a0); Copy() # Black square
     Select(0u2282); PasteWithOffset(-301, 0) # ⊂
     OverlapIntersect()
@@ -6430,7 +6604,6 @@ while (i < SizeOf(input_list))
     SetWidth(512)
 
 # ⊃ (半角にする)
-    Select(0u2283) # ⊃
     Select(0u25a0); Copy() # Black square
     Select(0u2283); PasteWithOffset(291, 0) # ⊃
     OverlapIntersect()
@@ -6438,7 +6611,6 @@ while (i < SizeOf(input_list))
     SetWidth(512)
 
 # ⊆ (半角にする)
-    Select(0u2286) # ⊆
     Select(0u25a0); Copy() # Black square
     Select(0u2286); PasteWithOffset(-301, 0) # ⊆
     OverlapIntersect()
@@ -6446,7 +6618,6 @@ while (i < SizeOf(input_list))
     SetWidth(512)
 
 # ⊇ (半角にする)
-    Select(0u2287) # ⊇
     Select(0u25a0); Copy() # Black square
     Select(0u2287); PasteWithOffset(291, 0) # ⊇
     OverlapIntersect()
