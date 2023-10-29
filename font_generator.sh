@@ -82,20 +82,20 @@ hhea_linegap1000="0"
 typo_ascent1024="809" # em値1024用
 typo_descent1024="215"
 typo_linegap1024="226"
-win_ascent1024="994"
-win_descent1024="256"
-hhea_ascent1024="994"
-hhea_descent1024="256"
+win_ascent1024="998"
+win_descent1024="252"
+hhea_ascent1024="${win_ascent1024}"
+hhea_descent1024="${win_descent1024}"
 hhea_linegap1024="0"
 
 # em値変更でのY座標のズレ修正用
 y_pos_em_revice="-10" #Y座標移動量
 
 # Powerline 変形、移動用
-height_percent_pl="123" # PowelineY座標比率
-height_percent_block="89" # ボックス要素Y座標比率
+height_percent_pl="123" # PowelineY座標拡大比率
+height_percent_block="89" # ボックス要素Y座標拡大比率
 height_center_pl="297" # PowerlineリサイズY座標中心
-y_pos_pl="72" # PowerlineY座標移動量
+y_pos_pl="76" # PowerlineY座標移動量
 
 # 可視化したスペース等、下線のY座標移動量
 y_pos_space="-235"
@@ -110,11 +110,11 @@ weight_reduce_kana_others_regular="-2" # 仮名フォントのその他レギュ
 weight_reduce_kana_others_bold="-12" # 仮名フォントのその他ボールド
 
 # 英数文字の縦横拡大率
-height_percent_latin="102" # 縦比率
-width_percent_latin="98" # 横比率
+height_percent_latin="102" # 縦拡大比率
+width_percent_latin="98" # 横拡大比率
 
 # 上付き、下付き数字用
-percent_super_sub="75" # 比率
+percent_super_sub="75" # 拡大比率
 y_pos_super="273" # 上付きY座標移動量
 y_pos_sub="-166" # 下付きY座標移動量
 weight_extend_super_sub="12" # ウェイト調整
@@ -6732,18 +6732,18 @@ while (i < SizeOf(input_list))
 # ⎧ (下を延ばす)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(0, -500)
+    Move(0, -490)
     Select(0u23a7); Copy() # ⎧
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0u23a7); PasteWithOffset(0, -280) # ⎧
+    Select(0u23a7); PasteWithOffset(0, -311) # ⎧
     RemoveOverlap()
     Simplify()
     Move(-202, 0)
     SetWidth(512)
 
-    Select(0u23a8); PasteWithOffset(0, -280) # ⎨
+    Select(0u23a8); PasteWithOffset(0, -311) # ⎨
 
 # ⎩ (上を延ばす)
     Select(0u25a0); Copy() # Black square
@@ -6753,14 +6753,14 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0u23a9); PasteWithOffset(0, 280) # ⎩
+    Select(0u23a9); PasteWithOffset(0, 227) # ⎩
     RemoveOverlap()
     Simplify()
     Move(-202, 0)
     SetWidth(512)
 
 # ⎨ (上下を延ばす)
-    Select(0u23a8); PasteWithOffset(0, 280) # ⎨
+    Select(0u23a8); PasteWithOffset(0, 227) # ⎨
     RemoveOverlap()
     Simplify()
     Move(-202, 0)
@@ -6771,18 +6771,18 @@ while (i < SizeOf(input_list))
 # ⎫ (下を延ばす)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(0, -500)
+    Move(0, -490)
     Select(0u23ab); Copy() # ⎫
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0u23ab); PasteWithOffset(0, -280) # ⎫
+    Select(0u23ab); PasteWithOffset(0, -311) # ⎫
     RemoveOverlap()
     Simplify()
     Move(-242, 0)
     SetWidth(512)
 
-    Select(0u23ac); PasteWithOffset(0, -280) # ⎬
+    Select(0u23ac); PasteWithOffset(0, -311) # ⎬
 
 # ⎭ (上を延ばす)
     Select(0u25a0); Copy() # Black square
@@ -6792,14 +6792,14 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0u23ad); PasteWithOffset(0, 280) # ⎭
+    Select(0u23ad); PasteWithOffset(0, 227) # ⎭
     RemoveOverlap()
     Simplify()
     Move(-242, 0)
     SetWidth(512)
 
 # ⎬ (上下を延ばす)
-    Select(0u23ac); PasteWithOffset(0, 280) # ⎬
+    Select(0u23ac); PasteWithOffset(0, 227) # ⎬
     RemoveOverlap()
     Simplify()
     Move(-242, 0)
