@@ -1555,9 +1555,9 @@ while (i < SizeOf(input_list))
     Select(65552);  Paste() # Temporary glyph
     Scale(30, 88); Copy()
     # {
-    Select(0u007b); PasteWithOffset(-191, 5) # {
+    Select(0u007b); PasteWithOffset(-171, 5) # {
     if (input_list[i] == "${input_latin_bold}")
-        PasteWithOffset(-191, -1)
+        PasteWithOffset(-171, -1)
     endif
     RemoveOverlap()
     Select(0u2588); Copy() # Full block
@@ -1569,14 +1569,13 @@ while (i < SizeOf(input_list))
  #        Select(0u007b); PasteWithOffset(-87, 0) # {
     endif
     OverlapIntersect()
-    Move(20, 0)
     Move(22, -14); SetWidth(500)
     Simplify()
     # }
     Select(65552);  Copy() # Temporary glyph
-    Select(0u007d); PasteWithOffset(151, 5) # }
+    Select(0u007d); PasteWithOffset(131, 5) # }
     if (input_list[i] == "${input_latin_bold}")
-        PasteWithOffset(151, -1)
+        PasteWithOffset(131, -1)
     endif
     RemoveOverlap()
     Select(0u2588); Copy() # Full block
@@ -1588,7 +1587,6 @@ while (i < SizeOf(input_list))
  #        Select(0u007d); PasteWithOffset(49, 0) # }
     endif
     OverlapIntersect()
-    Move(-20, 0)
     Move(22, -14); SetWidth(500)
     Simplify()
 
