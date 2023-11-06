@@ -3749,6 +3749,29 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
+# ハ (左のはらいを少し下に移動)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-350, 0)
+    Scale(100, 150)
+    Select(0u30cf); Copy() # ハ
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(100, 150)
+    Copy()
+    Select(0u30cf); PasteWithOffset(350, 0) # ハ
+    OverlapIntersect()
+
+    Select(65552);  Copy() # Temporary glyph
+    Select(0u30cf); PasteWithOffset(0, -10) # ハ
+    SetWidth(1000)
+
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
 # ラ (フの横棒を少し上に移動)
     # フの横棒
     Select(0u25a0); Copy() # Black square
