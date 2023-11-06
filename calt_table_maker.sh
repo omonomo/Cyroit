@@ -454,8 +454,8 @@ symbolFigure=("#" "$" "%" "&" "@" 0 2 3 4 5 6 7 8 9) # 幅のある記号と数�
 
 # 略号と名前 ----------------------------------------
 
-solidus="/" # 単独で変数を使用するため他と分けて代入
-solidus_name="slash"
+solidus=("/") # 単独で変数を使用するため他と分けて代入
+solidus_name=("slash")
 symbol2x=("#" "$" "%" "&" "${solidus}")
 symbol2x_name=("numbersign" "dollar" "percent" "ampersand" "${solidus_name}")
 
@@ -1185,6 +1185,13 @@ lookAhead=("${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
+# 左がVの字で 右が狭い文字の場合 左が丸い文字 右に移動
+backtrack=("${gravityVR[@]}")
+input=("${circleLC[@]}" "${circleCC[@]}")
+lookAhead=("${gravityCC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+index=`expr ${index} + 1`
+
 # 左が Fkx で 右が幅広の文字の場合 左が丸い小文字 左に移動
 backtrack=("${_FR[@]}" "${_kR[@]}" "${_xR[@]}")
 input=("${crclSmallLC[@]}" "${crclSmallCC[@]}")
@@ -1464,10 +1471,10 @@ index=`expr ${index} + 1`
 
 # 左右を見て移動させない例外処理 2 ----------------------------------------
 
-# 左が引き離す文字 右が幅広の文字の場合 引き寄せない文字と rt 移動しない
+# 左が引き離す文字 右が幅広の文字の場合 引き寄せない文字 移動しない
 backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}" \
 "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${_rC[@]}" "${_tC[@]}")
+input=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityWC[@]}" "${gravityEC[@]}" "${gravityMC[@]}")
 lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
