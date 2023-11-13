@@ -881,8 +881,7 @@ done
 
 # 同じ文字を等間隔にさせる例外処理 4 ----------------------------------------
 
-class=("${gCE[@]}") # 小文字は並べても例外処理で移動しないため、除外)
- #class=("${gCE[@]}" "${gSE[@]}")
+class=("${gCE[@]}" "${gSE[@]}")
 # 左右を見て 均等な文字 移動しない (右に異なる均等な文字がある場合)
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
@@ -1083,6 +1082,8 @@ lookAhead=("${gravityCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
+# 大文字と小文字で処理が異なる例外処理 1 ----------------------------------------
+
 # 左が左寄り、中間の大文字で 右が幅広の大文字の場合 右寄り、均等、中間、Vの字の大文字 左に移動
 backtrack=("${grvyCapitalLC[@]}" "${grvyCapitalMC[@]}")
 input=("${grvyCapitalRC[@]}" "${grvyCapitalEC[@]}" "${grvyCapitalMC[@]}" "${grvyCapitalVC[@]}")
@@ -1090,9 +1091,16 @@ lookAhead=("${grvyCapitalWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が左寄り、均等、中間の小文字で 右が幅広の小文字の場合 幅広と狭い以外の小文字 左に移動
-backtrack=("${grvySmallLC[@]}" "${grvySmallEC[@]}" "${grvySmallMC[@]}")
+# 左が左寄り、中間の小文字で 右が幅広の小文字の場合 幅広と狭い以外の小文字 左に移動
+backtrack=("${grvySmallLC[@]}" "${grvySmallMC[@]}")
 input=("${grvySmallLC[@]}" "${grvySmallRC[@]}" "${grvySmallEC[@]}" "${grvySmallMC[@]}" "${grvySmallVC[@]}")
+lookAhead=("${grvySmallWC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# 左が均等な小文字で 右が幅広の小文字の場合 右寄り、中間、Vの字の小文字 左に移動
+backtrack=("${grvySmallEC[@]}")
+input=("${grvySmallRC[@]}" "${grvySmallMC[@]}" "${grvySmallVC[@]}")
 lookAhead=("${grvySmallWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
@@ -1475,7 +1483,7 @@ lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 大文字と小文字で処理が異なる例外処理 1 ----------------------------------------
+# 大文字と小文字で処理が異なる例外処理 2 ----------------------------------------
 
 # 左側が狭い大文字で 右側が左寄り、右寄り、均等、中間の大文字の場合 左寄り、中間の大文字 左に移動しない
 backtrack=("${grvyCapitalCR[@]}")
@@ -1496,27 +1504,6 @@ backtrack=("${grvySmallLR[@]}" "${grvySmallMR[@]}")
 input=("${grvySmallRC[@]}")
 lookAhead=("${grvySmallEC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
-index=`expr ${index} + 1`
-
-# 左が均等な小文字で 右が右寄り、中間、Vの字の小文字の場合 均等な小文字 左に移動
-backtrack=("${grvySmallEL[@]}")
-input=("${grvySmallEC[@]}")
-lookAhead=("${grvySmallRC[@]}" "${grvySmallMC[@]}" "${grvySmallVC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
-# 左が均等な小文字で 右が狭い小文字の場合 均等な小文字 右に移動
-backtrack=("${grvySmallEC[@]}")
-input=("${grvySmallEC[@]}")
-lookAhead=("${grvySmallCC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
-index=`expr ${index} + 1`
-
-# 左が均等な小文字の場合 均等な小文字 右に移動しない
-backtrack=("${grvySmallEC[@]}")
-input=("${grvySmallEC[@]}")
-lookAhead=("")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
 # 左右を見て移動させない例外処理 2 ----------------------------------------
@@ -2005,14 +1992,7 @@ lookAhead=("${capitalAllC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 大文字と小文字で処理が異なる例外処理 2 ----------------------------------------
-
-# 右が均等な小文字の場合 均等な小文字 左に移動しない
-backtrack=("")
-input=("${grvySmallEC[@]}")
-lookAhead=("${grvySmallEC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
-index=`expr ${index} + 1`
+# 大文字と小文字で処理が異なる例外処理 3 ----------------------------------------
 
 # 左側が均等な小文字で 右側が右寄り、中間、Vの字の小文字の場合 狭い小文字 右に移動しない
 backtrack=("${grvySmallER[@]}")
