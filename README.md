@@ -1,4 +1,4 @@
-# 全角英数記号や半角カタカナが判別しやすい等幅フォント「Cyroit」
+# 全角英数や半角カナが判別しやすく、文字間隔調整機能の付いた等幅プログラミングフォント「Cyroit」
 
 Cyroit (しろいと) はプログラミングにもお使いいただける等幅フォントです。  
 Ricty 生成スクリプトで遊んでいるうちに合成フォント製作の沼にはまったことで生まれました。  
@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.4.10)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.4.10/Cyroit_v1.4.10.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.4.10.zip)
+最新版 (v1.5.0)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.5.0/Cyroit_v1.5.0.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.5.0.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -99,10 +99,10 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Monterey (version 12.7.1)
-- Shell: zsh 5.8.1 (x86_64-apple-darwin21.0)
+- OS: macOS Sonoma (version 14.1.1)
+- Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.44.0
+- FontTools: 4.44.3
 
 ### 実行方法
 
