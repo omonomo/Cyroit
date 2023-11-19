@@ -1059,7 +1059,7 @@ index=`expr ${index} + 1`
 
 # もろもろ例外 ========================================
 
-# 左右を見て移動させない例外処理 1 ----------------------------------------
+# 丸い文字に関する例外処理 ----------------------------------------
 
 # 左が、右が丸い文字で 右が Ww の場合 丸い文字 左に移動しない
 backtrack=("${circleRL[@]}" "${circleCL[@]}" \
@@ -1068,6 +1068,8 @@ input=("${circleCC[@]}")
 lookAhead=("${_WC[@]}" "${_wC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
+
+# 左右を見て移動させない例外処理 1 ----------------------------------------
 
 # 左が、右が丸い文字か PRÞ で 右が幅広の場合 均等な文字 左に移動しない
 backtrack=("${circleRL[@]}" "${circleCL[@]}" "${_PL[@]}" "${_RL[@]}" "${_THL[@]}" \
@@ -1228,6 +1230,13 @@ lookAhead=("${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
+# 左側が右寄り、均等な文字で 右が左寄り、幅広、均等な文字の場合 左が丸い文字 右に移動しない
+backtrack=("${gravityRC[@]}" "${gravityEC[@]}")
+input=("${circleLC[@]}" "${circleCC[@]}")
+lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+index=`expr ${index} + 1`
+
 # 左がVの字で 右が狭い文字の場合 左が丸い文字 右に移動
 backtrack=("${gravityVR[@]}")
 input=("${circleLC[@]}" "${circleCC[@]}")
@@ -1256,10 +1265,17 @@ lookAhead=("${gravityVC[@]}" "${gravityCC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
 index=`expr ${index} + 1`
 
-# 左が、右が丸い文字で 右が引き寄せる文字の場合 左が丸い文字 右に移動
-backtrack=("${circleRC[@]}")
+# 左が EFKTX で 右が引き寄せない大文字の場合 左が丸い文字 左に移動
+backtrack=("${_EC[@]}" "${_FC[@]}" "${_KC[@]}" "${_TC[@]}" "${_XC[@]}")
 input=("${circleLC[@]}" "${circleCC[@]}")
-lookAhead=("${gravityVC[@]}" "${gravityCC[@]}")
+lookAhead=("${grvyCapitalLC[@]}" "${grvyCapitalRC[@]}" "${grvyCapitalWC[@]}" "${grvyCapitalEC[@]}" "${grvyCapitalMC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
+# 左が、左が丸い文字で 右が右寄り、中間、Vの字の場合 左が丸い文字 右に移動
+backtrack=("${circleLR[@]}")
+input=("${circleLC[@]}")
+lookAhead=("${gravityRC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
@@ -1270,18 +1286,11 @@ lookAhead=("${gravityWC[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が EFKTX で 右が引き寄せない大文字の場合 左が丸い文字 左に移動
-backtrack=("${_EC[@]}" "${_FC[@]}" "${_KC[@]}" "${_TC[@]}" "${_XC[@]}")
+# 左が、右が丸い文字で 右が引き寄せる文字の場合 左が丸い文字 右に移動
+backtrack=("${circleRC[@]}")
 input=("${circleLC[@]}" "${circleCC[@]}")
-lookAhead=("${grvyCapitalLC[@]}" "${grvyCapitalRC[@]}" "${grvyCapitalWC[@]}" "${grvyCapitalEC[@]}" "${grvyCapitalMC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
-# 左側が右寄り、均等な文字で 右が左寄り、幅広、均等な文字の場合 左が丸い文字 右に移動しない
-backtrack=("${gravityRC[@]}" "${gravityEC[@]}")
-input=("${circleLC[@]}" "${circleCC[@]}")
-lookAhead=("${gravityLC[@]}" "${gravityWC[@]}" "${gravityEC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexC}"
+lookAhead=("${gravityVC[@]}" "${gravityCC[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
 # 左が、右が丸い大文字か G の場合 左が丸い小文字 移動しない
