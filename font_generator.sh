@@ -2519,7 +2519,13 @@ while (i < SizeOf(input_list))
     # 下
     Select(0u25a0); Copy() # Black square
     Select(65553);  Paste() # Temporary glyph
-    Move(-425, -441); Rotate(-15)
+    Move(-425, -441)
+    if (input_list[i] == "${input_kana_regular}")
+      Rotate(-15)
+    else
+      Rotate(-12)
+      Move(0, -12)
+    endif
     PasteWithOffset(-35, -511)
     RemoveOverlap()
     Select(0u304d); Copy() # き
@@ -2549,7 +2555,13 @@ while (i < SizeOf(input_list))
     # 下
     Select(0u25a0); Copy() # Black square
     Select(65553);  Paste() # Temporary glyph
-    Move(-450, -450); Rotate(-15)
+    Move(-450, -450)
+    if (input_list[i] == "${input_kana_regular}")
+      Rotate(-15)
+    else
+      Rotate(-12)
+      Move(0, -12)
+    endif
     PasteWithOffset(-60, -520)
     RemoveOverlap()
     Select(0u304e); Copy() # ぎ
@@ -2678,7 +2690,13 @@ while (i < SizeOf(input_list))
     # 下
     Select(0u25a0); Copy() # Black square
     Select(65553);  Paste() # Temporary glyph
-    Move(-432, -399); Rotate(-15)
+    Move(-432, -399)
+    if (input_list[i] == "${input_kana_regular}")
+      Rotate(-15)
+    else
+      Rotate(-6)
+      Move(0, -40)
+    endif
     PasteWithOffset(-42, -469)
     RemoveOverlap()
     Select(0u3055); Copy() # さ
@@ -2714,7 +2732,13 @@ while (i < SizeOf(input_list))
     # 下
     Select(0u25a0); Copy() # Black square
     Select(65553);  Paste() # Temporary glyph
-    Move(-447, -407); Rotate(-15)
+    Move(-447, -407)
+    if (input_list[i] == "${input_kana_regular}")
+      Rotate(-15)
+    else
+      Rotate(-6)
+      Move(0, -40)
+    endif
     PasteWithOffset(-57, -477)
     RemoveOverlap()
     Select(0u3056); Copy() # ざ
@@ -7703,6 +7727,7 @@ while (i < SizeOf(latin_sfd_list))
         PasteWithOffset(8, 12) # g
     else
         PasteWithOffset(5, 12) # g
+        PasteWithOffset(5, 2) # g
     endif
     # 先っぽ追加 ※ y を加工するとずれる可能性があるので注意
     Select(0u25a0); Copy() # Black square
@@ -7719,11 +7744,11 @@ while (i < SizeOf(latin_sfd_list))
         Select(0u0067) # g
         PasteWithOffset(68, 2)
     else
-        Scale(88)
+        Scale(99)
         Rotate(13)
         Copy()
         Select(0u0067) # g
-        PasteWithOffset(53, 2)
+        PasteWithOffset(53, -2)
     endif
 
     SetWidth(500)
