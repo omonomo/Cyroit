@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.5.2)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.5.2/Cyroit_v1.5.2.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.5.2.zip)
+最新版 (v1.5.3)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.5.3/Cyroit_v1.5.3.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.5.3.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -48,7 +48,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ### 仮名文字について
 
 - 一部のひらがなを教科書体っぽく (跳ねたり突き抜けたり別れたり) しています。
-- 濁点、半濁点の大きさや位置を変えています。
+- 濁点、半濁点の大きさや位置を変更しています。
 - イコールと区別しやすいようにダブルハイフンの先端を少し折っています。
 - その他のグリフについても、他の素材フォントとのバランスをとるための微調整を施しています。
 
