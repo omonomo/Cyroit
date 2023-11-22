@@ -1,4 +1,4 @@
-## 全角英数や半角カナが判別しやすい、文字間隔調整機能付等幅フォント「Cyroit」
+## 全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Cyroit」
 
 Copyright (c) 2023 omonomo (https://omonomo.github.io/Cyroit/)  
 
