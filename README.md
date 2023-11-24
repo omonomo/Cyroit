@@ -22,9 +22,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.5.3)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.5.3/Cyroit_v1.5.3.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.5.3.zip)
+最新版 (v1.5.4)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.5.4/Cyroit_v1.5.4.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.5.4.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -102,7 +102,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - OS: macOS Sonoma (version 14.1.1)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.44.3
+- FontTools: 4.45.0
 
 ### 実行方法
 
