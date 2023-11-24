@@ -1300,6 +1300,49 @@ while (i < SizeOf(input_list))
  #    Select(0uab47) # ꭇ
  #    Select(0uab49) # ꭉ
 
+# u (少し左に移動)
+    if (input_list[i] == "${input_latin_regular}")
+        Select(0u0075) # u
+        SelectMore(0u00f9) # ù
+        SelectMore(0u00fa) # ú
+        SelectMore(0u00fb) # û
+        SelectMore(0u00fc) # ü
+        SelectMore(0u0169) # ũ
+        SelectMore(0u016b) # ū
+        SelectMore(0u016d) # ŭ
+        SelectMore(0u016f) # ů
+        SelectMore(0u0171) # ű
+        SelectMore(0u0173) # ų
+        SelectMore(0u01b0) # ư
+        SelectMore(0u0215) # ȕ
+        SelectMore(0u0217) # ȗ
+        SelectMore(0u1e79) # ṹ
+        SelectMore(0u1e7b) # ṻ
+        SelectMore(0u1ee5) # ụ
+        SelectMore(0u1ee7) # ủ
+        SelectMore(0u1ee9) # ứ
+        SelectMore(0u1eeb) # ừ
+        SelectMore(0u1eed) # ử
+        SelectMore(0u1eef) # ữ
+        SelectMore(0u1ef1) # ự
+        Move(-5, 0)
+        SetWidth(500)
+
+ #        Select(0u01d4) # ǔ
+ #        Select(0u01d6) # ǖ
+ #        Select(0u01d8) # ǘ
+ #        Select(0u01da) # ǚ
+ #        Select(0u01dc) # ǜ
+ #        Select(0u0289) # ʉ
+ #        Select(0u1d99) # ᶙ
+ #        Select(0u1e73) # ṳ
+ #        Select(0u1e75) # ṵ
+ #        Select(0u1e77) # ṷ
+ #        Select(0uab4e) # ꭎ
+ #        Select(0uab4f) # ꭏ
+ #        Select(0uab52) # ꭒ
+    endif
+
 # g をオープンテイルに変更するため、それに合わせてjpqyの尻尾を伸ばす
 # j
     # 下
@@ -8590,7 +8633,7 @@ while (i < SizeOf(input_list))
 
 # Seti-UI + Customs
     Print("Edit Seti-UI + Costoms")
-    Select(0ue5fa, 0ue6ad); Scale(88)
+    Select(0ue5fa, 0ue6b1); Scale(88)
     Move(-20, 0); SetWidth(1024)
 
 # Devicons
@@ -8670,7 +8713,7 @@ while (i < SizeOf(input_list))
 
 # Font Logos
     Print("Edit Font Logos")
-    Select(0uf300, 0uf32f); Scale(88)
+    Select(0uf300, 0uf372); Scale(88)
     Move(-20, 0); SetWidth(1024)
 
 # Octicons
