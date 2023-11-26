@@ -5,26 +5,30 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、括弧が全角と半角の組み合わせになっていたり、波ダッシュであるべきところに全角チルダが使われていたりしてもすぐに判別することができます。  
 全角スペースを可視化しており、さらに半角・ノーブレークスペースも可視化したバージョンも用意しています。  
 [Commit Mono](https://commitmono.com) に影響を受け、calt フィーチャを利用したカーニング機能を実装しました (v1.1.0以降)。  
+[mottainaiDTP](http://mottainaidtp.seesaa.net) さんの [3桁ごとにカンマが発生するフォント](http://mottainaidtp.seesaa.net/article/395328634.html) を応用して、桁区切り表示に対応したバージョンを追加しました (v1.6.0以降)。  
 
 ## フォントサンプル  
 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="660">  
+<img alt="ScreenShot" src="./images/SS_0.png" width="662">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
-<img alt="ScreenShot" src="./images/SS_1.png" width="780">  
+<img alt="ScreenShot" src="./images/SS_1.png" width="892">  
 
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
-<img alt="ScreenShot" src="./images/SS_2.png" width="420">  
+<img alt="ScreenShot" src="./images/SS_2.png" width="422">  
 
 カーニングサンプル  
-<img alt="ScreenShot" src="./images/SS_3.gif" width="670">  
+<img alt="ScreenShot" src="./images/SS_3.gif" width="672">  
+
+桁区切り表示サンプル  
+<img alt="ScreenShot" src="./images/SS_4.gif" width="201">  
 
 ## ダウンロード
 
-最新版 (v1.5.4)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.5.4/Cyroit_v1.5.4.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.5.4.zip)
+最新版 (v1.6.0)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.0/Cyroit_v1.6.0.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.0.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -61,30 +65,33 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ### 記号類について
 
 - 形状の似た記号と区別しやすいように破線に改変している記号があります。
-- キーボードショートカット用などの記号を少しだけ追加しています。
+- キーボードショートカット用などの記号を少し追加しています。
 
 ### 機能的なものについて
 
 - IVS を利用した異体字表示に対応しています。
-- アイヌ語カナ表記に対応しています。
+- ccmp フィーチャによるアイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
 - calt フィーチャを利用して、等幅のままでラテン文字 (一部除く) の文字間隔を調整するようにしています。
+- 同じく calt フィーチャを利用して桁区切りマークを表示させています。下の表示が3桁区切り、上の表示が4桁区切りになります。また小数を少し小さくしています。
 - リガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
 
 ## フォントファミリーの種類
 
-見た目がちょっと違うだけなのに種類を増やしたため、無駄にファイルサイズが大きくなってしまい大変申しわけございません。  
+見た目が少し違うだけなのに種類を増やしたため、無駄にファイルサイズが大きくなってしまい大変申しわけございません。  
 それぞれにレギュラー、オブリーク、ボールド、ボールドオブリークの書体が含まれています。  
 
 |   名称   | サンプル | 説明 |
 |----------|----------|------|
-| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="450"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
-| CyroitSP | <img alt="SP" src="./images/SP.png" width="450"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
-| CyroitTM | <img alt="TM" src="./images/TM.png" width="450"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョンを復活。大文字の DVZ のグリフを改変しています。 |
-| CyroitTS | <img alt="TS" src="./images/TS.png" width="450"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版。 |
-| CyroitFX | <img alt="TS" src="./images/FX.png" width="450"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
-| CyroitHB | <img alt="HB" src="./images/HB.png" width="450"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
+| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="324"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
+| CyroitSP | <img alt="SP" src="./images/SP.png" width="324"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
+| CyroitDG | <img alt="DG" src="./images/DG.png" width="324"> | 桁区切り表示付き版。桁区切りは整数36桁まで対応しています。 |
+| CyroitDS | <img alt="DS" src="./images/DS.png" width="324"> | 桁区切り表示の付いたスペシャルスペース版。 |
+| CyroitTM | <img alt="TM" src="./images/TM.png" width="324"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョン。大文字の DVZ のグリフを改変しています。桁区切り表示付き。 |
+| CyroitTS | <img alt="TS" src="./images/TS.png" width="324"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版、全部盛り。 |
+| CyroitFX | <img alt="TS" src="./images/FX.png" width="324"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
+| CyroitHB | <img alt="HB" src="./images/HB.png" width="324"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
 
@@ -102,7 +109,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - OS: macOS Sonoma (version 14.1.1)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.45.0
+- FontTools: 4.45.1
 
 ### 実行方法
 
@@ -119,17 +126,17 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 `-h` ヘルプを表示します。  
 `-d` 下書きモード。時間のかかる処理を飛ばします。改変したグリフを確認するのに便利です。  
 `-C` calt フィーチャを設定する直前で処理を終了します。  
-`-p` `-C`オプションの続きを実行します。元のフォントを残すので、カーニングの設定・確認を繰り返す時に重宝します。  
+`-p` `-C`オプションの続きを実行します。元のフォントを残すので、カーニングの設定、確認を繰り返す時に重宝します。  
 `-c` カーニング機能を除いたフォントを生成します。  
 `-e` Nerd Fonts 無しのフォントを生成します。  
 `-F` 完成品を生成します。全てのバージョンを生成しますので時間がかかります。気長にお待ちください。  
 
-`-F`オプション以外の時は、グリフや機能に関係なくフォント名が Cyroit になり、オブリーク体を生成しません。  
+`-F` オプション以外の時は、グリフや機能に関係なくフォント名が Cyroit になり、オブリーク体を生成しません。  
 オプションなしの場合、通常処理でカーニングあり、Nerd Fonts ありになります。  
 
 ## メモ
 
-- 使用するソフトウェアによって、縦書きや異体字、アイヌ語カナ表記が正しく表示されない、また文字間隔が調整されない場合があります。
+- 使用するソフトウェアによって、縦書きや異体字、桁区切りマークが表示されない、また文字間隔が調整されない場合があります。
 - 一部グリフが不統一なところがありますが、複数のフォントを合成しているためであり、仕様となります。
 - 行間が広めにとってあります。ダイアクリティカルマークがたくさん付いた文字もきちんと表示させるためです。
 - Powerline グリフを使用する際はフォントサイズを 12pt か 14pt にすると、よい感じに表示されるかもしれません。
