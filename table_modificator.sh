@@ -13,7 +13,9 @@ glyphNo_without_nerd="13704" # calt用異体字の先頭glyphナンバー (Nerd 
 glyphNo_with_nerd="22862" # calt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 
 lookupIndex_calt="17"
-caltList="caltList"
+listNo="0"
+caltL="caltList"
+caltList="${caltL}_${listNo}"
 cmapList="cmapList"
 extList="extList"
 gsubList="gsubList"
@@ -207,7 +209,7 @@ if [ "${cmap_flag}" = "true" ]; then
 fi
 
 if [ "${gsub_flag}" = "true" ]; then
-  rm -f ${caltList}.txt
+  rm -f ${caltL}*.txt
   gsubList_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
   if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
     caltNo=`grep 'Substitution in="A"' "${gsubList}.txt"`
@@ -240,7 +242,7 @@ if [ "${gsub_flag}" = "true" ]; then
       echo "Compatible with calt feature."
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
-        caltlist_txt=`find . -name "${caltList}.txt" -maxdepth 1 | head -n 1`
+        caltlist_txt=`find . -name "${caltL}*.txt" -maxdepth 1 | head -n 1`
         if [ -z "${caltlist_txt}" ]; then #caltListが無ければ作成
           if [ "${patch_only_flag}" = "true" ]; then
             if [ "${leaving_tmp_flag}" = "true" ]; then
@@ -258,13 +260,19 @@ if [ "${gsub_flag}" = "true" ]; then
         fi
         # フォントがcaltフィーチャに対応していた場合フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"の中を削除
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
-        sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="17"の後に挿入
+        find . -name "${caltL}*.txt" -maxdepth 1 | while read line # caltList(caltルックアップ)の数だけループ
+        do
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"〜の中を削除
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="17"〜の後に挿入
+          lookupIndex_calt=`expr ${lookupIndex_calt} + 1`
+          listNo=`expr ${listNo} + 1`
+          caltList="${caltL}_${listNo}"
+        done
       fi
     else
       echo "Not compatible with calt feature."
@@ -334,7 +342,7 @@ if [ "${leaving_tmp_flag}" = "false" ]; then
   echo "Remove temporary files"
   rm -f ${font_familyname}*.ttx
   rm -f ${font_familyname}*.ttx.bak
-  rm -f ${caltList}.txt
+  rm -f ${caltL}*.txt
   rm -f ${cmapList}.txt
   rm -f ${extList}.txt
   rm -f ${gsubList}.txt

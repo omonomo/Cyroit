@@ -51,7 +51,8 @@ address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
 address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
 address_calt=`expr ${address_vert_kabu} + 7` # calt置換の先頭アドレス(左に移動した A)
 address_calt_middle=`expr ${address_calt} + 241` # calt置換の中間アドレス(右に移動した A)
-address_calt_end=`expr ${address_calt_middle} + 241` # calt置換の最終アドレス (上に移動した colon)
+address_calt_figure=`expr ${address_calt_middle} + 241` # calt置換アドレス(桁区切り付き、小数の0-9)
+address_calt_end=`expr ${address_calt_figure} + 40` # calt置換の最終アドレス (上に移動した colon)
 
 # フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
@@ -123,9 +124,10 @@ weight_extend_super_sub="12" # ウェイト調整
 y_pos_math="-30"
 y_pos_s_math="-10"
 
-# calt移動量
-x_pos_calt="20"
-y_pos_calt="60"
+# calt用
+x_pos_calt="20" # ラテン文字の移動量
+y_pos_calt="60" # コロンの移動量
+percent_calt_decimal="94" # 小数の拡大比率
 
 # Set path to command
 fontforge_command="fontforge"
@@ -147,6 +149,7 @@ improve_visibility_flag="true" # ダッシュ破線化
 dvz_flag="true" # DVZ改変
 calt_flag="true" # calt対応
 nerd_flag="true" # Nerd fonts 追加
+separator_flag="true" # 桁区切りあり
 oblique_flag="true" # オブリーク作成
 draft_flag="false" # 下書きモード
 patch_flag="true" # パッチを当てる
@@ -224,6 +227,7 @@ font_generator_help()
     echo "  -t                     Disable modified D, V and Z"
     echo "  -c                     Disable calt feature"
     echo "  -e                     Disable add Nerd fonts"
+    echo "  -g                     Disable thousands separator"
     echo "  -o                     Disable generate oblique style"
     echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -P                     End just before patching"
@@ -232,7 +236,7 @@ font_generator_help()
 }
 
 # Get options
-while getopts hVf:vlN:n:ZzbtceodPp OPT
+while getopts hVf:vlN:n:ZzbtcegodPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -284,6 +288,10 @@ do
         "e" )
             echo "Option: Disable add Nerd fonts"
             nerd_flag="false"
+            ;;
+        "g" )
+            echo "Option: Disable thousands separator"
+            separator_flag="false"
             ;;
         "o" )
             echo "Option: Disable generate oblique style"
@@ -7541,6 +7549,14 @@ while (i < SizeOf(input_list))
         Select(k); Paste()
         k += 1
 
+        j = 0
+        while (j < 40)
+            Select(0u0030 + j % 10); Copy() # 0-9
+            Select(k); Paste()
+            k += 1
+            j += 1
+        endloop
+
         Select(0u003a); Copy() # :
         Select(k); Paste()
         k += 1
@@ -9219,6 +9235,93 @@ while (i < \$argc)
         AddPosSub(lookupSub1, glyphName) # 中→右
         k += 1
 
+        lookupName = "単純置換 (3桁)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+
+        j = 0
+        while (j < 10)
+            Select(0u25b2); Copy() # ▲
+            Select(k); Paste()
+            Scale(15, 27)
+            Move(-490, -510)
+            Copy(); Select(k + 20); Paste() # 12桁用
+            Select(0u0030 + j); Copy() # 0
+            glyphName = GlyphInfo("Name")
+            Select(k); PasteInto()
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # ノーマル←3桁マーク付加
+            glyphName = GlyphInfo("Name")
+            Select(0u0030 + j) # 0
+            AddPosSub(lookupSub1, glyphName) # 3桁マーク付加←ノーマル
+            k += 1
+            j += 1
+        endloop
+
+        lookupName = "単純置換 (4桁)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+
+        j = 0
+        while (j < 10)
+            Select(0u25bc); Copy() # ▼
+            Select(k); Paste()
+            Scale(15, 27)
+            Move(-490, 452)
+            Copy(); Select(k + 10); PasteInto() # 12桁用
+            Select(0u0030 + j); Copy() # 0
+            glyphName = GlyphInfo("Name")
+            Select(k); PasteInto()
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # ノーマル←4桁マーク付加
+            glyphName = GlyphInfo("Name")
+            Select(0u0030 + j) # 0
+            AddPosSub(lookupSub1, glyphName) # 4桁マーク付加←ノーマル
+            k += 1
+            j += 1
+        endloop
+
+        lookupName = "単純置換 (12桁)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+
+        j = 0
+        while (j < 10)
+            Select(0u0030 + j); Copy() # 0
+            glyphName = GlyphInfo("Name")
+            Select(k); PasteInto()
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # ノーマル←12桁マーク付加
+            glyphName = GlyphInfo("Name")
+            Select(0u0030 + j) # 0
+            AddPosSub(lookupSub1, glyphName) # 12桁マーク付加←ノーマル
+            k += 1
+            j += 1
+        endloop
+
+        lookupName = "単純置換 (小数)"
+        AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
+        lookupSub1 = lookupName + "サブテーブル"
+        AddLookupSubtable(lookupName, lookupSub1)
+
+        j = 0
+        while (j < 10)
+            Select(0u0030 + j); Copy() # 0
+            glyphName = GlyphInfo("Name")
+            Select(k); Paste()
+            Scale(${percent_calt_decimal}, ${percent_calt_decimal}, 256, 0)
+            SetWidth(512)
+            AddPosSub(lookupSub0, glyphName) # ノーマル←小数
+            glyphName = GlyphInfo("Name")
+            Select(0u0030 + j) # 0
+            AddPosSub(lookupSub1, glyphName) # 小数←ノーマル
+            k += 1
+            j += 1
+        endloop
+
         lookupName = "単純置換 (上)"
         AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
         lookupSub1 = lookupName + "サブテーブル"
@@ -9236,14 +9339,18 @@ while (i < \$argc)
         k += 1
 
         # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
-        lookupName = "'zero' 文脈依存の異体字に後で換える"
-        AddLookup(lookupName, "gsub_single", 0, [["zero",[["DFLT",["dflt"]]]]], lookups[numlookups - 1])
-        Select(0u00a0); glyphName = GlyphInfo("Name")
-        Select(0u0020)
-
-        lookupSub = lookupName + "サブテーブル"
-        AddLookupSubtable(lookupName, lookupSub)
-        AddPosSub(lookupSub, glyphName)
+        j = 0
+        while (j < 15) # caltルックアップの数だけ確保する
+            lookupName = "'zero' 文脈依存の異体字に後で換える " + ToString(j)
+            AddLookup(lookupName, "gsub_single", 0, [["zero",[["DFLT",["dflt"]]]]], lookups[numlookups - 1])
+            Select(0u00a0); glyphName = GlyphInfo("Name")
+            Select(0u0020)
+    
+            lookupSub = lookupName + "サブテーブル"
+            AddLookupSubtable(lookupName, lookupSub)
+            AddPosSub(lookupSub, glyphName)
+            j += 1
+        endloop
  #    endif
 
     Print("Add aalt lookups")
@@ -9953,6 +10060,16 @@ while (i < \$argc)
             SetWidth(1024)
             j += 1
             k += 1
+        endloop
+    endif
+
+# 桁区切りなし・小数を元に戻す
+    if ("${separator_flag}" == "false")
+        j = 0
+        while (j < 40)
+            Select(0u0030 + j % 10); Copy() # 0-9
+            Select(${address_calt_figure} + j); Paste()
+            j += 1
         endloop
     endif
 

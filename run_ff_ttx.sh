@@ -7,11 +7,8 @@
 # 一連の操作を自動化したプログラム
 
 font_familyname="Cyroit"
-font_familyname_suffix0="HB" # バージョン違いの名称
-font_familyname_suffix1="SP"
-font_familyname_suffix2="TM"
-font_familyname_suffix3="TS"
-font_familyname_suffix4="FX"
+
+font_familyname_suffix=("HB" "SP" "TM" "TS" "FX" "DG" "DS") # バージョン違いの名称
 build_fonts_dir="build" # 完成品を保管するフォルダ
 
 font_version="0.1.0"
@@ -75,22 +72,30 @@ fi
 
 # 完成品作成のためフォントにパッチを当てる
 if [ "$1" = "-F" ]; then
-  if [ -n "${font_familyname_suffix0}" ]; then
-    sh font_generator.sh -Z -z -b -t -p -N "${font_familyname}" -n "${font_familyname_suffix0}" # HB
-  fi
-  if [ -n "${font_familyname_suffix1}" ]; then
-    sh font_generator.sh -t -p -N "${font_familyname}" -n "${font_familyname_suffix1}" # SP
-  fi
-  if [ -n "${font_familyname_suffix2}" ]; then
-    sh font_generator.sh -z -p -N "${font_familyname}" -n "${font_familyname_suffix2}" # TM
-  fi
-  if [ -n "${font_familyname_suffix3}" ]; then
-    sh font_generator.sh -p -N "${font_familyname}" -n "${font_familyname_suffix3}" # TS
-  fi
-  if [ -n "${font_familyname_suffix4}" ]; then
-    sh font_generator.sh -z -t -c -p -N "${font_familyname}" -n "${font_familyname_suffix4}" # FX
-  fi
-  sh font_generator.sh -z -t -p -N "${font_familyname}" # 通常
+  for S in ${font_familyname_suffix[@]}; do
+    if [ "${S}" = "HB" ]; then
+      sh font_generator.sh -Z -z -b -t -g -p -N "${font_familyname}" -n "${S}"
+    fi
+    if [ "${S}" = "SP" ]; then
+      sh font_generator.sh -t -g -p -N "${font_familyname}" -n "${S}"
+    fi
+    if [ "${S}" = "TM" ]; then
+      sh font_generator.sh -z -p -N "${font_familyname}" -n "${S}"
+    fi
+    if [ "${S}" = "TS" ]; then
+      sh font_generator.sh -p -N "${font_familyname}" -n "${S}"
+    fi
+    if [ "${S}" = "FX" ]; then
+      sh font_generator.sh -z -t -c -p -N "${font_familyname}" -n "${S}"
+    fi
+    if [ "${S}" = "DG" ]; then
+      sh font_generator.sh -z -t -p -N "${font_familyname}" -n "${S}"
+    fi
+    if [ "${S}" = "DS" ]; then
+      sh font_generator.sh -t -p -N "${font_familyname}" -n "${S}"
+    fi
+    sh font_generator.sh -z -t -g -p -N "${font_familyname}" # 通常
+  done
 fi
 
 # テーブル加工
@@ -110,26 +115,10 @@ if [ "$1" = "-F" ]; then
 
   echo "Move finished fonts"
   mkdir -p "${build_fonts_dir}"
-  if [ -n "${font_familyname_suffix0}" ]; then
-    mkdir -p "${build_fonts_dir}/${font_familyname_suffix0}"
-    mv -f ${font_familyname}${font_familyname_suffix0}*.ttf "${build_fonts_dir}/${font_familyname_suffix0}/."
-  fi
-  if [ -n "${font_familyname_suffix1}" ]; then
-    mkdir -p "${build_fonts_dir}/${font_familyname_suffix1}"
-    mv -f ${font_familyname}${font_familyname_suffix1}*.ttf "${build_fonts_dir}/${font_familyname_suffix1}/."
-  fi
-  if [ -n "${font_familyname_suffix2}" ]; then
-    mkdir -p "${build_fonts_dir}/${font_familyname_suffix2}"
-    mv -f ${font_familyname}${font_familyname_suffix2}*.ttf "${build_fonts_dir}/${font_familyname_suffix2}/."
-  fi
-  if [ -n "${font_familyname_suffix3}" ]; then
-    mkdir -p "${build_fonts_dir}/${font_familyname_suffix3}"
-    mv -f ${font_familyname}${font_familyname_suffix3}*.ttf "${build_fonts_dir}/${font_familyname_suffix3}/."
-  fi
-  if [ -n "${font_familyname_suffix4}" ]; then
-    mkdir -p "${build_fonts_dir}/${font_familyname_suffix4}"
-    mv -f ${font_familyname}${font_familyname_suffix4}*.ttf "${build_fonts_dir}/${font_familyname_suffix4}/."
-  fi
+  for S in ${font_familyname_suffix[@]}; do
+    mkdir -p "${build_fonts_dir}/${S}"
+    mv -f ${font_familyname}${S}*.ttf "${build_fonts_dir}/${S}/."
+  done
   mv -f ${font_familyname}*.ttf "${build_fonts_dir}/."
   echo
 
