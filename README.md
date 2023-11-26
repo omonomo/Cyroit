@@ -13,7 +13,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 <img alt="ScreenShot" src="./images/SS_0.png" width="662">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
-<img alt="ScreenShot" src="./images/SS_1.png" width="892">  
+<img alt="ScreenShot" src="./images/SS_1.png" width="780">  
 
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
 <img alt="ScreenShot" src="./images/SS_2.png" width="422">  
