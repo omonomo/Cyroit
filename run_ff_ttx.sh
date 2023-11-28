@@ -7,6 +7,7 @@
 # 一連の操作を自動化したプログラム
 
 font_familyname="Cyroit"
+tmpdir_name="font_generator_tmpdir" # font_generatorのテンポラリフォルダ名
 
 font_familyname_suffix=("HB" "SP" "TM" "TS" "FX" "DG" "DS") # バージョン違いの名称
 build_fonts_dir="build" # 完成品を保管するフォルダ
@@ -101,7 +102,7 @@ fi
 # テーブル加工
 if [ "$1" = "-C" ]; then
   sh table_modificator.sh -l -C -N "${font_familyname}"
-	exit 0
+  exit 0
 elif [ "$1" = "-F" ]; then
   sh table_modificator.sh -N "${font_familyname}"
 else
@@ -110,7 +111,8 @@ fi
 
 # 完成したフォントの移動と一時ファイルの削除
 if [ "$1" = "-F" ]; then
-  echo "Remove temporary files"
+  echo "Remove temporary folders and files"
+  rm -rf ${tmpdir_name}.*
   rm -f ${font_familyname}*.nopatch.ttf
 
   echo "Move finished fonts"
