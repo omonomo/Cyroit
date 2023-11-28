@@ -10,25 +10,25 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 ## フォントサンプル  
 
 [CotEditor](https://coteditor.com) にて  
-<img alt="ScreenShot" src="./images/SS_0.png" width="662">  
+<img alt="ScreenShot" src="./images/SS_0.png" width="670">  
 
 [warp](https://www.warp.dev) + [Starship](https://starship.rs/ja-JP/) + [lsd](https://github.com/lsd-rs/lsd) にて  
 <img alt="ScreenShot" src="./images/SS_1.png" width="780">  
 
 [egword Universal2](https://www.monokakido.jp/ja/mac/egworduniversal2/) にて  
-<img alt="ScreenShot" src="./images/SS_2.png" width="422">  
+<img alt="ScreenShot" src="./images/SS_2.png" width="420">  
 
 カーニングサンプル  
-<img alt="ScreenShot" src="./images/SS_3.gif" width="672">  
+<img alt="ScreenShot" src="./images/SS_3.gif" width="670">  
 
 桁区切り表示サンプル  
-<img alt="ScreenShot" src="./images/SS_4.gif" width="201">  
+<img alt="ScreenShot" src="./images/SS_4.gif" width="161">  
 
 ## ダウンロード
 
-最新版 (v1.6.0)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.0/Cyroit_v1.6.0.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.0.zip)
+最新版 (v1.6.1)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.1/Cyroit_v1.6.1.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.1.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -73,7 +73,8 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - ccmp フィーチャによるアイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
 - calt フィーチャを利用して、等幅のままでラテン文字 (一部除く) の文字間隔を調整するようにしています。
-- 同じく calt フィーチャを利用して桁区切りマークを表示させています。下の表示が3桁区切り、上の表示が4桁区切りになります。また小数を少し小さくしています。
+- 同じく calt フィーチャを利用して整数に桁区切りマークを表示させています。また小数を少し小さくしています。
+- 桁区切りマークは、上の表示が4桁区切り (36桁まで対応)、下の表示が3桁区切り (39桁まで対応) になります。4桁区切りは0と1が続いた時のみ表示されます。
 - リガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
 
@@ -84,14 +85,14 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 |   名称   | サンプル | 説明 |
 |----------|----------|------|
-| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="324"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
-| CyroitSP | <img alt="SP" src="./images/SP.png" width="324"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
-| CyroitDG | <img alt="DG" src="./images/DG.png" width="324"> | 桁区切り表示付き版。桁区切りは整数36桁まで対応しています。 |
-| CyroitDS | <img alt="DS" src="./images/DS.png" width="324"> | 桁区切り表示の付いたスペシャルスペース版。 |
-| CyroitTM | <img alt="TM" src="./images/TM.png" width="324"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョン。大文字の DVZ のグリフを改変しています。桁区切り表示付き。 |
-| CyroitTS | <img alt="TS" src="./images/TS.png" width="324"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版、全部盛り。 |
-| CyroitFX | <img alt="TS" src="./images/FX.png" width="324"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
-| CyroitHB | <img alt="HB" src="./images/HB.png" width="324"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
+| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="220"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
+| CyroitSP | <img alt="SP" src="./images/SP.png" width="220"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
+| CyroitDG | <img alt="DG" src="./images/DG.png" width="220"> | 桁区切り表示付き版。 |
+| CyroitDS | <img alt="DS" src="./images/DS.png" width="220"> | 桁区切り表示の付いたスペシャルスペース版。 |
+| CyroitTM | <img alt="TM" src="./images/TM.png" width="220"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョン。大文字の DVZ のグリフを改変しています。桁区切り表示付き。 |
+| CyroitTS | <img alt="TS" src="./images/TS.png" width="220"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版、全部盛り。 |
+| CyroitFX | <img alt="TS" src="./images/FX.png" width="220"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
+| CyroitHB | <img alt="HB" src="./images/HB.png" width="220"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
 
