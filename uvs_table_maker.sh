@@ -94,10 +94,14 @@ ttx -t GSUB "${toFontName_ttf}"
 # 元フォントがカレントディレクトリに無ければ生成したttxファイルを移動
 fromFontName_ttx=`find ${fonts_directories} -follow -name "${fromFontName}.ttx" | head -n 1`
 if [ -n "${fromFontName_ttx}" ] && [ ${fromFontName_ttx} != "./${fromFontName}.ttx" ]; then
-	echo "Move ${fromFontName}.ttx"
-	mv ${fromFontName_ttx} ./
+  echo "Move ${fromFontName}.ttx"
+  mv ${fromFontName_ttx} ./
 fi
 echo
+
+# ttxファイルを移動させる前に異常終了した場合、ttxファイルを消去する
+trap "if [ -e \"$fromFontName_ttx\" ]; then echo 'Remove ttx file'; rm -f $fromFontName_ttx; echo 'Abnormally terminated'; fi; exit 3" HUP INT QUIT
+trap "if [ -e \"$fromFontName_ttx\" ]; then echo 'Remove ttx file'; rm -f $fromFontName_ttx; echo 'Abnormally terminated'; fi" EXIT
 
 # 元のフォントのcmapから異体字セレクタリスト(format_14)を取り出す
 echo "Make cmap List"
@@ -113,7 +117,7 @@ echo "${fromFontName}: 0x${findUv} -> glyph${fromNum}"
 
 for i in `seq 0 ${samplingNum}`
 do
-	grep "glyph$((fromNum + i))" "${cmapList}.txt" >> "${extList}.txt"
+  grep "glyph$((fromNum + i))" "${cmapList}.txt" >> "${extList}.txt"
 done
 
 # 作成するフォントのGSUBから置換用リストを作成
@@ -125,7 +129,7 @@ echo "${toFontName}: 0x${findUv} -> glyph${toNum}"
 
 for i in `seq 0 ${samplingNum}`
 do
-	grep "glyph$((toNum + i))" "${toFontName}.ttx" | head -n 1 >> "${gsubList}.txt"
+  grep "glyph$((toNum + i))" "${toFontName}.ttx" | head -n 1 >> "${gsubList}.txt"
 done
 
 # 異体字セレクタリストのglyphナンバーを置換用リストの物に置き換える
@@ -133,15 +137,15 @@ echo "Modify cmap list"
 i=1
 while read toLine
 do
-	fromLine=`head -n ${i} "${extList}.txt" | tail -n 1`
-	temp=${fromLine#*glyph} # glyphナンバーより前を削除
-	fromNum=${temp%\"*} # glyphナンバーより後を削除
+  fromLine=`head -n ${i} "${extList}.txt" | tail -n 1`
+  temp=${fromLine#*glyph} # glyphナンバーより前を削除
+  fromNum=${temp%\"*} # glyphナンバーより後を削除
 
-	temp=${toLine##*glyph} # glyphナンバーより前を削除
-	toNum=${temp%\"*} # glyphナンバーより後を削除
+  temp=${toLine##*glyph} # glyphナンバーより前を削除
+  toNum=${temp%\"*} # glyphナンバーより後を削除
 
-	sed -i.bak -e "s/glyph${fromNum}/glyph${toNum}/g" "${cmapList}.txt"
-	i=$((i + 1))
+  sed -i.bak -e "s/glyph${fromNum}/glyph${toNum}/g" "${cmapList}.txt"
+  i=$((i + 1))
 done < "${gsubList}.txt"
 echo
 
