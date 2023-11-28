@@ -137,7 +137,7 @@ if [ "${other_flag}" = "true" ]; then
     elif [ "$(cat ${P%%.ttf}.ttx | grep "Regular")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000000",' "${P%%.ttf}.ttx"
       sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000000 11000000",' "${P%%.ttf}.ttx"
-  	fi
+    fi
 
     # head (フォントの情報を修正)
     sed -i.bak -e 's,flags value="........ ........",flags value="00000000 00000011",' "${P%%.ttf}.ttx"
@@ -295,7 +295,7 @@ if [ "${gsub_flag}" = "true" ]; then
     sed -i.bak -e 's,FeatureIndex index="7" value=".",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx" # index7 は valueが1桁と2桁の2つの場合がある
     sed -i.bak -e 's,FeatureIndex index="7" value="..",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx"
 
-  	sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
 
     if [ "${calt_ok_flag_l}" = "true" ] && [ "${calt_ok_flag_f}" = "true" ]; then # calt対応であれば index13を追加
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
