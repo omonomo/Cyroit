@@ -25,6 +25,8 @@ if [ -n "${version_txt}" ]; then
     fi
 fi
 
+tmpdir_name="font_generator_tmpdir"
+
 # グリフ保管アドレス
 address_dvz_latin="64336" # 0ufb50 latinフォントのDVZアドレス
 address_visi_latin=`expr ${address_dvz_latin} + 18` # latinフォントの視認性向上アドレス ⁄|
@@ -432,9 +434,9 @@ ttx_version=`${ttx_command} --version`
 
 # Make temporary directory
 if [ -w "/tmp" -a "${leaving_tmp_flag}" = "false" ]; then
-    tmpdir=`mktemp -d /tmp/font_generator_tmpdir.XXXXXX` || exit 2
+    tmpdir=`mktemp -d /tmp/"${tmpdir_name}".XXXXXX` || exit 2
 else
-    tmpdir=`mktemp -d ./font_generator_tmpdir.XXXXXX`    || exit 2
+    tmpdir=`mktemp -d ./"${tmpdir_name}".XXXXXX`    || exit 2
 fi
 
 # Remove temporary directory by trapping
@@ -552,7 +554,7 @@ while (i < SizeOf(input_list))
     Select(0u0034); Copy() # 4
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
-    
+
     Select(0u2588); Copy() # Full block
     Select(0u0034); PasteWithOffset(400, 0) # 4
     OverlapIntersect()
@@ -1191,7 +1193,7 @@ while (i < SizeOf(input_list))
 # m (縦線を少し太く)
     if (input_list[i] == "${input_latin_regular}")
         Select(0u006d); Copy() # m
-        PasteWithOffset(-2,0) 
+        PasteWithOffset(-2,0)
         RemoveOverlap()
 
         # 縦横比変更時にゴミが出るため、一旦脚を切って付け直す
@@ -6163,7 +6165,7 @@ while (i < SizeOf(input_list))
         SelectMore(1114421, 1114432) # 小文字カタカナ
         SelectMore(0uff66, 0uff9d) # 半角カナ
         Move(0, -20)
-		endif
+    endif
 
 # 縦書き対応
     Print("Edit vert glyphs")
@@ -8642,7 +8644,7 @@ while (i < SizeOf(input_list))
     SelectMore(0ue381, 0ue3a9)
     SelectMore(0ue3af, 0ue3bb)
     SelectMore(0ue3c4, 0ue3e3)
-		Scale(88)
+    Scale(88)
 
     Select(0ue300, 0ue3e3)
     Move(-20, 0); SetWidth(1024)
@@ -9255,6 +9257,10 @@ while (i < \$argc)
             glyphName = GlyphInfo("Name")
             Select(0u0030 + j) # 0
             AddPosSub(lookupSub1, glyphName) # 3桁マーク付加←ノーマル
+            Select(k + 10) # 0
+            AddPosSub(lookupSub1, glyphName) # 3桁マーク付加←4桁マーク付加
+            Select(k + 20) # 0
+            AddPosSub(lookupSub1, glyphName) # 3桁マーク付加←12桁マーク付加
             k += 1
             j += 1
         endloop
@@ -9279,6 +9285,10 @@ while (i < \$argc)
             glyphName = GlyphInfo("Name")
             Select(0u0030 + j) # 0
             AddPosSub(lookupSub1, glyphName) # 4桁マーク付加←ノーマル
+            Select(k - 10) # 0
+            AddPosSub(lookupSub1, glyphName) # 4桁マーク付加←3桁マーク付加
+            Select(k + 10) # 0
+            AddPosSub(lookupSub1, glyphName) # 4桁マーク付加←12桁マーク付加
             k += 1
             j += 1
         endloop
@@ -9298,6 +9308,10 @@ while (i < \$argc)
             glyphName = GlyphInfo("Name")
             Select(0u0030 + j) # 0
             AddPosSub(lookupSub1, glyphName) # 12桁マーク付加←ノーマル
+            Select(k - 20) # 0
+            AddPosSub(lookupSub1, glyphName) # 12桁マーク付加←3桁マーク付加
+            Select(k - 10) # 0
+            AddPosSub(lookupSub1, glyphName) # 12桁マーク付加←4桁マーク付加
             k += 1
             j += 1
         endloop
@@ -9340,12 +9354,12 @@ while (i < \$argc)
 
         # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
         j = 0
-        while (j < 15) # caltルックアップの数だけ確保する
+        while (j < 16) # caltルックアップの数だけ確保する
             lookupName = "'zero' 文脈依存の異体字に後で換える " + ToString(j)
             AddLookup(lookupName, "gsub_single", 0, [["zero",[["DFLT",["dflt"]]]]], lookups[numlookups - 1])
             Select(0u00a0); glyphName = GlyphInfo("Name")
             Select(0u0020)
-    
+
             lookupSub = lookupName + "サブテーブル"
             AddLookupSubtable(lookupName, lookupSub)
             AddPosSub(lookupSub, glyphName)
@@ -9930,8 +9944,8 @@ while (i < \$argc)
     if (input_style == "BoldOblique")
         output_style = input_style
         style        = "Bold Oblique"
-		else
-		    output_style = input_style
+    else
+        output_style = input_style
         style        = input_style
     endif
 
