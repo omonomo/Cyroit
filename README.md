@@ -26,9 +26,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.6.1)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.1/Cyroit_v1.6.1.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.1.zip)
+最新版 (v1.6.2)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.2/Cyroit_v1.6.2.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.2.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
