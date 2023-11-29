@@ -8651,7 +8651,7 @@ while (i < SizeOf(input_list))
 
 # Seti-UI + Customs
     Print("Edit Seti-UI + Costoms")
-    Select(0ue5fa, 0ue6b1); Scale(88)
+    Select(0ue5fa, 0ue6b2); Scale(88)
     Move(-20, 0); SetWidth(1024)
 
 # Devicons
