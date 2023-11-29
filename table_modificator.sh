@@ -38,6 +38,9 @@ patch_only_flag="false" # パッチモード
 calt_ok_flag_l="true" # calt対応に必要なファイル(gsubList)があるか
 calt_ok_flag_f="true" # フォントがcaltに対応しているか
 
+# エラー処理
+trap "exit 3" HUP INT QUIT
+
 echo
 echo "= Font tables Modificator ="
 echo
