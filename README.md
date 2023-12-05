@@ -26,9 +26,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.6.2)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.2/Cyroit_v1.6.2.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.2.zip)
+最新版 (v1.6.3)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.3/Cyroit_v1.6.3.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.3.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -85,14 +85,14 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 |   名称   | サンプル | 説明 |
 |----------|----------|------|
-| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="220"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
-| CyroitSP | <img alt="SP" src="./images/SP.png" width="220"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
-| CyroitDG | <img alt="DG" src="./images/DG.png" width="220"> | 桁区切り表示付き版。 |
-| CyroitDS | <img alt="DS" src="./images/DS.png" width="220"> | 桁区切り表示の付いたスペシャルスペース版。 |
-| CyroitTM | <img alt="TM" src="./images/TM.png" width="220"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョン。大文字の DVZ のグリフを改変しています。桁区切り表示付き。 |
-| CyroitTS | <img alt="TS" src="./images/TS.png" width="220"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版、全部盛り。 |
-| CyroitFX | <img alt="TS" src="./images/FX.png" width="220"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
-| CyroitHB | <img alt="HB" src="./images/HB.png" width="220"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
+| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="330"> | 通常版。全角スペースを可視化し、全角形・半角形や濁点・半濁点、感嘆符等にアンダーラインが付くなど、形の似た文字を識別しやくしています。 |
+| CyroitSP | <img alt="SP" src="./images/SP.png" width="330"> | スペシャルスペース版。半角スペース、ノーブレークスペース (0x00a0) も可視化したバージョン。コマンドランチャー等で使用すると便利かもしれません。 |
+| CyroitDG | <img alt="DG" src="./images/DG.png" width="330"> | 桁区切り表示付き版。 |
+| CyroitDS | <img alt="DS" src="./images/DS.png" width="330"> | 桁区切り表示の付いたスペシャルスペース版。 |
+| CyroitTM | <img alt="TM" src="./images/TM.png" width="330"> | トゥーマッチ (やりすぎ) 版。開発途中まで通常版だったバージョン。大文字の DVZ のグリフを改変しています。桁区切り表示付き。 |
+| CyroitTS | <img alt="TS" src="./images/TS.png" width="330"> | トゥーマッチスペシャルスペース版。トゥーマッチなスペシャルスペース版、全部盛り。 |
+| CyroitFX | <img alt="TS" src="./images/FX.png" width="330"> | 文字間隔固定版。calt フィーチャと相性が悪いソフト用。 |
+| CyroitHB | <img alt="HB" src="./images/HB.png" width="330"> | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。プリントアウト用にどうぞ。 |
 
 ## ライセンス
 
@@ -107,10 +107,10 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Sonoma (version 14.1.1)
+- OS: macOS Sonoma (version 14.1.2)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.45.1
+- FontTools: 4.46.0
 
 ### 実行方法
 
