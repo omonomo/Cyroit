@@ -9,16 +9,13 @@
 
 font_familyname="Cyroit"
 
-glyphNo_without_nerd="13704" # calt用異体字の先頭glyphナンバー (Nerd Fontsなし)
-glyphNo_with_nerd="22862" # calt用異体字の先頭glyphナンバー (Nerd Fontsあり)
-
-lookupIndex_calt="17"
+lookupIndex_calt="17" # caltテーブルのlookupナンバー
 listNo="0"
-caltL="caltList"
-caltList="${caltL}_${listNo}"
-cmapList="cmapList"
-extList="extList"
-gsubList="gsubList"
+caltL="caltList" # caltテーブルリストの名称
+caltList="${caltL}_${listNo}" # Lookupごとのcaltテーブルリスト
+cmapList="cmapList" # 異体字セレクタリスト
+extList="extList" # 異体字のglyphナンバーリスト
+gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
 
 half_width="512" # 半角文字幅
 full_width="1024" # 全角文字幅
@@ -32,11 +29,11 @@ leaving_tmp_flag="false" # 一時ファイル残す
 cmap_flag="true" # cmapを編集するか
 gsub_flag="true" # GSUBを編集するか
 other_flag="true" # その他を編集するか
+reuse_list_flag="false" # 生成済みのリストを使かうか
 
 calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # パッチモード
-calt_ok_flag_l="true" # calt対応に必要なファイル(gsubList)があるか
-calt_ok_flag_f="true" # フォントがcaltに対応しているか
+calt_ok_flag="true" # フォントがcaltに対応しているか
 
 # エラー処理
 trap "exit 3" HUP INT QUIT
@@ -58,11 +55,12 @@ table_modificator_help()
     echo "  -t         Disable edit other tables"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
+    echo "  -r         Reuse an existing list"
     exit 0
 }
 
 # Get options
-while getopts hlN:mgtCp OPT
+while getopts hlN:mgtCpr OPT
 do
     case "${OPT}" in
         "h" )
@@ -98,6 +96,10 @@ do
             cmap_flag="false"
             other_flag="false"
             ;;
+        "r" )
+            echo "Option: Reuse an existing list"
+            reuse_list_flag="true"
+            ;;
         * )
             exit 1
             ;;
@@ -120,6 +122,7 @@ if [ -z "${fontName_ttf}" ]; then
   exit 1
 fi
 
+# cmap GSUB 以外のテーブル更新 ----------
 if [ "${other_flag}" = "true" ]; then
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
@@ -179,12 +182,18 @@ if [ "${other_flag}" = "true" ]; then
   done
 fi
 
-# cmapテーブル加工用ファイルの作成
+# cmap テーブルの更新 ----------
 if [ "${cmap_flag}" = "true" ]; then
-  if [ "${leaving_tmp_flag}" = "true" ]; then
-    sh uvs_table_maker.sh -l -N "${font_familyname}"
-  else
-    sh uvs_table_maker.sh -N "${font_familyname}"
+  if [ "${reuse_list_flag}" = "false" ]; then
+    rm -f ${cmapList}.txt
+  fi
+  cmaplist_txt=`find . -name "${cmapList}.txt" -maxdepth 1 | head -n 1`
+  if [ -z "${cmaplist_txt}" ]; then # cmapListが無ければ作成
+    if [ "${leaving_tmp_flag}" = "true" ]; then
+      sh uvs_table_maker.sh -l -N "${font_familyname}"
+    else
+      sh uvs_table_maker.sh -N "${font_familyname}"
+    fi
   fi
 
   find . -not -name "*.*.ttf" -maxdepth 1 | \
@@ -211,29 +220,16 @@ if [ "${cmap_flag}" = "true" ]; then
   done
 fi
 
-if [ "${gsub_flag}" = "true" ]; then
-  rm -f ${caltL}*.txt
-  gsubList_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
-  if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
-    caltNo=`grep 'Substitution in="A"' "${gsubList}.txt"`
-    if [ -n "${caltNo}" ]; then # calt用の異体字があった場合gSubListからglyphナンバーを取得
-      temp=${caltNo##*glyph} # glyphナンバーより前を削除
-      glyphNo=${temp%\"*} # glyphナンバーより後を削除してオフセット値追加
-    else
-      echo "Can't find glyph number of \"A moved left\""
-      echo
-      calt_ok_flag_l="false"
-    fi
-  else
-    echo "Can't find GSUB List"
-    echo
-    calt_ok_flag_l="false"
+# GSUB テーブルの更新 ----------
+if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今あるリストを削除
+  if [ "${reuse_list_flag}" = "false" ]; then
+    rm -f ${caltL}*.txt
   fi
 
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
-    calt_ok_flag_f="true"
+    calt_ok_flag="true" # calt不対応の場合、後でfalse
     ttx -t GSUB "$P"
 
     # GSUB (用字、言語全て共通に変更)
@@ -242,26 +238,26 @@ if [ "${gsub_flag}" = "true" ]; then
     if [ -n "${gpc}" ]; then
       echo "Already calt feature exist. Do not overwrite the table."
     elif [ -n "${gpz}" ]; then
-      echo "Compatible with calt feature."
+      echo "Compatible with calt feature." # フォントがcaltフィーチャに対応していた場合
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
         caltlist_txt=`find . -name "${caltL}*.txt" -maxdepth 1 | head -n 1`
-        if [ -z "${caltlist_txt}" ]; then #caltListが無ければ作成
+        if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
           if [ "${patch_only_flag}" = "true" ]; then
             if [ "${leaving_tmp_flag}" = "true" ]; then
-              sh calt_table_maker.sh -b -l -n ${glyphNo}
+              sh calt_table_maker.sh -b -l
             else
-              sh calt_table_maker.sh -b -n ${glyphNo}
+              sh calt_table_maker.sh -b
             fi
           else
             if [ "${leaving_tmp_flag}" = "true" ]; then
-              sh calt_table_maker.sh -l -n ${glyphNo}
+              sh calt_table_maker.sh -l
             else
-              sh calt_table_maker.sh -n ${glyphNo}
+              sh calt_table_maker.sh
             fi
           fi
         fi
-        # フォントがcaltフィーチャに対応していた場合フィーチャリストを変更
+        # フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         find . -name "${caltL}*.txt" -maxdepth 1 | while read line # caltList(caltルックアップ)の数だけループ
         do
@@ -278,8 +274,8 @@ if [ "${gsub_flag}" = "true" ]; then
         done
       fi
     else
-      echo "Not compatible with calt feature."
-      calt_ok_flag_f="false"
+      echo "Not compatible with calt feature." # フォントが対応していないか、すでにcaltがある場合
+      calt_ok_flag="false"
     fi
     # calt対応に関係なくスクリプトリストを変更
     sed -i.bak -e '/FeatureIndex index="10" value=".."/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる
@@ -300,7 +296,7 @@ if [ "${gsub_flag}" = "true" ]; then
 
     sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
 
-    if [ "${calt_ok_flag_l}" = "true" ] && [ "${calt_ok_flag_f}" = "true" ]; then # calt対応であれば index13を追加
+    if [ "${calt_ok_flag}" = "true" ]; then # calt対応であれば index13を追加
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
       <FeatureIndex index="10" value="12"/>\
       <FeatureIndex index="11" value="13"/>\
