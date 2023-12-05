@@ -13,9 +13,9 @@
 fromFontName="BIZUDGothic-Regular" # 抽出元フォント名
 font_familyname="Cyroit" # 生成フォントファミリー名
 
-cmapList="cmapList"
-extList="extList"
-gsubList="gsubList"
+cmapList="cmapList" # 異体字セレクタリスト
+extList="extList" # 異体字のglyphナンバーリスト
+gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
 findUv="9022" # 異体字の先頭文字コード
 samplingNum="324" # 取り出すglyphナンバーの数
 
