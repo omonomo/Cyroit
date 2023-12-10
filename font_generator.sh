@@ -9355,7 +9355,7 @@ while (i < \$argc)
 
         # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
         j = 0
-        while (j < 18) # caltルックアップの数だけ確保する
+        while (j < 17) # caltルックアップの数だけ確保する
             lookupName = "'zero' 文脈依存の異体字に後で換える " + ToString(j)
             AddLookup(lookupName, "gsub_single", 0, [["zero",[["DFLT",["dflt"]]]]], lookups[numlookups - 1])
             Select(0u00a0); glyphName = GlyphInfo("Name")
