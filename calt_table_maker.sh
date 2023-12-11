@@ -2336,15 +2336,10 @@ remove=("${cCL[@]}" "${cSL[@]}" "${cCR[@]}" "${cSR[@]}")
 
 class=("") # 丸い文字を除去
 for S in ${set[@]}; do
-  flag="false"
-  for T in ${remove[@]}; do
-    if [ "${S}" = "${T}" ]; then
-      flag="true"
-    fi
-  done
-  if [ "${flag}" = "false" ]; then
-    class+=("${S}")
-  fi
+	T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
+	if [ -z "${T}" ]; then
+		class+=("${S}")
+	fi
 done
 
 for S in ${class[@]}; do
@@ -2458,15 +2453,10 @@ remove=("${cCL[@]}" "${cSL[@]}" "${cCR[@]}" "${cSR[@]}")
 
 class=("") # 丸い文字を除去
 for S in ${set[@]}; do
-  flag="false"
-  for T in ${remove[@]}; do
-    if [ "${S}" = "${T}" ]; then
-      flag="true"
-    fi
-  done
-  if [ "${flag}" = "false" ]; then
-    class+=("${S}")
-  fi
+	T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
+	if [ -z "${T}" ]; then
+		class+=("${S}")
+	fi
 done
 
 for S in ${class[@]}; do
