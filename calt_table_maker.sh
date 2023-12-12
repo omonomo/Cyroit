@@ -120,8 +120,8 @@ letter_members() {
 if [ -n "${class}" ]; then
   for S in ${class[@]}; do
       eval "member+=(\"\${${S}[@]}\")"
-    done
-    echo "${member[@]}"
+  done
+  echo "${member[@]}"
 fi
 }
 
@@ -141,19 +141,19 @@ chain_context() {
   local input
   local lookAhead
   local lookupIndex
+  local backtrack1
   local lookAhead1
   local lookAheadX
   local aheadMax
-  local backtrack1
   substIndex="${1}"
   backtrack=("${2}")
   input=("${3}")
   lookAhead=("${4}")
   lookupIndex="${5}"
-  lookAhead1=("${6}")
-  lookAheadX=("${7}")
-  aheadMax="${8}" # lookAheadのIndex2以降はその数(最大のIndexNo)を入れる(当然内容は全て同じになる)
-  backtrack1=("${9}")
+  backtrack1=("${6}")
+  lookAhead1=("${7}")
+  lookAheadX=("${8}")
+  aheadMax="${9}" # lookAheadのIndex2以降はその数(最大のIndexNo)を入れる(当然内容は全て同じになる)
 
   echo "Make ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
 
@@ -162,15 +162,14 @@ chain_context() {
   if [ -n "${backtrack}" ]; then # 入力した文字の左側
     echo "<BacktrackCoverage index=\"0\">" >> "${caltList}.txt"
     rm -f ${listTemp}.txt
-    for S in ${backtrack[@]}
-    do
+    for S in ${backtrack[@]}; do
       T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
       echo "${T}" >> "${listTemp}.txt"
     done
     sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
     do
       T=`echo "${line}" | cut -d ' ' -f 2`
-     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+      echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
     done
     echo "</BacktrackCoverage>" >> "${caltList}.txt"
   fi
@@ -178,15 +177,14 @@ chain_context() {
   if [ -n "${backtrack1}" ]; then # 入力した文字の左側2つ目
     echo "<BacktrackCoverage index=\"1\">" >> "${caltList}.txt"
     rm -f ${listTemp}.txt
-    for S in ${backtrack1[@]}
-    do
+    for S in ${backtrack1[@]}; do
       T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
       echo "${T}" >> "${listTemp}.txt"
     done
     sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
     do
       T=`echo "${line}" | cut -d ' ' -f 2`
-     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+      echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
     done
     echo "</BacktrackCoverage>" >> "${caltList}.txt"
   fi
@@ -195,30 +193,28 @@ chain_context() {
 
   echo "<InputCoverage index=\"0\">" >> "${caltList}.txt" # 入力した文字(グリフ変換対象)
   rm -f ${listTemp}.txt
-  for S in ${input[@]}
-    do
-      T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
-      echo "${T}" >> "${listTemp}.txt"
-    done
-    sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
-    do
-      T=`echo "${line}" | cut -d ' ' -f 2`
-     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
-    done
+  for S in ${input[@]}; do
+    T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
+    echo "${T}" >> "${listTemp}.txt"
+  done
+  sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
+  do
+    T=`echo "${line}" | cut -d ' ' -f 2`
+    echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+  done
   echo "</InputCoverage>" >> "${caltList}.txt"
 
   if [ -n "${lookAhead}" ]; then # 入力した文字の右側
     echo "<LookAheadCoverage index=\"0\">" >> "${caltList}.txt"
     rm -f ${listTemp}.txt
-    for S in ${lookAhead[@]}
-    do
+    for S in ${lookAhead[@]}; do
       T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
       echo "${T}" >> "${listTemp}.txt"
     done
     sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
     do
       T=`echo "${line}" | cut -d ' ' -f 2`
-     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+      echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
     done
     echo "</LookAheadCoverage>" >> "${caltList}.txt"
   fi
@@ -228,15 +224,14 @@ chain_context() {
   if [ -n "${lookAhead1}" ]; then # 入力した文字の右側2つ目
     echo "<LookAheadCoverage index=\"1\">" >> "${caltList}.txt"
     rm -f ${listTemp}.txt
-    for S in ${lookAhead1[@]}
-    do
+    for S in ${lookAhead1[@]}; do
       T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
       echo "${T}" >> "${listTemp}.txt"
     done
     sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
     do
       T=`echo "${line}" | cut -d ' ' -f 2`
-     echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+      echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
     done
     echo "</LookAheadCoverage>" >> "${caltList}.txt"
   fi
@@ -245,23 +240,22 @@ chain_context() {
     for i in `seq 2 "${aheadMax}"`; do
       echo "<LookAheadCoverage index=\"${i}\">" >> "${caltList}.txt"
       rm -f ${listTemp}.txt
-      for S in ${lookAheadX[@]}
-      do
+      for S in ${lookAheadX[@]}; do
         T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
         echo "${T}" >> "${listTemp}.txt"
       done
       sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
       do
         T=`echo "${line}" | cut -d ' ' -f 2`
-      echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
+        echo "<Glyph value=\"${T}\"/>" >> "${caltList}.txt"
       done
       echo "</LookAheadCoverage>" >> "${caltList}.txt"
     done
   fi
 
   echo "<SubstLookupRecord index=\"0\">" >> "${caltList}.txt" # 条件がそろった時にジャンプするテーブル番号
-   echo "<SequenceIndex value=\"0\"/>" >> "${caltList}.txt"
-   echo "<LookupListIndex value=\"${lookupIndex}\"/>" >> "${caltList}.txt"
+  echo "<SequenceIndex value=\"0\"/>" >> "${caltList}.txt"
+  echo "<LookupListIndex value=\"${lookupIndex}\"/>" >> "${caltList}.txt"
   echo "</SubstLookupRecord>" >> "${caltList}.txt"
 
   echo "</ChainContextSubst>" >> "${caltList}.txt"
@@ -664,32 +658,28 @@ i=0
 
 word=("${symbol2x[@]}" "${figure[@]}" "${symbol3x[@]}" "${symbol4x[@]}") # $ % & / 0-9 : @
 name=("${symbol2x_name[@]}" "${figure_name[@]}" "${symbol3x_name[@]}" "${symbol4x_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]} ${name[j]}" >> "${dict}.txt" # C無し注意
   i=`expr ${i} + 1`
 done
 
 word=("${latin[@]}") # A-z
 name=("${latin_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]}C ${name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
 word=("${symbol5x[@]}") # reverse solidus
 name=("${symbol5x_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]} ${name[j]}" >> "${dict}.txt" # C無し注意
   i=`expr ${i} + 1`
 done
 
 word=("${latinCx[@]}") # À-Å
 name=("${latinCx_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]}C ${name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -703,8 +693,7 @@ i=`expr ${i} + 1`
 
 word=("${latinCz[@]}" "${latinDx[@]}" "${latinEx[@]}") # Ç-å
 name=("${latinCz_name[@]}" "${latinDx_name[@]}" "${latinEx_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]}C ${name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -720,14 +709,12 @@ word=("${latinEz[@]}" "${latinFx[@]}" "${latin10x[@]}" "${latin11x[@]}" \
 "${latin12x[@]}" "${latin13x[@]}" "${latin14x[@]}" "${latin15x[@]}") # ç-ő
 name=("${latinEz_name[@]}" "${latinFx_name[@]}" "${latin10x_name[@]}" "${latin11x_name[@]}" \
 "${latin12x_name[@]}" "${latin13x_name[@]}" "${latin14x_name[@]}" "${latin15x_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]}C ${name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
-for j in ${!latin15y[@]} # Œ œ
-do
+for j in ${!latin15y[@]}; do # Œ œ
   echo "$i ${latin15y[j]}C ${latin15y_name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
   echo "$i ${latin15y[j]}L ${latin15y_name[j]}" >> "${dict}.txt" # Œ œ は移動しないため
@@ -738,8 +725,7 @@ done
 
 word=("${latin15z[@]}" "${latin16x[@]}" "${latin17x[@]}" "${latin21x[@]}" "${latin1E9x[@]}") # Ŕ-ẞ
 name=("${latin15z_name[@]}" "${latin16x_name[@]}" "${latin17x_name[@]}" "${latin21x_name[@]}" "${latin1E9x_name[@]}")
-for j in ${!word[@]}
-do
+for j in ${!word[@]}; do
   echo "$i ${word[j]}C ${name[j]}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -752,16 +738,14 @@ word=("${latin[@]}" "${solidus}" "${rSolidus}" "${latinCx[@]}" "${latinCz[@]}" "
 
 i=${glyphNo}
 
-for S in ${word[@]}
-do
+for S in ${word[@]}; do
   echo "$i ${S}L glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
 
 # 右に移動した文字 ----------------------------------------
 
-for S in ${word[@]}
-do
+for S in ${word[@]}; do
   echo "$i ${S}R glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -770,8 +754,7 @@ done
 
 word=("${figure[@]}") # 0-9
 
-for S in ${word[@]}
-do
+for S in ${word[@]}; do
   echo "$i ${S}3 glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -780,8 +763,7 @@ done
 
 word=("${figure[@]}") # 0-9
 
-for S in ${word[@]}
-do
+for S in ${word[@]}; do
   echo "$i ${S}4 glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -790,8 +772,7 @@ done
 
 word=("${figure[@]}") # 0-9
 
-for S in ${word[@]}
-do
+for S in ${word[@]}; do
   echo "$i ${S}2 glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -800,8 +781,7 @@ done
 
 word=("${figure[@]}") # 0-9
 
-for S in ${word[@]}
-do
+for S in ${word[@]}; do
   echo "$i ${S}D glyph${i}" >> "${dict}.txt"
   i=`expr ${i} + 1`
 done
@@ -999,10 +979,7 @@ backtrack1=("${gravityWL[@]}" "${gravityWR[@]}" "${gravityWC[@]}")
 backtrack=("${gravityLR[@]}" "${gravityRR[@]}" "${gravityER[@]}" "${gravityMR[@]}" "${gravityVR[@]}")
 input=("${gravityCC[@]}")
 lookAhead=("${gravityLC[@]}" "${gravityRC[@]}" "${gravityEC[@]}" "${gravityMC[@]}" "${gravityVC[@]}")
-lookAhead1=("")
-lookAheadX=("")
-aheadMax=""
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
 index=`expr ${index} + 1`
 
 # 丸い文字に関する例外処理 ----------------------------------------
@@ -2291,11 +2268,12 @@ index=`expr ${index} + 1`
 # 右を見て右に移動させない例外処理 ----------------------------------------
 
 # 右が狭い文字で その右が狭い文字の場合 幅広の文字 右に移動しない
+backtrack1=("")
 backtrack=("")
 input=("${gravityWC[@]}")
 lookAhead=("${gravityCC[@]}")
 lookAhead1=("${gravityCC[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
 # 右を見て右に移動させる通常処理 ----------------------------------------
@@ -2336,23 +2314,24 @@ remove=("${cCL[@]}" "${cSL[@]}" "${cCR[@]}" "${cSR[@]}")
 
 class=("") # 丸い文字を除去
 for S in ${set[@]}; do
-	T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
-	if [ -z "${T}" ]; then
-		class+=("${S}")
-	fi
+  T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
+  if [ -z "${T}" ]; then
+    class+=("${S}")
+  fi
 done
 
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
 # 左に移動 (広がる 3文字限定)
-  backtrack=("") 
+  backtrack1=("")
+  backtrack=("")
   input=(""); lookAhead=(""); lookAhead1=("")
   for T in ${member[@]}; do
     input+=("${T}C")
     lookAhead+=("${T}C")
     lookAhead1+=("${T}C")
   done
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${lookAhead1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}" "${lookAhead1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2368,24 +2347,24 @@ index="0"
 
 # J
 # 右から元に戻る (広がる)
+backtrack1=("")
 backtrack=("")
 input=("${_JR[@]}")
 lookAhead=("${_JC[@]}")
 lookAhead1=("${_JL[@]}")
-lookAheadX=("${_JL[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${_JL[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # L
 # 右から元に戻る (広がる)
+backtrack1=("")
 backtrack=("")
 input=("${_LR[@]}")
 lookAhead=("${_LC[@]}")
 lookAhead1=("${_LL[@]}")
-lookAheadX=("${_LL[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${_LL[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # 左から元に戻る (広がる)
@@ -2393,10 +2372,7 @@ backtrack1=("${_LC[@]}")
 backtrack=("${_LC[@]}")
 input=("${_LL[@]}")
 lookAhead=("")
-lookAhead1=("")
-lookAheadX=("")
-aheadMax=""
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
 index=`expr ${index} + 1`
 
 # 丸い小文字
@@ -2404,16 +2380,16 @@ class=("${cSC[@]}")
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
 # 左から元に戻る (縮む)
+  backtrack1=("")
   backtrack=("")
-  input=(""); lookAhead=(""); lookAhead1=("")
+  input=(""); lookAhead=(""); lookAhead1=(""); lookAheadX=(""); aheadMax="2"
   for T in ${member[@]}; do
     input+=("${T}L")
     lookAhead+=("${T}C")
     lookAhead1+=("${T}R")
     lookAheadX+=("${T}R")
   done
-  aheadMax="2"
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
   index=`expr ${index} + 1`
 
 # 右から元に戻る (縮む)
@@ -2424,10 +2400,7 @@ for S in ${class[@]}; do
     input+=("${T}R")
   done
   lookAhead=("")
-  lookAhead1=("")
-  lookAheadX=("")
-  aheadMax=""
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2436,6 +2409,7 @@ class=("${cCL[@]}" "${cSL[@]}" "${cCR[@]}" "${cSR[@]}")
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
 # 左から元に戻る (縮む)
+  backtrack1=("")
   backtrack=("")
   input=(""); lookAhead=(""); lookAhead1=("")
   for T in ${member[@]}; do
@@ -2443,7 +2417,7 @@ for S in ${class[@]}; do
     lookAhead+=("${T}C")
     lookAhead1+=("${T}C")
   done
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2453,23 +2427,24 @@ remove=("${cCL[@]}" "${cSL[@]}" "${cCR[@]}" "${cSR[@]}")
 
 class=("") # 丸い文字を除去
 for S in ${set[@]}; do
-	T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
-	if [ -z "${T}" ]; then
-		class+=("${S}")
-	fi
+  T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
+  if [ -z "${T}" ]; then
+    class+=("${S}")
+  fi
 done
 
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
 # 左から元に戻る (縮む)
+  backtrack1=("")
   backtrack=("")
-  input=(""); lookAhead=(""); lookAhead1=(""); lookAheadX=("")
+  input=(""); lookAhead=(""); lookAhead1=("")
   for T in ${member[@]}; do
     input+=("${T}L")
     lookAhead+=("${T}L")
     lookAhead1+=("${T}L" "${T}C")
   done
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
   index=`expr ${index} + 1`
 
 # 左から元に戻る
@@ -2495,10 +2470,7 @@ for S in ${class[@]}; do
     input+=("${T}R")
   done
   lookAhead=("")
-  lookAhead1=("")
-  lookAheadX=("")
-  aheadMax=""
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2507,6 +2479,7 @@ class=("${gCW[@]}" "${gSW[@]}")
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
 # 左から元に戻る (縮む)
+  backtrack1=("")
   backtrack=("")
   input=(""); lookAhead=(""); lookAhead1=("")
   for T in ${member[@]}; do
@@ -2514,7 +2487,7 @@ for S in ${class[@]}; do
     lookAhead+=("${T}C")
     lookAhead1+=("${T}C")
   done
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
   index=`expr ${index} + 1`
 
 # 右から元に戻る (縮む)
@@ -2525,10 +2498,7 @@ for S in ${class[@]}; do
     input+=("${T}R")
   done
   lookAhead=("")
-  lookAhead1=("")
-  lookAheadX=("")
-  aheadMax=""
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2537,16 +2507,16 @@ class=("${gCE[@]}" "${gSE[@]}")
 for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
 # 左から元に戻る (縮む)
+  backtrack1=("")
   backtrack=("")
-  input=(""); lookAhead=(""); lookAhead1=(""); lookAheadX=("")
+  input=(""); lookAhead=(""); lookAhead1=(""); lookAheadX=(""); aheadMax="2"
   for T in ${member[@]}; do
     input+=("${T}L")
     lookAhead+=("${T}C")
     lookAhead1+=("${T}R")
     lookAheadX+=("${T}R")
   done
-  aheadMax="2"
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
   index=`expr ${index} + 1`
 
 # 右から元に戻る (縮む)
@@ -2557,10 +2527,7 @@ for S in ${class[@]}; do
     input+=("${T}R")
   done
   lookAhead=("")
-  lookAhead1=("")
-  lookAheadX=("")
-  aheadMax=""
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2570,6 +2537,7 @@ for S in ${class[@]}; do
   eval "member=(\"\${${S}[@]}\")"
   if [ "${S}" != "_J" ]; then
 # 右から元に戻る (広がる)
+    backtrack1=("")
     backtrack=("")
     input=(""); lookAhead=(""); lookAhead1=("")
     for T in ${member[@]}; do
@@ -2577,7 +2545,7 @@ for S in ${class[@]}; do
       lookAhead+=("${T}C")
       lookAhead1+=("${T}C")
     done
-    chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}"
+    chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
     index=`expr ${index} + 1`
   fi
 
@@ -2589,10 +2557,7 @@ for S in ${class[@]}; do
     input+=("${T}L")
   done
   lookAhead=("")
-  lookAhead1=("")
-  lookAheadX=("")
-  aheadMax=""
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}" "${backtrack1[*]}"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
   index=`expr ${index} + 1`
 done
 
@@ -2746,13 +2711,13 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figureN[@]}")
-lookAheadX=("${figureN[@]}")
-aheadMax="10"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex2}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureN[@]}"); aheadMax="10"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex2}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # ノーマルに戻す処理 1 ----------------------------------------
@@ -2777,13 +2742,13 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figureN[@]}")
-lookAheadX=("${figureN[@]}")
-aheadMax="10"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex2}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureN[@]}"); aheadMax="10"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex2}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # ノーマルに戻す処理 2 ----------------------------------------
@@ -2808,13 +2773,13 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figureN[@]}")
-lookAheadX=("${figureN[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureN[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # ノーマルに戻す処理 3 ----------------------------------------
@@ -2839,13 +2804,13 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figureN[@]}")
-lookAheadX=("${figureN[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureN[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # ノーマルに戻す処理 4 ----------------------------------------
@@ -2870,25 +2835,28 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figureN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${lookAhead1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figure4[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${lookAhead1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figure4[@]}")
 lookAhead1=("${figureN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${lookAhead1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
 # ノーマルに戻す処理 5 ----------------------------------------
@@ -2905,13 +2873,13 @@ lookAhead=("${figure3[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
+backtrack1=("")
 backtrack=("")
 input=("${figure3[@]}")
 lookAhead=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
 lookAhead1=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
-lookAheadX=("${figureN[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureN[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 # 3桁マークを付ける処理 2 ----------------------------------------
@@ -2922,18 +2890,20 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figureN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${lookAhead1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
+backtrack1=("")
 backtrack=("${figure2[@]}" "${figure3[@]}" "${figure4[@]}" "${figureN[@]}")
 input=("${figureN[@]}")
 lookAhead=("${figureN[@]}")
 lookAhead1=("${figure4[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${lookAhead1[*]}"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex3}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
 # ノーマルに戻す処理 6 ----------------------------------------
@@ -2958,31 +2928,31 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
+backtrack1=("")
 backtrack=("${figureBN[@]}")
 input=("${figureB2[@]}")
 lookAhead=("${figureBN[@]}")
 lookAhead1=("${figureBN[@]}")
-lookAheadX=("${figureB3[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex2}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureB3[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex2}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
+backtrack1=("")
 backtrack=("${figureB3[@]}" "${figureBN[@]}")
 input=("${figureB4[@]}")
 lookAhead=("${figureBN[@]}")
 lookAhead1=("${figureB3[@]}")
-lookAheadX=("${figureBN[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureBN[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
+backtrack1=("")
 backtrack=("${figureB3[@]}" "${figureBN[@]}")
 input=("${figureB4[@]}")
 lookAhead=("${figureB3[@]}")
 lookAhead1=("${figureBN[@]}")
-lookAheadX=("${figureBN[@]}")
-aheadMax="2"
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+lookAheadX=("${figureBN[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex4}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 index=`expr ${index} + 1`
 
 backtrack=("")
