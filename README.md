@@ -26,20 +26,20 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.6.5)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.5/Cyroit_v1.6.5.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.5.zip)
+最新版 (v1.6.6)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.6/Cyroit_v1.6.6.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.6.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
 
 ## その他の特徴
 
-- 主にラテン文字のグリフは [Inconsolata](https://github.com/googlefonts/Inconsolata) を使用しています。
-- 主に仮名文字、ギリシア文字、キリル文字のグリフは [CircleM+ 1m](https://mix-mplus-ipa.osdn.jp) を使用しています。
-- 主に漢字のグリフは [BIZ UDゴシック](https://github.com/googlefonts/morisawa-biz-ud-gothic) を使用しています。
+- 主にラテン文字は [Inconsolata](https://github.com/googlefonts/Inconsolata) を使用しています。
+- 主に仮名文字、ギリシア文字、キリル文字は [CircleM+ 1m](https://mix-mplus-ipa.osdn.jp) を使用しています。
+- 主に漢字は [BIZ UDゴシック](https://github.com/googlefonts/morisawa-biz-ud-gothic) を使用しています。
 - [Nerd Fonts](https://www.nerdfonts.com) Ver.3 を追加しています。
-- [ricty_generator](https://rictyfonts.github.io) をForkしたスクリプトで自動生成させています。生成時にグリフの改変や微調整を行っています。
+- [ricty_generator](https://rictyfonts.github.io) を Fork したスクリプトで自動生成させています。生成時にグリフの改変や調整を行っています。
 
 ### ラテン文字について
 
@@ -69,14 +69,14 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ### 機能的なものについて
 
-- IVS を利用した異体字表示に対応しています。
+- IVS を利用した漢字の異体字表示に対応しています。
 - ccmp フィーチャによるアイヌ語カナ表記に対応しています。
 - vert フィーチャのみですが、縦書き表示に対応しています。
 - calt フィーチャを利用して、等幅のままでラテン文字 (一部除く) の文字間隔を調整するようにしています。
 - 同じく calt フィーチャを利用して整数に桁区切りマークを表示させています。また桁区切り表示版は小数が少し小さく表示されます。
 - 桁区切りマークは、上の表示が4桁区切り (36桁まで対応)、下の表示が3桁区切り (39桁まで対応) になります。4桁区切りは0と1が続いた時のみ表示されます。
 - 記号を置き換えるタイプのリガチャには対応していません。
-- 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削っています。
+- 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削ってあります。
 
 ## フォントファミリーの種類
 
