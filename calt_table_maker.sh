@@ -2768,7 +2768,7 @@ index=`expr ${index} + 1`
 # 右が上下対称な演算子の場合 : 上に移動
 backtrack=("")
 input=("${colon}")
-lookAhead=("${colonN[@]}" "${barN[@]}" "${operatorHN[@]}" "${lessN[@]}" "${greaterN[@]}")
+lookAhead=("${barN[@]}" "${operatorHN[@]}" "${lessN[@]}" "${greaterN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexU}"
 index=`expr ${index} + 1`
 
@@ -2878,9 +2878,9 @@ echo "<LookupType value=\"6\"/>" >> "${caltList}.txt"
 echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
-# | ~ に関する処理 ----------------------------------------
+# | ~ : に関する処理 ----------------------------------------
 
-# 右が | ~ の場合 | ~ 下に移動
+# 右が | ~ の場合 | ~ 下に移動 (4個まで)
 member=("${bar[@]}" "${tilde[@]}")
 for T in ${member[@]}; do
   backtrack=("")
@@ -2912,6 +2912,41 @@ for T in ${member[@]}; do
   lookAheadX=("${T}D")
   aheadMax="2"
   chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexD}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+  index=`expr ${index} + 1`
+done
+
+# 右が : の場合 : 上に移動 (4個まで)
+member=("${colon[@]}")
+for T in ${member[@]}; do
+  backtrack=("")
+  input=("${T}")
+  lookAhead=("${T}U")
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexU}"
+  index=`expr ${index} + 1`
+done
+
+for T in ${member[@]}; do
+  backtrack1=("")
+  backtrack=("")
+  input=("${T}")
+  lookAhead=("${T}U" \
+  "${T}")
+  lookAhead1=("${T}U")
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexU}" "${backtrack1[*]}" "${lookAhead1[*]}"
+  index=`expr ${index} + 1`
+done
+
+for T in ${member[@]}; do
+  backtrack1=("")
+  backtrack=("")
+  input=("${T}")
+  lookAhead=("${T}U" \
+  "${T}")
+  lookAhead1=("${T}U" \
+  "${T}")
+  lookAheadX=("${T}U")
+  aheadMax="2"
+  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexU}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
   index=`expr ${index} + 1`
 done
 
