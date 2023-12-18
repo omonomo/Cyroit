@@ -7704,7 +7704,7 @@ while (i < SizeOf(latin_sfd_list))
         Move(-220, 190)
     else
         ExpandStroke(38, 0, 0, 0, 1); Simplify()
-        Move(-222, 190)
+        Move(-222, 204)
     endif
     SetWidth(500)
     RemoveOverlap()
