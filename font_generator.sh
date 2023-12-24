@@ -28,24 +28,26 @@ fi
 tmpdir_name="font_generator_tmpdir"
 
 # グリフ保管アドレス
-address_dvz_latin="64336" # 0ufb50 latinフォントのDVZアドレス
-address_visi_latin=`expr ${address_dvz_latin} + 18` # latinフォントの視認性向上アドレス ⁄|
+address_dvz_latin="64336" # 0ufb50 latinフォントの避難したDVZアドレス
+address_visi_latin=`expr ${address_dvz_latin} + 18` # latinフォントの避難した視認性向上アドレス ⁄|
 
-address_visi_kana=`expr ${address_visi_latin} + 2` # 仮名フォントの視認性向上アドレス ゠-➓
+address_visi_kana=`expr ${address_visi_latin} + 2` # 仮名フォントの避難した視認性向上アドレス ゠-➓
 address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
 
-address_visi_kanzi=`expr ${address_visi_kana} + 26` # 漢字フォントの視認性向上アドレス 〇-口
-address_calt_kanzi="1115493" # 漢字フォントのcalt置換アドレス
-address_calt_kanzi2="1115776" # 漢字フォントのcalt置換アドレス
+address_visi_kanzi=`expr ${address_visi_kana} + 26` # 漢字フォントの避難した視認性向上アドレス 〇-口
+address_calt_kanzi="1114841" # 漢字フォントのcalt置換アドレス
+address_calt_kanzi2="1115493" # 漢字フォントのcalt置換アドレス
+address_calt_kanzi3="1115623" # 漢字フォントのcalt置換アドレス
+address_calt_kanzi4="1115776" # 漢字フォントのcalt置換アドレス
 
-address_dvz_latinkana=${address_dvz_latin} # latin仮名フォントのDVZアドレス
-address_zenhan_latinkana=`expr ${address_visi_kanzi} + 9` # latin仮名フォントの全角半角アドレス(縦書きの（-゠)
+address_dvz_latinkana=${address_dvz_latin} # latin仮名フォントの避難したDVZアドレス
+address_zenhan_latinkana=`expr ${address_visi_kanzi} + 9` # latin仮名フォントの避難した全角半角アドレス(縦書きの（-゠)
 address_vert_latinkana="65682" # latin仮名フォントのvert置換アドレス
 
-address_dvz=${address_dvz_latin} # DVZアドレス
-address_visi=${address_visi_latin} # 視認性向上アドレス
-address_zenhan=${address_zenhan_latinkana} # 全角半角アドレス
-address_store_end=`expr ${address_zenhan} + 281` # 保管グリフの最終アドレス(縦書きの゠)
+address_dvz=${address_dvz_latin} # 避難したDVZアドレス
+address_visi=${address_visi_latin} # 避難した視認性向上アドレス
+address_zenhan=${address_zenhan_latinkana} # 避難した全角半角アドレス
+address_store_end=`expr ${address_zenhan} + 281` # 避難したグリフの最終アドレス(縦書きの゠)
 
 address_vert="1114179" # vert置換アドレス （
 address_vert_X=`expr ${address_vert} + 109` # vert置換アドレス ✂
@@ -1113,6 +1115,58 @@ while (i < SizeOf(input_list))
  #    Select(0u1e07) # ḇ
  #    Select(0ua797) # ꞗ
 
+# f (右端を少しカット、少し右にずらす)
+    # 先っぽをコピー
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    Scale(20, 5)
+    if (input_list[i] == "${input_latin_regular}")
+        Move(170, 260)
+    else
+        Move(175, 245)
+    endif
+    Select(0u0066); RemoveOverlap(); Copy() # f
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    # 先っぽを装着
+    if (input_list[i] == "${input_latin_regular}")
+        Rotate(11)
+        Copy()
+        Select(0u0066) # f
+        PasteWithOffset(-31, 33)
+    else
+        Rotate(4)
+        Copy()
+        Select(0u0066) # f
+        PasteWithOffset(-25, 23)
+    endif
+    RemoveOverlap()
+
+    # 先端カット
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Rotate(-28); Move(184, 0)
+    else
+        Rotate(-28); Move(213, 0)
+    endif
+    PasteWithOffset(465, -530)
+    RemoveOverlap()
+    Copy()
+    Select(0u0066); PasteWithOffset(-465, 0) # f
+    OverlapIntersect()
+    Move(10, 0)
+    SetWidth(500)
+    Simplify()
+
+    Select(65552); Clear() # Temporary glyph
+
+ #    Select(0u0192) # ƒ
+ #    Select(0u1d6e) # ᵮ
+ #    Select(0u1d82) # ᶂ
+ #    Select(0u1e1f) # ḟ
+ #    Select(0ua799) # ꞙ
+
 # i (ほんの少し右へ移動)
     Select(0u0069) # i
     SelectMore(0u00ec) # ì
@@ -2025,10 +2079,10 @@ while (i < SizeOf(input_list))
     endloop
 
     # ⁺-ⁿ
-    norm = [0u002b, 0u2212, 0u003d, 0u0028, 0u0029, 0u006e]
+    orig = [0u002b, 0u2212, 0u003d, 0u0028, 0u0029, 0u006e]
     j = 0
-    while (j < SizeOf(norm))
-        Select(norm[j]); Copy()
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
         Select(0u207a + j); Paste()
         Scale(${percent_super_sub}, 250, 0)
         ChangeWeight(${weight_extend_super_sub})
@@ -2036,7 +2090,7 @@ while (i < SizeOf(input_list))
         Move(0,${y_pos_super})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # sups フィーチャ追加
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
@@ -2060,14 +2114,14 @@ while (i < SizeOf(input_list))
     endloop
 
     # ₊-ₜ
-    norm = [0u002b, 0u2212, 0u003d, 0u0028, 0u0029, 0u0000,\
+    orig = [0u002b, 0u2212, 0u003d, 0u0028, 0u0029, 0u0000,\
             0u0061, 0u0065, 0u006f, 0u0078, 0u0259,\
             0u0068, 0u006b, 0u006c, 0u006d,\
             0u006e, 0u0070, 0u0073, 0u0074] # 0u0000はダミー
     j = 0
-    while (j < SizeOf(norm))
+    while (j < SizeOf(orig))
         if (j != 5)
-            Select(norm[j]); Copy()
+            Select(orig[j]); Copy()
             Select(0u208a + j); Paste()
             Scale(${percent_super_sub}, 250, 0)
             ChangeWeight(${weight_extend_super_sub})
@@ -2075,7 +2129,7 @@ while (i < SizeOf(input_list))
             Move(0,${y_pos_sub})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # subs フィーチャ追加
-            Select(norm[j])
+            Select(orig[j])
             AddPosSub(lookups[1][0],glyphName)
         endif
         j += 1
@@ -3872,7 +3926,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     # 合成
     Select(65552);  Copy() # Temporary glyph
-    Select(0u30cf); PasteWithOffset(0, -15) # ハ
+    Select(0u30cf); PasteWithOffset(0, -12) # ハ
     SetWidth(1000)
 
     Select(65552); Clear() # Temporary glyph
@@ -3896,7 +3950,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     # 合成
     Select(65552);  Copy() # Temporary glyph
-    Select(0u31f5); PasteWithOffset(0, -10) # ㇵ
+    Select(0u31f5); PasteWithOffset(0, -8) # ㇵ
     SetWidth(1000)
 
     Select(65552); Clear() # Temporary glyph
@@ -3920,7 +3974,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     # 合成
     Select(65552);  Copy() # Temporary glyph
-    Select(0uff8a); PasteWithOffset(0, -15) # ﾊ
+    Select(0uff8a); PasteWithOffset(0, -12) # ﾊ
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
@@ -4089,6 +4143,84 @@ while (i < SizeOf(input_list))
 
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
+
+# ル (上を少し延ばす)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, 600)
+    Select(0u30eb); Copy() # ル
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u30eb); PasteWithOffset(0, 10) # ル
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ㇽ (上を少し延ばす)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, 500)
+    Select(0u31fd); Copy() # ㇽ
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u31fd); PasteWithOffset(0, 7) # ㇽ
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ﾙ (上を少し延ばす)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-250, 600)
+    Select(0uff99); Copy() # ﾙ
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0uff99); PasteWithOffset(0, 10) # ﾙ
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# レ (上を少し延ばす)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, 600)
+    Select(0u30ec); Copy() # レ
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u30ec); PasteWithOffset(0, 10) # レ
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ㇾ (上を少し延ばす)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, 500)
+    Select(0u31fe); Copy() # ㇾ
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u31fe); PasteWithOffset(0, 7) # ㇾ
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ﾚ (上を少し延ばす)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-250, 600)
+    Select(0uff9a); Copy() # ﾚ
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0uff9a); PasteWithOffset(0, 10) # ﾚ
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
 
 # 仮名の濁点を拡大移動、半濁点を移動
     Print("Edit kana voiced sound mark")
@@ -5969,7 +6101,12 @@ while (i < SizeOf(input_list))
  #            SelectMore(0ufe31, 0ufe32) # ︱︲
  #            SelectMore(0uff5f, 0uff9f) # 半角カタカナ
             SelectMore(0u1b000, 0u1b001) # 𛀀𛀁
-            SelectMore(1114115, 1114128) # 合字カタカナ
+            SelectMore(1114115, 1114128) # 合字ひらがなカタカナ
+            SelectMore(1114384, 1114385) # 縦書き 、。
+            SelectMore(1114386, 1114395) # 縦書き括弧
+            SelectMore(1114397, 1114408) # 縦書き括弧、〜、引用符
+            SelectMore(1114409, 1114432) # 縦書き小文字ひらがなカタカナ
+            SelectMore(1114433) # 縦書き ー
             SelectMore(${address_visi_kana}) # 避難した゠
             SelectMore(${address_visi_kana} + 1) # 避難した⼣
             ChangeWeight(${weight_reduce_kana_bold}); CorrectDirection()
@@ -6087,22 +6224,86 @@ while (i < SizeOf(input_list))
         endif
     endif
 
-# カタカナを少し下に移動
+# カタカナを少し下に移動 (カタカナ拡張は縦書き用が無いため移動不要)
     if ("${draft_flag}" == "false")
         Print("Move katakana glyphs")
         Select(0u30a1, 0u30fa) # カタカナ
         SelectMore(0u31f0, 0u31ff) # カナカナ拡張
         SelectMore(1114120, 1114128) # 合字カタカナ
-        SelectMore(1114421, 1114432) # 小文字カタカナ
+        SelectMore(1114421, 1114432) # 縦書き小文字カタカナ
         SelectMore(0uff66, 0uff9d) # 半角カナ
-        Move(0, -20)
+        Move(0, -10)
+
+        Select(0u30a7, 0u30a8) # ェ エ
+        SelectMore(0uff74) # ｴ
+        SelectMore(0uff6a) # ｪ
+        SelectMore(1114424) # 縦書き ェ
+        SelectMore(0u30a9, 0u30aa) # ォ オ
+        SelectMore(0uff75) # ｵ
+        SelectMore(0uff6b) # ｫ
+        SelectMore(1114425) # 縦書き ォ
+        SelectMore(0u30ab, 0u30ac) # カ ガ
+        SelectMore(0u30f5) # ヵ
+        SelectMore(0uff76) # ｶ
+        SelectMore(1114431) # 縦書き ヵ
+        SelectMore(0u30b3, 0u30b4) # コ ゴ
+        SelectMore(0uff7a) # ｺ
+        SelectMore(0u30bb, 0u30bc) # セ ゼ
+        SelectMore(0uff7e) # ｾ
+        SelectMore(0u30cb) # ニ
+        SelectMore(0uff86) # ﾆ
+        SelectMore(0u30d2, 0u30d4) # ヒ ビ ピ
+        SelectMore(0uff8b) # ﾋ
+        SelectMore(0u31f6) # ㇶ
+        SelectMore(0u30df) # ミ
+        SelectMore(0uff90) # ﾐ
+        SelectMore(0u30e0) # ム
+        SelectMore(0uff91) # ﾑ
+        SelectMore(0u30e2) # モ
+        SelectMore(0uff93) # ﾓ
+        SelectMore(0u30e5, 0u30e6) # ュ ユ
+        SelectMore(0uff95) # ﾕ
+        SelectMore(0uff6d) # ｭ
+        SelectMore(1114428) # 縦書き ュ
+        SelectMore(0u30e7, 0u30e8) # ョ ヨ
+        SelectMore(0uff96) # ﾖ
+        SelectMore(0uff6e) # ｮ
+        SelectMore(1114429) # 縦書き ョ
+        SelectMore(0u30ed) # ロ
+        SelectMore(0uff9b) # ﾛ
+        SelectMore(0u31ff) # ㇿ
+        SelectMore(0u30f1) # ヱ
+        SelectMore(0u30f9) # ヹ
+        Move(0, -10)
+
+        Select(0u30ad, 0u30ae) # キ ギ
+        SelectMore(0uff77) # ｷ
+        Select(0u30c8, 0u30c9) # ト ド
+        SelectMore(0uff84) # ﾄ
+        SelectMore(0u31f3) # ㇳ
+        SelectMore(0u30ea) # リ
+        SelectMore(0uff98) # ﾘ
+        SelectMore(0u31fc) # ㇼ
+        Move(0, 5)
     endif
 
-# 縦書き対応
+# 縦書き対応 (仮名小文字を改変した場合は要コピー)
     Print("Edit vert glyphs")
 # ぁ (加工したグリフをコピー)
     Select(0u3041); Copy() # ぁ
     Select(1114409); Paste()
+    Move(72, 73)
+    SetWidth(1000)
+
+# ぃ (加工したグリフをコピー)
+    Select(0u3043); Copy() # ぃ
+    Select(1114410); Paste()
+    Move(72, 73)
+    SetWidth(1000)
+
+# ゎ (加工したグリフをコピー)
+    Select(0u308e); Copy() # ゎ
+    Select(1114418); Paste()
     Move(72, 73)
     SetWidth(1000)
 
@@ -6170,7 +6371,7 @@ while (i < SizeOf(input_list))
             0u31f4, 0u31f5, 0u31f6, 0u31f7,\
             0u31f8, 0u31f9, 0u31fa, 0u31fb,\
             0u31fc, 0u31fd, 0u31fe, 0u31ff,\
-            1114128] # ‖〰゠, # 小文字カタカナ
+            1114128] # ‖〰゠, # 特殊な小文字カタカナ
     vert += j
     j = 0
     while (j < SizeOf(hori))
@@ -7408,7 +7609,7 @@ while (i < SizeOf(input_list))
 
 # calt 対応 (スロットの確保、後でグリフ上書き)
     j = 0
-    k = ${address_calt_kanzi} # 開いているアドレスを再利用しないとエラーが出る
+    k = ${address_calt_kanzi3} # 完成時の最後の異体字のアドレスより大きなアドレスを再利用しないとエラーが出る
     while (j < 52)
         Select(0u0041 + j % 26); Copy() # A
         Select(k); Paste()
@@ -7423,6 +7624,7 @@ while (i < SizeOf(input_list))
         k += 1
     endloop
 
+    k = ${address_calt_kanzi2}
     j = 0
     while (j < 128)
         l = 0u00c0 + j % 64
@@ -7437,7 +7639,7 @@ while (i < SizeOf(input_list))
         j += 1
     endloop
 
-    k = ${address_calt_kanzi2}
+    k = ${address_calt_kanzi}
     j = 0
     while (j < 256)
         l = 0u0100 + j % 128
@@ -7938,7 +8140,12 @@ while (i < SizeOf(latin_sfd_list))
     j = 0
     while (j < 93)
         if (j != 62) # ＿
-            Select(0u0021 + j); Copy()
+          if (j == 91)
+            Select(${address_visi_latin} + 1) # ｜
+          else
+            Select(0u0021 + j)
+          endif
+            Copy()
             Select(0uff01 + j); Paste()
             Move(230, 0)
         endif
@@ -8145,28 +8352,6 @@ while (i < SizeOf(latin_sfd_list))
         j += 1
     endloop
 
-    j = 0 # ￠ - ￦
-    while (j < 7)
-        Select(0uffe0 + j)
-        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
-        Select(65552); Copy()
-        Select(0uffe0 + j); PasteInto()
-        SetWidth(1000)
-        j += 1
-    endloop
-
-    hori = [0u309b, 0u309c, 0u203c, 0u2047,\
-            0u2048, 0u2049] # ゛゜‼⁇⁈⁉
-    j = 0
-    while (j < SizeOf(hori))
-        Select(hori[j])
-        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
-        Select(65552);  Copy()
-        Select(hori[j]); PasteInto()
-        SetWidth(1000)
-        j += 1
-    endloop
-
 # 保管しているDVZに下線追加
     j = 0
     while (j < 3)
@@ -8192,23 +8377,20 @@ while (i < SizeOf(latin_sfd_list))
         j += 1
     endloop
 
-    Select(65552); Clear() # Temporary glyph
-    Select(65553); Clear() # Temporary glyph
-
 # 半角文字に下線を追加
     Print("Edit hankaku")
 
     # 下線作成
     Select(0u25a0); Copy() # Black square
-    Select(65552);  Paste() # Temporary glyph
+    Select(65553);  Paste() # Temporary glyph
     Scale(100, 92)
     Select(0u25a1); Copy() # White square
-    Select(65552);  PasteInto()
+    Select(65553);  PasteInto()
     OverlapIntersect()
     Scale(34, 100); Move(-228, 0)
 
     Select(0u25a0); Copy() # Black square
-    Select(65552); PasteWithOffset(-150, -510)
+    Select(65553); PasteWithOffset(-150, -510)
     Move(0, ${y_pos_space})
     OverlapIntersect()
 
@@ -8216,15 +8398,40 @@ while (i < SizeOf(latin_sfd_list))
     while (j < 63)
         Select(0uff61 + j) # ｡-ﾟ
         Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(500); k += 1
-        Select(65552); Copy()
+        Select(65553); Copy()
         Select(0uff61 + j); PasteInto() # ｡-ﾟ
         SetWidth(500)
         j += 1
     endloop
 
-    Select(65552); Clear() # Temporary glyph
+# 横書き全角形に下線追加 (続き)
+    Print("Edit zenkaku")
+    j = 0 # ￠ - ￦
+    while (j < 7)
+        Select(0uffe0 + j)
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
+        Select(65552); Copy()
+        Select(0uffe0 + j); PasteInto()
+        SetWidth(1000)
+        j += 1
+    endloop
 
-# 保管しているグリフを置き換え
+    hori = [0u309b, 0u309c, 0u203c, 0u2047,\
+            0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+    j = 0
+    while (j < SizeOf(hori))
+        Select(hori[j])
+        Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1
+        Select(65552);  Copy()
+        Select(hori[j]); PasteInto()
+        SetWidth(1000)
+        j += 1
+    endloop
+
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
+# 保管している、改変されたグリフを元のグリフに置き換え
     Select(${address_visi_latin} + 1); Copy() # |
     Select(${address_zenhan_latinkana} + 10); Paste()
     Move(230, 0)
@@ -9452,7 +9659,7 @@ while (i < \$argc)
     Select(0u1b001) # 𛀁
     AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
 
-    norm = [0u0069, 0u0061, 0u0065, 0u006f,\
+    orig = [0u0069, 0u0061, 0u0065, 0u006f,\
             0u0078, 0u0259, 0u0068, 0u006b,\
             0u006c, 0u006d, 0u0070, 0u0073,\
             0u0074] #i-t
@@ -9461,10 +9668,10 @@ while (i < \$argc)
             0u2097, 0u2098, 0u209a, 0u209b,\
             0u209c] #ⁱ-ₜ
     j = 0
-    while (j < SizeOf(norm))
+    while (j < SizeOf(orig))
         Select(supb[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
@@ -9538,7 +9745,7 @@ while (i < \$argc)
     Select(0u1b000) # 𛀀
     AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
 
-    norm = [0u0030, 0u0031, 0u0032, 0u0033,\
+    orig = [0u0030, 0u0031, 0u0032, 0u0033,\
             0u0034, 0u0035, 0u0036, 0u0037,\
             0u0038, 0u0039, 0u002b, 0u002d,\
             0u003d, 0u0028, 0u0029, 0u006e] # 0-n
@@ -9551,14 +9758,14 @@ while (i < \$argc)
             0u2088, 0u2089, 0u208a, 0u208b,\
             0u208c, 0u208d, 0u208e, 0u2099] #₀-ₙ
     j = 0
-    while (j < SizeOf(norm))
+    while (j < SizeOf(orig))
         Select(sups[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         Select(subs[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
@@ -9580,7 +9787,7 @@ while (i < \$argc)
     AddPosSub(lookups[0][0],glyphName)
     AddPosSub(lookups[1][0],glyphName)
 
-    norm = [0u30a2, 0u30a4, 0u30a6, 0u30a8, 0u30aa,\
+    orig = [0u30a2, 0u30a4, 0u30a6, 0u30a8, 0u30aa,\
             0u30ab, 0u30ad, 0u30af, 0u30b1, 0u30b3,\
             0u30b5, 0u30b7, 0u30b9, 0u30bb, 0u30bd,\
             0u30bf, 0u30c1, 0u30c4, 0u30c6, 0u30c8,\
@@ -9591,10 +9798,10 @@ while (i < \$argc)
             0u32df, 0u32e0, 0u32e1, 0u32e2, 0u32e3,\
             0u32e5, 0u32e9, 0u32ec, 0u32ed, 0u32fa] # ㋐-㋺
     j = 0
-    while (j < SizeOf(norm))
+    while (j < SizeOf(orig))
         Select(circ[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         if (j != 3) # エは𛀀があるため複数、前のルーチンで処理済
             AddPosSub(lookups[1][0],glyphName)
@@ -9633,7 +9840,7 @@ while (i < \$argc)
     AddPosSub(lookups[0][0],glyphName)
     AddPosSub(lookups[1][0],glyphName)
 
-    norm = [0uff11, 0uff12, 0uff13, 0uff14,\
+    orig = [0uff11, 0uff12, 0uff13, 0uff14,\
             0uff15, 0uff16, 0uff17, 0uff18, 0uff19] # １-９
     circ = [0u2460, 0u2461, 0u2462, 0u2463,\
             0u2464, 0u2465, 0u2466, 0u2467, 0u2468] # ①-⑨
@@ -9650,46 +9857,46 @@ while (i < \$argc)
     ciSN = [0u278a, 0u278b, 0u278c, 0u278d,\
             0u278e, 0u278f, 0u2790, 0u2791, 0u2792] # ➊-➒
     j = 0
-    while (j < SizeOf(norm))
+    while (j < SizeOf(orig))
         Select(circ[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(pare[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(peri[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(cir2[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(cirN[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(cirS[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(ciSN[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         j += 1
     endloop
 
-    norm = [0uff41, 0uff42, 0uff43, 0uff44,\
+    orig = [0uff41, 0uff42, 0uff43, 0uff44,\
             0uff45, 0uff46, 0uff47, 0uff48,\
             0uff49, 0uff4a, 0uff4b, 0uff4c,\
             0uff4d, 0uff4e, 0uff4f, 0uff50,\
@@ -9711,15 +9918,15 @@ while (i < \$argc)
            0u24e4, 0u24e5, 0u24e6, 0u24e7,\
            0u24e8, 0u24e9] # ⓐ-ⓩ
     j = 0
-    while (j < SizeOf(norm))
+    while (j < SizeOf(orig))
         Select(pare[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         Select(circ[j])
         glyphName = GlyphInfo("Name")
-        Select(norm[j])
+        Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         j += 1
@@ -10083,6 +10290,18 @@ while (i < \$argc)
             j += 1
             k += 1
         endloop
+
+        # 半角横書き
+        j = 0 # ｡-ﾟ
+        while (j < 63)
+            Select(${address_zenhan} + k); Copy();
+            Select(0uff61 + j); Paste()
+            SetWidth(512)
+            j += 1
+            k += 1
+        endloop
+
+        # 全角横書き (続き)
         j = 0 # ￠-￦
         while (j < 7)
             Select(${address_zenhan} + k); Copy()
@@ -10098,16 +10317,6 @@ while (i < \$argc)
             Select(${address_zenhan} + k); Copy()
             Select(orig[j]); Paste()
             SetWidth(1024)
-            j += 1
-            k += 1
-        endloop
-
-        # 半角横書き
-        j = 0 # ｡-ﾟ
-        while (j < 63)
-            Select(${address_zenhan} + k); Copy();
-            Select(0uff61 + j); Paste()
-            SetWidth(512)
             j += 1
             k += 1
         endloop
@@ -10225,6 +10434,11 @@ while (i < \$argc)
             j += 1
             k += 1
         endloop
+
+        Select(0u007c); Copy() # |
+        Select(${address_calt_end} - 2); Paste()
+        Move(0, ${y_pos_calt_bar})
+        SetWidth(512)
 
     else # calt非対応の場合ダミーのフィーチャを削除
         Print("Remove calt lookups and glyphs")
