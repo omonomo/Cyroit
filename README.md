@@ -26,9 +26,9 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 
 ## ダウンロード
 
-最新版 (v1.6.6)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.6/Cyroit_v1.6.6.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.6.zip)
+最新版 (v1.6.7)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v1.6.7/Cyroit_v1.6.7.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v1.6.7.zip)
 
 フォントファイルの使用は自己責任にてお願いいたします。  
 ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -78,7 +78,7 @@ Ricty 生成スクリプトで遊んでいるうちに合成フォント製作�
 - 記号を置き換えるタイプのリガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削ってあります。
 
-## フォントファミリーの種類
+## 収録フォントの違い
 
 見た目が少し違うだけなのに種類を増やしたため、無駄にファイルサイズが大きくなってしまい大変申しわけございません。  
 それぞれにレギュラー、オブリーク、ボールド、ボールドオブリークの書体が含まれています。  
@@ -110,7 +110,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - OS: macOS Sonoma (version 14.2)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.46.0
+- FontTools: 4.47.0
 
 ### 実行方法
 
