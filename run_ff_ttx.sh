@@ -48,7 +48,7 @@ elif [ "$1" = "-d" ]; then
   exit 0 # 下書きモードの場合テーブルを編集しない
 elif [ "$1" = "-C" ]; then
   echo "End just before editing calt feature"
-  sh font_generator.sh -l -z -t -o -N "${font_familyname}" auto
+  sh font_generator.sh -l -Z -z -t -o -N "${font_familyname}" auto
 elif [ "$1" = "-p" ]; then
   echo "Run calt patch only"
   sh table_modificator.sh -p -l
