@@ -10,7 +10,8 @@ set -e
 font_familyname="Cyroit"
 tmpdir_name="font_generator_tmpdir" # font_generatorのテンポラリフォルダ名
 
-font_familyname_suffix=("HB" "SP" "TM" "TS" "FX" "DG" "DS") # バージョン違いの名称
+font_familyname_suffix=("BS" "SP" "FX" "HB" "DG") # バージョン違いの名称
+#font_familyname_suffix=("BS" "SP" "FX" "HB" "DG" "DS" "TM" "TS") # バージョン違いの名称
 build_fonts_dir="build" # 完成品を保管するフォルダ
 
 font_version="0.1.0"
@@ -35,30 +36,34 @@ forge_ttx_help()
     echo "  -p  Run calt patch only" # -C の続きを実行
     echo "  -c  Disable calt feature" # calt有無の見た目確認用
     echo "  -e  Disable add Nerd fonts" # NerdFonts無しの場合のサイズ確認用
+    echo "  -S  Enable ss feature" # ssフィーチャを追加し、それに合わせたフォントを作成
     echo "  -F  Complete Mode (generate finished fonts)" # 完成品作成
 }
 
 # フォント作成
 if [ $# -eq 0 ]; then
   echo "Normal Mode"
-  sh font_generator.sh -l -o -N "${font_familyname}" auto
+  sh font_generator.sh -lo -N "${font_familyname}" auto
 elif [ "$1" = "-d" ]; then
   echo "Draft Mode"
-  sh font_generator.sh -l -d -o -P -N "${font_familyname}" auto
+  sh font_generator.sh -ldoP -N "${font_familyname}" auto
   exit 0 # 下書きモードの場合テーブルを編集しない
 elif [ "$1" = "-C" ]; then
   echo "End just before editing calt feature"
-  sh font_generator.sh -l -Z -z -t -o -N "${font_familyname}" auto
+  sh font_generator.sh -lZzto -N "${font_familyname}" auto
 elif [ "$1" = "-p" ]; then
   echo "Run calt patch only"
-  sh table_modificator.sh -p -l
+  sh table_modificator.sh -lpb
   exit 0
 elif [ "$1" = "-c" ]; then
   echo "Disable calt feature"
-  sh font_generator.sh -l -z -t -c -o -N "${font_familyname}" auto
+  sh font_generator.sh -lztco -N "${font_familyname}" auto
 elif [ "$1" = "-e" ]; then
   echo "Disable add Nerd fonts"
-  sh font_generator.sh -l -e -o -N "${font_familyname}" auto
+  sh font_generator.sh -leo -N "${font_familyname}" auto
+elif [ "$1" = "-S" ]; then
+  echo "Enable ss feature"
+  sh font_generator.sh -lSo -N "${font_familyname}" auto
 elif [ "$1" = "-F" ]; then
   echo "Complete Mode (generate finished fonts)"
   sh font_generator.sh -P -N "${font_familyname}" auto # パッチ適用直前まで作成
@@ -75,39 +80,35 @@ fi
 # 完成品作成のためフォントにパッチを当てる
 if [ "$1" = "-F" ]; then
   for S in ${font_familyname_suffix[@]}; do
-    if [ "${S}" = "HB" ]; then
-      sh font_generator.sh -Z -z -b -t -g -p -N "${font_familyname}" -n "${S}"
-    fi
-    if [ "${S}" = "SP" ]; then
-      sh font_generator.sh -t -g -p -N "${font_familyname}" -n "${S}"
-    fi
-    if [ "${S}" = "TM" ]; then
-      sh font_generator.sh -z -p -N "${font_familyname}" -n "${S}"
-    fi
-    if [ "${S}" = "TS" ]; then
+    if [ "${S}" = "BS" ]; then
+      sh font_generator.sh -ztsp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "SP" ]; then
+      sh font_generator.sh -tsp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "FX" ]; then
+      sh font_generator.sh -ztcp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "HB" ]; then
+      sh font_generator.sh -Zzbtsp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "DG" ]; then
+      sh font_generator.sh -ztp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "DS" ]; then
+      sh font_generator.sh -tp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "TM" ]; then
+      sh font_generator.sh -zp -N "${font_familyname}" -n "${S}"
+    elif [ "${S}" = "TS" ]; then
       sh font_generator.sh -p -N "${font_familyname}" -n "${S}"
     fi
-    if [ "${S}" = "FX" ]; then
-      sh font_generator.sh -z -t -c -p -N "${font_familyname}" -n "${S}"
-    fi
-    if [ "${S}" = "DG" ]; then
-      sh font_generator.sh -z -t -p -N "${font_familyname}" -n "${S}"
-    fi
-    if [ "${S}" = "DS" ]; then
-      sh font_generator.sh -t -p -N "${font_familyname}" -n "${S}"
-    fi
-    sh font_generator.sh -z -t -g -p -N "${font_familyname}" # 通常
   done
+  sh font_generator.sh -Sp -N "${font_familyname}" # 通常
 fi
 
 # テーブル加工
 if [ "$1" = "-C" ]; then
-  sh table_modificator.sh -l -C -N "${font_familyname}"
+  sh table_modificator.sh -lC -N "${font_familyname}"
   exit 0
 elif [ "$1" = "-F" ]; then
   sh table_modificator.sh -N "${font_familyname}"
 else
-  sh table_modificator.sh -l -N "${font_familyname}"
+  sh table_modificator.sh -lb -N "${font_familyname}"
 fi
 
 # 完成したフォントの移動と一時ファイルの削除
