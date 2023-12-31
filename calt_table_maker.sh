@@ -9,7 +9,7 @@
 # 条件成立時に呼び出す異体字変換テーブルは font_generator にて生成済みであること
 
  #glyphNo="13706" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
-glyphNo="22936" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
+glyphNo="22940" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="0"
 caltL="caltList" # caltテーブルリストの名称
 caltList="${caltL}_${listNo}" # Lookupごとのcaltテーブルリスト
@@ -33,7 +33,7 @@ lookupIndexN=`expr ${lookupIndex_replace} + 10` # 変換先(ノーマルなグ�
 
 leaving_tmp_flag="false" # 一時ファイル残す
 basic_only_flag="false" # 基本ラテン文字のみ
-separator_only_flag="false" # 桁区切りのみ
+symbol_only_flag="false" # 記号、桁区切りのみ
 glyphNo_flag="false" # glyphナンバーの指定があるか
 
 # エラー処理
@@ -52,12 +52,12 @@ calt_table_maker_help()
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -n number  Set glyph number of \"A moved left\""
     echo "  -b         Make only basic latin characters"
-    echo "  -g         Don't make latin characters"
+    echo "  -s         Don't make latin characters"
     exit 0
 }
 
 # Get options
-while getopts hln:bg OPT
+while getopts hln:bs OPT
 do
     case "${OPT}" in
         "h" )
@@ -76,9 +76,9 @@ do
             echo "Option: Make only basic latin characters"
             basic_only_flag="true"
             ;;
-        "g" )
+        "s" )
             echo "Option: Don't make latin characters"
-            separator_only_flag="true"
+            symbol_only_flag="true"
             ;;
         * )
             exit 1
@@ -197,8 +197,11 @@ chain_context() {
   echo "<InputCoverage index=\"0\">" >> "${caltList}.txt" # 入力した文字(グリフ変換対象)
   rm -f ${listTemp}.txt
   for S in ${input[@]}; do
-    T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
-    echo "${T}" >> "${listTemp}.txt"
+#    T=`printf '%s\n' "${fixedGlyphN[@]}" | grep -x "${S}"` # 移動 (置換) しない文字を除く
+#    if [ -z "${T}" ]; then # (有効にするとデータ量が減るが、逆に何故か Overfrow エラーが出る)
+      T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
+      echo "${T}" >> "${listTemp}.txt"
+#    fi
   done
   sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
   do
@@ -592,6 +595,8 @@ done
 
 symbolFigureN=("#" "$" "%" "&" "@" 0 2 3 4 5 6 7 8 9) # 幅のある記号と数字
 operatorHN=("AS" "+" "-" "=") # 記号が上下に移動する記号
+S=("_AE" "_OE" "_ae" "_oe") # 移動 (置換) しないグリフ (input[@]から除去)
+fixedGlyphN=(`letter_members "${S[*]}"`)
 
 # グリフ名変換用辞書作成 (グリフのIDS順に並べること) ||||||||||||||||||||||||||||||||||||||||
 
@@ -681,14 +686,14 @@ latin12x_name=("Gdotaccent" "gdotaccent" "uni0122" "uni0123" "Hcircumflex" "hcir
 latin13x=(İ ı Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ)
 latin13x_name=("Idotaccent" "dotlessi" "Jcircumflex" "jcircumflex" "uni0136" "uni0137" \
 "kgreenlandic" "Lacute" "lacute" "uni013B" "uni013C" "Lcaron" "lcaron" "Ldot")
- #latin13x=(İ ı Ĳ ĳ Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ)
+ #latin13x=(İ ı Ĳ ĳ Ĵ ĵ Ķ ķ ĸ Ĺ ĺ Ļ ļ Ľ ľ Ŀ) # 除外した文字を入れる場合は、移動したグリフに対する処理を追加すること
  #latin13x_name=("Idotaccent" "dotlessi" "IJ" "ij" "Jcircumflex" "jcircumflex" "uni0136" "uni0137" \
  #"kgreenlandic" "Lacute" "lacute" "uni013B" "uni013C" "Lcaron" "lcaron" "Ldot")
 
 latin14x=(ŀ Ł ł Ń ń Ņ ņ Ň ň Ŋ ŋ Ō ō Ŏ ŏ)
 latin14x_name=("ldot" "Lslash" "lslash" "Nacute" "nacute" "uni0145" "uni0146" "Ncaron" \
 "ncaron" "Eng" "eng" "Omacron" "omacron" "Obreve" "obreve")
- #latin14x=(ŀ Ł ł Ń ń Ņ ņ Ň ň ŉ Ŋ ŋ Ō ō Ŏ ŏ)
+ #latin14x=(ŀ Ł ł Ń ń Ņ ņ Ň ň ŉ Ŋ ŋ Ō ō Ŏ ŏ) # 除外した文字を入れる場合は、移動したグリフに対する処理を追加すること
  #latin14x_name=("ldot" "Lslash" "lslash" "Nacute" "nacute" "uni0145" "uni0146" "Ncaron" \
  #"ncaron" "napostrophe" "Eng" "eng" "Omacron" "omacron" "Obreve" "obreve")
 
@@ -707,7 +712,7 @@ latin16x_name=("Scaron" "scaron" "uni0162" "uni0163" "Tcaron" "tcaron" "Tbar" "t
 latin17x=(Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž)
 latin17x_name=("Uhungarumlaut" "uhungarumlaut" "Uogonek" "uogonek" "Wcircumflex" "wcircumflex" "Ycircumflex" "ycircumflex" \
 "Ydieresis" "Zacute" "zacute" "Zdotaccent" "zdotaccent" "Zcaron" "zcaron")
- #latin17x=(Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž ſ)
+ #latin17x=(Ű ű Ų ų Ŵ ŵ Ŷ ŷ Ÿ Ź ź Ż ż Ž ž ſ) # 除外した文字を入れる場合は、移動したグリフに対する処理を追加すること
  #latin17x_name=("Uhungarumlaut" "uhungarumlaut" "Uogonek" "uogonek" "Wcircumflex" "wcircumflex" "Ycircumflex" "ycircumflex" \
  #"Ydieresis" "Zacute" "zacute" "Zdotaccent" "zdotaccent" "Zcaron" "zcaron" "longs")
 
@@ -913,7 +918,7 @@ lookAhead=("${gravityLN[@]}" "${gravityRN[@]}" "${gravityWN[@]}" "${gravityEN[@]
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
-if [ "${separator_only_flag}" = "false" ]; then
+if [ "${symbol_only_flag}" = "false" ]; then
 # 同じ文字を等間隔にさせる例外処理 1 ----------------------------------------
 
 # 左が丸い文字
@@ -1003,7 +1008,7 @@ index=`expr ${index} + 1`
 
 # もろもろ例外 ========================================
 
-# 2つ左を見て移動する例外処理 ----------------------------------------
+# 2つ左を見て移動する例外処理 1 ----------------------------------------
 
 # 左が幅広、狭い以外の文字 その左が幅広の文字 右が幅広、狭い以外の文字の場合 狭い文字 左に移動
 backtrack1=("${gravityWL[@]}" "${gravityWR[@]}" "${gravityWN[@]}")
@@ -1086,16 +1091,16 @@ lookAhead=("${gravityCapitalWN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が左寄り、中間の小文字で 右が幅広の小文字の場合 幅広と狭い以外の小文字 左に移動
-backtrack=("${gravitySmallLN[@]}" "${gravitySmallMN[@]}")
-input=("${gravitySmallLN[@]}" "${gravitySmallRN[@]}" "${gravitySmallEN[@]}" "${gravitySmallMN[@]}" "${gravitySmallVN[@]}")
+# 左が左寄り、均等、中間の小文字で 右が幅広の小文字の場合 右寄り、中間、Vの字の小文字 左に移動
+backtrack=("${gravitySmallLN[@]}" "${gravitySmallEN[@]}" "${gravitySmallMN[@]}")
+input=("${gravitySmallRN[@]}" "${gravitySmallMN[@]}" "${gravitySmallVN[@]}")
 lookAhead=("${gravitySmallWN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が均等な小文字で 右が幅広の小文字の場合 右寄り、中間、Vの字の小文字 左に移動
-backtrack=("${gravitySmallEN[@]}")
-input=("${gravitySmallRN[@]}" "${gravitySmallMN[@]}" "${gravitySmallVN[@]}")
+# 左が左寄り、中間の小文字で 右が幅広の小文字の場合 左寄り、均等な小文字 左に移動
+backtrack=("${gravitySmallLN[@]}" "${gravitySmallMN[@]}")
+input=("${gravitySmallLN[@]}" "${gravitySmallEN[@]}")
 lookAhead=("${gravitySmallWN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
@@ -1201,13 +1206,6 @@ index=`expr ${index} + 1`
 backtrack=("${_FR[@]}" "${_TR[@]}" "${_kR[@]}" "${_xR[@]}")
 input=("${circleSmallLN[@]}" "${circleSmallCN[@]}")
 lookAhead=("${gravityWN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
-# 左が EFKTX で 右が引き寄せない大文字の場合 左が丸い文字 左に移動
-backtrack=("${_E[@]}" "${_F[@]}" "${_K[@]}" "${_T[@]}" "${_X[@]}")
-input=("${circleLN[@]}" "${circleCN[@]}")
-lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalRN[@]}" "${gravityCapitalWN[@]}" "${gravityCapitalEN[@]}" "${gravityCapitalMN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
@@ -1465,17 +1463,10 @@ index=`expr ${index} + 1`
 
 # 大文字と小文字に関する例外処理 1 ----------------------------------------
 
-# 左が、右下が開いている大文字で 右が右寄り、中間、Vの字の場合 左が低い文字 左に移動しない (後の3つの処理とセット)
+# 左が、右下が開いている大文字で 右が狭い文字の場合 左が低い文字 移動しない
 backtrack=("${spaceCapitalRR[@]}" "${spaceCapitalCR[@]}")
 input=("${lowLN[@]}" "${lowCN[@]}")
-lookAhead=("${gravityRN[@]}" "${gravityMN[@]}" "${gravityVN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
-index=`expr ${index} + 1`
-
-# 左が、右下が開いている大文字で 右が狭い文字の場合 左が低い文字 左に移動しない
-backtrack=("${spaceCapitalRN[@]}" "${spaceCapitalCN[@]}")
-input=("${lowLN[@]}" "${lowCN[@]}")
-lookAhead=("${gravityCN[@]}")
+lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
@@ -1483,6 +1474,13 @@ index=`expr ${index} + 1`
 backtrack=("${_P[@]}" "${_TH[@]}")
 input=("${lowLN[@]}" "${lowCN[@]}")
 lookAhead=("")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+index=`expr ${index} + 1`
+
+# 左が、右下が開いている大文字で 右が狭い文字の場合 左が低い文字 左に移動しない
+backtrack=("${spaceCapitalRN[@]}" "${spaceCapitalCN[@]}")
+input=("${lowLN[@]}" "${lowCN[@]}")
+lookAhead=("${gravityCN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
@@ -1494,19 +1492,19 @@ lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
-# 左が、右下が開いている大文字で 右が狭い文字の場合 左が低い文字 右に移動しない
-backtrack=("${spaceCapitalRR[@]}" "${spaceCapitalCR[@]}")
-input=("${lowLN[@]}" "${lowCN[@]}")
-lookAhead=("")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
-index=`expr ${index} + 1`
-
 # 大文字と小文字で処理が異なる例外処理 2 ----------------------------------------
 
 # 左が幅広の大文字で 右が左寄り、幅広、均等な大文字の場合 均等、中間の大文字 右に移動しない
 backtrack=("${gravityCapitalWL[@]}")
-input=("${gravityCapitalEN[@]}" "${gravityCapitalEN[@]}")
+input=("${gravityCapitalEN[@]}" "${gravityCapitalMN[@]}")
 lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalWN[@]}" "${gravityCapitalEN[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+index=`expr ${index} + 1`
+
+# 左が中間の大文字で 右が狭い大文字の場合 中間の大文字 右に移動しない
+backtrack=("${gravityCapitalMN[@]}")
+input=("${gravityCapitalMN[@]}")
+lookAhead=("${gravityCapitalCN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
@@ -2337,6 +2335,17 @@ lookAhead=("${gravityLN[@]}" "${gravityRN[@]}" "${gravityEN[@]}" "${gravityMN[@]
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
+# 2つ左を見て移動する例外処理 2 ----------------------------------------
+
+# 左が狭い文字 その左が、左寄り、均等、中間、Vの字の場合 幅広の文字 右に移動
+backtrack1=("${gravityCL[@]}" \
+"${gravityCN[@]}")
+backtrack=("${gravityLL[@]}" "${gravityEL[@]}" "${gravityML[@]}" "${gravityVL[@]}")
+input=("${gravityWN[@]}")
+lookAhead=("")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}"
+index=`expr ${index} + 1`
+
 # 同じ文字を等間隔にさせる例外処理 2 ----------------------------------------
 
 # 丸くない左寄り、右寄りの文字
@@ -2909,8 +2918,7 @@ for T in ${member[@]}; do
   "${T}")
   lookAhead1=("${T}D" \
   "${T}")
-  lookAheadX=("${T}D")
-  aheadMax="2"
+  lookAheadX=("${T}D"); aheadMax="2"
   chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexD}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
   index=`expr ${index} + 1`
 done
@@ -2944,8 +2952,7 @@ for T in ${member[@]}; do
   "${T}")
   lookAhead1=("${T}U" \
   "${T}")
-  lookAheadX=("${T}U")
-  aheadMax="2"
+  lookAheadX=("${T}U"); aheadMax="2"
   chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexU}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
   index=`expr ${index} + 1`
 done
