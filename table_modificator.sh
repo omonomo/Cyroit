@@ -35,6 +35,8 @@ calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # パッチモード
 calt_ok_flag="true" # フォントがcaltに対応しているか
 
+basic_only_flag="false" # calt設定を基本ラテン文字に限定
+
 # エラー処理
 trap "exit 3" HUP INT QUIT
 
@@ -55,12 +57,13 @@ table_modificator_help()
     echo "  -t         Disable edit other tables"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
+    echo "  -b         Make calt for only basic latin characters"
     echo "  -r         Reuse an existing list"
     exit 0
 }
 
 # Get options
-while getopts hlN:mgtCpr OPT
+while getopts hlN:mgtCpbr OPT
 do
     case "${OPT}" in
         "h" )
@@ -95,6 +98,10 @@ do
             patch_only_flag="true"
             cmap_flag="false"
             other_flag="false"
+            ;;
+        "b" )
+            echo "Option: Make calt for only basic latin characters"
+            basic_only_flag="true"
             ;;
         "r" )
             echo "Option: Reuse an existing list"
@@ -243,9 +250,9 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       if [ "${calt_insert_flag}" = "true" ]; then
         caltlist_txt=`find . -name "${caltL}*.txt" -maxdepth 1 | head -n 1`
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
-          if [ "${patch_only_flag}" = "true" ]; then
+          if [ "${basic_only_flag}" = "true" ]; then
             if [ "${leaving_tmp_flag}" = "true" ]; then
-              sh calt_table_maker.sh -b -l
+              sh calt_table_maker.sh -lb
             else
               sh calt_table_maker.sh -b
             fi
@@ -282,6 +289,8 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     sed -i.bak -e '/FeatureIndex index="11" value=".."/d' "${P%%.ttf}.ttx"
     sed -i.bak -e '/FeatureIndex index="12" value=".."/d' "${P%%.ttf}.ttx"
     sed -i.bak -e '/FeatureIndex index="13" value=".."/d' "${P%%.ttf}.ttx"
+    sed -i.bak -e '/FeatureIndex index="14" value=".."/d' "${P%%.ttf}.ttx"
+    sed -i.bak -e '/FeatureIndex index="15" value=".."/d' "${P%%.ttf}.ttx"
 
     sed -i.bak -e 's,FeatureIndex index="0" value=".",FeatureIndex index="0" value="0",' "${P%%.ttf}.ttx" # 始めの部分は上書き
     sed -i.bak -e 's,FeatureIndex index="1" value=".",FeatureIndex index="1" value="1",' "${P%%.ttf}.ttx"
@@ -296,17 +305,37 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
 
     sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
 
-    if [ "${calt_ok_flag}" = "true" ]; then # calt対応であれば index13を追加
+    gps=`grep 'FeatureTag value="ss01"' "${P%%.ttf}.ttx"` # ssフィーチャがあるか判定
+    if [ -n "${gps}" ]; then # ss対応の場合
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
       <FeatureIndex index="10" value="12"/>\
       <FeatureIndex index="11" value="13"/>\
       <FeatureIndex index="12" value="14"/>\
-      <FeatureIndex index="13" value="15"/>,' "${P%%.ttf}.ttx" # index9を上書き、以降は追加
-    else
+      <FeatureIndex index="13" value="15"/>\
+      <FeatureIndex index="14" value="16"/>\
+      <FeatureIndex index="15" value="17"/>\
+      <FeatureIndex index="16" value="18"/>\
+      <FeatureIndex index="17" value="19"/>\
+      <FeatureIndex index="18" value="20"/>\
+      <FeatureIndex index="19" value="21"/>\
+      <FeatureIndex index="20" value="22"/>\
+      ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(12 + ss フィーチャの数) を追加
+      if [ "${calt_ok_flag}" = "true" ]; then # calt対応であればさらに1つ index 追加
+        sed -i.bak -e 's,<FeatureIndex index="20" value="22"/>,<FeatureIndex index="20" value="22"/>\
+        <FeatureIndex index="21" value="23"/>\
+        ,' "${P%%.ttf}.ttx"
+      fi
+    else # ss非対応の場合
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
       <FeatureIndex index="10" value="12"/>\
       <FeatureIndex index="11" value="13"/>\
-      <FeatureIndex index="12" value="14"/>,' "${P%%.ttf}.ttx" # index9を上書き、以降は追加
+      <FeatureIndex index="12" value="14"/>\
+      ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index12 まで追加
+      if [ "${calt_ok_flag}" = "true" ]; then # calt対応であれば index13 を追加
+        sed -i.bak -e 's,<FeatureIndex index="12" value="14"/>,<FeatureIndex index="12" value="14"/>\
+        <FeatureIndex index="13" value="15"/>\
+        ,' "${P%%.ttf}.ttx"
+      fi
     fi
 
     sed -i.bak -e '/<LangSys>/{n;d;}' "${P%%.ttf}.ttx" # LangSysタグとその間を削除
