@@ -20,7 +20,7 @@ Copyright (c) 2023 omonomo (https://omonomo.github.io/Cyroit/)
 **無印**: 通常版 (ss フィーチャにて機能の ON/OFF が可能)  
 **BS**: 基本版  
 **SP**: スペシャルスペース版  
-**DG**: 桁区切り表示付き版  
+**DG**: 桁区切り表示版  
 **FX**: 文字間隔固定版  
 **HB**: 平凡版  
 
