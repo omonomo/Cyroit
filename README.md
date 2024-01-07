@@ -148,6 +148,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 　`-F` オプション以外の時はグリフや機能に関係なくフォント名が Cyroit になり、オブリーク体を生成しません。  
 　またカーニングの設定が基本ラテン文字に限定されます。  
 　オプションなしの場合、calt 対応、ss 非対応、Nerd Fonts 有りになります。  
+　今のところ、 run_ff_ttx.sh はオプションの併用に対応していません。カスタマイズする場合は run_ff_ttx.sh を直接編集するか、font_generator.sh 実行後、table_modificator.sh を実行してください。  
 
 - オプション  
 `-h` ヘルプを表示します。  
@@ -167,7 +168,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 　また、オプションの後に素材にするフォントを指定する必要がありますが、基本的に auto で問題ありません。
 
 ```
-./run_ff_ttx.sh [options] auto
+./font_generator.sh [options] auto
 ```
 
 - オプション  
