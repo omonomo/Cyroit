@@ -170,6 +170,8 @@ ${HOME}/Library/Fonts /Library/Fonts \
 /c/Windows/Fonts /cygdrive/c/Windows/Fonts"
 
 # Set flags
+mode="" # 生成モード
+
 leaving_tmp_flag="false" # 一時ファイル残す
 visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
@@ -237,6 +239,13 @@ Font version: ${font_version}
 
 _EOT_
 
+option_check() {
+  if [ -n "${mode}" ]; then # -Pp のうち2個以上含まれていたら終了
+    echo "Illegal option"
+    exit 1
+  fi
+}
+
 # Define displaying help function
 font_generator_help()
 {
@@ -253,21 +262,22 @@ font_generator_help()
     echo "  -n string              Set fontfamily suffix (\"string\")"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
+    echo "  -u                     Disable zenkaku hankaku underline"
     echo "  -b                     Disable glyphs with improved visibility"
     echo "  -t                     Disable modified D, V and Z"
     echo "  -c                     Disable calt feature"
     echo "  -s                     Disable thousands separator"
     echo "  -e                     Disable add Nerd fonts"
     echo "  -o                     Disable generate oblique style"
-    echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -S                     Enable ss feature"
+    echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -P                     End just before patching"
     echo "  -p                     Run font patch only"
     exit 0
 }
 
 # Get options
-while getopts hVf:vlN:n:ZzbtcseodSPp OPT
+while getopts hVf:vlN:n:ZzubtcseoSdPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -304,10 +314,21 @@ do
             echo "Option: Disable visible hankaku space"
             visible_hankaku_space_flag="false"
             ;;
+        "u" )
+            echo "Option: Disable zenkaku hankaku underline"
+            if [ "${ss_flag}" = "true" ]; then
+                echo "Can't be disabled"
+            else
+                underline_flag="false"
+            fi
+            ;;
         "b" )
             echo "Option: Disable glyphs with improved visibility"
-            improve_visibility_flag="false"
-            underline_flag="false"
+            if [ "${ss_flag}" = "true" ]; then
+                echo "Can't be disabled"
+            else
+                improve_visibility_flag="false"
+            fi
             ;;
         "t" )
             echo "Option: Disable modified D, V and Z"
@@ -315,7 +336,11 @@ do
             ;;
         "c" )
             echo "Option: Disable calt feature"
-            calt_flag="false"
+            if [ "${ss_flag}" = "true" ]; then
+                echo "Can't be disabled"
+            else
+                calt_flag="false"
+            fi
             ;;
         "s" )
             echo "Option: Disable thousands separator"
@@ -329,29 +354,35 @@ do
             echo "Option: Disable generate oblique style"
             oblique_flag="false"
             ;;
-        "d" )
-            echo "Option: Enable draft mode (skip time-consuming processes)"
-            draft_flag="true"
-            oblique_flag="false"
-            ;;
         "S" )
             echo "Option: Enable ss feature"
             visible_zenkaku_space_flag="false"
             visible_hankaku_space_flag="false"
-            improve_visibility_flag="true"
             underline_flag="true"
+            improve_visibility_flag="true"
  #            underline_flag="false" # デフォルトで下線無しにする場合
             dvz_flag="false"
             calt_flag="true"
             separator_flag="false"
             ss_flag="true"
             ;;
+        "d" )
+            echo "Option: Enable draft mode (skip time-consuming processes)"
+            draft_flag="true"
+            oblique_flag="false"
+            ;;
         "P" )
             echo "Option: End just before patching"
+            option_check
+            mode="-P"
             patch_flag="false"
+            patch_only_flag="false"
             ;;
         "p" )
             echo "Option: Run font patch only"
+            option_check
+            mode="-p"
+            patch_flag="true"
             patch_only_flag="true"
             ;;
         * )
@@ -10807,9 +10838,9 @@ while (i < \$argc)
         Select(0u00a0); Clear(); SetWidth(512) # ノーブレークスペース
     endif
 
-# 識別性向上グリフを元に戻す
+# 下線付きの全角・半角形を元に戻す
     if ("${underline_flag}" == "false")
-        Print("Option: Disable glyphs with improved visibility")
+        Print("Option: Disable zenkaku hankaku underline")
         k = 0
         # 全角縦書き
         j = 0
@@ -10862,7 +10893,9 @@ while (i < \$argc)
         endloop
     endif
 
+# 識別性向上グリフを元に戻す
     if ("${improve_visibility_flag}" == "false")
+        Print("Option: Disable glyphs with improved visibility")
         # 破線・ウロコ等
         k = 0
         orig = [0u2044, 0u007c,\
@@ -11023,7 +11056,6 @@ _EOT_
 ################################################################################
 # Generate custom fonts
 ################################################################################
-
 
 if [ "${patch_only_flag}" = "false" ]; then
     rm -f ${font_familyname}*.ttf
