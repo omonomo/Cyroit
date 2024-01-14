@@ -25,9 +25,11 @@ fonts_directories=". ${HOME}/.fonts /usr/local/share/fonts /usr/share/fonts \
 ${HOME}/Library/Fonts /Library/Fonts \
 /c/Windows/Fonts /cygdrive/c/Windows/Fonts"
 
-echo
-echo "- UVS table [cmap_format_14] maker -"
-echo
+remove_temp() {
+  echo "Remove temporary files"
+  rm -f ${fromFontName}*.ttx
+  rm -f ${toFontName}*.ttx
+}
 
 uvs_table_maker_help()
 {
@@ -35,17 +37,27 @@ uvs_table_maker_help()
     echo ""
     echo "Options:"
     echo "  -h         Display this information"
+    echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
     exit 0
 }
 
+echo
+echo "- UVS table [cmap, format 14] maker -"
+echo
+
 # Get options
-while getopts hlN: OPT
+while getopts hxlN: OPT
 do
     case "${OPT}" in
         "h" )
             uvs_table_maker_help
+            ;;
+        "x" )
+            echo "Option: Cleaning temporary files"
+            remove_temp
+            exit 0
             ;;
         "l" )
             echo "Option: Leave (do NOT remove) temporary files"
@@ -150,20 +162,18 @@ done < "${gsubList}.txt"
 echo
 
 # 一時ファイルを削除
-echo "Remove temporary files"
-  rm -f ${fromFontName}.ttx.bak
-  rm -f ${toFontName}.ttx.bak
-  rm -f ${cmapList}.txt.bak
-  rm -f ${extList}.txt.bak
-  rm -f ${gsubList}.txt.bak
+rm -f ${fromFontName}.ttx.bak
+rm -f ${toFontName}.ttx.bak
+rm -f ${cmapList}.txt.bak
+rm -f ${extList}.txt.bak
+rm -f ${gsubList}.txt.bak
 if [ "${leaving_tmp_flag}" = "true" ]; then
   mv "${fromFontName}.ttx" "${fromFontName}.cmap.orig.ttx"
   mv "${toFontName}.ttx" "${toFontName}.GSUB.orig.ttx"
 else
-  rm -f ${fromFontName}*.ttx
-  rm -f ${toFontName}*.ttx
+  remove_temp
+  echo
 fi
-echo
 
 # Exit
 echo "Finished making the modified table [cmap_format_14]."
