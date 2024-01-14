@@ -8,11 +8,21 @@ set -e
 # 一連の操作を自動化したプログラム
 
 font_familyname="Cyroit"
-tmpdir_name="font_generator_tmpdir" # font_generatorのテンポラリフォルダ名
+font_familyname_suffix=""
+tmpdir_name="font_generator_tmpdir" # font_generator のテンポラリフォルダ名
 
-font_familyname_suffix=("BS" "SP" "FX" "HB" "DG") # バージョン違いの名称
-#font_familyname_suffix=("BS" "SP" "FX" "HB" "DG" "DS" "TM" "TS") # バージョン違いの名称
+font_familyname_suffix_def=("BS" "SP" "FX" "HB" "DG") # バージョン違いの名称 (デフォルト設定)
+#font_familyname_suffix_def=("BS" "SP" "FX" "HB" "DG" "DS" "TM" "TS")
 build_fonts_dir="build" # 完成品を保管するフォルダ
+illegal_opt_fg="hVfNn" # font_generator の使用できないオプション
+
+opt_fg="" # font_generator のオプション
+opt_tm="" # table_modificator のオプション
+mode="" # 生成モード
+
+draft_flag="false" # 下書きモード
+leaving_tmp_flag="true" # 一時ファイル残す
+table_modify_flag="true" # フィーチャテーブルを編集する
 
 font_version="0.1.0"
 
@@ -25,110 +35,266 @@ if [ -n "${version_txt}" ]; then
   fi
 fi
 
-forge_ttx_help()
-{
-    echo "Usage: run_ff_ttx.sh [options]"
-    echo ""
-    echo "Option:"
-    echo "  -h  Display this information"
-    echo "  -d  Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
-    echo "  -C  End just before editing calt feature" # caltの編集・確認を繰り返す時用にcalt適用前のフォントを作成する
-    echo "  -p  Run calt patch only" # -C の続きを実行
-    echo "  -c  Disable calt feature" # calt有無の見た目確認用
-    echo "  -e  Disable add Nerd fonts" # NerdFonts無しの場合のサイズ確認用
-    echo "  -S  Enable ss feature" # ssフィーチャを追加し、それに合わせたフォントを作成
-    echo "  -F  Complete Mode (generate finished fonts)" # 完成品作成
+option_format_fg() { # font_generator 用のオプションを整形
+  local opt
+  local leaving_tmp_flag
+  opt="${1}"
+  leaving_tmp_flag="${2}"
+
+  if [ "${leaving_tmp_flag}" = "true" ]; then # 引数に l はないが、一時作成ファイルを残す場合
+    opt="${opt}l"
+  fi
+  if [ "${draft_flag}" = "true" ]; then # 引数に d はないが、下書きモードで処理する場合
+    opt="${opt}d"
+  fi
+  echo "${opt}"
 }
 
-# フォント作成
-if [ $# -eq 0 ]; then
-  echo "Normal Mode"
-  sh font_generator.sh -lo -N "${font_familyname}" auto
-elif [ "$1" = "-d" ]; then
-  echo "Draft Mode"
-  sh font_generator.sh -ldoP -N "${font_familyname}" auto
-  exit 0 # 下書きモードの場合テーブルを編集しない
-elif [ "$1" = "-C" ]; then
-  echo "End just before editing calt feature"
-  sh font_generator.sh -lZzto -N "${font_familyname}" auto
-elif [ "$1" = "-p" ]; then
-  echo "Run calt patch only"
-  sh table_modificator.sh -lpb
-  exit 0
-elif [ "$1" = "-c" ]; then
-  echo "Disable calt feature"
-  sh font_generator.sh -lztco -N "${font_familyname}" auto
-elif [ "$1" = "-e" ]; then
-  echo "Disable add Nerd fonts"
-  sh font_generator.sh -leo -N "${font_familyname}" auto
-elif [ "$1" = "-S" ]; then
-  echo "Enable ss feature"
-  sh font_generator.sh -lSo -N "${font_familyname}" auto
-elif [ "$1" = "-F" ]; then
-  echo "Complete Mode (generate finished fonts)"
-  sh font_generator.sh -P -N "${font_familyname}" auto # パッチ適用直前まで作成
-elif [ "$1" = "-h" ]; then
-  forge_ttx_help
-  exit 0
-else
-  echo "illegal option."
-  echo
-  forge_ttx_help
-  exit 1
-fi
+option_format_tm() { # table_modificator 用のオプションを整形
+  local opt
+  local leaving_tmp_flag
+  opt="${1}"
+  leaving_tmp_flag="${2}"
 
-# 完成品作成のためフォントにパッチを当てる
-if [ "$1" = "-F" ]; then
-  for S in ${font_familyname_suffix[@]}; do
-    if [ "${S}" = "BS" ]; then
-      sh font_generator.sh -ztsp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "SP" ]; then
-      sh font_generator.sh -tsp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "FX" ]; then
-      sh font_generator.sh -ztcp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "HB" ]; then
-      sh font_generator.sh -Zzbtsp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "DG" ]; then
-      sh font_generator.sh -ztp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "DS" ]; then
-      sh font_generator.sh -tp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "TM" ]; then
-      sh font_generator.sh -zp -N "${font_familyname}" -n "${S}"
-    elif [ "${S}" = "TS" ]; then
-      sh font_generator.sh -p -N "${font_familyname}" -n "${S}"
-    fi
-  done
-  sh font_generator.sh -Sp -N "${font_familyname}" # 通常
-fi
+  if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションか 引数に l がある場合
+    opt="${opt}l"
+  fi
+  echo "${opt}"
+}
 
-# テーブル加工
-if [ "$1" = "-C" ]; then
-  sh table_modificator.sh -lC -N "${font_familyname}"
-  exit 0
-elif [ "$1" = "-F" ]; then
-  sh table_modificator.sh -N "${font_familyname}"
-else
-  sh table_modificator.sh -lb -N "${font_familyname}"
-fi
+option_check() {
+  if [ -n "${mode}" ]; then # -dCpF のうち2個以上含まれていたら終了
+    echo "Illegal option"
+    exit 1
+  fi
+}
 
-# 完成したフォントの移動と一時ファイルの削除
-if [ "$1" = "-F" ]; then
+remove_temp() {
   echo "Remove temporary folders and files"
   rm -rf ${tmpdir_name}.*
   rm -f ${font_familyname}*.nopatch.ttf
+}
 
+forge_ttx_help()
+{
+    echo "Usage: run_ff_ttx.sh [options] [argument (options of font_generator)]"
+    echo ""
+    echo "Option:"
+    echo "  -h         Display this information"
+    echo "  -x         Cleaning temporary folders and files" # 一時作成ファイルの消去のみ
+    echo "  -l         Leave (do NOT remove) temporary files"
+    echo "  -N string  Set fontfamily (\"string\")"
+    echo "  -n string  Set fontfamily suffix (\"string\")"
+    echo "  -d         Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
+    echo "  -C         End just before editing calt feature" # caltの編集・確認を繰り返す時用にcalt適用前のフォントを作成する
+    echo "  -p         Run calt patch only" # -C の続きを実行
+    echo "  -F         Complete Mode (generate finished fonts)" # 完成品作成
+    exit 0
+}
+
+# オプションを取得
+while getopts hxlN:n:dCpF OPT
+do
+    case "${OPT}" in
+        "h" )
+            forge_ttx_help
+            ;;
+        "x" )
+            echo "Option: Cleaning temporary folders and files"
+            remove_temp
+            sh table_modificator.sh -x
+            rm -f *.ttf
+            exit 0
+            ;;
+        "l" )
+            echo "Option: Leave (do NOT remove) temporary files"
+            leaving_tmp_flag="true"
+            ;;
+        "N" )
+            echo "Option: Set fontfamily: ${OPTARG}"
+            font_familyname=`echo $OPTARG | tr -d ' '`
+            ;;
+        "n" )
+            echo "Option: Set fontfamily suffix: ${OPTARG}"
+            font_familyname_suffix=`echo $OPTARG | tr -d ' '`
+            ;;
+        "d" )
+            echo "Option: Draft mode (skip time-consuming processes)"
+            option_check
+            mode="-d"
+            draft_flag="true"
+            leaving_tmp_flag="true"
+            table_modify_flag="false"
+            ;;
+        "C" )
+            echo "Option: End just before editing calt feature"
+            option_check
+            mode="-C"
+            leaving_tmp_flag="true"
+            table_modify_flag="true"
+            ;;
+        "p" )
+            echo "Option: Run calt patch only"
+            option_check
+            mode="-p"
+            leaving_tmp_flag="true"
+            table_modify_flag="true"
+            ;;
+        "F" )
+            echo "Option: Complete Mode (generate finished fonts)"
+            option_check
+            mode="-F"
+            leaving_tmp_flag="false"
+            table_modify_flag="true"
+            ;;
+        * )
+            exit 1
+            ;;
+    esac
+done
+
+shift `expr $OPTIND - 1`
+
+# 引数を取得
+if [ "${mode}" != "-p" ]; then # -p オプション以外は引数を取得
+  if [ $# -eq 1 ]; then
+    opt_fg=`echo "$1" | tr -d ' -'`
+    array=(`echo ${opt_fg} | sed 's/./& /g'`) # 配列化
+    for S in ${array[@]}; do
+      if grep -q "${S}" <<< "${illegal_opt_fg}"; then # 引数に使用できないオプションが含まれていれば終了
+        echo "Illegal argument"
+        exit 1
+      elif [ "${S}" = "l" ]; then # l が含まれていれば一時作成ファイルを残す (-l オプションと区別)
+        leaving_tmp_flag="true_arg"
+      elif [ "${S}" = "d" ]; then # d が含まれていれば下書きモードで処理 (-d オプションと区別)
+        draft_flag="true_arg"
+      elif [ "${S}" = "P" ]; then # P が含まれていればテーブルを編集する前に終了
+        table_modify_flag="false"
+      fi
+    done
+  elif [ $# -gt 1 ]; then
+    echo "Illegal argument"
+    exit 1
+  fi
+fi
+
+# フォント作成
+case ${mode} in
+  "-d" )
+    if [ $# -eq 0 ]; then
+      opt_fg="ldoP" # 引数が無い場合の設定
+    fi
+    ;;
+  "-C" )
+    if [ $# -eq 0 ]; then
+      opt_fg="lZzto" # 引数が無い場合の設定
+    fi
+    ;;
+  "-p" )
+    ;;
+  "-F" )
+    if [ $# -eq 0 ]; then
+      opt_fg="P" # 引数が無い場合、パッチ適用直前まで作成
+    fi
+    ;;
+  "" )
+    if [ $# -eq 0 ]; then
+      opt_fg="lo" # 引数が無い場合の設定
+    fi
+    ;;
+  * )
+    exit 1
+    ;;
+esac
+if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
+  opt_fg=`option_format_fg "${opt_fg}" "${leaving_tmp_flag}"`
+  if [ -n "${opt_fg}" ]; then
+    sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
+  else
+    sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}" auto
+  fi
+fi
+
+if [ "${table_modify_flag}" = "false" ]; then # 下書きモードか、引数に P があった場合テーブルを編集しない
+  exit 0
+fi
+
+# -F オプションの場合
+if [ "${mode}" = "-F" ]; then
+  if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
+    for S in ${font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
+      case "${S}" in
+        "BS" ) opt_fg="ztsp" ;;
+        "SP" ) opt_fg="tsp" ;;
+        "FX" ) opt_fg="ztcp" ;;
+        "HB" ) opt_fg="Zzbutsp" ;;
+        "DG" ) opt_fg="ztp" ;;
+        "DS" ) opt_fg="tp" ;;
+        "TM" ) opt_fg="zp" ;;
+        "TS" ) opt_fg="p" ;;
+      esac
+      opt_fg=`option_format_fg "${opt_fg}" "${leaving_tmp_flag}"`
+      if [ -n "${opt_fg}" ]; then
+        sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${S}"
+      else
+        sh font_generator.sh -N "${font_familyname}" -n "${S}"
+      fi
+    done
+  fi
+  if [ $# -eq 0 ]; then # 引き数がない場合、通常版を生成
+    opt_fg="Sp"
+    opt_fg=`option_format_fg "${opt_fg}" "${leaving_tmp_flag}"`
+    if [ -n "${opt_fg}" ]; then
+      sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
+    else
+      sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}"
+    fi
+  fi
+fi
+
+# テーブル加工 (完成品以外はカーニング設定を基本ラテン文字に限定)
+case ${mode} in
+  "-C" ) opt_tm="C" ;;
+  "-p" ) opt_tm="pb" ;;
+  "-F" ) opt_tm="" ;;
+     * ) opt_tm="b" ;;
+esac
+opt_tm=`option_format_tm "${opt_tm}" "${leaving_tmp_flag}"`
+if [ -n "${opt_tm}" ]; then
+  sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
+else
+  sh table_modificator.sh -N "${font_familyname}${font_familyname_suffix}"
+fi
+
+# -F が有効で、-l が無効、引数にも l が無い場合、一時ファイルを削除
+if [ "${leaving_tmp_flag}" = "false" ]; then
+  remove_temp
+fi
+
+# -F オプションの場合、完成したフォントを移動
+if [ "${mode}" = "-F" ]; then
   echo "Move finished fonts"
   mkdir -p "${build_fonts_dir}"
-  for S in ${font_familyname_suffix[@]}; do
-    mkdir -p "${build_fonts_dir}/${S}"
-    mv -f ${font_familyname}${S}*.ttf "${build_fonts_dir}/${S}/."
+  if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then # 引数が無く、suffix も無い場合、デフォルト設定で各フォルダにフォントを移動
+    for S in ${font_familyname_suffix_def[@]}; do
+      mkdir -p "${build_fonts_dir}/${S}"
+      mv -f ${font_familyname}${S}*.ttf "${build_fonts_dir}/${S}/."
+    done
+  elif [ -n "${font_familyname_suffix}" ]; then # suffix がある場合、フォルダを作ってフォントを移動
+    mkdir -p "${build_fonts_dir}/${font_familyname_suffix}"
+    mv -f ${font_familyname}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname_suffix}/."
+  fi
+  # パッチ未適用のフォントを除外して移動
+  find . -not -name "*.nopatch.ttf" -maxdepth 1 | \
+  grep -e "${font_familyname}.*\.ttf$" | while read line
+  do
+    mv -f "${line}" "${build_fonts_dir}/."
   done
-  mv -f ${font_familyname}*.ttf "${build_fonts_dir}/."
   echo
-
   # Exit
   echo "Succeeded in generating custom fonts!"
   echo "Font version : ${font_version}"
   echo
 fi
+
 exit 0
