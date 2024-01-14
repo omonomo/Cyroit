@@ -24,6 +24,8 @@ underline="-80" # アンダーライン位置
 #vhea_descent1024="256"
 #vhea_linegap1024="0"
 
+mode="" # 生成モード
+
 leaving_tmp_flag="false" # 一時ファイル残す
 
 cmap_flag="true" # cmapを編集するか
@@ -32,7 +34,7 @@ other_flag="true" # その他を編集するか
 reuse_list_flag="false" # 生成済みのリストを使かうか
 
 calt_insert_flag="true" # caltテーブルを挿入するか
-patch_only_flag="false" # パッチモード
+patch_only_flag="false" # caltテーブルのみ編集
 calt_ok_flag="true" # フォントがcaltに対応しているか
 
 basic_only_flag="false" # calt設定を基本ラテン文字に限定
@@ -40,9 +42,22 @@ basic_only_flag="false" # calt設定を基本ラテン文字に限定
 # エラー処理
 trap "exit 3" HUP INT QUIT
 
-echo
-echo "= Font tables Modificator ="
-echo
+option_check() {
+  if [ -n "${mode}" ]; then # -Cp のうち2個以上含まれていたら終了
+    echo "Illegal option"
+    exit 1
+  fi
+}
+
+remove_temp() {
+  echo "Remove temporary files"
+  rm -f ${font_familyname}*.ttx
+  rm -f ${font_familyname}*.ttx.bak
+  rm -f ${caltL}*.txt
+  rm -f ${cmapList}.txt
+  rm -f ${extList}.txt
+  rm -f ${gsubList}.txt
+}
 
 table_modificator_help()
 {
@@ -50,6 +65,7 @@ table_modificator_help()
     echo ""
     echo "Options:"
     echo "  -h         Display this information"
+    echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -m         Disable edit cmap tables"
@@ -57,17 +73,28 @@ table_modificator_help()
     echo "  -t         Disable edit other tables"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
-    echo "  -b         Make calt for only basic latin characters"
+    echo "  -b         Make calt settings for basic Latin characters only"
     echo "  -r         Reuse an existing list"
     exit 0
 }
 
+echo
+echo "= Font tables Modificator ="
+echo
+
 # Get options
-while getopts hlN:mgtCpbr OPT
+while getopts hxlN:mgtCpbr OPT
 do
     case "${OPT}" in
         "h" )
             table_modificator_help
+            ;;
+        "x" )
+            echo "Option: Cleaning temporary files"
+            remove_temp
+            sh uvs_table_maker.sh -x
+            sh calt_table_maker.sh -x
+            exit 0
             ;;
         "l" )
             echo "Option: Leave (do NOT remove) temporary files"
@@ -91,16 +118,26 @@ do
             ;;
         "C" )
             echo "Option: End just before editing calt feature"
+            option_check
+            mode="-C"
+            patch_only_flag="false"
+            other_flag="true"
+            cmap_flag="true"
+            gsub_flag="true"
             calt_insert_flag="false"
             ;;
         "p" )
             echo "Option: Run calt patch only"
+            option_check
+            mode="-p"
             patch_only_flag="true"
-            cmap_flag="false"
             other_flag="false"
+            cmap_flag="false"
+            gsub_flag="true"
+            calt_insert_flag="true"
             ;;
         "b" )
-            echo "Option: Make calt for only basic latin characters"
+            echo "Option: Make calt settings for basic Latin characters only"
             basic_only_flag="true"
             ;;
         "r" )
@@ -134,8 +171,8 @@ if [ "${other_flag}" = "true" ]; then
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
-    ttx -t name -t head -t OS/2 -t post -t hmtx "$P"
-#    ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
+    ttx -t head -t OS/2 -t post -t hmtx "$P"
+#    ttx -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
 
     # head, OS/2 (フォントスタイルを修正)
     if [ "$(cat ${P%%.ttf}.ttx | grep "Bold Oblique")" ]; then
@@ -236,7 +273,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
-    calt_ok_flag="true" # calt不対応の場合、後でfalse
+    calt_ok_flag="true" # calt不対応の場合は後でfalse
     ttx -t GSUB "$P"
 
     # GSUB (用字、言語全て共通に変更)
@@ -248,6 +285,14 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       echo "Compatible with calt feature." # フォントがcaltフィーチャに対応していた場合
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
+        gsublist_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
+        if [ -z "${gsublist_txt}" ]; then # gsubListが無ければ作成(calt_table_maker で使用するため)
+          if [ "${leaving_tmp_flag}" = "true" ]; then
+            sh uvs_table_maker.sh -l -N "${font_familyname}"
+          else
+            sh uvs_table_maker.sh -N "${font_familyname}"
+          fi
+        fi
         caltlist_txt=`find . -name "${caltL}*.txt" -maxdepth 1 | head -n 1`
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
           if [ "${basic_only_flag}" = "true" ]; then
@@ -367,13 +412,7 @@ fi
 
 # 一時ファイルを削除
 if [ "${leaving_tmp_flag}" = "false" ]; then
-  echo "Remove temporary files"
-  rm -f ${font_familyname}*.ttx
-  rm -f ${font_familyname}*.ttx.bak
-  rm -f ${caltL}*.txt
-  rm -f ${cmapList}.txt
-  rm -f ${extList}.txt
-  rm -f ${gsubList}.txt
+  remove_temp
   echo
 fi
 
