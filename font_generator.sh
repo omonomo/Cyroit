@@ -391,6 +391,8 @@ do
             ;;
     esac
 done
+echo
+
 shift `expr $OPTIND - 1`
 
 # Get input fonts

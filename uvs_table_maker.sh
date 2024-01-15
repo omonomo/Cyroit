@@ -72,6 +72,7 @@ do
             ;;
     esac
 done
+echo
 
 toFontName="${font_familyname}-Regular" # 生成フォント名
 

@@ -31,7 +31,7 @@ leaving_tmp_flag="false" # 一時ファイル残す
 cmap_flag="true" # cmapを編集するか
 gsub_flag="true" # GSUBを編集するか
 other_flag="true" # その他を編集するか
-reuse_list_flag="false" # 生成済みのリストを使かうか
+reuse_list_flag="false" # 生成済みのリストを使うか
 
 calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # caltテーブルのみ編集
@@ -67,6 +67,7 @@ table_modificator_help()
     echo "  -h         Display this information"
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
+    echo "  -r         Reuse an existing list"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -m         Disable edit cmap tables"
     echo "  -g         Disable edit GSUB tables"
@@ -74,7 +75,6 @@ table_modificator_help()
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
     echo "  -b         Make calt settings for basic Latin characters only"
-    echo "  -r         Reuse an existing list"
     exit 0
 }
 
@@ -83,7 +83,7 @@ echo "= Font tables Modificator ="
 echo
 
 # Get options
-while getopts hxlN:mgtCpbr OPT
+while getopts hxlrN:mgtCpb OPT
 do
     case "${OPT}" in
         "h" )
@@ -99,6 +99,10 @@ do
         "l" )
             echo "Option: Leave (do NOT remove) temporary files"
             leaving_tmp_flag="true"
+            ;;
+        "r" )
+            echo "Option: Reuse an existing list"
+            reuse_list_flag="true"
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
@@ -140,15 +144,12 @@ do
             echo "Option: Make calt settings for basic Latin characters only"
             basic_only_flag="true"
             ;;
-        "r" )
-            echo "Option: Reuse an existing list"
-            reuse_list_flag="true"
-            ;;
         * )
             exit 1
             ;;
     esac
 done
+echo
 
 # ttxファイルを削除、パッチのみの場合フォントをリネームして再利用
 rm -f ${font_familyname}*.ttx ${font_familyname}*.ttx.bak
