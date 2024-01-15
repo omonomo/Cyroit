@@ -22,6 +22,7 @@ mode="" # 生成モード
 
 draft_flag="false" # 下書きモード
 leaving_tmp_flag="true" # 一時ファイル残す
+reuse_list_flag="false" # 生成済みのリストを使う
 table_modify_flag="true" # フィーチャテーブルを編集する
 
 font_version="0.1.0"
@@ -53,11 +54,16 @@ option_format_fg() { # font_generator 用のオプションを整形
 option_format_tm() { # table_modificator 用のオプションを整形
   local opt
   local leaving_tmp_flag
+  local reuse_list_flag
   opt="${1}"
   leaving_tmp_flag="${2}"
+  reuse_list_flag="${3}"
 
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションか 引数に l がある場合
     opt="${opt}l"
+  fi
+  if [ "${reuse_list_flag}" != "false" ]; then # -r オプションがある場合
+    opt="${opt}r"
   fi
   echo "${opt}"
 }
@@ -83,6 +89,7 @@ forge_ttx_help()
     echo "  -h         Display this information"
     echo "  -x         Cleaning temporary folders and files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
+    echo "  -r         Reuse an existing list"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -n string  Set fontfamily suffix (\"string\")"
     echo "  -d         Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
@@ -92,8 +99,12 @@ forge_ttx_help()
     exit 0
 }
 
+echo
+echo "≡ FontForge and TTX runner ≡"
+echo
+
 # オプションを取得
-while getopts hxlN:n:dCpF OPT
+while getopts hxlrN:n:dCpF OPT
 do
     case "${OPT}" in
         "h" )
@@ -109,6 +120,10 @@ do
         "l" )
             echo "Option: Leave (do NOT remove) temporary files"
             leaving_tmp_flag="true"
+            ;;
+        "r" )
+            echo "Option: Reuse an existing list"
+            reuse_list_flag="true"
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
@@ -152,6 +167,7 @@ do
             ;;
     esac
 done
+echo
 
 shift `expr $OPTIND - 1`
 
@@ -182,12 +198,12 @@ fi
 case ${mode} in
   "-d" )
     if [ $# -eq 0 ]; then
-      opt_fg="ldoP" # 引数が無い場合の設定
+      opt_fg="oP" # 引数が無い場合の設定
     fi
     ;;
   "-C" )
     if [ $# -eq 0 ]; then
-      opt_fg="lZzto" # 引数が無い場合の設定
+      opt_fg="Zzto" # 引数が無い場合の設定
     fi
     ;;
   "-p" )
@@ -199,7 +215,7 @@ case ${mode} in
     ;;
   "" )
     if [ $# -eq 0 ]; then
-      opt_fg="lo" # 引数が無い場合の設定
+      opt_fg="o" # 引数が無い場合の設定
     fi
     ;;
   * )
@@ -259,7 +275,7 @@ case ${mode} in
   "-F" ) opt_tm="" ;;
      * ) opt_tm="b" ;;
 esac
-opt_tm=`option_format_tm "${opt_tm}" "${leaving_tmp_flag}"`
+opt_tm=`option_format_tm "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"`
 if [ -n "${opt_tm}" ]; then
   sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else
