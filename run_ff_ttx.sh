@@ -9,12 +9,11 @@ set -e
 
 font_familyname="Cyroit"
 font_familyname_suffix=""
-tmpdir_name="font_generator_tmpdir" # font_generator のテンポラリフォルダ名
 
 font_familyname_suffix_def=("BS" "SP" "FX" "HB" "DG") # バージョン違いの名称 (デフォルト設定)
 #font_familyname_suffix_def=("BS" "SP" "FX" "HB" "DG" "DS" "TM" "TS")
 build_fonts_dir="build" # 完成品を保管するフォルダ
-illegal_opt_fg="hVfNn" # font_generator の使用できないオプション
+illegal_opt_fg="hVxfNn" # font_generator の使用できないオプション
 
 opt_fg="" # font_generator のオプション
 opt_tm="" # table_modificator のオプション
@@ -76,8 +75,8 @@ option_check() {
 }
 
 remove_temp() {
-  echo "Remove temporary folders and files"
-  rm -rf ${tmpdir_name}.*
+  echo "Remove temporary files"
+  sh font_generator.sh -x
   rm -f ${font_familyname}*.nopatch.ttf
 }
 
@@ -87,7 +86,7 @@ forge_ttx_help()
     echo ""
     echo "Option:"
     echo "  -h         Display this information"
-    echo "  -x         Cleaning temporary folders and files" # 一時作成ファイルの消去のみ
+    echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -r         Reuse an existing list"
     echo "  -N string  Set fontfamily (\"string\")"
@@ -100,7 +99,7 @@ forge_ttx_help()
 }
 
 echo
-echo "≡ FontForge and TTX runner ≡"
+echo "*** FontForge and TTX runner ***"
 echo
 
 # オプションを取得
@@ -111,10 +110,10 @@ do
             forge_ttx_help
             ;;
         "x" )
-            echo "Option: Cleaning temporary folders and files"
+            echo "Option: Cleaning temporary files"
             remove_temp
-            sh table_modificator.sh -x
             rm -f *.ttf
+            sh table_modificator.sh -x
             exit 0
             ;;
         "l" )
@@ -203,7 +202,7 @@ case ${mode} in
     ;;
   "-C" )
     if [ $# -eq 0 ]; then
-      opt_fg="Zzto" # 引数が無い場合の設定
+      opt_fg="Zzteo" # 引数が無い場合の設定
     fi
     ;;
   "-p" )
@@ -243,7 +242,7 @@ if [ "${mode}" = "-F" ]; then
         "BS" ) opt_fg="ztsp" ;;
         "SP" ) opt_fg="tsp" ;;
         "FX" ) opt_fg="ztcp" ;;
-        "HB" ) opt_fg="Zzbutsp" ;;
+        "HB" ) opt_fg="Zzubtsp" ;;
         "DG" ) opt_fg="ztp" ;;
         "DS" ) opt_fg="tp" ;;
         "TM" ) opt_fg="zp" ;;
