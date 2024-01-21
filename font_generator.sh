@@ -54,12 +54,17 @@ address_vert_X=`expr ${address_vert} + 109` # vert置換アドレス ✂
 address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
 address_vert_mm=`expr ${address_vert_dh} + 18` # vert置換アドレス ㍉
 address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
+
 address_calt=`expr ${address_vert_kabu} + 7` # calt置換の先頭アドレス(左に移動した A)
 address_calt_middle=`expr ${address_calt} + 239` # calt置換の中間アドレス(右に移動した A)
 address_calt_figure=`expr ${address_calt_middle} + 239` # calt置換アドレス(桁区切り付きの数字)
 address_calt_end=`expr ${address_calt_figure} + 52` # calt置換の最終アドレス (上に移動した colon)
 lookupIndex_calt="17" # caltテーブルのlookupナンバー
-num_calt_lookups="19" # calt のルックアップ数
+num_calt_lookups="20" # calt のルックアップ数
+
+lookupIndex_replace=`expr ${lookupIndex_calt} + ${num_calt_lookups}` # 単純置換のlookupナンバー
+num_replace_lookups="11" # 単純置換のルックアップ数
+
 address_ss=`expr ${address_calt_end} + 1` # ss置換の先頭アドレス(全角スペース)
 address_ss_figure=`expr ${address_ss} + 3` # ss置換アドレス(桁区切り付きの数字)
 address_ss_vert=`expr ${address_ss_figure} + 50` # ss置換の全角縦書きアドレス(縦書きの（)
@@ -68,14 +73,8 @@ address_ss_visibility=`expr ${address_ss_zenhan} + 172` # ss置換の識別性�
 address_ss_dvz=`expr ${address_ss_visibility} + 39` # ss置換のDVZアドレス
 address_ss_end=`expr ${address_ss_dvz} + 17` # ss置換の最終アドレス (Ｚ)
 num_ss_glyphs=`expr ${address_ss_end} - ${address_ss} + 1` # ss置換のグリフ数
-lookupIndex_ss="47" # ssテーブルのlookupナンバー
+lookupIndex_ss=`expr ${lookupIndex_replace} + ${num_replace_lookups}` # ssテーブルのlookupナンバー
 num_ss_lookups="8" # ss のルックアップ数
-
-# フォントバージョンにビルドNo追加
-buildNo=`date "+%s"`
-buildNo=`expr ${buildNo} % 315360000 / 60`
-buildNo=`echo "obase=16; ibase=10; ${buildNo}" | bc`
-font_version="${font_version} (${buildNo})"
 
 # 著作権
 copyright9="Copyright (c) 2023 omonomo\n\n"
@@ -250,11 +249,12 @@ option_check() {
 font_generator_help()
 {
     echo "Usage: font_generator.sh [options] auto"
-    echo "       font_generator.sh [options] [font1]-{Regular,Bold}.ttf [font2]-{regular,bold}.ttf [font3]-{Regular,Bold}.ttf [Nerd fonts].ttf"
+    echo "       font_generator.sh [options] [font1]-{Regular,Bold}.ttf [font2]-{regular,bold}.ttf ..."
     echo ""
     echo "Options:"
     echo "  -h                     Display this information"
     echo "  -V                     Display version number"
+    echo "  -x                     Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -f /path/to/fontforge  Set path to fontforge command"
     echo "  -v                     Enable verbose mode (display fontforge's warning)"
     echo "  -l                     Leave (do NOT remove) temporary files"
@@ -277,13 +277,19 @@ font_generator_help()
 }
 
 # Get options
-while getopts hVf:vlN:n:ZzubtcseoSdPp OPT
+while getopts hVxf:vlN:n:ZzubtcseoSdPp OPT
 do
     case "${OPT}" in
         "h" )
             font_generator_help
             ;;
         "V" )
+            exit 0
+            ;;
+        "x" )
+            echo "Option: Cleaning temporary files"
+            echo "Remove temporary files"
+            rm -rf ${tmpdir_name}.*
             exit 0
             ;;
         "f" )
@@ -523,6 +529,12 @@ else
     trap "echo 'Abnormally terminated'; exit 3" HUP INT QUIT
 fi
 echo
+
+# フォントバージョンにビルドNo追加
+buildNo=`date "+%s"`
+buildNo=`expr ${buildNo} % 315360000 / 60`
+buildNo=`echo "obase=16; ibase=10; ${buildNo}" | bc`
+font_version="${font_version} (${buildNo})"
 
 ################################################################################
 # Generate script for modified latin fonts
