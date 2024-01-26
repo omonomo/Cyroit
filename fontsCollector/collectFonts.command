@@ -10,3 +10,5 @@ done
 
 #rm -f OFL.txt
 #rm -f README.md
+
+exit 0
