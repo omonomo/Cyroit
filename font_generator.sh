@@ -59,11 +59,11 @@ address_calt=`expr ${address_vert_kabu} + 7` # calt置換の先頭アドレス(�
 address_calt_middle=`expr ${address_calt} + 239` # calt置換の中間アドレス(右に移動した A)
 address_calt_figure=`expr ${address_calt_middle} + 239` # calt置換アドレス(桁区切り付きの数字)
 address_calt_end=`expr ${address_calt_figure} + 52` # calt置換の最終アドレス (上に移動した colon)
-lookupIndex_calt="17" # caltテーブルのlookupナンバー
-num_calt_lookups="20" # calt のルックアップ数
+lookupIndex_calt="17" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
+num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる)
 
 lookupIndex_replace=`expr ${lookupIndex_calt} + ${num_calt_lookups}` # 単純置換のlookupナンバー
-num_replace_lookups="11" # 単純置換のルックアップ数
+num_replace_lookups="11" # 単純置換のルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 
 address_ss=`expr ${address_calt_end} + 1` # ss置換の先頭アドレス(全角スペース)
 address_ss_figure=`expr ${address_ss} + 3` # ss置換アドレス(桁区切り付きの数字)
@@ -74,7 +74,7 @@ address_ss_dvz=`expr ${address_ss_visibility} + 39` # ss置換のDVZアドレス
 address_ss_end=`expr ${address_ss_dvz} + 17` # ss置換の最終アドレス (Ｚ)
 num_ss_glyphs=`expr ${address_ss_end} - ${address_ss} + 1` # ss置換のグリフ数
 lookupIndex_ss=`expr ${lookupIndex_replace} + ${num_replace_lookups}` # ssテーブルのlookupナンバー
-num_ss_lookups="8" # ss のルックアップ数
+num_ss_lookups="8" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 
 # 著作権
 copyright9="Copyright (c) 2023 omonomo\n\n"
@@ -1015,6 +1015,22 @@ while (i < SizeOf(input_list))
  #    Select(0ua7aa) # Ɦ
  #    Select(0u1e26) # Ḧ
  #    Select(0u2c67) # Ⱨ
+
+# K (ほんの少し右へ移動)
+    Select(0u004b) # K
+    SelectMore(0u0136) # Ķ
+    SelectMore(0u0198) # Ƙ
+ #    SelectMore(0u01e8) # Ǩ
+ #    SelectMore(0u1e30) # Ḱ
+ #    SelectMore(0u1e32) # Ḳ
+ #    SelectMore(0u1e34) # Ḵ
+ #    SelectMore(0u2c69) # Ⱪ
+ #    SelectMore(0ua740) # Ꝁ
+ #    SelectMore(0ua742) # Ꝃ
+ #    SelectMore(0ua744) # Ꝅ
+ #    SelectMore(0ua7a2) # Ꞣ
+    Move(10, 0)
+    SetWidth(500)
 
 # Q (尻尾を下に伸ばす)
     # 下
@@ -7206,7 +7222,7 @@ while (i < SizeOf(input_list))
     Move(-222, 0)
     SetWidth(512)
 
-# ∭ (半角にする)
+# ∭ (全角にする)
     Select(1115733); Copy()
     Select(0u222d); Paste() # ∭
     SetWidth(1024)
