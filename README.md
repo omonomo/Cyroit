@@ -28,9 +28,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.0.4)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.0.4/Cyroit_v2.0.4.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.0.4.zip)
+最新版 (v2.0.5)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.0.5/Cyroit_v2.0.5.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.0.5.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -123,7 +123,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Sonoma (version 14.2.1)
+- OS: macOS Sonoma (version 14.3)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
 - FontTools: 4.47.2
@@ -249,7 +249,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 `-h` ヘルプを表示します。  
 `-x` スクリプトと同じフォルダにある一時作成ファイルの削除のみ行って終了します。  
 `-l` 一時作成ファイルを残したままにします。  
-`-n number` calt で置換するグリフの先頭アドレスに *number* を指定します。  
+`-n number` calt で置換する先頭のグリフ (左に動いた A になります) を示す番号に *number* を指定します。  
 　　先に uvs_table_maker を実行し、`gsubList.txt` が生成されていれば省略しても問題ありません。  
 `-b` カーニング設定を基本ラテン文字に限定します。動作確認用です。  
 `-s` カーニング以外の設定 (桁区切り、記号の移動) のみ作成します。動作確認用です。  
@@ -261,7 +261,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 - 一部グリフに不統一なところがありますが、複数のフォントを合成しているためであり、仕様となります。
 - 行間が広めにとってあります。ダイアクリティカルマークがたくさん付いた文字もきちんと表示させるためです。
 - Powerline グリフを使用する際はフォントサイズを 12pt か 14pt にすると、よい感じに表示されるかもしれません。
-- スクリプト実行時、ttx にて「Attempting to fix OTLOffsetOverflowError…」が出る場合がありますが、生成フォントに影響は無いと認識しております。
+- スクリプト実行時、ttx にて「Attempting to fix OTLOffsetOverflowError…」という警告が出る場合がありますが、生成フォントに影響は無いと認識しております。
 
 ## リンク
 
