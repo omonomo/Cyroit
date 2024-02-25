@@ -1207,6 +1207,14 @@ lookAhead=("${_iN[@]}" "${_lN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
+# 左が左寄り、中間、Vの字で 右が左寄り、均等な大文字、右が丸い文字の場合 il 左に移動
+backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}")
+input=("${_iN[@]}" "${_lN[@]}")
+lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalEN[@]}" \
+"${circleRN[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
+
 # rt に関する例外処理 1 ----------------------------------------
 
 # 両側が r の場合 r 左に移動しない (次の処理とセット)
@@ -1879,26 +1887,6 @@ lookAhead=("${gravityLN[@]}" "${gravityEN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
-# 2つ右を見て移動させない例外処理 1 ----------------------------------------
-
-# 左が左寄り、中間、Vの字で 右が左寄り、均等な大文字、右が丸い文字で その右が狭い文字の場合 il 左に移動しない (次の処理とセット)
-backtrack1=("")
-backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}")
-input=("${_iN[@]}" "${_lN[@]}")
-lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalEN[@]}" \
-"${circleRN[@]}")
-lookAhead1=("${gravityCN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
-index=`expr ${index} + 1`
-
-# 左が左寄り、中間、Vの字で 右が左寄り、均等な大文字、右が丸い文字の場合 il 左に移動
-backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}")
-input=("${_iN[@]}" "${_lN[@]}")
-lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalEN[@]}" \
-"${circleRN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-index=`expr ${index} + 1`
-
 # 左側基準で左に移動 ========================================
 
 # 左右を見て左に移動させる通常処理 ----------------------------------------
@@ -2546,7 +2534,7 @@ index=`expr ${index} + 1`
 
 # 右側基準で右に移動 ========================================
 
-# 2つ右を見て移動させない例外処理 2 ----------------------------------------
+# 2つ右を見て移動させない例外処理 ----------------------------------------
 
 # 左が左寄り、中間の文字で 右が狭い文字の場合 右寄り、中間の文字 右に移動
 backtrack=("${gravityLN[@]}" "${gravityMN[@]}")
