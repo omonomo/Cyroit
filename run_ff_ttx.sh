@@ -202,7 +202,7 @@ case ${mode} in
     ;;
   "-C" )
     if [ $# -eq 0 ]; then
-      opt_fg="Zzteo" # 引数が無い場合の設定
+      opt_fg="Seo" # 引数が無い場合の設定
     fi
     ;;
   "-p" )
@@ -234,7 +234,7 @@ if [ "${table_modify_flag}" = "false" ]; then # 下書きモードか、引数�
   exit 0
 fi
 
-# -F オプションの場合
+# -F オプション(かつ引き数がない)の場合
 if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
     for S in ${font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
@@ -267,7 +267,7 @@ if [ "${mode}" = "-F" ]; then
   fi
 fi
 
-# テーブル加工 (完成品以外はカーニング設定を基本ラテン文字に限定)
+# テーブル加工 (-F オプション以外はカーニング設定を基本ラテン文字に限定)
 case ${mode} in
   "-C" ) opt_tm="C" ;;
   "-p" ) opt_tm="pb" ;;
