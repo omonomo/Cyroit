@@ -7,7 +7,8 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 [Commit Mono](https://commitmono.com) に影響を受け、calt を利用したカーニング機能を実装しました (v1.1.0以降)。  
 [mottainaiDTP](http://mottainaidtp.seesaa.net) さんの [3桁ごとにカンマが発生するフォント](http://mottainaidtp.seesaa.net/article/395328634.html) を応用して、桁区切り表示に対応したバージョンを追加しました (v1.6.0以降)。  
-スタイルセットに対応したことで、機能や見た目について柔軟にカスタマイズできるようになりました (v2.0.0以降)。
+スタイルセットに対応したことで、機能や見た目について柔軟にカスタマイズできるようになりました (v2.0.0以降)。  
+変体仮名と小書き仮名の表示に対応しました (v2.1.0以降)。  
 
 ## フォントサンプル  
 
@@ -28,9 +29,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.0.5)
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.0.5/Cyroit_v2.0.5.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.0.5.zip)
+最新版 (v2.1.0)
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.1.0/Cyroit_v2.1.0.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.1.0.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -38,8 +39,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 ## その他の特徴
 
 - 主にラテン文字のグリフは [Inconsolata](https://github.com/googlefonts/Inconsolata) を使用しています。
-- 主に仮名文字、ギリシア文字、キリル文字のグリフは [CircleM+ 1m](https://mix-mplus-ipa.osdn.jp) を使用しています。
+- 主に仮名文字、ギリシア文字、キリル文字のグリフは [Circle M+ 1m](https://itouhiro.github.io/mixfont-mplus-ipa/) を使用しています。
 - 主に漢字のグリフは [BIZ UDゴシック](https://github.com/googlefonts/morisawa-biz-ud-gothic) を使用しています。
+- 変体仮名のグリフは [NINJAL 変体仮名フォント](https://cid.ninjal.ac.jp/kana/font/) を使用しています。
 - [Nerd Fonts](https://www.nerdfonts.com) Ver.3 を追加しています。
 - [ricty_generator](https://rictyfonts.github.io) を Fork したスクリプトで自動生成させています。生成時にグリフの改変や調整を行っています。
 
@@ -56,6 +58,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 - 一部のひらがなを教科書体っぽく (跳ねたり突き抜けたり別れたり) しています。
 - 濁点、半濁点の大きさや位置を変更しています。
 - イコールと区別しやすいようにダブルハイフンの先端を少し折っています。
+- 小仮名拡張に対応しています。見た目に統一感はないですが、変体仮名の表示にも対応しています。
 - その他のグリフについても、他の素材フォントとのバランスをとるための微調整を施しています。
 
 ### 漢字について
@@ -123,10 +126,10 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Sonoma (version 14.3)
+- OS: macOS Sonoma (version 14.3.1)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.47.2
+- FontTools: 4.49.0
 
 ### 基本的な使い方
 
@@ -163,7 +166,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 `-n string` フォントファミリー名の接尾語 (「BS」や「SP」の部分) を *string* にします。  
 `-d` 下書きモード。時間のかかる処理を飛ばします。改変したグリフの確認用です。  
 　　フィーチャテーブルを編集する前に終了します。パラメータなしの場合 `ldoP` を有効にしたフォントを生成します。  
-`-C` calt を設定する直前で処理を終了します。パラメータなしの場合 `lZzteo` を有効にしたフォントを生成します。  
+`-C` calt を設定する直前で処理を終了します。パラメータなしの場合 `lSeo` を有効にしたフォントを生成します。  
 `-p` `-C` オプションの続きから実行します。元のフォントを残すので、調整を繰り返す時に重宝します。  
 　　カーニング設定は基本ラテン文字限定になります。フォントは合成済みのため、パラメータの内容は意味を成しません。  
 `-F` 完成品を生成します。時間がかかりますので気長にお待ちください。完成したフォントは `build` フォルダに保存されます。  
