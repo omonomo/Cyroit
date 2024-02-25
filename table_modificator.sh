@@ -9,7 +9,7 @@
 
 font_familyname="Cyroit"
 
-lookupIndex_calt="17" # caltテーブルのlookupナンバー
+lookupIndex_calt="18" # caltテーブルのlookupナンバー
 listNo="0"
 caltL="caltList" # caltテーブルリストの名称
 caltList="${caltL}_${listNo}" # Lookupごとのcaltテーブルリスト
@@ -314,13 +314,13 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         find . -name "${caltL}*.txt" -maxdepth 1 | while read line # caltList(caltルックアップ)の数だけループ
         do
-          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="17"〜の中を削除
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の中を削除
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
-          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="17"〜の後に挿入
+          sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の後に挿入
           lookupIndex_calt=`expr ${lookupIndex_calt} + 1`
           listNo=`expr ${listNo} + 1`
           caltList="${caltL}_${listNo}"
@@ -331,55 +331,47 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       calt_ok_flag="false"
     fi
     # calt対応に関係なくスクリプトリストを変更
-    sed -i.bak -e '/FeatureIndex index="10" value=".."/d' "${P%%.ttf}.ttx" # 最少のindex数が9なので10以降を削除して数を合わせる
-    sed -i.bak -e '/FeatureIndex index="11" value=".."/d' "${P%%.ttf}.ttx"
-    sed -i.bak -e '/FeatureIndex index="12" value=".."/d' "${P%%.ttf}.ttx"
-    sed -i.bak -e '/FeatureIndex index="13" value=".."/d' "${P%%.ttf}.ttx"
-    sed -i.bak -e '/FeatureIndex index="14" value=".."/d' "${P%%.ttf}.ttx"
-    sed -i.bak -e '/FeatureIndex index="15" value=".."/d' "${P%%.ttf}.ttx"
+    sed -i.bak -e '/FeatureIndex index=".." value=".."/d' "${P%%.ttf}.ttx" # 2桁のindexを削除
 
     sed -i.bak -e 's,FeatureIndex index="0" value=".",FeatureIndex index="0" value="0",' "${P%%.ttf}.ttx" # 始めの部分は上書き
-    sed -i.bak -e 's,FeatureIndex index="1" value=".",FeatureIndex index="1" value="1",' "${P%%.ttf}.ttx"
-    sed -i.bak -e 's,FeatureIndex index="2" value=".",FeatureIndex index="2" value="4",' "${P%%.ttf}.ttx"
-    sed -i.bak -e 's,FeatureIndex index="3" value=".",FeatureIndex index="3" value="5",' "${P%%.ttf}.ttx"
-    sed -i.bak -e 's,FeatureIndex index="4" value=".",FeatureIndex index="4" value="6",' "${P%%.ttf}.ttx"
-    sed -i.bak -e 's,FeatureIndex index="5" value=".",FeatureIndex index="5" value="7",' "${P%%.ttf}.ttx"
-    sed -i.bak -e 's,FeatureIndex index="6" value=".",FeatureIndex index="6" value="8",' "${P%%.ttf}.ttx"
-
-    sed -i.bak -e 's,FeatureIndex index="7" value=".",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx" # index7 は valueが1桁と2桁の2つの場合がある
-    sed -i.bak -e 's,FeatureIndex index="7" value="..",FeatureIndex index="7" value="9",' "${P%%.ttf}.ttx"
-
-    sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="10",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="1" value=".",FeatureIndex index="1" value="3",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="2" value=".",FeatureIndex index="2" value="6",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="3" value=".",FeatureIndex index="3" value="7",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="4" value=".",FeatureIndex index="4" value="8",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="5" value=".",FeatureIndex index="5" value="9",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="6" value="..",FeatureIndex index="6" value="10",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="7" value="..",FeatureIndex index="7" value="11",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="12",' "${P%%.ttf}.ttx"
 
     gps=`grep 'FeatureTag value="ss01"' "${P%%.ttf}.ttx"` # ssフィーチャがあるか判定
     if [ -n "${gps}" ]; then # ss対応の場合
-      sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
-      <FeatureIndex index="10" value="12"/>\
-      <FeatureIndex index="11" value="13"/>\
-      <FeatureIndex index="12" value="14"/>\
-      <FeatureIndex index="13" value="15"/>\
-      <FeatureIndex index="14" value="16"/>\
-      <FeatureIndex index="15" value="17"/>\
-      <FeatureIndex index="16" value="18"/>\
-      <FeatureIndex index="17" value="19"/>\
-      <FeatureIndex index="18" value="20"/>\
-      <FeatureIndex index="19" value="21"/>\
-      <FeatureIndex index="20" value="22"/>\
-      ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(12 + ss フィーチャの数) を追加
+      sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="13"/>\
+      <FeatureIndex index="10" value="14"/>\
+      <FeatureIndex index="11" value="15"/>\
+      <FeatureIndex index="12" value="16"/>\
+      <FeatureIndex index="13" value="17"/>\
+      <FeatureIndex index="14" value="18"/>\
+      <FeatureIndex index="15" value="19"/>\
+      <FeatureIndex index="16" value="20"/>\
+      <FeatureIndex index="17" value="21"/>\
+      <FeatureIndex index="18" value="22"/>\
+      <FeatureIndex index="19" value="23"/>\
+      <FeatureIndex index="20" value="24"/>\
+      ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(14 + ss フィーチャの数) を追加
       if [ "${calt_ok_flag}" = "true" ]; then # calt対応であればさらに1つ index 追加
-        sed -i.bak -e 's,<FeatureIndex index="20" value="22"/>,<FeatureIndex index="20" value="22"/>\
-        <FeatureIndex index="21" value="23"/>\
+        sed -i.bak -e 's,<FeatureIndex index="20" value=".."/>,<FeatureIndex index="20" value="24"/>\
+        <FeatureIndex index="21" value="25"/>\
         ,' "${P%%.ttf}.ttx"
       fi
     else # ss非対応の場合
-      sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="11"/>\
-      <FeatureIndex index="10" value="12"/>\
-      <FeatureIndex index="11" value="13"/>\
-      <FeatureIndex index="12" value="14"/>\
+      sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="13"/>\
+      <FeatureIndex index="10" value="14"/>\
+      <FeatureIndex index="11" value="15"/>\
+      <FeatureIndex index="12" value="16"/>\
       ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index12 まで追加
       if [ "${calt_ok_flag}" = "true" ]; then # calt対応であれば index13 を追加
-        sed -i.bak -e 's,<FeatureIndex index="12" value="14"/>,<FeatureIndex index="12" value="14"/>\
-        <FeatureIndex index="13" value="15"/>\
+        sed -i.bak -e 's,<FeatureIndex index="12" value=".."/>,<FeatureIndex index="12" value="16"/>\
+        <FeatureIndex index="13" value="17"/>\
         ,' "${P%%.ttf}.ttx"
       fi
     fi
