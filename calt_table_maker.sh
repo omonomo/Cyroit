@@ -1881,19 +1881,21 @@ index=`expr ${index} + 1`
 
 # 2つ右を見て移動させない例外処理 1 ----------------------------------------
 
-# 左が左寄り、中間、Vの字で 右が左寄り、均等な文字で その右が狭い文字の場合 il 左に移動しない (次の処理とセット)
+# 左が左寄り、中間、Vの字で 右が左寄り、均等な大文字、右が丸い文字で その右が狭い文字の場合 il 左に移動しない (次の処理とセット)
 backtrack1=("")
 backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}")
 input=("${_iN[@]}" "${_lN[@]}")
-lookAhead=("${gravityLN[@]}" "${gravityEN[@]}")
+lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalEN[@]}" \
+"${circleRN[@]}")
 lookAhead1=("${gravityCN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 index=`expr ${index} + 1`
 
-# 左が左寄り、中間、Vの字で 右が左寄り、均等な文字の場合 il 左に移動
+# 左が左寄り、中間、Vの字で 右が左寄り、均等な大文字、右が丸い文字の場合 il 左に移動
 backtrack=("${gravityLR[@]}" "${gravityMR[@]}" "${gravityVR[@]}")
 input=("${_iN[@]}" "${_lN[@]}")
-lookAhead=("${gravityLN[@]}" "${gravityEN[@]}")
+lookAhead=("${gravityCapitalLN[@]}" "${gravityCapitalEN[@]}" \
+"${circleRN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
