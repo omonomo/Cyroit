@@ -2739,7 +2739,7 @@ while (i < SizeOf(input_list))
 # --------------------------------------------------
 
 # 漢字のグリフクリア
-    Print("Remove kanzi glyphs")
+    Print("Remove kanji glyphs")
  #    Select(0u2e80, 0u2fdf) # 部首
     Select(0u3003) # 〃
     SelectMore(0u3005, 0u3007) # 々〆〇
@@ -6098,7 +6098,8 @@ while (i < SizeOf(input_list))
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     if (input_list[i] == "${input_kana_regular}")
-        Move(-110, 3)
+        Move(-148, 3)
+ #        Move(-110, 3)
     else
         Move(-120, 3)
  #        Move(-95, 3)
@@ -6636,7 +6637,7 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_kana_bold}")
  #        Select(0u3052); PasteWithOffset(108,  104) # げ
  #        OverlapIntersect()
-        Select(0u3054); PasteWithOffset( 84,  76) # ご
+        Select(0u3054); PasteWithOffset(104,  76) # ご
  #        Select(0u3054); PasteWithOffset( 80, 103) # ご
         OverlapIntersect()
 
@@ -6701,7 +6702,7 @@ while (i < SizeOf(input_list))
  #        Select(0u3094); PasteWithOffset( 89,   78) # ゔ
         SetWidth(1000); RemoveOverlap()
 
-        Select(0u304c); PasteWithOffset( 81,   70) # が
+        Select(0u304c); PasteWithOffset( 91,   70) # が
  #        Select(0u304c); PasteWithOffset( 51,   60) # が
         SetWidth(1000); RemoveOverlap()
         Select(0u304e); PasteWithOffset(113,  128) # ぎ
@@ -6717,7 +6718,7 @@ while (i < SizeOf(input_list))
  #        Select(0u3054); PasteWithOffset( 55, -143) # ご
         SetWidth(1000); RemoveOverlap()
 
-        Select(0u3056); PasteWithOffset(125,  128) # ざ
+        Select(0u3056); PasteWithOffset(135,  128) # ざ
  #        Select(0u3056); PasteWithOffset(105,  131) # ざ
         SetWidth(1000); RemoveOverlap()
         Select(0u3058); PasteWithOffset(-43,   18) # じ
@@ -6728,7 +6729,7 @@ while (i < SizeOf(input_list))
         Select(0u305c); PasteWithOffset(149,  124) # ぜ
  #        Select(0u305c); PasteWithOffset(149,  114) # ぜ
         SetWidth(1000); RemoveOverlap()
-        Select(0u305e); PasteWithOffset(115,  114) # ぞ
+        Select(0u305e); PasteWithOffset(125,  114) # ぞ
  #        Select(0u305e); PasteWithOffset(145,   -4) # ぞ
         SetWidth(1000); RemoveOverlap()
 
@@ -6740,7 +6741,7 @@ while (i < SizeOf(input_list))
         SetWidth(1000); RemoveOverlap()
         Select(0u3065); PasteWithOffset( 96,  122) # づ
         SetWidth(1000); RemoveOverlap()
-        Select(0u3067); PasteWithOffset( 80, -180) # で
+        Select(0u3067); PasteWithOffset( 90, -180) # で
  #        Select(0u3067); PasteWithOffset( 80, -195) # で
         SetWidth(1000); RemoveOverlap()
         Select(0u3069); PasteWithOffset( 14,   81) # ど
@@ -6752,7 +6753,7 @@ while (i < SizeOf(input_list))
         Select(0u3073); PasteWithOffset(107,   93) # び
  #        Select(0u3073); PasteWithOffset( 87,   93) # び
         SetWidth(1000); RemoveOverlap()
-        Select(0u3076); PasteWithOffset(117,   98) # ぶ
+        Select(0u3076); PasteWithOffset(127,   98) # ぶ
         SetWidth(1000); RemoveOverlap()
         Select(0u307c); PasteWithOffset(149,  103) # ぼ
  #        Select(0u307c); PasteWithOffset(149,   93) # ぼ
@@ -6761,16 +6762,16 @@ while (i < SizeOf(input_list))
         Select(0u30f4); PasteWithOffset(105,  128) # ヴ
         SetWidth(1000); RemoveOverlap()
 
-        Select(0u30ac); PasteWithOffset( 91,  123) # ガ
+        Select(0u30ac); PasteWithOffset(121,  123) # ガ
  #        Select(0u30ac); PasteWithOffset( 81,  128) # ガ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30ae); PasteWithOffset( 81,  123) # ギ
+        Select(0u30ae); PasteWithOffset( 91,  123) # ギ
  #        Select(0u30ae); PasteWithOffset( 81,  128) # ギ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30b0); PasteWithOffset(115,  110) # グ
+        Select(0u30b0); PasteWithOffset(125,  110) # グ
  #        Select(0u30b0); PasteWithOffset(105,  110) # グ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30b2); PasteWithOffset( 81,  128) # ゲ
+        Select(0u30b2); PasteWithOffset(101,  128) # ゲ
         SetWidth(1000); RemoveOverlap()
         Select(0u30b4); PasteWithOffset(114,  121) # ゴ
  #        Select(0u30b4); PasteWithOffset(104,  121) # ゴ
@@ -6785,7 +6786,7 @@ while (i < SizeOf(input_list))
         Select(0u30ba); PasteWithOffset(103,  128) # ズ
  #        Select(0u30ba); PasteWithOffset( 93,  128) # ズ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30bc); PasteWithOffset( 96,  128) # ゼ
+        Select(0u30bc); PasteWithOffset(106,  128) # ゼ
         SetWidth(1000); RemoveOverlap()
         Select(0u30be); PasteWithOffset(124,  116) # ゾ
  #        Select(0u30be); PasteWithOffset( 84,  116) # ゾ
@@ -6818,16 +6819,16 @@ while (i < SizeOf(input_list))
         Select(0u30dc); PasteWithOffset(103,  128) # ボ
         SetWidth(1000); RemoveOverlap()
 
-        Select(0u30f7); PasteWithOffset(131,  128) # ヷ
+        Select(0u30f7); PasteWithOffset(141,  128) # ヷ
  #        Select(0u30f7); PasteWithOffset(101,  129) # ヷ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30f8); PasteWithOffset(131,  128) # ヸ
+        Select(0u30f8); PasteWithOffset(141,  128) # ヸ
  #        Select(0u30f8); PasteWithOffset(111,  129) # ヸ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30f9); PasteWithOffset(129,  128) # ヹ
+        Select(0u30f9); PasteWithOffset(139,  128) # ヹ
  #        Select(0u30f9); PasteWithOffset( 99,  135) # ヹ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30fa); PasteWithOffset(132,  128) # ヺ
+        Select(0u30fa); PasteWithOffset(142,  128) # ヺ
  #        Select(0u30fa); PasteWithOffset(102,  128) # ヺ
         SetWidth(1000); RemoveOverlap()
 
@@ -6859,7 +6860,7 @@ while (i < SizeOf(input_list))
         Select(0u3052); PasteWithOffset(108,   99) # げ
  #        Select(0u3052); PasteWithOffset( 80,   79) # げ
         SetWidth(1000); RemoveOverlap()
-        Select(0u3054); PasteWithOffset( 80,  108) # ご
+        Select(0u3054); PasteWithOffset(100,  108) # ご
  #        Select(0u3054); PasteWithOffset( 30, -209) # ご
         SetWidth(1000); RemoveOverlap()
 
@@ -6908,7 +6909,7 @@ while (i < SizeOf(input_list))
         Select(0u30f4); PasteWithOffset( 65,  104) # ヴ
         SetWidth(1000); RemoveOverlap()
 
-        Select(0u30ac); PasteWithOffset( 84,   99) # ガ
+        Select(0u30ac); PasteWithOffset( 94,   99) # ガ
  #        Select(0u30ac); PasteWithOffset( 74,   94) # ガ
         SetWidth(1000); RemoveOverlap()
         Select(0u30ae); PasteWithOffset( 74,   89) # ギ
@@ -7018,7 +7019,7 @@ while (i < SizeOf(input_list))
     Select(65553); Clear() # Temporary glyph
 
 # 漢字部首のグリフ変更
-    Print("Edit kanzi busyu")
+    Print("Edit kanji busyu")
 
 # ⼣
     Select(0u2f23); Copy() # ⼣
@@ -7714,7 +7715,7 @@ _EOT_
 cat > ${tmpdir}/${modified_kanzi_generator} << _EOT_
 #!$fontforge_command -script
 
-Print("- Generate modified kanzi fonts -")
+Print("- Generate modified kanji fonts -")
 
 # Set parameters
 input_list  = ["${input_kanzi_regular}",    "${input_kanzi_bold}"]
@@ -7996,7 +7997,7 @@ while (i < SizeOf(input_list))
 # --------------------------------------------------
 
 # Edit kanzi (漢字のグリフ変更)
-    Print("Edit kanzi")
+    Print("Edit kanji")
 
 # 〇 (上にうろこを追加)
     Select(0u3007); Copy() # 〇
@@ -9019,7 +9020,7 @@ while (i < SizeOf(input_list))
 # ボールド漢字等のウェイト調整
     if ("${draft_flag}" == "false")
         if (input_list[i] == "${input_kanzi_bold}")
-            Print("Edit kanzi weight of glyphs (it may take a few minutes)")
+            Print("Edit kanji weight of glyphs (it may take a few minutes)")
             Select(0u2e80, 0u2fdf)
             SelectMore(0u3003) # 〃
             SelectMore(0u3005, 0u3007) # 々〆〇
