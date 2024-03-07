@@ -212,11 +212,11 @@ chain_context() {
   echo "<InputCoverage index=\"0\">" >> "${caltList}.txt" # 入力した文字(グリフ変換対象)
   rm -f ${listTemp}.txt
   for S in ${input[@]}; do
- #     T=`printf '%s\n' "${fixedGlyphN[@]}" | grep -x "${S}"` # (コレと) 移動 (置換) しない文字を除く
- #     if [ -z "${T}" ]; then # (コレと) 有効にするとデータ量が減るはずだが、何故か Overfrow エラーが出やすくなる場合がある
+ #    T=`printf '%s\n' "${fixedGlyphN[@]}" | grep -x "${S}"` # (コレと) 移動 (置換) しない文字を除く
+ #    if [ -z "${T}" ]; then # (コレと) 有効にするとデータ量が減るはずだが、何故か Overfrow エラーが出やすくなる場合がある
       T=`glyph_name "${S}"` # 略号から通し番号とグリフ名を取得
       echo "${T}" >> "${listTemp}.txt"
- #     fi # (コレの3行)
+ #    fi # (コレの3行)
   done
   sort -n -u "${listTemp}.txt" | while read line # ソートしないとttxにしかられる
   do
@@ -3041,6 +3041,35 @@ lookAhead=("${gravityLN[@]}" "${gravityEN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 index=`expr ${index} + 1`
 
+# 左が幅広の文字で 右が右寄りの文字の場合 均等、丸い文字 元に戻る (2つ後の処理と統合)
+ #backtrack=("${gravityWL[@]}")
+ #input=("${gravityER[@]}" \
+ #"${circleCR[@]}")
+ #lookAhead=("${gravityRN[@]}")
+ #chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+ #index=`expr ${index} + 1`
+
+# 右に幅広が来た時に左側を詰める処理の始め ----------------------------------------
+
+# 左が左寄り、右寄り、均等な小文字で その左が右寄り、均等な小文字で 右が幅広の小文字の場合 左寄り、右寄り、均等、中間の小文字 左に移動
+backtrack1=("${gravitySmallRL[@]}" "${gravitySmallEL[@]}")
+backtrack=("${gravitySmallLN[@]}" "${gravitySmallRN[@]}" "${gravitySmallEN[@]}")
+input=("${gravitySmallLN[@]}" "${gravitySmallRN[@]}" "${gravitySmallEN[@]}" "${gravitySmallMN[@]}")
+lookAhead=("${gravitySmallWN[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
+index=`expr ${index} + 1`
+
+# 左が幅広、均等、右が丸い文字で 右が右寄り、均等、右が丸い文字の場合 均等、丸い文字 元の位置に戻る (2つ前の処理と統合)
+backtrack=("${gravityWL[@]}" \
+"${gravityER[@]}" \
+"${circleRR[@]}" "${circleCR[@]}")
+input=("${gravityER[@]}" \
+"${circleCR[@]}")
+lookAhead=("${gravityRN[@]}" "${gravityEN[@]}" \
+"${circleRN[@]}" "${circleCN[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+index=`expr ${index} + 1`
+
 # 丸い文字と均等な文字が並んだ場合の処理 ----------------------------------------
 
 # 両側が、左右が丸い文字の場合 左右が丸い、均等な文字 左に移動
@@ -3124,18 +3153,6 @@ lookAhead=("${gravitySmallLR[@]}" "${gravitySmallER[@]}" \
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 index=`expr ${index} + 1`
 
-# 右に幅広が来た時に左側を詰める処理の始め ----------------------------------------
-
-# 左が、右が丸い、均等な文字で 右が、左右が丸い、均等な文字の場合 丸い、均等な文字 元の位置に戻る
-backtrack=("${circleRR[@]}" "${circleCR[@]}" \
-"${gravityER[@]}")
-input=("${circleCR[@]}" \
-"${gravityER[@]}")
-lookAhead=("${circleRN[@]}" "${circleLN[@]}" "${circleCN[@]}" \
-"${gravityEN[@]}")
-chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
-index=`expr ${index} + 1`
-
 # 右側が右に移動したため開いた間隔を詰める処理 ----------------------------------------
 
 # 左が引き寄せる文字の場合 均等な文字 元の位置に戻らない
@@ -3201,6 +3218,14 @@ echo "<LookupFlag value=\"0\"/>" >> "${caltList}.txt"
 index="0"
 
 # 右に幅広が来た時に左側を詰める処理の続き ----------------------------------------
+
+# 左が右寄り、均等な小文字で 右が左寄り、右寄り、均等な小文字の場合 左寄り、右寄り、均等、中間の小文字 左に移動
+backtrack=("${gravitySmallRL[@]}" "${gravitySmallEL[@]}")
+input=("${gravitySmallLN[@]}" "${gravitySmallRN[@]}" "${gravitySmallEN[@]}" "${gravitySmallMN[@]}")
+lookAhead=("${gravitySmallLL[@]}" "${gravitySmallRL[@]}" "${gravitySmallEL[@]}" \
+"${circleSmallCL[@]}")
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+index=`expr ${index} + 1`
 
 # 左が、右が丸い、均等な文字で 右が、左右が丸い、均等な文字の場合 丸い、均等な文字 元の位置に戻る
 backtrack=("${circleRR[@]}" "${circleCR[@]}" \
