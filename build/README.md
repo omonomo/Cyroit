@@ -49,7 +49,7 @@ Copyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 
 [Symbols Nerd Font]  
 Copyright (c) 2016, Ryan McIntyre  
 ([https://www.nerdfonts.com](https://www.nerdfonts.com))  
-サイズ調整したものを使用しています。Symbols Nerd Font のライセンスは [SIL Open Font License v1.1](http://scripts.sil.org/ofl) です。  
+サイズを調整して使用しています。Symbols Nerd Font のライセンスは [SIL Open Font License v1.1](http://scripts.sil.org/ofl) です。  
 
 ## Cyroit のライセンス
 
