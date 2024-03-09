@@ -4380,8 +4380,8 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0u30a4); PasteWithOffset(0, -5) # イ
-    Move(0, 5)
+    Select(0u30a4); PasteWithOffset(0, -10) # イ
+    Move(0, 10)
     SetWidth(1000)
     RemoveOverlap()
 
@@ -4395,8 +4395,8 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0u30a3); PasteWithOffset(0, -3) # イ
-    Move(0, 3)
+    Select(0u30a3); PasteWithOffset(0, -7) # イ
+    Move(0, 7)
     SetWidth(1000)
     RemoveOverlap()
 
@@ -4410,8 +4410,8 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0uff72); PasteWithOffset(0, -5) # ｲ
-    Move(0, 5)
+    Select(0uff72); PasteWithOffset(0, -10) # ｲ
+    Move(0, 10)
     SetWidth(500)
     RemoveOverlap()
 
@@ -4425,8 +4425,8 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Copy()
-    Select(0uff68); PasteWithOffset(0, -3) # ｨ
-    Move(0, 3)
+    Select(0uff68); PasteWithOffset(0, -7) # ｨ
+    Move(0, 7)
     SetWidth(500)
     RemoveOverlap()
 
