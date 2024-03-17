@@ -29,9 +29,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.1.3)  
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.1.3/Cyroit_v2.1.3.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.1.3.zip)
+最新版 (v2.2.0)  
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.0/Cyroit_v2.2.0.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.0.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -129,7 +129,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - OS: macOS Sonoma (version 14.4)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.49.0
+- FontTools: 4.50.0
 
 ### 基本的な使い方
 
@@ -263,7 +263,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 - 一部グリフに不統一なところがありますが、複数のフォントを合成しているためであり、仕様となります。
 - 行間が広めにとってあります。ダイアクリティカルマークがたくさん付いた文字もきちんと表示させるためです。
 - Powerline グリフを使用する際はフォントサイズを 12pt か 14pt にすると、よい感じに表示されるかもしれません。
-- 通常版等をメインのフォントに指定すると、スクロールがもっさりになってしまうソフトウェアがあります。その場合は文字間隔固定版をお試しください。
+- 通常版等をメインのフォントに指定すると、動作がもっさりになってしまうソフトウェアがあります。その場合は文字間隔固定版をお試しください。
 - スクリプト実行時、ttx にて「Attempting to fix OTLOffsetOverflowError…」という警告が出る場合がありますが、生成フォントに影響は無いと認識しております。
 
 ## リンク
