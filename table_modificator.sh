@@ -17,6 +17,7 @@ cmapList="cmapList" # 異体字セレクタリスト
 extList="extList" # 異体字のglyphナンバーリスト
 gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
 
+zero_width="0" # 文字幅ゼロ
 half_width="512" # 半角文字幅
 full_width="1024" # 全角文字幅
 underline="-80" # アンダーライン位置
@@ -206,6 +207,7 @@ if [ "${other_flag}" = "true" ]; then
 #    sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${vhea_linegap1024}\"," "${P%%.ttf}.ttx"
 
     # hmtx (Widthのブレを修正)
+    sed -i.bak -e "s,width=\".\",width=\"${zero_width}\"," "${P%%.ttf}.ttx" # zero width
     sed -i.bak -e "s,width=\"3..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # .notdef
     sed -i.bak -e "s,width=\"4..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # 半角
     sed -i.bak -e "s,width=\"5..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
