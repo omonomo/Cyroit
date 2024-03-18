@@ -118,9 +118,12 @@ y_pos_pl="76" # PowerlineY座標移動量
 y_pos_space="-235"
 
 # ウェイト調整用
+weight_extend_kanzi_regular="8" # 主に漢字レギュラー
 weight_extend_kanzi_bold="8" # 主に漢字ボールド
 weight_extend_kanzi_symbols_regular="6" # 漢字フォントの記号類レギュラー
 weight_extend_kanzi_symbols_bold="12" # 漢字フォントの記号類ボールド
+weight_reduce_kanzi_roman_regular="-6" # 漢字フォントのローマ数字レギュラー
+weight_reduce_kanzi_roman_bold="-8" # 漢字フォントのローマ数字ボールド
 
 weight_reduce_kana_bold="-8" # 主に仮名ボールド
 weight_reduce_kana_others_regular="-2" # 仮名フォントのその他レギュラー
@@ -8606,6 +8609,34 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
+# Ⅰⅰ(縦線を少し細く)
+    Select(0u2160) # Ⅰ
+    SelectMore(0u2170) # ⅰ
+    if (input_list[i] == "${input_kanzi_regular}")
+        Scale(86, 100)
+    else
+        Scale(91, 100)
+    endif
+    SetWidth(1024)
+
+# Ⅱⅱ(縦線を少し細く)
+    Select(0u2161) # Ⅱ
+    SelectMore(0u2171) # ⅱ
+    if (input_list[i] == "${input_kanzi_regular}")
+        Scale(88, 100)
+    else
+        Scale(96, 100)
+    endif
+    SetWidth(1024)
+
+# Ⅲⅲ(縦線を少し細く)
+    Select(0u2162) # Ⅲ
+    SelectMore(0u2172) # ⅲ
+    if (input_list[i] == "${input_kanzi_regular}")
+        Scale(93, 100)
+    endif
+    SetWidth(1024)
+
 # Ⅼ-Ⅿ (ローマ数字、全角英数をコピー)
     Select(0uff2c); Copy() # Ｌ
     Select(0u216c); Paste() # ローマ数字Ⅼ
@@ -9430,7 +9461,8 @@ while (i < SizeOf(input_list))
         if (input_list[i] == "${input_kanzi_regular}")
             Select(0u20a0, 0u2120) # 記号類
             SelectMore(0u2122, 0u213a) # 記号類
-            SelectMore(0u213c, 0u22ed) # 記号類
+            SelectMore(0u213c, 0u215f) # 記号類
+            SelectMore(0u2189, 0u22ed) # 記号類
             SelectMore(0u22f0, 0u2306) # 記号類
             SelectMore(0u2308, 0u2312) # 記号類
             SelectMore(0u23a7, 0u23cc) # ⎧ -
@@ -9440,11 +9472,16 @@ while (i < SizeOf(input_list))
             ChangeWeight(${weight_extend_kanzi_symbols_regular}); CorrectDirection()
             Select(0u2602, 0u2603) # ☂☃
             SelectMore(0u261c, 0u261f) # ☜-☟
-            ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
+            ChangeWeight(${weight_extend_kanzi_regular}); CorrectDirection()
+            SelectMore(0u216c, 0u216f) # Ⅼ-Ⅿ
+            SelectMore(0u217c, 0u2184) # ⅼ-ↄ
+ #            Select(0u2160, 0u2188) # ローマ数字
+            ChangeWeight(${weight_reduce_kanzi_roman_regular}); CorrectDirection()
         else
             Select(0u20a0, 0u2120) # 記号類
             SelectMore(0u2122, 0u213a) # 記号類
-            SelectMore(0u213c, 0u22ed) # 記号類
+            SelectMore(0u213c, 0u215f) # 記号類
+            SelectMore(0u2189, 0u22ed) # 記号類
             SelectMore(0u22f0, 0u2306) # 記号類
             SelectMore(0u2308, 0u2312) # 記号類
             SelectMore(0u23a7, 0u23cc) # ⎧ -
@@ -9455,6 +9492,10 @@ while (i < SizeOf(input_list))
             Select(0u2602, 0u2603) # ☂☃
             SelectMore(0u261c, 0u261f) # ☜-☟
             ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
+            SelectMore(0u216c, 0u216f) # Ⅼ-Ⅿ
+            SelectMore(0u217c, 0u2184) # ⅼ-ↄ
+ #            Select(0u2160, 0u2188) # ローマ数字
+            ChangeWeight(${weight_reduce_kanzi_roman_bold}); CorrectDirection()
         endif
     endif
 
