@@ -29,9 +29,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.2.0)  
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.0/Cyroit_v2.2.0.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.0.zip)
+最新版 (v2.2.1)  
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.1/Cyroit_v2.2.1.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.1.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
