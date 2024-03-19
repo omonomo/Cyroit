@@ -9989,7 +9989,7 @@ while (i < SizeOf(latin_sfd_list))
     Move(-35, 0)
     SetWidth(500)
 
-# Ɔ (C をコピーして裏返す)
+# ɔ (c をコピーして裏返す)
     Select(0u0063); Copy() # c
     Select(0u0254); Paste() # ɔ
     HFlip()
