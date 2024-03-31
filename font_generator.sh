@@ -1331,6 +1331,45 @@ while (i < SizeOf(input_list))
  #    Select(0u1e07) # ḇ
  #    Select(0ua797) # ꞗ
 
+# e (少し右に移動)
+    Select(0u0065) # e
+    SelectMore(0u00e8) # è
+    SelectMore(0u00e9) # é
+    SelectMore(0u00ea) # ê
+    SelectMore(0u00eb) # ë
+    SelectMore(0u0113) # ē
+    SelectMore(0u0115) # ĕ
+    SelectMore(0u0117) # ė
+    SelectMore(0u0119) # ę
+    SelectMore(0u011b) # ě
+    SelectMore(0u0205) # ȅ
+    SelectMore(0u0207) # ȇ
+    SelectMore(0u1e15) # ḕ
+    SelectMore(0u1e17) # ḗ
+    SelectMore(0u1e1d) # ḝ
+    SelectMore(0u1eb9) # ẹ
+    SelectMore(0u1ebb) # ẻ
+    SelectMore(0u1ebd) # ẽ
+    SelectMore(0u1ebf) # ế
+    SelectMore(0u1ec1) # ề
+    SelectMore(0u1ec3) # ể
+    SelectMore(0u1ec5) # ễ
+    SelectMore(0u1ec7) # ệ
+    if (input_list[i] == "${input_latin_regular}")
+        Move(3, 0)
+    else
+        Move(2, 0)
+    endif
+        SetWidth(500)
+
+ #    SelectMore(0u0247) # ɇ
+ #    SelectMore(0u0229) # ȩ
+ #    SelectMore(0u1d92) # ᶒ
+ #    SelectMore(0u1e19) # ḙ
+ #    SelectMore(0u1e1b) # ḛ
+ #    SelectMore(0u2c78) # ⱸ
+ #    SelectMore(0uab34) # ꬴ
+
 # f (右端を少しカット、首を長くして少し右にずらす、Regular は横棒を少し太くする)
     # 先っぽをコピー
     Select(0u2588); Copy() # Full block
@@ -1761,7 +1800,7 @@ while (i < SizeOf(input_list))
  #    Select(0u0249) # ɉ
  #    Select(0u029d) # ʝ
 
-# p (ついでに縦線を少し細くする)
+# p (ついでに縦線を少し細くして左に少し移動)
     # 下
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
@@ -1778,8 +1817,10 @@ while (i < SizeOf(input_list))
     Select(0u0070) # p
     if (input_list[i] == "${input_latin_regular}")
         PasteWithOffset(64, 0)
+        Move(-3, 0)
     else
         PasteWithOffset(55, 0)
+        Move(-2, 0)
     endif
 
     SetWidth(500)
@@ -2702,17 +2743,12 @@ while (i < SizeOf(input_list))
 # 全角文字を移動
     if ("${draft_flag}" == "false")
         Print("Move zenkaku glyphs")
-         j = 0u2000
-        while (j <= 0u27bf)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1000)
-                    Move(${x_pos_zenkaku_latin}, 0)
-                    SetWidth(-${x_pos_zenkaku_latin}, 1)
-                endif
+        SelectWorthOutputting()
+        foreach
+            if (GlyphInfo("Width") == 1000)
+                Move(${x_pos_zenkaku_latin}, 0)
+                SetWidth(-${x_pos_zenkaku_latin}, 1)
             endif
-            j += 1
         endloop
     endif
 
@@ -7973,70 +8009,13 @@ while (i < SizeOf(input_list))
 
 # 全角文字を移動
     if ("${draft_flag}" == "false")
-        Print("Move zenkaku glyphs (it may take a few minutes)")
-         j = 0u2000
-        while (j <= 0u33ff)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1000)
-                    Move(${x_pos_zenkaku_kana}, 0)
-                    SetWidth(-${x_pos_zenkaku_kana}, 1)
-                endif
+        Print("Move zenkaku glyphs")
+        SelectWorthOutputting()
+        foreach
+            if (GlyphInfo("Width") == 1000)
+                Move(${x_pos_zenkaku_kana}, 0)
+                SetWidth(-${x_pos_zenkaku_kana}, 1)
             endif
-            j += 1
-        endloop
-
-         j = 0ufb00
-        while (j <= 0ufb7f)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1000)
-                    Move(${x_pos_zenkaku_kana}, 0)
-                    SetWidth(-${x_pos_zenkaku_kana}, 1)
-                endif
-            endif
-            j += 1
-        endloop
-
-         j = 0ufe10
-        while (j <= 0uffff)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1000)
-                    Move(${x_pos_zenkaku_kana}, 0)
-                    SetWidth(-${x_pos_zenkaku_kana}, 1)
-                endif
-            endif
-            j += 1
-        endloop
-
-         j = 0u1b000
-        while (j <= 0u1b16f)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1000)
-                    Move(${x_pos_zenkaku_kana}, 0)
-                    SetWidth(-${x_pos_zenkaku_kana}, 1)
-                endif
-            endif
-            j += 1
-        endloop
-
-        j = 1114112
-        while (j <= 1114465)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1000)
-                    Move(${x_pos_zenkaku_kana}, 0)
-                    SetWidth(-${x_pos_zenkaku_kana}, 1)
-                endif
-            endif
-            j += 1
         endloop
     endif
 
@@ -9512,69 +9491,12 @@ while (i < SizeOf(input_list))
 # 全角文字を移動
     if ("${draft_flag}" == "false")
         Print("Move zenkaku glyphs (it may take a few minutes)")
-        j = 0u2000
-        while (j <= 0u9fff)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1024)
-                    Move(${x_pos_zenkaku_kanzi}, 0)
-                    SetWidth(-${x_pos_zenkaku_kanzi}, 1)
-                endif
+        SelectWorthOutputting()
+        foreach
+            if (GlyphInfo("Width") == 1024)
+                Move(${x_pos_zenkaku_kanzi}, 0)
+                SetWidth(-${x_pos_zenkaku_kanzi}, 1)
             endif
-            j += 1
-        endloop
-
-        j = 0uf900
-        while (j <= 0uffff)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1024)
-                    Move(${x_pos_zenkaku_kanzi}, 0)
-                    SetWidth(-${x_pos_zenkaku_kanzi}, 1)
-                endif
-            endif
-            j += 1
-        endloop
-
-         j = 0u1f100
-        while (j <= 0u1f5ff)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1024)
-                    Move(${x_pos_zenkaku_kanzi}, 0)
-                    SetWidth(-${x_pos_zenkaku_kanzi}, 1)
-                endif
-            endif
-            j += 1
-        endloop
-
-         j = 0u20000
-        while (j <= 0u2fa1f)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1024)
-                    Move(${x_pos_zenkaku_kanzi}, 0)
-                    SetWidth(-${x_pos_zenkaku_kanzi}, 1)
-                endif
-            endif
-            j += 1
-        endloop
-
-        j = 1114112
-        while (j <= 1116304)
-            Select(j)
-            if (WorthOutputting())
-                w = GlyphInfo("Width")
-                if (w == 1024)
-                    Move(${x_pos_zenkaku_kanzi}, 0)
-                    SetWidth(-${x_pos_zenkaku_kanzi}, 1)
-                endif
-            endif
-            j += 1
         endloop
     endif
 
