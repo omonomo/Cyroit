@@ -163,6 +163,10 @@ x_pos_zenkaku_latin="20"
 x_pos_zenkaku_kana="22"
 x_pos_zenkaku_kanzi="34"
 
+# オブリーク体用
+tan_oblique="16" # 傾きの係数 * 100
+x_pos_oblique="-4800" # 移動量 * 100
+
 # calt用
 x_pos_calt="20" # ラテン文字の移動量
 x_pos_calt_hyphen="30" # - の移動量
@@ -12417,7 +12421,7 @@ while (i < \$argc)
 # Transform
     Print("Transform all glyphs (it may take a few minutes)")
     SelectWorthOutputting()
-    Transform(100, 0, 20, 100, 0, 0)
+    Transform(100, 0, ${tan_oblique}, 100, ${x_pos_oblique}, 0)
     RemoveOverlap()
     RoundToInt()
 
