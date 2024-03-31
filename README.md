@@ -8,7 +8,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 [Commit Mono](https://commitmono.com) に影響を受け、calt を利用したカーニング機能を実装しました (v1.1.0以降)。  
 [mottainaiDTP](http://mottainaidtp.seesaa.net) さんの [3桁ごとにカンマが発生するフォント](http://mottainaidtp.seesaa.net/article/395328634.html) を応用して、桁区切り表示に対応したバージョンを追加しました (v1.6.0以降)。  
 スタイルセットに対応したことで、機能や見た目について柔軟にカスタマイズできるようになりました (v2.0.0以降)。  
-変体仮名と小書き仮名の表示に対応しました (v2.1.0以降)。  
+変体仮名と小書き仮名拡張の表示に対応しました (v2.1.0以降)。  
 
 ## フォントサンプル
 
@@ -29,9 +29,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.2.1)  
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.1/Cyroit_v2.2.1.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.1.zip)
+最新版 (v2.2.2)  
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.2/Cyroit_v2.2.2.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.2.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -58,8 +58,8 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 - 一部のひらがなを教科書体っぽく (跳ねたり突き抜けたり別れたり) しています。
 - 濁点、半濁点の大きさや位置を変更しています。
 - イコールと区別しやすいようにダブルハイフンの先端を少し折っています。
-- 小仮名拡張に対応しています。また、見た目に統一感はないですが変体仮名の表示にも対応しています。
 - その他のグリフについても、他の素材フォントとのバランスをとるための微調整を施しています。
+- 小書き仮名拡張に対応しています。また、見た目に統一感はないですが変体仮名の表示にも対応しています。
 
 ### 漢字について
 
@@ -126,7 +126,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 Cyroit は、以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Sonoma (version 14.4)
+- OS: macOS Sonoma (version 14.4.1)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
 - FontTools: 4.50.0
