@@ -959,7 +959,7 @@ index=`expr ${index} + 1`
 if [ "${symbol_only_flag}" = "false" ]; then
 # もろもろ例外 ========================================
 
-# 同じ文字を等間隔にさせる例外処理 1 ----------------------------------------
+# 同じ文字を等間隔にさせる例外処理 ----------------------------------------
 
 # 左が丸い文字、EF
 class=("${cCL[@]}" "${cSL[@]}" "_E" "_F")
@@ -2839,35 +2839,6 @@ input=("${gravityWN[@]}")
 lookAhead=("")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}"
 index=`expr ${index} + 1`
-
-# 同じ文字を等間隔にさせる例外処理 2 ----------------------------------------
-
-# 丸くない右寄りの文字
-set=("${gCR[@]}" "${gSR[@]}")
-remove=("${cCL[@]}" "${cSL[@]}")
-
-class=("") # 丸い文字を除去
-for S in ${set[@]}; do
-  T=`printf '%s\n' "${remove[@]}" | grep -x "${S}"`
-  if [ -z "${T}" ]; then
-    class+=("${S}")
-  fi
-done
-
-for S in ${class[@]}; do
-  eval "member=(\"\${${S}[@]}\")"
-  # 左に移動 (広がる 3文字限定)
-  backtrack1=("")
-  backtrack=("")
-  input=(""); lookAhead=(""); lookAhead1=("")
-  for T in ${member[@]}; do
-    input+=("${T}")
-    lookAhead+=("${T}")
-    lookAhead1+=("${T}")
-  done
-  chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}" "${lookAhead1[*]}"
-  index=`expr ${index} + 1`
-done
 
 # 再調整 ========================================
 
