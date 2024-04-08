@@ -29,9 +29,9 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.2.2)  
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.2/Cyroit_v2.2.2.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.2.zip)
+最新版 (v2.2.3)  
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.3/Cyroit_v2.2.3.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.3.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -129,7 +129,7 @@ Cyroit は、以下の環境でビルドできることを確認しています�
 - OS: macOS Sonoma (version 14.4.1)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
-- FontTools: 4.50.0
+- FontTools: 4.51.0
 
 ### 基本的な使い方
 
