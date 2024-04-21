@@ -1,6 +1,6 @@
 # Nerd Fonts
 
-This is an archived font from the Nerd Fonts release v3.1.1.
+This is an archived font from the Nerd Fonts release v3.2.1.
 
 For more information see:
 * https://github.com/ryanoasis/nerd-fonts/
