@@ -1488,7 +1488,7 @@ while (i < SizeOf(input_list))
  #    Select(0u01d0) # ǐ
  #    Select(0u1d96) # ᶖ
  #    Select(0u1e2d) # ḭ
-    Move(10, 0)
+    Move(5, 0)
     SetWidth(500)
 
 # l (縦線を少し細くし、左を少しカットして少し左へ移動)
@@ -2158,41 +2158,6 @@ while (i < SizeOf(input_list))
     CorrectDirection()
     SetWidth(500)
 
-# ⌀ (追加)
-    Select(0u2205); Copy() # ∅
-    Select(0u2300); Paste() # ⌀
-    Scale(130)
-    if (input_list[i] == "${input_latin_regular}")
-        ChangeWeight(-10)
-    else
-        ChangeWeight(-24)
-    endif
-    CorrectDirection()
-    Rotate(2)
-    Select(0u007c); Copy() # |
-    Select(65552);  Paste() # Temporary glyph
-    if (input_list[i] == "${input_latin_regular}")
-        Scale(99)
-    else
-        ChangeWeight(-6)
-        CorrectDirection()
-        Scale(92)
-    endif
-    Move(0, 76)
-    Rotate(-45)
-    Copy()
-    Select(0u2300); PasteInto() # ⌀
-    RemoveOverlap()
-    Move(230, 0)
-    if (input_list[i] == "${input_latin_bold}")
-        Scale(110)
-        ChangeWeight(-20)
-        CorrectDirection()
-    endif
-    SetWidth(1000)
-    RemoveOverlap()
-    Select(65552); Clear() # Temporary glyph
-
 # √ (ボールドのウェイト調整)
     Select(0u221a) # √
     if (input_list[i] == "${input_latin_bold}")
@@ -2201,9 +2166,122 @@ while (i < SizeOf(input_list))
         SetWidth(500)
     endif
 
-# ⌂ (全角にする)
+# ⌀ (追加)
+    # 丸
+    Select(0u25cb); Copy() # ○
+    Select(0u2300); Paste() # ⌀
+    Move(1, 18)
+    Scale(130)
+    if (input_list[i] == "${input_latin_regular}")
+        ChangeWeight(6)
+    else
+        Scale(110)
+        ChangeWeight(-24)
+    endif
+    CorrectDirection()
+    # 斜線
+    Select(0u007c); Copy() # |
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(98)
+        ChangeWeight(-6)
+    else
+        Scale(101)
+        ChangeWeight(-24)
+    endif
+    CorrectDirection()
+    Move(0, 76)
+    Rotate(-45)
+    Copy()
+    Select(0u2300); PasteInto() # ⌀
+    Move(230, 0)
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ⌖ (追加)
+    # 丸
+    Select(0u25cb); Copy() # ○
+    Select(0u2316); Paste() # ⌖
+    Move(1, 18)
+    Scale(130)
+    if (input_list[i] == "${input_latin_regular}")
+        ChangeWeight(6)
+    else
+        Scale(110)
+        ChangeWeight(-24)
+    endif
+    CorrectDirection()
+    # 縦棒・横棒
+    Select(0u007c); Copy() # |
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(98)
+        ChangeWeight(-6)
+    else
+        Scale(101)
+        ChangeWeight(-24)
+    endif
+    CorrectDirection()
+    Move(0, 76); Copy()
+    Rotate(90);  PasteInto()
+    Copy()
+    Select(0u2316); PasteInto() # ⌖
+    Move(230, 0)
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ⌭ (追加)
+    # 丸
+    Select(0u25cb); Copy() # ○
+    Select(0u232d); Paste() # ⌭
+    Move(1, 18)
+    Scale(130)
+    if (input_list[i] == "${input_latin_regular}")
+        ChangeWeight(6)
+    else
+        Scale(110)
+        ChangeWeight(-24)
+    endif
+    CorrectDirection()
+    # 斜線
+    Select(0u007c); Copy() # |
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(98)
+        ChangeWeight(-6)
+    else
+        Scale(101)
+        ChangeWeight(-24)
+    endif
+    CorrectDirection()
+    Move(0, 76)
+    Rotate(-30)
+    Copy()
+    Select(0u232d) # ⌭
+    PasteWithOffset(-265, 48)
+    PasteWithOffset(265, -48)
+    Move(230, 0)
+    SetWidth(1000)
+    RemoveOverlap()
+    Select(65552); Clear() # Temporary glyph
+
+# ⌴ (追加)
+    Select(0u2302); Copy() # ⌂
+    Select(0u2334); Paste() # ⌴
+    Select(0u2588); Copy() # Full block
+    Select(0u2334); PasteWithOffset(0, -750) # ⌴
+    OverlapIntersect()
+    Scale(150)
+    CorrectDirection()
+    Move(230, 170)
+    SetWidth(1000)
+
+# ⌂ (全角にする) ※ ⌴の後に加工すること
     Select(0u2302) # ⌂
     Scale(150)
+    CorrectDirection()
     Move(230, 120)
     SetWidth(1000)
 
@@ -2213,9 +2291,15 @@ while (i < SizeOf(input_list))
     Move(230, 120)
     SetWidth(1000)
 
-# ⌥ (全角にする)
+# ⌥ (ウェイトを調整して全角にする)
     Select(0u2325) # ⌥
     Scale(140, 130)
+    if (input_list[i] == "${input_latin_regular}")
+        ChangeWeight(2)
+    else
+        ChangeWeight(8)
+    endif
+    CorrectDirection()
     Move(230, 120)
     SetWidth(1000)
 
@@ -2245,39 +2329,37 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
 
 # ⎈ (追加)
-    Select(0u2205); Copy() # ∅
+    # 丸
+    Select(0u25cb); Copy() # ○
     Select(0u2388); Paste() # ⎈
+    Move(1, 18)
     Scale(130)
     if (input_list[i] == "${input_latin_regular}")
-        ChangeWeight(-10)
+        ChangeWeight(6)
     else
+        Scale(110)
         ChangeWeight(-24)
     endif
     CorrectDirection()
-    Rotate(47)
+    # アスタリスク
     Select(0u007c); Copy() # |
     Select(65552);  Paste() # Temporary glyph
     if (input_list[i] == "${input_latin_regular}")
-        Scale(99)
-    else
+        Scale(98)
         ChangeWeight(-6)
-        CorrectDirection()
-        Scale(92)
+    else
+        Scale(101)
+        ChangeWeight(-24)
     endif
+    CorrectDirection()
     Move(0, 76); Copy()
     Rotate(-60); PasteInto()
     Rotate(120); PasteInto()
     Copy()
     Select(0u2388); PasteInto() # ⎈
-    RemoveOverlap()
     Move(230, 0)
-    if (input_list[i] == "${input_latin_bold}")
-        Scale(110)
-        ChangeWeight(-20)
-        CorrectDirection()
-    endif
-    Move(-1, 0)
     SetWidth(1000)
+    RemoveOverlap()
     Select(65552); Clear() # Temporary glyph
 
 # ⎋ (全角にする)
@@ -2351,7 +2433,7 @@ while (i < SizeOf(input_list))
     Rotate(90, 490, 340)
     Select(65552); Clear() # Temporary glyph
 
-# | (破線にし、縦に延ばして少し上へ移動) ※ ⌀⎈ の加工より後にすること
+# | (破線にし、縦に延ばして少し上へ移動) ※ ⌀⌖⌭⎈ の加工より後にすること
 # ¦ (隙間を開ける)
     Select(0u007c); Copy() # |
     Select(${address_visi_latin} + 1); Paste() # 避難所
@@ -7263,6 +7345,64 @@ while (i < SizeOf(input_list))
     Move(0, 60)
     SetWidth(500)
 
+# ↥ (追加)
+    # 矢印
+    Select(0u2191); Copy() # ↑
+    Select(0u21a5); Paste() # ↥
+    # 下線
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_kana_regular}")
+        Move(0, -671)
+    else
+        Move(0, -678)
+    endif
+    Select(0u21a8); Copy() # ↨
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    # 合成
+    Select(0u21a5) # ↥
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(0, 64)
+        PasteWithOffset(0, 44)
+    else
+        PasteWithOffset(0, 75)
+        PasteWithOffset(0, 55)
+    endif
+    Move(0, 10)
+    SetWidth(1000)
+    RemoveOverlap()
+    Simplify()
+    Select(65552); Clear() # Temporary glyph
+
+# ↤ (追加)
+    Select(0u21a5); Copy() # ↥
+    Select(0u21a4); Paste() # ↤
+    Rotate(90)
+    Move(-20, 0)
+    SetWidth(1000)
+
+# ↦ (追加)
+    Select(0u21a5); Copy() # ↥
+    Select(0u21a6); Paste() # ↦
+    Rotate(-90)
+    Move(20, 0)
+    SetWidth(1000)
+
+# ↧ (追加)
+    Select(0u21a5); Copy() # ↥
+    Select(0u21a7); Paste() # ↧
+    VFlip()
+    CorrectDirection()
+    Move(0, -20)
+    SetWidth(1000)
+
+# ↥ (加工の続き)
+    Select(0u21a5) # ↥
+    Move(0, 20)
+    SetWidth(1000)
+
 # ⇞ (追加)
     # 矢の延長部分
     Select(0u25a0); Copy() # Black square
@@ -7376,7 +7516,162 @@ while (i < SizeOf(input_list))
     SelectMore(0u27e9) # ⟩
     SelectMore(0u2e28) # ⸨
     SelectMore(0u2e29) # ⸩
-    Move(0, ${y_pos_paren} + 35); SetWidth(500)
+    Move(0, ${y_pos_paren} + 35)
+    SetWidth(500)
+
+# ⌓◠ (追加)
+    Select(0u25cb); Copy() # ○
+    Select(0u2313); Paste() # ⌓
+    Select(0u25e0); Paste() # ◠
+    # 中心線
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(95, 20)
+    if (input_list[i] == "${input_kana_regular}")
+        Move(0, -191)
+    else
+        Move(0, -179)
+    endif
+    Select(0u25ad); Copy() # ▭
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    # 合成
+    Select(0u2313) # ⌓
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(0, 166)
+    else
+        PasteWithOffset(0, 166)
+    endif
+    RemoveOverlap()
+    # ⌓◠ の下をカット
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(150, 100)
+    Copy()
+    Select(0u2313) # ⌓
+    SelectMore(0u25e0) # ◠
+    PasteWithOffset(0, 332)
+    OverlapIntersect()
+    # ウェイト調整
+    if (input_list[i] == "${input_kana_regular}")
+        ChangeWeight(16)
+    else
+        ChangeWeight(24)
+    endif
+    CorrectDirection()
+    Move(0, -220)
+    SetWidth(1000)
+    Select(65552); Clear() # Temporary glyph
+
+# ◡ (追加)
+    Select(0u25e0); Copy() # ◠
+    Select(0u25e1); Paste() # ◡
+    VFlip()
+    CorrectDirection()
+    SetWidth(1000)
+
+# ⌰ (追加)
+    # 下線
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(320, 0)
+    Select(0u2190); Copy() # ←
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    # 合成
+    Select(0u2197); Copy() # ↗
+    Select(0u2330); Paste() # ⌰
+    Rotate(15); Copy()
+    Move(-230, 0)
+    PasteWithOffset(230, 0)
+    Select(65552); Copy() # Temporary glyph
+    Select(0u2330) # ⌰
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(-360, -224)
+        PasteWithOffset(-210, -224)
+    else
+        PasteWithOffset(-360, -201)
+        PasteWithOffset(-205, -201)
+    endif
+    RemoveOverlap()
+    # 下のはみ出した部分を削除
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(150); Copy()
+    Select(0u2330) # ⌰
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(25, 243)
+    else
+        PasteWithOffset(25, 245)
+    endif
+    OverlapIntersect()
+    if (input_list[i] == "${input_kana_regular}")
+        ChangeWeight(-4)
+        Move(-30, -30)
+    else
+        ChangeWeight(-26)
+        Move(-30, -35)
+    endif
+    CorrectDirection()
+    SetWidth(1000)
+    Select(65552); Clear() # Temporary glyph
+
+# ⌲⌳ (追加)
+    Select(0u25b7); Copy() # ▷
+    Select(0u2332); Paste() # ⌲
+    Select(0u2333); Paste() # ⌳
+    # 中心線
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(85, 20)
+    if (input_list[i] == "${input_kana_regular}")
+        Move(0, -191)
+    else
+        Move(0, -179)
+    endif
+    Select(0u25ad); Copy() # ▭
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    # 合成
+    Select(0u2332) # ⌲
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(10, 145)
+    else
+        PasteWithOffset(10, 139)
+    endif
+    RemoveOverlap()
+    Select(0u2333) # ⌳
+    if (input_list[i] == "${input_kana_regular}")
+        PasteWithOffset(10, 174) # ウェイト調整で太くなる分上にずらす
+ #        PasteWithOffset(10, 166)
+    else
+        PasteWithOffset(0, 178)
+ #        PasteWithOffset(0, 166)
+    endif
+    RemoveOverlap()
+    # ウェイト調整
+    Select(0u2332,0u2333) # ⌲⌳
+    if (input_list[i] == "${input_kana_regular}")
+        ChangeWeight(16)
+    else
+        ChangeWeight(24)
+    endif
+    CorrectDirection()
+    # ⌳ の下をカット (鋭角の先端がつぶれるのでウェイト調整の後でカット)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(150, 100)
+    Copy()
+    Select(0u2333) # ⌳
+    PasteWithOffset(0, 332)
+    OverlapIntersect()
+    Move(0, -220)
+
+    Select(0u2332,0u2333) # ⌲⌳
+    SetWidth(1000)
+    Select(65552); Clear() # Temporary glyph
 
 # ⏏ (小さくして下に移動)
     Select(0u23cf) # ⏏
@@ -7384,9 +7679,13 @@ while (i < SizeOf(input_list))
     Move(0, -30)
     SetWidth(1000)
 
-# ␥ (全角にする)
+# ␥ (ウェイトを調整して全角にする)
     Select(0u2425) # ␥
-    ChangeWeight(-2)
+    if (input_list[i] == "${input_kana_regular}")
+        ChangeWeight(-10)
+    else
+        ChangeWeight(-20)
+    endif
     CorrectDirection()
     Scale(110)
     if (input_list[i] == "${input_kana_regular}")
@@ -7395,6 +7694,54 @@ while (i < SizeOf(input_list))
         Rotate(-28)
     endif
     Move(230, 0)
+    SetWidth(1000)
+
+# ⌯ (追加) ※ ␥の後に加工すること
+    Select(0u2425); Copy() # ␥
+    Select(0u232f); Paste() # ⌯
+    # 回転
+    if (input_list[i] == "${input_kana_regular}")
+        Rotate(-46)
+    else
+        Rotate(-47)
+    endif
+
+    # 間隔を拡げる
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(0, 400)
+    Select(65553);  Paste() # Temporary glyph
+    Move(0, -400)
+    Select(0u232f); Copy() # ⌯
+    Select(65552, 65553);  PasteInto() # Temporary glyph
+    # 中
+    Select(0u2501); Copy() # ━
+    Select(0u232f); PasteWithOffset(0, 4) # ⌯
+    OverlapIntersect()
+    # 上
+    Select(65552) # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u232f); PasteWithOffset(0, 20) # ⌯
+    # 下
+    Select(65553) # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u232f); PasteWithOffset(0, -20) # ⌯
+
+    SetWidth(1000)
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
+# ␥ (加工の続き)
+    Select(0u232f); Copy() # ⌯
+    Select(0u2425); Paste() # ␥
+    # 回転
+    if (input_list[i] == "${input_kana_regular}")
+        Rotate(46)
+    else
+        Rotate(47)
+    endif
     SetWidth(1000)
 
 # ▱ (全角にする)
@@ -7717,112 +8064,70 @@ while (i < SizeOf(input_list))
 # ラテン文字、ギリシア文字、キリル文字等のウェイト調整
     if ("${draft_flag}" == "false")
         Print("Edit latin greek cyrillic weight of glyphs")
+        Select(0u00a1, 0u0173) # Latin
+        SelectMore(0u174, 0u0175) # W
+        SelectMore(0u176, 0u017f)
+        SelectMore(0u180, 0u01c3)
+ #        SelectMore(0u01c4, 0u01cc) # リガチャ
+        SelectMore(0u01cd, 0u01f0)
+ #        SelectMore(0u01f1, 0u01f3) # リガチャ
+        SelectMore(0u01f4)
+ #        SelectMore(0u01f5) # g オープンテイル製作用、modified_latin_kana_generatorで調整
+        SelectMore(0u01f7, 0u028c)
+        SelectMore(0u028d) # w
+        SelectMore(0u028e, 0u02a2)
+ #        SelectMore(0u02a3, 0u02ac) # リガチャ
+        SelectMore(0u02ad, 0u02af)
+        SelectMore(0u02b9, 0u02ff) # 装飾文字
+        SelectMore(0u0372, 0u03ff) # Greek
+        SelectMore(0u0400, 0u04ff) # Cyrillic
+        SelectMore(0u1d05) # Latin
+        SelectMore(0u1d07)
+        SelectMore(0u1e00, 0u1e3d)
+        SelectMore(0u1e3e) # M
+        SelectMore(0u1e3f)
+        SelectMore(0u1e40) # M
+        SelectMore(0u1e41)
+        SelectMore(0u1e42) # M
+        SelectMore(0u1e43, 0u1e7f)
+        SelectMore(0u1e80, 0u1e89) # W
+        SelectMore(0u1e8a, 0u1e97)
+        SelectMore(0u1e98) # W
+        SelectMore(0u1e99, 0u1eff)
+        SelectMore(0u1f00, 0u1fff) # Greek
+        SelectMore(0u2422) # ␢
+        SelectMore(0u2c71) # ⱱ
+        SelectMore(0ufb00, 0ufb04) # ﬀ
         if (input_list[i] == "${input_kana_regular}")
-            Select(0u00a1, 0u0173) # Latin
-            SelectMore(0u174, 0u0175) # W
-            SelectMore(0u176, 0u017f)
-            SelectMore(0u180, 0u01c3)
- #            SelectMore(0u01c4, 0u01cc) # リガチャ
-            SelectMore(0u01cd, 0u01f0)
- #            SelectMore(0u01f1, 0u01f3) # リガチャ
-            SelectMore(0u01f4)
- #            SelectMore(0u01f5) # g オープンテイル製作用、modified_latin_kana_generatorで調整
-            SelectMore(0u01f7, 0u024f)
-            SelectMore(0u0250, 0u028c)
-            SelectMore(0u028d) # w
-            SelectMore(0u028e, 0u02a2)
- #            SelectMore(0u02a3, 0u02ac) # リガチャ
-            SelectMore(0u02ad, 0u02af)
-            SelectMore(0u02b9, 0u02ff) # 装飾文字
-            SelectMore(0u0372, 0u03ff) # Greek
-            SelectMore(0u0400, 0u04ff) # Cyrillic
-            SelectMore(0u1d05) # Latin
-            SelectMore(0u1d07)
-            SelectMore(0u1e00, 0u1e3d)
-            SelectMore(0u1e3e) # M
-            SelectMore(0u1e3f)
-            SelectMore(0u1e40) # M
-            SelectMore(0u1e41)
-            SelectMore(0u1e42) # M
-            SelectMore(0u1e43, 0u1e7f)
-            SelectMore(0u1e80, 0u1e89) # W
-            SelectMore(0u1e8a, 0u1e97)
-            SelectMore(0u1e98) # W
-            SelectMore(0u1e99, 0u1eff)
-            SelectMore(0u1f00, 0u1fff) # Greek
-            SelectMore(0u2422) # ␢
-            SelectMore(0u2c71) # ⱱ
-            SelectMore(0ufb00, 0ufb04) # ﬀ
-
-            SelectMore(0u20a0, 0u212d) # 記号類
- #            SelectMore(0u212e) # ℮
-            SelectMore(0u212f, 0u214f) # 記号類
-             SelectMore(0u2150, 0u21cf) # ローマ数字、矢印
-             SelectMore(0u21e4, 0u21e5) # ⇤⇥
-            SelectMore(0u21ee, 0u22ed) # 記号類
-            SelectMore(0u22f0, 0u2306) # 記号類
-            SelectMore(0u2308, 0u2312) # 記号類
- #            SelectMore(0u23cf) # ⏏
- #            SelectMore(0u2425) # ␥
-            SelectMore(0u27e8, 0u27e9) # ⟨⟩
-            SelectMore(0u2a2f) # ⨯
-            SelectMore(0u339b, 0u33a6) # 単位
-            ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2)
-            CorrectDirection() # ChangeWeight()だと形が崩れるグリフがある
+            ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
         else
-            Select(0u00a1, 0u0173) # Latin
-            SelectMore(0u174, 0u0175) # W
-            SelectMore(0u176, 0u01c3)
- #            SelectMore(0u01c4, 0u01cc) # リガチャ
-            SelectMore(0u01cd, 0u01f0)
- #            SelectMore(0u01f1, 0u01f3) # リガチャ
-            SelectMore(0u01f4)
- #            SelectMore(0u01f5) #  g オープンテイル製作用、modified_latin_kana_generatorで調整
-            SelectMore(0u01f7, 0u028c)
-            SelectMore(0u028d) # w
-            SelectMore(0u028e, 0u02a2)
- #            SelectMore(0u02a3, 0u02ac) # リガチャ
-            SelectMore(0u02ad, 0u02af)
-            SelectMore(0u02b9, 0u02ff) # 装飾文字
-            SelectMore(0u0372, 0u03ff) # Greek
-            SelectMore(0u0400, 0u04ff) # Cyrillic
-            SelectMore(0u1d05) # Latin
-            SelectMore(0u1d07)
-            SelectMore(0u1e00, 0u1e3d)
-            SelectMore(0u1e3e) # M
-            SelectMore(0u1e3f)
-            SelectMore(0u1e40) # M
-            SelectMore(0u1e41)
-            SelectMore(0u1e42) # M
-            SelectMore(0u1e43, 0u1e7f)
-            SelectMore(0u1e80, 0u1e89) # W
-            SelectMore(0u1e8a, 0u1e97)
-            SelectMore(0u1e98) # W
-            SelectMore(0u1e99, 0u1eff)
-            SelectMore(0u1f00, 0u1fff) # Greek
-            SelectMore(0u2422) # ␢
-            SelectMore(0u2c71) # ⱱ
-            SelectMore(0ufb00, 0ufb04) # ﬀ
             ChangeWeight(${weight_reduce_kana_others_bold})
             CorrectDirection()
             Move(0, -9)
-
-            Select(0u20a0, 0u212d) # 記号類
- #            SelectMore(0u212e) # ℮
-            SelectMore(0u212f, 0u214f) # 記号類
-            SelectMore(0u2150, 0u21cf) # ローマ数字、矢印
-            SelectMore(0u21e4, 0u21e5) # ⇤⇥
-            SelectMore(0u21ee, 0u22ed) # 記号類
-            SelectMore(0u22f0, 0u2306) # 記号類
-            SelectMore(0u2308, 0u2312) # 記号類
- #            SelectMore(0u23cf) # ⏏
-            SelectMore(0u2425) # ␥
-            SelectMore(0u27e8, 0u27e9) # ⟨⟩
-            SelectMore(0u2a2f) # ⨯
-            SelectMore(0u339b, 0u33a6) # 単位
-            ChangeWeight(${weight_reduce_kana_others_bold})
-            CorrectDirection()
         endif
+        CorrectDirection()
+
+        Select(0u20a0, 0u212d) # 記号類
+ #        SelectMore(0u212e) # ℮
+        SelectMore(0u212f, 0u214f) # 記号類
+        SelectMore(0u2150, 0u21cf) # ローマ数字、矢印
+        SelectMore(0u21dc, 0u21e5) # 矢印
+        SelectMore(0u21ee, 0u22ed) # 記号類
+        SelectMore(0u22f0, 0u2306) # 記号類
+        SelectMore(0u2308, 0u2312) # 記号類
+        SelectMore(0u2329, 0u232a) # 〈〉
+ #        SelectMore(0u2330, 0u2333) # ⌰⌱⌲⌳ # グリフ加工でウェイト調整済
+ #        SelectMore(0u23cf) # ⏏
+ #        SelectMore(0u2425) # ␥ # グリフ加工でウェイト調整済
+        SelectMore(0u27e8, 0u27e9) # ⟨⟩
+        SelectMore(0u2a2f) # ⨯
+        SelectMore(0u339b, 0u33a6) # 単位
+        if (input_list[i] == "${input_kana_regular}")
+            ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
+        else
+            ChangeWeight(${weight_reduce_kana_others_bold})
+        endif
+        CorrectDirection()
     endif
 
 # 縦書き対応 (カタカナ拡張、小仮名拡張以外の小文字を改変した場合は要コピー)
@@ -8830,9 +9135,9 @@ while (i < SizeOf(input_list))
     Select(0u2303); Paste() # ⌃
     Scale(150, 100)
     if (input_list[i] == "${input_kanzi_regular}")
-        ChangeWeight(-6)
+        ChangeWeight(-8)
     else
-        ChangeWeight(-12)
+        ChangeWeight(-10)
     endif
     CorrectDirection()
     Move(240, 224)
@@ -8848,6 +9153,32 @@ while (i < SizeOf(input_list))
     Select(0u2324)
     PasteWithOffset(11 ,294) # ⌤
     PasteWithOffset(470, 294) # ⌤
+    SetWidth(1024)
+    Select(65552); Clear() # Temporary glyph
+
+# ⌵ (追加)
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(627, -130)
+    PasteWithOffset(140, -613)
+    RemoveOverlap()
+    Select(0u22bf); Copy() # ⊿
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Rotate(-45)
+    if (input_list[i] == "${input_kanzi_regular}")
+        Move(-42, 195)
+    else
+        Move(-55, 195)
+    endif
+    Copy()
+    Select(0u2335); Paste() # ⌵
+    if (input_list[i] == "${input_kanzi_regular}")
+        ChangeWeight(8)
+    else
+        ChangeWeight(16)
+    endif
+    CorrectDirection()
     SetWidth(1024)
     Select(65552); Clear() # Temporary glyph
 
@@ -9040,6 +9371,37 @@ while (i < SizeOf(input_list))
     SetWidth(1024)
 
     Select(65552); Clear() # Temporary glyph
+
+# Ⓐ-Ⓩ (追加)
+    j = 0
+    while (j < 26)
+        Select(0uff21 + j); Copy() # Ａ-Ｚ
+        Select(0u24b6 + j); Paste() # Ⓐ-Ⓩ
+        Scale(74)
+        ChangeWeight(12)
+        CorrectDirection()
+        if (j == 2 || j == 5 || j == 6 || j == 10 || j == 11) #CFGKL
+          Move(-20, 0)
+        elseif (j == 4) # E
+          Move(-10, 0)
+        elseif (j == 1 || j == 3) # BD
+          Move(10, 0)
+        elseif (j == 9) # J
+          Move(20, 0)
+        elseif (j == 20) # U
+          Move(0, -10)
+        elseif (j == 21 || j == 22) # VW
+          Move(0, -20)
+        elseif (j == 19 || j == 24) # TY
+          Move(0, -30)
+        elseif (j == 0) # A
+          Move(0, 20)
+        endif
+        Select(0u25ef); Copy() # ◯
+        Select(0u24b6 + j); PasteInto() # Ⓐ-Ⓩ
+        SetWidth(1024)
+        j += 1
+    endloop
 
 # ☜-☟ (拡大)
     Select(0u261c, 0u261f); Scale(116) # ☜-☟
@@ -9441,43 +9803,39 @@ while (i < SizeOf(input_list))
 # 記号等のウェイト調整
     if ("${draft_flag}" == "false")
         Print("Edit symbol weight of glyphs")
+        Select(0u20a0, 0u2120) # 記号類
+        SelectMore(0u2122, 0u213a) # 記号類
+        SelectMore(0u213c, 0u215f) # 記号類
+        SelectMore(0u2189, 0u22ed) # 記号類
+        SelectMore(0u22f0, 0u2302) # 記号類
+ #        SelectMore(0u2303) # ⌃ グリフ改変時にウェイト調整済
+        SelectMore(0u2304, 0u2306) # 記号類
+        SelectMore(0u2308, 0u2323) # 記号類
+ #        SelectMore(0u2324) # ⌤ グリフ改変時にウェイト調整済
+        SelectMore(0u2325, 0u2334) # 記号類
+ #        SelectMore(0u2335) # ⌵ グリフ改変時にウェイト調整済
+        SelectMore(0u23a7, 0u23cc) # ⎧ -
+        SelectMore(0u2640, 0u2642) # ♀♂
+        SelectMore(0u2934, 0u2935) # ⤴⤵
+        SelectMore(0u29fa, 0u29fb) # ⧺⧻
         if (input_list[i] == "${input_kanzi_regular}")
-            Select(0u20a0, 0u2120) # 記号類
-            SelectMore(0u2122, 0u213a) # 記号類
-            SelectMore(0u213c, 0u215f) # 記号類
-            SelectMore(0u2189, 0u22ed) # 記号類
-            SelectMore(0u22f0, 0u2306) # 記号類
-            SelectMore(0u2308, 0u2312) # 記号類
-            SelectMore(0u23a7, 0u23cc) # ⎧ -
-            SelectMore(0u2640, 0u2642) # ♀♂
-            SelectMore(0u2934, 0u2935) # ⤴⤵
-            SelectMore(0u29fa, 0u29fb) # ⧺⧻
             ChangeWeight(${weight_extend_kanzi_symbols_regular}); CorrectDirection()
-            Select(0u2602, 0u2603) # ☂☃
-            SelectMore(0u261c, 0u261f) # ☜-☟
+        else
+            ChangeWeight(${weight_extend_kanzi_symbols_bold}); CorrectDirection()
+        endif
+        Select(0u2602, 0u2603) # ☂☃
+        SelectMore(0u261c, 0u261f) # ☜-☟
+        if (input_list[i] == "${input_kanzi_regular}")
             ChangeWeight(${weight_extend_kanzi_regular}); CorrectDirection()
-            SelectMore(0u216c, 0u216f) # Ⅼ-Ⅿ
-            SelectMore(0u217c, 0u2184) # ⅼ-ↄ
- #            Select(0u2160, 0u2188) # ローマ数字
+        else
+            ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
+        endif
+ #        Select(0u2160, 0u2188) # ローマ数字
+        Select(0u216c, 0u216f) # Ⅼ-Ⅿ
+        SelectMore(0u217c, 0u2184) # ⅼ-ↄ
+        if (input_list[i] == "${input_kanzi_regular}")
             ChangeWeight(${weight_reduce_kanzi_roman_regular}); CorrectDirection()
         else
-            Select(0u20a0, 0u2120) # 記号類
-            SelectMore(0u2122, 0u213a) # 記号類
-            SelectMore(0u213c, 0u215f) # 記号類
-            SelectMore(0u2189, 0u22ed) # 記号類
-            SelectMore(0u22f0, 0u2306) # 記号類
-            SelectMore(0u2308, 0u2312) # 記号類
-            SelectMore(0u23a7, 0u23cc) # ⎧ -
-            SelectMore(0u2640, 0u2642) # ♀♂
-            SelectMore(0u2934, 0u2935) # ⤴⤵
-            SelectMore(0u29fa, 0u29fb) # ⧺⧻
-            ChangeWeight(${weight_extend_kanzi_symbols_bold}); CorrectDirection()
-            Select(0u2602, 0u2603) # ☂☃
-            SelectMore(0u261c, 0u261f) # ☜-☟
-            ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
-            SelectMore(0u216c, 0u216f) # Ⅼ-Ⅿ
-            SelectMore(0u217c, 0u2184) # ⅼ-ↄ
- #            Select(0u2160, 0u2188) # ローマ数字
             ChangeWeight(${weight_reduce_kanzi_roman_bold}); CorrectDirection()
         endif
     endif
@@ -10651,20 +11009,19 @@ while (i < SizeOf(input_list))
 
 # IEC Power Symbols
     Print("Edit IEC Power Symbols")
-    Select(0u23fb, 0u23fe); Scale(88); SetWidth(1024)
-    Select(0u2630);         Scale(88); SetWidth(1024)
-    Select(0u26a1);         Scale(88); SetWidth(1024)
-    Select(0u276c, 0u2771) #; Scale(88)
+    Select(0u23fb, 0u23fe)
+    SelectMore(0u2b58)
+    Scale(88)
     SetWidth(1024)
-    Select(0u2b58);         Scale(88); SetWidth(1024)
 
 # Pomicons
     Print("Edit Pomicons")
-    Select(0ue000, 0ue00a); Scale(91)
+    Select(0ue000, 0ue00a)
+    Scale(91)
     SetWidth(1024)
 
 # Powerline Glyphs (Win(HHead)Ascent と Win(HHead)Descent の長さより少し大きくして位置を合わす)
-    Print("Edit Powerline Glyphs")
+    Print("Edit Powerline Extra Symbols")
     Select(0ue0a0, 0ue0a3)
     SelectMore(0ue0b0, 0ue0c8)
     SelectMore(0ue0ca)
@@ -10695,10 +11052,13 @@ while (i < SizeOf(input_list))
     Select(0ue0d1);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0d2);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0d4);         Scale(105, ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
+    Select(0ue0d6);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0d7);         Scale(105, ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
 
 # Font Awesome Extension
     Print("Edit Font Awesome Extension")
-    Select(0ue200, 0ue2a9); Scale(88)
+    Select(0ue200, 0ue2a9)
+    Scale(88)
     SetWidth(1024)
 
 # Weather Icons
@@ -10720,7 +11080,8 @@ while (i < SizeOf(input_list))
 
 # Seti-UI + Customs
     Print("Edit Seti-UI + Costoms")
-    Select(0ue5fa, 0ue6b2); Scale(88)
+    Select(0ue5fa, 0ue6b5)
+    Scale(88)
     SetWidth(1024)
 
 # Devicons
@@ -10735,7 +11096,7 @@ while (i < SizeOf(input_list))
 # Codicons
     Print("Edit Codicons")
     j = 0uea60
-    while (j <= 0uebeb)
+    while (j <= 0uec1e)
         Select(j)
         if (WorthOutputting())
             Scale(88)
@@ -10746,24 +11107,23 @@ while (i < SizeOf(input_list))
 
 # Font Awesome
     Print("Edit Font Awesome")
-    j = 0uf000
-    while (j <= 0uf2e0)
-        Select(j)
-        if (WorthOutputting())
-            Scale(88)
-            SetWidth(1024)
-        endif
-        j += 1
-    endloop
+    Select(0ued00, 0uedff)
+    Select(0uee0c, 0uefce)
+    SelectMore(0uf000, 0uf2ff)
+    Scale(88)
+    SetWidth(1024)
 
 # Font Logos
     Print("Edit Font Logos")
-    Select(0uf300, 0uf372); Scale(88)
+    Select(0uf300, 0uf375)
+    Scale(88)
     SetWidth(1024)
 
 # Octicons
     Print("Edit Octicons")
-    Select(0uf400, 0uf533); Scale(88)
+    Select(0u26a1)
+    SelectMore(0uf400, 0uf533)
+    Scale(88)
     SetWidth(1024)
 
 # Material Design Icons
@@ -10771,6 +11131,12 @@ while (i < SizeOf(input_list))
  #    Select(0uf500, 0uf8ff); Scale(83) # v2.3.3まで 互換用
  #    SetWidth(1024)
     Select(0uf0001, 0uf1af0); Scale(88)
+    SetWidth(1024)
+
+# Others
+    Print("Edit Other glyphs")
+    Select(0u2630); Scale(88); SetWidth(1024)
+    Select(0u276c, 0u2771) #; Scale(88)
     SetWidth(1024)
 
 # ◢◣◤◥
@@ -12053,6 +12419,18 @@ while (i < \$argc)
     AddPosSub(lookups[0][0],glyphName)
     AddPosSub(lookups[1][0],glyphName)
 
+    orig = 0uff21 # Ａ
+    circ = 0u24b6 # Ⓐ
+    j = 0
+    while (j < 26)
+        Select(circ + j)
+        glyphName = GlyphInfo("Name")
+        Select(orig + j)
+        AddPosSub(lookups[0][0],glyphName)
+        AddPosSub(lookups[1][0],glyphName)
+        j += 1
+    endloop
+
     orig = [0u30a2, 0u30a4, 0u30a6, 0u30a8, 0u30aa,\
             0u30ab, 0u30ad, 0u30af, 0u30b1, 0u30b3,\
             0u30b5, 0u30b7, 0u30b9, 0u30bb, 0u30bd,\
@@ -12106,93 +12484,67 @@ while (i < \$argc)
     AddPosSub(lookups[0][0],glyphName)
     AddPosSub(lookups[1][0],glyphName)
 
-    orig = [0uff11, 0uff12, 0uff13, 0uff14,\
-            0uff15, 0uff16, 0uff17, 0uff18, 0uff19] # １-９
-    circ = [0u2460, 0u2461, 0u2462, 0u2463,\
-            0u2464, 0u2465, 0u2466, 0u2467, 0u2468] # ①-⑨
-    pare = [0u2474, 0u2475, 0u2476, 0u2477,\
-            0u2478, 0u2479, 0u247a, 0u247b, 0u247c] # ⑴-⑼
-    peri = [0u2488, 0u2489, 0u248a, 0u248b,\
-            0u248c, 0u248d, 0u248e, 0u248f, 0u2490] # ⒈-⒐
-    cir2 = [0u24f5, 0u24f6, 0u24f7, 0u24f8,\
-            0u24f9, 0u24fa, 0u24fb, 0u24fc, 0u24fd] # ⓵-⓽
-    cirN = [0u2776, 0u2777, 0u2778, 0u2779,\
-            0u277a, 0u277b, 0u277c, 0u277d, 0u277e] # ❶-❾
-    cirS = [0u2780, 0u2781, 0u2782, 0u2783,\
-            0u2784, 0u2785, 0u2786, 0u2787, 0u2788] # ➀-➈
-    ciSN = [0u278a, 0u278b, 0u278c, 0u278d,\
-            0u278e, 0u278f, 0u2790, 0u2791, 0u2792] # ➊-➒
+    orig = 0uff11 # １
+    circ = 0u2460 # ①
+    pare = 0u2474 # ⑴
+    peri = 0u2488 # ⒈
+    cir2 = 0u24f5 # ⓵
+    cirN = 0u2776 # ❶
+    cirS = 0u2780 # ➀
+    ciSN = 0u278a # ➊
     j = 0
-    while (j < SizeOf(orig))
-        Select(circ[j])
+    while (j < 9)
+        Select(circ + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(pare[j])
+        Select(pare + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(peri[j])
+        Select(peri + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(cir2[j])
+        Select(cir2 + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(cirN[j])
+        Select(cirN + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(cirS[j])
+        Select(cirS + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(ciSN[j])
+        Select(ciSN + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         j += 1
     endloop
 
-    orig = [0uff41, 0uff42, 0uff43, 0uff44,\
-            0uff45, 0uff46, 0uff47, 0uff48,\
-            0uff49, 0uff4a, 0uff4b, 0uff4c,\
-            0uff4d, 0uff4e, 0uff4f, 0uff50,\
-            0uff51, 0uff52, 0uff53, 0uff54,\
-            0uff55, 0uff56, 0uff57, 0uff58,\
-            0uff59, 0uff5a] # ａ-ｚ
-    pare =[0u249c, 0u249d, 0u249e, 0u249f,\
-           0u24a0, 0u24a1, 0u24a2, 0u24a3,\
-           0u24a4, 0u24a5, 0u24a6, 0u24a7,\
-           0u24a8, 0u24a9, 0u24aa, 0u24ab,\
-           0u24ac, 0u24ad, 0u24ae, 0u24af,\
-           0u24b0, 0u24b1, 0u24b2, 0u24b3,\
-           0u24b4, 0u24b5] # ⒜-⒵
-    circ = [0u24d0, 0u24d1, 0u24d2, 0u24d3,\
-           0u24d4, 0u24d5, 0u24d6, 0u24d7,\
-           0u24d8, 0u24d9, 0u24da, 0u24db,\
-           0u24dc, 0u24dd, 0u24de, 0u24df,\
-           0u24e0, 0u24e1, 0u24e2, 0u24e3,\
-           0u24e4, 0u24e5, 0u24e6, 0u24e7,\
-           0u24e8, 0u24e9] # ⓐ-ⓩ
+    orig = 0uff41 # ａ
+    pare = 0u249c # ⒜
+    circ = 0u24d0 # ⓐ
     j = 0
-    while (j < SizeOf(orig))
-        Select(pare[j])
+    while (j < 26)
+        Select(pare + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
-        Select(circ[j])
+        Select(circ + j)
         glyphName = GlyphInfo("Name")
-        Select(orig[j])
+        Select(orig + j)
         AddPosSub(lookups[0][0],glyphName)
         AddPosSub(lookups[1][0],glyphName)
         j += 1
