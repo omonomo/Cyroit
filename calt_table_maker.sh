@@ -2777,6 +2777,16 @@ lookAhead=("${gravityCN[@]}")
 chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 index=`expr ${index} + 1`
 
+# 右が狭い文字で その右が狭い文字で その右が幅広、狭い文字の場合 左寄り、中間の文字 右に移動
+backtrack1=("")
+backtrack=("")
+input=("${gravityLN[@]}" "${gravityMN[@]}")
+lookAhead=("${gravityCN[@]}")
+lookAhead1=("${gravityCN[@]}")
+lookAheadX=("${gravityWN[@]}" "${gravityCN[@]}"); aheadMax="2"
+chain_context "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+index=`expr ${index} + 1`
+
 # 右が t で その右が IJfrt の場合 左寄り、中間の文字 右に移動しない
 backtrack1=("")
 backtrack=("")
