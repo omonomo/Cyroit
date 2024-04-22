@@ -125,6 +125,8 @@ weight_extend_kanzi_symbols_bold="12" # 漢字フォントの記号類ボール�
 weight_reduce_kanzi_roman_regular="-6" # 漢字フォントのローマ数字レギュラー
 weight_reduce_kanzi_roman_bold="-8" # 漢字フォントのローマ数字ボールド
 
+weight_extend_kana_geometry_regular="16" # 仮名フォントの幾何学模様レギュラー
+weight_extend_kana_geometry_bold="16" # 仮名フォントの幾何学模様ボールド
 weight_reduce_kana_bold="-8" # 主に仮名ボールド
 weight_reduce_kana_others_regular="-2" # 仮名フォントのその他レギュラー
 weight_reduce_kana_others_bold="-12" # 仮名フォントのその他ボールド
@@ -7519,10 +7521,9 @@ while (i < SizeOf(input_list))
     Move(0, ${y_pos_paren} + 35)
     SetWidth(500)
 
-# ⌓◠ (追加)
+# ⌒⌓ (追加)
     Select(0u25cb); Copy() # ○
-    Select(0u2313); Paste() # ⌓
-    Select(0u25e0); Paste() # ◠
+    Select(0u2312, 0u2313); Paste() # ⌒⌓
     # 中心線
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
@@ -7538,19 +7539,14 @@ while (i < SizeOf(input_list))
     Copy()
     # 合成
     Select(0u2313) # ⌓
-    if (input_list[i] == "${input_kana_regular}")
-        PasteWithOffset(0, 166)
-    else
-        PasteWithOffset(0, 166)
-    endif
+    PasteWithOffset(0, 166)
     RemoveOverlap()
-    # ⌓◠ の下をカット
+    # ⌒⌓ の下をカット
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Scale(150, 100)
     Copy()
-    Select(0u2313) # ⌓
-    SelectMore(0u25e0) # ◠
+    Select(0u2312, 0u2313) # ⌒⌓
     PasteWithOffset(0, 332)
     OverlapIntersect()
     # ウェイト調整
@@ -7564,12 +7560,33 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
     Select(65552); Clear() # Temporary glyph
 
-# ◡ (追加)
-    Select(0u25e0); Copy() # ◠
-    Select(0u25e1); Paste() # ◡
-    VFlip()
-    CorrectDirection()
+# ◠ (追加)
+    Select(0u25cb); Copy() # ○
+    Select(0u25e0); Paste() # ◠
+    # 下をカット
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(150, 100)
+    Copy()
+    Select(0u25e0) # ◠
+    PasteWithOffset(0, 332)
+    OverlapIntersect()
     SetWidth(1000)
+    Select(65552); Clear() # Temporary glyph
+
+# ◡ (追加)
+    Select(0u25cb); Copy() # ○
+    Select(0u25e1); Paste() # ◡
+    # 上をカット
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(150, 100)
+    Copy()
+    Select(0u25e1) # ◡
+    PasteWithOffset(0, -332)
+    OverlapIntersect()
+    SetWidth(1000)
+    Select(65552); Clear() # Temporary glyph
 
 # ⌰ (追加)
     # 下線
@@ -7749,9 +7766,9 @@ while (i < SizeOf(input_list))
     Select(0u25b1); Paste() # ▱
     Transform(80, 0, 40, 70, -4000, 10000)
     if (input_list[i] == "${input_kana_regular}")
-        ChangeWeight(22)
+        ChangeWeight(14)
     else
-        ChangeWeight(24)
+        ChangeWeight(18)
     endif
     CorrectDirection()
     SetWidth(1000)
@@ -8114,7 +8131,8 @@ while (i < SizeOf(input_list))
         SelectMore(0u21dc, 0u21e5) # 矢印
         SelectMore(0u21ee, 0u22ed) # 記号類
         SelectMore(0u22f0, 0u2306) # 記号類
-        SelectMore(0u2308, 0u2312) # 記号類
+        SelectMore(0u2308, 0u2311) # 記号類
+ #        SelectMore(0u2312, 0u2313) # ⌒⌓ # グリフ加工でウェイト調整済
         SelectMore(0u2329, 0u232a) # 〈〉
  #        SelectMore(0u2330, 0u2333) # ⌰⌱⌲⌳ # グリフ加工でウェイト調整済
  #        SelectMore(0u23cf) # ⏏
@@ -8128,6 +8146,20 @@ while (i < SizeOf(input_list))
             ChangeWeight(${weight_reduce_kana_others_bold})
         endif
         CorrectDirection()
+
+        Select(0u25a0, 0u25cb) # 幾何学模様
+ #        SelectMore(0u25cc) # ◌
+        SelectMore(0u25cd, 0u25d8) # 幾何学模様
+ #        SelectMore(0u25d9) # ◙
+        SelectMore(0u25da, 0u2667) # 幾何学模様
+        if (input_list[i] == "${input_kana_regular}")
+            ChangeWeight(${weight_extend_kana_geometry_regular})
+        else
+            ChangeWeight(${weight_extend_kana_geometry_bold})
+        endif
+        CorrectDirection()
+
+
     endif
 
 # 縦書き対応 (カタカナ拡張、小仮名拡張以外の小文字を改変した場合は要コピー)
