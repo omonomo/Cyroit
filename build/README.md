@@ -28,7 +28,7 @@ Copyright (c) 2023 omonomo ([https://omonomo.github.io/Cyroit/](https://omonomo.
 
 [Inconsolata]  
 Copyright 2006 The Inconsolata Project Authors  
-([https://github.com/cyrealtype/Inconsolata](https://github.com/cyrealtype/Inconsolata))  
+([https://levien.com/type/myfonts/inconsolata.html](https://levien.com/type/myfonts/inconsolata.html))  
 主にラテン文字で使用しています。Inconsolata のライセンスは [SIL Open Font License v1.1](http://scripts.sil.org/ofl) です。  
 
 [Circle M+]  
