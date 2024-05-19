@@ -1501,11 +1501,11 @@ while (i < SizeOf(input_list))
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
     if (input_list[i] == "${input_latin_regular}")
-        Move(116, 600)
+        Move(121, 600)
         PasteWithOffset(154, 0)
  #        PasteWithOffset(214, 0)
     else
-        Move(96, 600)
+        Move(101, 600)
         PasteWithOffset(134, 0)
  #        PasteWithOffset(194, 0)
     endif
@@ -7521,7 +7521,7 @@ while (i < SizeOf(input_list))
     Move(0, ${y_pos_paren} + 35)
     SetWidth(500)
 
-# ⌒⌓ (追加)
+# ⌒⌓ (漢字フォントを置換・追加)
     Select(0u25cb); Copy() # ○
     Select(0u2312, 0u2313); Paste() # ⌒⌓
     # 中心線
@@ -7851,7 +7851,7 @@ while (i < SizeOf(input_list))
         SelectMore(1114116) # き゚
         Move(-5, 0)
         SetWidth(1000)
-        
+
         Select(0u304f) # く
         Move(10, 0)
         SetWidth(1000)
@@ -7872,7 +7872,7 @@ while (i < SizeOf(input_list))
         Select(0u3055, 0u3056) # さざ
         Move(-5, 0)
         SetWidth(1000)
-        
+
         Select(0u3059, 0u305a) # すず
         Move(-10, 0)
         SetWidth(1000)
@@ -9214,6 +9214,60 @@ while (i < SizeOf(input_list))
     SetWidth(1024)
     Select(65552); Clear() # Temporary glyph
 
+# ⌨ (追加)
+    Select(0u25a1); Copy() # □
+    Select(0u2328); Paste() # ⌨
+    if (input_list[i] == "${input_kanzi_regular}")
+        Scale(122, 88)
+        Copy()
+        Move(0, 11)
+        Select(0u2328); PasteWithOffset(0, -11) # ⌨
+        RemoveOverlap()
+        ChangeWeight(-10)
+    else
+        Scale(126, 92)
+        Copy()
+        Move(0, 15)
+        Select(0u2328); PasteWithOffset(0, -15) # ⌨
+        RemoveOverlap()
+        ChangeWeight(-28)
+    endif
+    CorrectDirection()
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_kanzi_regular}")
+        Scale(12, 12)
+    else
+        Scale(13, 13)
+    endif
+    Copy()
+    Select(0u2328) # ⌨
+    PasteWithOffset(-260, 150)
+    PasteWithOffset(-245, 150)
+    PasteWithOffset( -95, 150)
+    PasteWithOffset(  55, 150)
+    PasteWithOffset( 205, 150)
+    PasteWithOffset( 260, 150)
+
+    PasteWithOffset(-260,   0)
+    PasteWithOffset(-210,   0)
+    PasteWithOffset( -60,   0)
+    PasteWithOffset(  90,   0)
+    PasteWithOffset( 240,   0)
+    PasteWithOffset( 260,   0)
+
+    PasteWithOffset(-260, -150)
+    PasteWithOffset(-110, -150)
+    PasteWithOffset( -50, -150)
+    PasteWithOffset(   0, -150)
+    PasteWithOffset(  50, -150)
+    PasteWithOffset( 110, -150)
+    PasteWithOffset( 260, -150)
+
+    RemoveOverlap()
+    SetWidth(1024)
+    Select(65552); Clear() # Temporary glyph
+
 # ⎧ (下を延ばす)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
@@ -9844,7 +9898,9 @@ while (i < SizeOf(input_list))
         SelectMore(0u2304, 0u2306) # 記号類
         SelectMore(0u2308, 0u2323) # 記号類
  #        SelectMore(0u2324) # ⌤ グリフ改変時にウェイト調整済
-        SelectMore(0u2325, 0u2334) # 記号類
+        SelectMore(0u2325, 0u2327) # 記号類
+ #        SelectMore(0u2328) # ⌨ グリフ改変時にウェイト調整済 # 記号類
+        SelectMore(0u2329, 0u2334) # 記号類
  #        SelectMore(0u2335) # ⌵ グリフ改変時にウェイト調整済
         SelectMore(0u23a7, 0u23cc) # ⎧ -
         SelectMore(0u2640, 0u2642) # ♀♂
@@ -11770,7 +11826,7 @@ while (i < \$argc)
  #    AddPosSub(lookupSub0, glyphName) # 左→中
     glyphName = GlyphInfo("Name")
     Select(0u003c) # <
- #    AddPosSub(lookupSub1, glyphName) # 左←中
+    AddPosSub(lookupSub1, glyphName) # 左←中
     k += 1
 
     Select(0u003e); Copy() # >
@@ -11827,7 +11883,7 @@ while (i < \$argc)
     Select(k); Paste()
     Move(${x_pos_calt}, 0)
     SetWidth(512)
- #    AddPosSub(lookupSub0, glyphName) # 中←右
+    AddPosSub(lookupSub0, glyphName) # 中←右
     glyphName = GlyphInfo("Name")
     Select(0u003c) # <
     AddPosSub(lookupSub1, glyphName) # 中→右
@@ -11838,10 +11894,10 @@ while (i < \$argc)
     Select(k); Paste()
     Move(${x_pos_calt}, 0)
     SetWidth(512)
- #    AddPosSub(lookupSub0, glyphName) # 中←右
+    AddPosSub(lookupSub0, glyphName) # 中←右
     glyphName = GlyphInfo("Name")
     Select(0u003e) # >
- #    AddPosSub(lookupSub1, glyphName) # 中→右
+    AddPosSub(lookupSub1, glyphName) # 中→右
     k += 1
 
     Select(0u005c); Copy() # reverse solidus
