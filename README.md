@@ -29,16 +29,16 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v2.2.5)  
-- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.5/Cyroit_v2.2.5.zip)
-- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.5.zip)
+最新版 (v2.2.6)  
+- [フォント](https://github.com/omonomo/Cyroit/releases/download/v2.2.6/Cyroit_v2.2.6.zip)
+- [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v2.2.6.zip)
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
 
 ## その他の特徴
 
-- 主にラテン文字のグリフは [Inconsolata](https://github.com/googlefonts/Inconsolata) を使用しています。
+- 主にラテン文字のグリフは [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) を使用しています。
 - 主に仮名文字、ギリシア文字、キリル文字のグリフは [Circle M+ 1m](https://itouhiro.github.io/mixfont-mplus-ipa/) を使用しています。
 - 主に漢字のグリフは [BIZ UDゴシック](https://github.com/googlefonts/morisawa-biz-ud-gothic) を使用しています。
 - 変体仮名のグリフは [NINJAL 変体仮名フォント](https://cid.ninjal.ac.jp/kana/font/) を使用しています。
@@ -127,7 +127,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 Cyroit は以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Sonoma (version 14.4.1)
+- OS: macOS Sonoma (version 14.5)
 - Shell: zsh 5.9 (x86_64-apple-darwin23.0)
 - FontForge: 20230101
 - FontTools: 4.51.0
