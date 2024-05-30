@@ -11,8 +11,8 @@ font_familyname="Cyroit"
 
 lookupIndex_calt="18" # caltテーブルのlookupナンバー
 listNo="0"
-caltL="caltList" # caltテーブルリストの名称
-caltList="${caltL}_${listNo}" # Lookupごとのcaltテーブルリスト
+caltListName="caltList" # caltテーブルリストの名称
+caltList="${caltListName}_${listNo}" # Lookupごとのcaltテーブルリスト
 cmapList="cmapList" # 異体字セレクタリスト
 extList="extList" # 異体字のglyphナンバーリスト
 gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
@@ -54,7 +54,7 @@ remove_temp() {
   echo "Remove temporary files"
   rm -f ${font_familyname}*.ttx
   rm -f ${font_familyname}*.ttx.bak
-  rm -f ${caltL}*.txt
+  rm -f ${caltListName}*.txt
   rm -f ${cmapList}.txt
   rm -f ${extList}.txt
   rm -f ${gsubList}.txt
@@ -270,7 +270,7 @@ fi
 # GSUB テーブルの更新 ----------
 if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今あるリストを削除
   if [ "${reuse_list_flag}" = "false" ]; then
-    rm -f ${caltL}*.txt
+    rm -f ${caltListName}*.txt
   fi
 
   find . -not -name "*.*.ttf" -maxdepth 1 | \
@@ -296,7 +296,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
             sh uvs_table_maker.sh -N "${font_familyname}"
           fi
         fi
-        caltlist_txt=`find . -name "${caltL}*.txt" -maxdepth 1 | head -n 1`
+        caltlist_txt=`find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1`
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
           if [ "${basic_only_flag}" = "true" ]; then
             if [ "${leaving_tmp_flag}" = "true" ]; then
@@ -314,7 +314,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         fi
         # フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
-        find . -name "${caltL}*.txt" -maxdepth 1 | while read line # caltList(caltルックアップ)の数だけループ
+        find . -name "${caltListName}*.txt" -maxdepth 1 | while read line # caltList(caltルックアップ)の数だけループ
         do
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の中を削除
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
@@ -323,9 +323,9 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の後に挿入
-          lookupIndex_calt=`expr ${lookupIndex_calt} + 1`
-          listNo=`expr ${listNo} + 1`
-          caltList="${caltL}_${listNo}"
+          lookupIndex_calt=$((${lookupIndex_calt} + 1))
+          listNo=$((${listNo} + 1))
+          caltList="${caltListName}_${listNo}"
         done
       fi
     else

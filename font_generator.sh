@@ -29,51 +29,51 @@ tmpdir_name="font_generator_tmpdir" # 一時作成フォルダ名
 
 # グリフ保管アドレス
 address_dvz_latin="64336" # 0ufb50 latinフォントの避難したDVZアドレス
-address_visi_latin=`expr ${address_dvz_latin} + 18` # latinフォントの避難した識別性向上アドレス ⁄|
+address_visi_latin=$((${address_dvz_latin} + 18)) # latinフォントの避難した識別性向上アドレス ⁄|
 
-address_visi_kana=`expr ${address_visi_latin} + 2` # 仮名フォントの避難した識別性向上アドレス ゠-➓
+address_visi_kana=$((${address_visi_latin} + 2)) # 仮名フォントの避難した識別性向上アドレス ゠-➓
 address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
 
-address_visi_kanzi=`expr ${address_visi_kana} + 26` # 漢字フォントの避難した識別性向上アドレス 〇-口
+address_visi_kanzi=$((${address_visi_kana} + 26)) # 漢字フォントの避難した識別性向上アドレス 〇-口
 address_calt_kanzi="1114841" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi2="1115493" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi3="1115623" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi4="1115776" # 漢字フォントのcalt置換アドレス
 
 address_dvz_latinkana=${address_dvz_latin} # latin仮名フォントの避難したDVZアドレス
-address_zenhan_latinkana=`expr ${address_visi_kanzi} + 9` # latin仮名フォントの避難した全角半角アドレス(縦書きの（-゠)
+address_zenhan_latinkana=$((${address_visi_kanzi} + 9)) # latin仮名フォントの避難した全角半角アドレス(縦書きの（-゠)
 address_vert_latinkana="65682" # latin仮名フォントのvert置換アドレス
 
 address_dvz=${address_dvz_latin} # 避難したDVZアドレス
 address_visi=${address_visi_latin} # 避難した識別性向上アドレス
 address_zenhan=${address_zenhan_latinkana} # 避難した全角半角アドレス
-address_store_end=`expr ${address_zenhan} + 281` # 避難したグリフの最終アドレス(縦書きの゠)
+address_store_end=$((${address_zenhan} + 281)) # 避難したグリフの最終アドレス(縦書きの゠)
 
 address_vert="1114179" # vert置換アドレス （
-address_vert_X=`expr ${address_vert} + 109` # vert置換アドレス ✂
-address_vert_dh=`expr ${address_vert_X} + 3` # vert置換アドレス ゠
-address_vert_mm=`expr ${address_vert_dh} + 27` # vert置換アドレス ㍉
-address_vert_kabu=`expr ${address_vert_mm} + 333` # vert置換アドレス ㍿
+address_vert_X=$((${address_vert} + 109)) # vert置換アドレス ✂
+address_vert_dh=$((${address_vert_X} + 3)) # vert置換アドレス ゠
+address_vert_mm=$((${address_vert_dh} + 27)) # vert置換アドレス ㍉
+address_vert_kabu=$((${address_vert_mm} + 333)) # vert置換アドレス ㍿
 
-address_calt=`expr ${address_vert_kabu} + 7` # calt置換の先頭アドレス(左に移動した A)
-address_calt_middle=`expr ${address_calt} + 239` # calt置換の中間アドレス(右に移動した A)
-address_calt_figure=`expr ${address_calt_middle} + 239` # calt置換アドレス(桁区切り付きの数字)
-address_calt_end=`expr ${address_calt_figure} + 52` # calt置換の最終アドレス (上に移動した colon)
+address_calt=$((${address_vert_kabu} + 7)) # calt置換の先頭アドレス(左に移動した A)
+address_calt_middle=$((${address_calt} + 239)) # calt置換の中間アドレス(右に移動した A)
+address_calt_figure=$((${address_calt_middle} + 239)) # calt置換アドレス(桁区切り付きの数字)
+address_calt_end=$((${address_calt_figure} + 52)) # calt置換の最終アドレス (上に移動した colon)
 lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
 num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
 
-lookupIndex_replace=`expr ${lookupIndex_calt} + ${num_calt_lookups}` # 単純置換のlookupナンバー
+lookupIndex_replace=$((${lookupIndex_calt} + ${num_calt_lookups})) # 単純置換のlookupナンバー
 num_replace_lookups="10" # 単純置換のルックアップ数 (lookupの数を変えた場合はcalt_table_makerも変更すること)
 
-address_ss=`expr ${address_calt_end} + 1` # ss置換の先頭アドレス(全角スペース)
-address_ss_figure=`expr ${address_ss} + 3` # ss置換アドレス(桁区切り付きの数字)
-address_ss_vert=`expr ${address_ss_figure} + 50` # ss置換の全角縦書きアドレス(縦書きの（)
-address_ss_zenhan=`expr ${address_ss_vert} + 109` # ss置換の全角半角アドレス(！)
-address_ss_visibility=`expr ${address_ss_zenhan} + 172` # ss置換の識別性向上アドレス(/)
-address_ss_dvz=`expr ${address_ss_visibility} + 39` # ss置換のDVZアドレス
-address_ss_end=`expr ${address_ss_dvz} + 17` # ss置換の最終アドレス (Ｚ)
-num_ss_glyphs=`expr ${address_ss_end} - ${address_ss} + 1` # ss置換のグリフ数
-lookupIndex_ss=`expr ${lookupIndex_replace} + ${num_replace_lookups}` # ssテーブルのlookupナンバー
+address_ss=$((${address_calt_end} + 1)) # ss置換の先頭アドレス(全角スペース)
+address_ss_figure=$((${address_ss} + 3)) # ss置換アドレス(桁区切り付きの数字)
+address_ss_vert=$((${address_ss_figure} + 50)) # ss置換の全角縦書きアドレス(縦書きの（)
+address_ss_zenhan=$((${address_ss_vert} + 109)) # ss置換の全角半角アドレス(！)
+address_ss_visibility=$((${address_ss_zenhan} + 172)) # ss置換の識別性向上アドレス(/)
+address_ss_dvz=$((${address_ss_visibility} + 39)) # ss置換のDVZアドレス
+address_ss_end=$((${address_ss_dvz} + 17)) # ss置換の最終アドレス (Ｚ)
+num_ss_glyphs=$((${address_ss_end} - ${address_ss} + 1)) # ss置換のグリフ数
+lookupIndex_ss=$((${lookupIndex_replace} + ${num_replace_lookups})) # ssテーブルのlookupナンバー
 num_ss_lookups="8" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 
 # 著作権
@@ -424,7 +424,7 @@ do
 done
 echo
 
-shift `expr $OPTIND - 1`
+shift $(($OPTIND - 1))
 
 # Get input fonts
 if [ "${patch_only_flag}" = "false" ]; then
@@ -569,7 +569,7 @@ echo
 
 # フォントバージョンにビルドNo追加
 buildNo=`date "+%s"`
-buildNo=`expr ${buildNo} % 315360000 / 60`
+buildNo=$((${buildNo} % 315360000 / 60))
 buildNo=`echo "obase=16; ibase=10; ${buildNo}" | bc`
 font_version="${font_version} (${buildNo})"
 
