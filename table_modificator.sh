@@ -323,8 +323,8 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の後に挿入
-          lookupIndex_calt=$((${lookupIndex_calt} + 1))
-          listNo=$((${listNo} + 1))
+          lookupIndex_calt=$((lookupIndex_calt + 1))
+          listNo=$((listNo + 1))
           caltList="${caltListName}_${listNo}"
         done
       fi

@@ -168,7 +168,7 @@ do
 done
 echo
 
-shift $((${OPTIND} - 1))
+shift $((OPTIND - 1))
 
 # 引数を取得
 if [ "${mode}" != "-p" ]; then # -p オプション以外は引数を取得
