@@ -65,7 +65,7 @@ do
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
-            font_familyname=`echo $OPTARG | tr -d ' '`
+            font_familyname=${OPTARG// /}
             ;;
         * )
             exit 1
@@ -83,12 +83,12 @@ do
     [ -d "${i}" ] && tmp="${tmp} ${i}"
 done
 fonts_directories=$tmp
-fromFontName_ttf=`find ${fonts_directories} -follow -name "${fromFontName}.ttf" | head -n 1`
+fromFontName_ttf=$(find ${fonts_directories} -follow -name "${fromFontName}.ttf" | head -n 1)
 if [ -z "${fromFontName_ttf}" ]; then
   echo "Error: ${fromFontName} not found" >&2
   exit 1
 fi
-toFontName_ttf=`find . -name "${toFontName}.ttf" -maxdepth 1 | head -n 1`
+toFontName_ttf=$(find . -name "${toFontName}.ttf" -maxdepth 1 | head -n 1)
 if [ -z "${toFontName_ttf}" ]; then
   echo "Error: ${toFontName} not found" >&2
   exit 1
@@ -105,7 +105,7 @@ rm -f ${gsubList}.txt ${gsubList}.txt.bak
 ttx -t cmap "${fromFontName_ttf}"
 ttx -t GSUB "${toFontName_ttf}"
 # 元フォントがカレントディレクトリに無ければ生成したttxファイルを移動
-fromFontName_ttx=`find ${fonts_directories} -follow -name "${fromFontName}.ttx" | head -n 1`
+fromFontName_ttx=$(find ${fonts_directories} -follow -name "${fromFontName}.ttx" | head -n 1)
 if [ -n "${fromFontName_ttx}" ] && [ ${fromFontName_ttx} != "./${fromFontName}.ttx" ]; then
   echo "Move ${fromFontName}.ttx"
   mv ${fromFontName_ttx} ./
@@ -123,24 +123,24 @@ grep "map uv=" "${fromFontName}.ttx" >> "${cmapList}.txt"
 
 # 取り出したリストから外字のみのリストを作成
 echo "Make external char list"
-line=`grep "map uv=\"0x${findUv}\"" "${cmapList}.txt" | head -n 1`
+line=$(grep "map uv=\"0x${findUv}\"" "${cmapList}.txt" | head -n 1)
 temp=${line#*glyph} # glyphナンバーより前を削除
 fromNum=${temp%\"*} # glyphナンバーより後を削除
 echo "${fromFontName}: 0x${findUv} -> glyph${fromNum}"
 
-for i in `seq 0 ${samplingNum}`
+for i in $(seq 0 ${samplingNum})
 do
   grep "glyph$((fromNum + i))" "${cmapList}.txt" >> "${extList}.txt"
 done
 
 # 作成するフォントのGSUBから置換用リストを作成
 echo "Make GSUB list"
-line=`grep "Substitution in=\"uni${findUv}\"" "${toFontName}.ttx" | head -n 1`
+line=$(grep "Substitution in=\"uni${findUv}\"" "${toFontName}.ttx" | head -n 1)
 temp=${line#*glyph} # glyphナンバーより前を削除
 toNum=${temp%\"*} # glyphナンバーより後を削除
 echo "${toFontName}: 0x${findUv} -> glyph${toNum}"
 
-for i in `seq 0 ${samplingNum}`
+for i in $(seq 0 ${samplingNum})
 do
   grep "glyph$((toNum + i))" "${toFontName}.ttx" | head -n 1 >> "${gsubList}.txt"
 done
@@ -150,7 +150,7 @@ echo "Modify cmap list"
 i=1
 while read toLine
 do
-  fromLine=`head -n ${i} "${extList}.txt" | tail -n 1`
+  fromLine=$(head -n ${i} "${extList}.txt" | tail -n 1)
   temp=${fromLine#*glyph} # glyphナンバーより前を削除
   fromNum=${temp%\"*} # glyphナンバーより後を削除
 
