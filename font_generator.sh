@@ -17,9 +17,9 @@ font_version="0.1.0"
 vendor_id="PfEd"
 
 version="version"
-version_txt=`find . -name "${version}.txt" -maxdepth 1 | head -n 1`
+version_txt=$(find . -name "${version}.txt" -maxdepth 1 | head -n 1)
 if [ -n "${version_txt}" ]; then
-    font_v=`cat ${version_txt} | head -n 1`
+    font_v=$(head -n 1 < "${version_txt}")
     if [ -n "${font_v}" ]; then
         font_version=${font_v}
     fi
@@ -331,11 +331,11 @@ do
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
-            font_familyname=`echo $OPTARG | tr -d ' '`
+            font_familyname=${OPTARG// /}
             ;;
         "n" )
             echo "Option: Set fontfamily suffix: ${OPTARG}"
-            font_familyname_suffix=`echo $OPTARG | tr -d ' '`
+            font_familyname_suffix=${OPTARG// /}
             ;;
         "Z" )
             echo "Option: Disable visible zenkaku space"
@@ -437,35 +437,35 @@ if [ "${patch_only_flag}" = "false" ]; then
         done
         fonts_directories=$tmp
         # Search latin fonts
-        input_latin_regular=`find $fonts_directories -follow -name "${origin_latin_regular}" | head -n 1`
-        input_latin_bold=`find $fonts_directories -follow -name "${origin_latin_bold}" | head -n 1`
+        input_latin_regular=$(find $fonts_directories -follow -name "${origin_latin_regular}" | head -n 1)
+        input_latin_bold=$(find $fonts_directories -follow -name "${origin_latin_bold}" | head -n 1)
         if [ -z "${input_latin_regular}" -o -z "${input_latin_bold}" ]; then
             echo "Error: ${origin_latin_regular} and/or ${origin_latin_bold} not found" >&2
             exit 1
         fi
         # Search kana fonts
-        input_kana_regular=`find $fonts_directories -follow -iname "${origin_kana_regular}" | head -n 1`
-        input_kana_bold=`find $fonts_directories -follow -iname "${origin_kana_bold}"    | head -n 1`
+        input_kana_regular=$(find $fonts_directories -follow -iname "${origin_kana_regular}" | head -n 1)
+        input_kana_bold=$(find $fonts_directories -follow -iname "${origin_kana_bold}"    | head -n 1)
         if [ -z "${input_kana_regular}" -o -z "${input_kana_bold}" ]; then
             echo "Error: ${origin_kana_regular} and/or ${origin_kana_bold} not found" >&2
             exit 1
         fi
         # Search kanzi fonts
-        input_kanzi_regular=`find $fonts_directories -follow -iname "${origin_kanzi_regular}" | head -n 1`
-        input_kanzi_bold=`find $fonts_directories -follow -iname "${origin_kanzi_bold}"    | head -n 1`
+        input_kanzi_regular=$(find $fonts_directories -follow -iname "${origin_kanzi_regular}" | head -n 1)
+        input_kanzi_bold=$(find $fonts_directories -follow -iname "${origin_kanzi_bold}"    | head -n 1)
         if [ -z "${input_kanzi_regular}" -o -z "${input_kanzi_bold}" ]; then
             echo "Error: ${origin_kanzi_regular} and/or ${origin_kanzi_bold} not found" >&2
             exit 1
         fi
         # Search hentai kana fonts
-        input_hentai_kana=`find $fonts_directories -follow -iname "${origin_hentai_kana}" | head -n 1`
+        input_hentai_kana=$(find $fonts_directories -follow -iname "${origin_hentai_kana}" | head -n 1)
         if [ -z "${input_hentai_kana}" ]; then
             echo "Error: ${origin_hentai_kana} not found" >&2
             exit 1
         fi
         if [ ${nerd_flag} = "true" ]; then
             # Search nerd fonts
-            input_nerd=`find $fonts_directories -follow -iname "${origin_nerd}" | head -n 1`
+            input_nerd=$(find $fonts_directories -follow -iname "${origin_nerd}" | head -n 1)
             if [ -z "${input_nerd}" ]; then
                 echo "Error: ${origin_nerd} not found" >&2
                 exit 1
@@ -540,8 +540,8 @@ then
     echo "Error: ${fontforge_command} command not found" >&2
     exit 1
 fi
-fontforge_v=`${fontforge_command} -version`
-fontforge_version=`echo ${fontforge_v} | cut -d ' ' -f2`
+fontforge_v=$(${fontforge_command} -version)
+fontforge_version=$(echo ${fontforge_v} | cut -d ' ' -f2)
 
 # Check ttx existance
 if ! which $ttx_command > /dev/null 2>&1
@@ -549,13 +549,13 @@ then
     echo "Error: ${ttx_command} command not found" >&2
     exit 1
 fi
-ttx_version=`${ttx_command} --version`
+ttx_version=$(${ttx_command} --version)
 
 # Make temporary directory
 if [ -w "/tmp" -a "${leaving_tmp_flag}" = "false" ]; then
-    tmpdir=`mktemp -d /tmp/"${tmpdir_name}".XXXXXX` || exit 2
+    tmpdir=$(mktemp -d /tmp/"${tmpdir_name}".XXXXXX) || exit 2
 else
-    tmpdir=`mktemp -d ./"${tmpdir_name}".XXXXXX`    || exit 2
+    tmpdir=$(mktemp -d ./"${tmpdir_name}".XXXXXX)    || exit 2
 fi
 
 # Remove temporary directory by trapping
@@ -568,9 +568,9 @@ fi
 echo
 
 # フォントバージョンにビルドNo追加
-buildNo=`date "+%s"`
+buildNo=$(date "+%s")
 buildNo=$((buildNo % 315360000 / 60))
-buildNo=`echo "obase=16; ibase=10; ${buildNo}" | bc`
+buildNo=$(echo "obase=16; ibase=10; ${buildNo}" | bc)
 font_version="${font_version} (${buildNo})"
 
 ################################################################################
@@ -1495,20 +1495,28 @@ while (i < SizeOf(input_list))
     Move(5, 0)
     SetWidth(500)
 
-# l (縦線を少し細くし、左を少しカットして少し左へ移動)
+# l (縦線を少し細くし、セリフを少しカットして少し左へ移動)
     Select(0u006c); Copy() # l
     PasteWithOffset(-1, 0)
     OverlapIntersect()
 
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
+    Scale(30, 25)
+    HFlip()
     if (input_list[i] == "${input_latin_regular}")
-        Move(121, 600)
-        PasteWithOffset(154, 0)
+        Move(223, -200)
+        PasteWithOffset(121, 600)
+        PasteWithOffset(164, 0)
+ #        Move(244, -200)
+ #        PasteWithOffset(116, 600)
  #        PasteWithOffset(214, 0)
     else
-        Move(101, 600)
-        PasteWithOffset(134, 0)
+        Move(244, -200)
+        PasteWithOffset(101, 600)
+        PasteWithOffset(144, 0)
+ #        Move(261, -200)
+ #        PasteWithOffset(96, 600)
  #        PasteWithOffset(194, 0)
     endif
     RemoveOverlap()
@@ -6793,7 +6801,8 @@ while (i < SizeOf(input_list))
         Select(0u30d7); PasteWithOffset(80, 53) # プ
  #        Select(0u30d7); PasteWithOffset(40, 33) # プ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30da); PasteWithOffset(0, 0) # ペ
+        Select(0u30da); PasteWithOffset(10, 0) # ペ
+ #        Select(0u30da); PasteWithOffset(0, 0) # ペ
         SetWidth(1000); RemoveOverlap()
         Select(0u30dd); PasteWithOffset(70, 53) # ポ
  #        Select(0u30dd); PasteWithOffset(40, 33) # ポ
@@ -6845,7 +6854,8 @@ while (i < SizeOf(input_list))
         Select(0u30d7); PasteWithOffset(52, 32) # プ
  #        Select(0u30d7); PasteWithOffset(12, 12) # プ
         SetWidth(1000); RemoveOverlap()
-        Select(0u30da); PasteWithOffset(0, 0) # ペ
+        Select(0u30da); PasteWithOffset(10, 0) # ペ
+ #        Select(0u30da); PasteWithOffset(0, 0) # ペ
         SetWidth(1000); RemoveOverlap()
         Select(0u30dd); PasteWithOffset(42, 32) # ポ
  #        Select(0u30dd); PasteWithOffset(12, 12) # ポ
@@ -6893,9 +6903,11 @@ while (i < SizeOf(input_list))
 
     Select(65553); Copy()
     if (input_list[i] == "${input_kana_regular}")
-        Select(0u307a); PasteWithOffset(  0,    0) # ぺ
+        Select(0u307a); PasteWithOffset( 10,    0) # ぺ
+ #        Select(0u307a); PasteWithOffset(  0,    0) # ぺ
     else
-        Select(0u307a); PasteWithOffset(  0,    0) # ぺ
+        Select(0u307a); PasteWithOffset( 10,    0) # ぺ
+ #        Select(0u307a); PasteWithOffset(  0,    0) # ぺ
     endif
     SetWidth(1000); RemoveOverlap()
 
@@ -7309,10 +7321,10 @@ while (i < SizeOf(input_list))
 
     Select(65553); Copy()
     if (input_list[i] == "${input_kana_regular}")
-        Select(0u3079); PasteWithOffset( 20,    0) # べ
+        Select(0u3079); PasteWithOffset( 40,    0) # べ
  #        Select(0u3079); PasteWithOffset(  0,    0) # べ
     else
-        Select(0u3079); PasteWithOffset( 20,    0) # べ
+        Select(0u3079); PasteWithOffset( 40,    0) # べ
  #        Select(0u3079); PasteWithOffset(  0,    0) # べ
     endif
         SetWidth(1000); RemoveOverlap()
