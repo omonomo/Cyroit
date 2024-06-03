@@ -27,19 +27,19 @@ table_modify_flag="true" # フィーチャテーブルを編集する
 font_version="0.1.0"
 
 version="version"
-version_txt=`find . -name "${version}.txt" -maxdepth 1 | head -n 1`
+version_txt=$(find . -name "${version}.txt" -maxdepth 1 | head -n 1)
 if [ -n "${version_txt}" ]; then
-  font_v=`cat ${version_txt} | head -n 1`
+  font_v=$(head -n 1 < ${version_txt})
   if [ -n "${font_v}" ]; then
     font_version=${font_v}
   fi
 fi
 
-option_format_fg() { # font_generator 用のオプションを整形
-  local opt
-  local leaving_tmp_flag
-  opt="${1}"
-  leaving_tmp_flag="${2}"
+option_format_fg() { # font_generator 用のオプションを整形 (戻り値: 整形したオプション)
+  local opt # 整形前のオプション
+  local leaving_tmp_flag # 一時作成ファイルを残すか
+  opt="${2}"
+  leaving_tmp_flag="${3}"
 
   if [ "${leaving_tmp_flag}" = "true" ]; then # 引数に l はないが、一時作成ファイルを残す場合
     opt="${opt}l"
@@ -47,16 +47,16 @@ option_format_fg() { # font_generator 用のオプションを整形
   if [ "${draft_flag}" = "true" ]; then # 引数に d はないが、下書きモードで処理する場合
     opt="${opt}d"
   fi
-  echo "${opt}"
+  eval "${1}=\${opt}" # 戻り値を入れる変数名を1番目の引数に指定する
 }
 
-option_format_tm() { # table_modificator 用のオプションを整形
-  local opt
-  local leaving_tmp_flag
-  local reuse_list_flag
-  opt="${1}"
-  leaving_tmp_flag="${2}"
-  reuse_list_flag="${3}"
+option_format_tm() { # table_modificator 用のオプションを整形 (戻り値: 整形したオプション)
+  local opt # 整形前のオプション
+  local leaving_tmp_flag # 一時作成ファイルを残すか
+  local reuse_list_flag # 作成済みのリストを使用するか
+  opt="${2}"
+  leaving_tmp_flag="${3}"
+  reuse_list_flag="${4}"
 
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションか 引数に l がある場合
     opt="${opt}l"
@@ -64,7 +64,7 @@ option_format_tm() { # table_modificator 用のオプションを整形
   if [ "${reuse_list_flag}" != "false" ]; then # -r オプションがある場合
     opt="${opt}r"
   fi
-  echo "${opt}"
+  eval "${1}=\${opt}" # 戻り値を入れる変数名を1番目の引数に指定する
 }
 
 option_check() {
@@ -126,11 +126,11 @@ do
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
-            font_familyname=`echo $OPTARG | tr -d ' '`
+            font_familyname=${OPTARG// /}
             ;;
         "n" )
             echo "Option: Set fontfamily suffix: ${OPTARG}"
-            font_familyname_suffix=`echo $OPTARG | tr -d ' '`
+            font_familyname_suffix=${OPTARG// /}
             ;;
         "d" )
             echo "Option: Draft mode (skip time-consuming processes)"
@@ -173,8 +173,8 @@ shift $((OPTIND - 1))
 # 引数を取得
 if [ "${mode}" != "-p" ]; then # -p オプション以外は引数を取得
   if [ $# -eq 1 ]; then
-    opt_fg=`echo "$1" | tr -d ' -'`
-    array=(`echo ${opt_fg} | sed 's/./& /g'`) # 配列化
+    opt_fg=$(echo "$1" | tr -d ' -')
+    array=($(echo ${opt_fg} | sed 's/./& /g')) # 配列化 (abc → a b c)
     for S in ${array[@]}; do
       if grep -q "${S}" <<< "${illegal_opt_fg}"; then # 引数に使用できないオプションが含まれていれば終了
         echo "Illegal argument"
@@ -222,7 +222,7 @@ case ${mode} in
     ;;
 esac
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
-  opt_fg=`option_format_fg "${opt_fg}" "${leaving_tmp_flag}"`
+  option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
   if [ -n "${opt_fg}" ]; then
     sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   else
@@ -248,7 +248,7 @@ if [ "${mode}" = "-F" ]; then
         "TM" ) opt_fg="zp" ;;
         "TS" ) opt_fg="p" ;;
       esac
-      opt_fg=`option_format_fg "${opt_fg}" "${leaving_tmp_flag}"`
+      option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
       if [ -n "${opt_fg}" ]; then
         sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${S}"
       else
@@ -258,7 +258,7 @@ if [ "${mode}" = "-F" ]; then
   fi
   if [ $# -eq 0 ]; then # 引き数がない場合、通常版を生成
     opt_fg="Sp"
-    opt_fg=`option_format_fg "${opt_fg}" "${leaving_tmp_flag}"`
+    option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
     if [ -n "${opt_fg}" ]; then
       sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
     else
@@ -274,7 +274,7 @@ case ${mode} in
   "-F" ) opt_tm="" ;;
      * ) opt_tm="b" ;;
 esac
-opt_tm=`option_format_tm "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"`
+option_format_tm "opt_tm" "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"
 if [ -n "${opt_tm}" ]; then
   sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else
