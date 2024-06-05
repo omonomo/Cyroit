@@ -58,7 +58,8 @@ address_vert_kabu=$((address_vert_mm + 333)) # vert置換アドレス ㍿
 address_calt=$((address_vert_kabu + 7)) # calt置換の先頭アドレス(左に移動した A)
 address_calt_middle=$((address_calt + 239)) # calt置換の中間アドレス(右に移動した A)
 address_calt_figure=$((address_calt_middle + 239)) # calt置換アドレス(桁区切り付きの数字)
-address_calt_end=$((address_calt_figure + 52)) # calt置換の最終アドレス (上に移動した colon)
+address_calt_bar=$((address_calt_figure + 50)) # calt置換アドレス (下に移動した |)
+address_calt_end=$((address_calt_bar + 6)) # calt置換の最終アドレス (上に移動した =)
 lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
 num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
 
@@ -175,6 +176,7 @@ x_pos_calt_hyphen="30" # - の移動量
 y_pos_calt_colon="55" # : の移動量
 y_pos_calt_bar="-38" # | の移動量
 y_pos_calt_tilde="-195" # ~ の移動量
+y_pos_calt_math="25" # *+-= の移動量
 percent_calt_decimal="93" # 小数の拡大比率
 
 # Set path to command
@@ -12027,6 +12029,50 @@ while (i < \$argc)
     AddPosSub(lookupSub1, glyphName) # 移動前→後
     k += 1
 
+    Select(0u002a); Copy() # *
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    Move(0, ${y_pos_calt_math})
+    SetWidth(512)
+ #    AddPosSub(lookupSub0, glyphName) # 移動前←後
+    glyphName = GlyphInfo("Name")
+    Select(0u002a) # *
+    AddPosSub(lookupSub1, glyphName) # 移動前→後
+    k += 1
+
+    Select(0u002b); Copy() # +
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    Move(0, ${y_pos_calt_math})
+    SetWidth(512)
+ #    AddPosSub(lookupSub0, glyphName) # 移動前←後
+    glyphName = GlyphInfo("Name")
+    Select(0u002b) # +
+    AddPosSub(lookupSub1, glyphName) # 移動前→後
+    k += 1
+
+    Select(0u002d); Copy() # -
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    Move(0, ${y_pos_calt_math})
+    SetWidth(512)
+ #    AddPosSub(lookupSub0, glyphName) # 移動前←後
+    glyphName = GlyphInfo("Name")
+    Select(0u002d) # -
+    AddPosSub(lookupSub1, glyphName) # 移動前→後
+    k += 1
+
+    Select(0u003d); Copy() # =
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    Move(0, ${y_pos_calt_math})
+    SetWidth(512)
+ #    AddPosSub(lookupSub0, glyphName) # 移動前←後
+    glyphName = GlyphInfo("Name")
+    Select(0u003d) # =
+    AddPosSub(lookupSub1, glyphName) # 移動前→後
+    k += 1
+
     # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
     j = 0
     while (j < ${num_calt_lookups}) # caltルックアップの数だけ確保する
@@ -12343,7 +12389,7 @@ while (i < \$argc)
     Move(0, ${y_pos_calt_bar})
     SetWidth(512)
     glyphName = GlyphInfo("Name")
-    Select(${address_calt_end} - 2)
+    Select(${address_calt_bar})
     AddPosSub(lookupSub, glyphName)
     k += 1
     ss += 1
@@ -13234,7 +13280,7 @@ while (i < \$argc)
         endloop
 
         Select(0u007c); Copy() # |
-        Select(${address_calt_end} - 2); Paste()
+        Select(${address_calt_bar}); Paste()
         Move(0, ${y_pos_calt_bar})
         SetWidth(512)
 
