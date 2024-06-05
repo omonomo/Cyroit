@@ -75,7 +75,7 @@ table_modificator_help()
     echo "  -t         Disable edit other tables"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
-    echo "  -b         Make calt settings for basic Latin characters only"
+    echo "  -b         Make kerning settings for basic Latin characters only"
     exit 0
 }
 
@@ -107,7 +107,7 @@ do
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
-            font_familyname=`echo $OPTARG | tr -d ' '`
+            font_familyname=${OPTARG// /}
             ;;
         "m" )
             echo "Option: Disable edit cmap tables"
@@ -162,7 +162,7 @@ if [ "${patch_only_flag}" = "true" ]; then
 fi
 
 # フォントがあるかチェック
-fontName_ttf=`find . -name "${font_familyname}*.ttf" -maxdepth 1 | head -n 1`
+fontName_ttf=$(find . -name "${font_familyname}*.ttf" -maxdepth 1 | head -n 1)
 if [ -z "${fontName_ttf}" ]; then
   echo "Error: ${font_familyname} not found" >&2
   exit 1
@@ -234,7 +234,7 @@ if [ "${cmap_flag}" = "true" ]; then
   if [ "${reuse_list_flag}" = "false" ]; then
     rm -f ${cmapList}.txt
   fi
-  cmaplist_txt=`find . -name "${cmapList}.txt" -maxdepth 1 | head -n 1`
+  cmaplist_txt=$(find . -name "${cmapList}.txt" -maxdepth 1 | head -n 1)
   if [ -z "${cmaplist_txt}" ]; then # cmapListが無ければ作成
     if [ "${leaving_tmp_flag}" = "true" ]; then
       sh uvs_table_maker.sh -l -N "${font_familyname}"
@@ -280,15 +280,15 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     ttx -t GSUB "$P"
 
     # GSUB (用字、言語全て共通に変更)
-    gpc=`grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx"` # caltフィーチャがすでにあるか判定
-    gpz=`grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx"` # zeroフィーチャ(caltのダミー)があるか判定
+    gpc=$(grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx") # caltフィーチャがすでにあるか判定
+    gpz=$(grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx") # zeroフィーチャ(caltのダミー)があるか判定
     if [ -n "${gpc}" ]; then
       echo "Already calt feature exist. Do not overwrite the table."
     elif [ -n "${gpz}" ]; then
       echo "Compatible with calt feature." # フォントがcaltフィーチャに対応していた場合
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
-        gsublist_txt=`find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1`
+        gsublist_txt=$(find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1)
         if [ -z "${gsublist_txt}" ]; then # gsubListが無ければ作成(calt_table_maker で使用するため)
           if [ "${leaving_tmp_flag}" = "true" ]; then
             sh uvs_table_maker.sh -l -N "${font_familyname}"
@@ -296,9 +296,9 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
             sh uvs_table_maker.sh -N "${font_familyname}"
           fi
         fi
-        caltlist_txt=`find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1`
+        caltlist_txt=$(find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1)
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
-          if [ "${basic_only_flag}" = "true" ]; then
+          if [ "${basic_only_flag}" = "true" ]; then # 基本ラテン文字のみの場合は最適化処理を実行しない
             if [ "${leaving_tmp_flag}" = "true" ]; then
               sh calt_table_maker.sh -lb
             else
@@ -345,7 +345,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     sed -i.bak -e 's,FeatureIndex index="7" value="..",FeatureIndex index="7" value="11",' "${P%%.ttf}.ttx"
     sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="12",' "${P%%.ttf}.ttx"
 
-    gps=`grep 'FeatureTag value="ss01"' "${P%%.ttf}.ttx"` # ssフィーチャがあるか判定
+    gps=$(grep 'FeatureTag value="ss01"' "${P%%.ttf}.ttx") # ssフィーチャがあるか判定
     if [ -n "${gps}" ]; then # ss対応の場合
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="13"/>\
       <FeatureIndex index="10" value="14"/>\
