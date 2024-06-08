@@ -267,11 +267,11 @@ if [ "${mode}" = "-F" ]; then
   fi
 fi
 
-# テーブル加工 (-F オプション以外はカーニング設定を基本ラテン文字に限定)
+# テーブル加工 (-F オプション以外はカーニング設定を基本ラテン文字に限定、最適化処理をしない)
 case ${mode} in
   "-C" ) opt_tm="C" ;;
   "-p" ) opt_tm="pb" ;;
-  "-F" ) opt_tm="" ;;
+  "-F" ) opt_tm="o" ;;
      * ) opt_tm="b" ;;
 esac
 option_format_tm "opt_tm" "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"

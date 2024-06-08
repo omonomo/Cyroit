@@ -38,10 +38,33 @@ calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # caltテーブルのみ編集
 calt_ok_flag="true" # フォントがcaltに対応しているか
 
-basic_only_flag="false" # calt設定を基本ラテン文字に限定
+basic_only_flag="false" # カーニング設定を基本ラテン文字に限定するか
+optimize_flag="false" # なんちゃって最適化ルーチンを実行するか
 
 # エラー処理
 trap "exit 3" HUP INT QUIT
+
+option_format_cm() { # calt_table_maker 用のオプションを整形 (戻り値: 整形したオプション)
+  local opt # 整形前のオプション
+  local leaving_tmp_flag # 一時作成ファイルを残すか
+  local basic_only_flag # カーニング設定を基本ラテン文字に限定するか
+  local optimize_flag="false" # なんちゃって最適化ルーチンを実行するか
+  opt="${2}"
+  leaving_tmp_flag="${3}"
+  basic_only_flag="${4}"
+  optimize_flag="${5}"
+
+  if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションがある場合
+    opt="${opt}l"
+  fi
+  if [ "${basic_only_flag}" != "false" ]; then # -b オプションがある場合
+    opt="${opt}b"
+  fi
+  if [ "${optimize_flag}" != "false" ]; then # -o オプションがある場合
+    opt="${opt}o"
+  fi
+  eval "${1}=\${opt}" # 戻り値を入れる変数名を1番目の引数に指定する
+}
 
 option_check() {
   if [ -n "${mode}" ]; then # -Cp のうち2個以上含まれていたら終了
@@ -76,6 +99,7 @@ table_modificator_help()
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
     echo "  -b         Make kerning settings for basic Latin characters only"
+    echo "  -o         Enable optimization process when make kerning settings"
     exit 0
 }
 
@@ -84,7 +108,7 @@ echo "= Font tables Modificator ="
 echo
 
 # Get options
-while getopts hxlrN:mgtCpb OPT
+while getopts hxlrN:mgtCpbo OPT
 do
     case "${OPT}" in
         "h" )
@@ -144,6 +168,10 @@ do
         "b" )
             echo "Option: Make calt settings for basic Latin characters only"
             basic_only_flag="true"
+            ;;
+        "o" )
+            echo "Option: Enable optimization process when make kerning settings"
+            optimize_flag="true"
             ;;
         * )
             exit 1
@@ -298,19 +326,8 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         fi
         caltlist_txt=$(find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1)
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
-          if [ "${basic_only_flag}" = "true" ]; then # 基本ラテン文字のみの場合は最適化処理を実行しない
-            if [ "${leaving_tmp_flag}" = "true" ]; then
-              sh calt_table_maker.sh -lb
-            else
-              sh calt_table_maker.sh -b
-            fi
-          else
-            if [ "${leaving_tmp_flag}" = "true" ]; then
-              sh calt_table_maker.sh -l
-            else
-              sh calt_table_maker.sh
-            fi
-          fi
+          option_format_cm "opt_fg" "" "${leaving_tmp_flag}" "${basic_only_flag}" "${optimize_flag}"
+          sh calt_table_maker.sh -"${opt_fg}"
         fi
         # フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
