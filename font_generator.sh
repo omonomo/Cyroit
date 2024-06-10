@@ -25,7 +25,7 @@ if [ -n "${version_txt}" ]; then
     fi
 fi
 
-tmpdir_name="font_generator_tmpdir" # 一時作成フォルダ名
+tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 
 # グリフ保管アドレス
 address_dvz_latin="64336" # 0ufb50 latinフォントの避難したDVZアドレス
@@ -13013,7 +13013,7 @@ if (\$argc == 1)
     Quit()
 endif
 
-Print("- Patch the font -")
+Print("- Patch the generated fonts -")
 
 # Begin loop
 i = 1
@@ -13382,12 +13382,12 @@ fi
 
 # パッチ適用
 if [ "${patch_flag}" = "true" ]; then
-  find . -name "${font_familyname}-*.nopatch.ttf" -maxdepth 1 | while read line
-      do
+    find . -name "${font_familyname}-*.nopatch.ttf" -maxdepth 1 | while read line
+    do
         font_ttf=$(basename ${line})
         $fontforge_command -script ${tmpdir}/${font_patcher} \
-          ${font_ttf} \
-          2> $redirection_stderr || exit 4
+            ${font_ttf} \
+            2> $redirection_stderr || exit 4
     done
 fi
 
