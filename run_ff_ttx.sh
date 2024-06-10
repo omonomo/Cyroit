@@ -77,6 +77,7 @@ option_check() {
 remove_temp() {
   echo "Remove temporary files"
   sh font_generator.sh -x
+  sh table_modificator.sh -x
   rm -f ${font_familyname}*.nopatch.ttf
 }
 
@@ -113,7 +114,6 @@ do
             echo "Option: Cleaning temporary files"
             remove_temp
             rm -f *.ttf
-            sh table_modificator.sh -x
             exit 0
             ;;
         "l" )
