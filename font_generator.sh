@@ -1497,6 +1497,67 @@ while (i < SizeOf(input_list))
     Move(5, 0)
     SetWidth(500)
 
+# k (/ の線を少し太くする)
+    if (input_list[i] == "${input_latin_regular}")
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Scale(20, 25)
+        Move(-10, 100)
+        Rotate(-47)
+        Select(0u006b); Copy() # k
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+
+        Select(0u006b) # k
+        PasteWithOffset(-7, 1)
+
+        SetWidth(500)
+        RemoveOverlap()
+        Simplify()
+
+        Select(65552); Clear() # Temporary glyph
+
+        Select(0u2588); Copy() # Full block
+        Select(0u0137); PasteWithOffset(0, -1015); OverlapIntersect() # ķ
+        Select(0u006b); Copy() # k
+        Select(0u0137); PasteInto(); SetWidth(500)
+
+ #        Select(0u0199) # ƙ
+ #        Select(0u01e9) # ǩ
+ #        Select(0u1d84) # ᶄ
+ #        Select(0u1e31) # ḱ
+ #        Select(0u1e33) # ḳ
+ #        Select(0u1e35) # ḵ
+ #        Select(0u2c6a) # ⱪ
+ #        Select(0ua741) # ꝁ
+ #        Select(0ua743) # ꝃ
+ #        Select(0ua745) # ꝅ
+ #        Select(0ua7a3) # ꞣ
+    endif
+
+# ĸ (/ の線を少し太くする)
+    if (input_list[i] == "${input_latin_regular}")
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Scale(20, 25)
+        Move(-10, 100)
+        Rotate(-47)
+        Select(0u0138); Copy() # k
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+
+        Select(0u0138) # k
+        PasteWithOffset(-7, 1)
+
+        SetWidth(500)
+        RemoveOverlap()
+        Simplify()
+
+        Select(65552); Clear() # Temporary glyph
+    endif
+
 # l (縦線を少し細くし、セリフを少しカットして少し左へ移動)
     Select(0u006c); Copy() # l
     PasteWithOffset(-1, 0)
