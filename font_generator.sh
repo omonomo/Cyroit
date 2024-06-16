@@ -28,8 +28,9 @@ fi
 tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 
 # グリフ保管アドレス
-address_dvz_latin="64336" # 0ufb50 latinフォントの避難したDVZアドレス
-address_visi_latin=$((address_dvz_latin + 18)) # latinフォントの避難した識別性向上アドレス ⁄|
+num_mod_glyphs="4" # -t オプションで改変するグリフ数
+address_mod_latin="64336" # 0ufb50 latinフォントの避難したDQVZアドレス
+address_visi_latin=$((address_mod_latin + num_mod_glyphs * 6)) # latinフォントの避難した識別性向上アドレス ⁄|
 
 address_visi_kana=$((address_visi_latin + 2)) # 仮名フォントの避難した識別性向上アドレス ゠-➓
 address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
@@ -40,11 +41,11 @@ address_calt_kanzi2="1115493" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi3="1115623" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi4="1115776" # 漢字フォントのcalt置換アドレス
 
-address_dvz_latinkana=${address_dvz_latin} # latin仮名フォントの避難したDVZアドレス
+address_mod_latinkana=${address_mod_latin} # latin仮名フォントの避難したDQVZアドレス
 address_zenhan_latinkana=$((address_visi_kanzi + 9)) # latin仮名フォントの避難した全角半角アドレス(縦書きの（-゠)
 address_vert_latinkana="65682" # latin仮名フォントのvert置換アドレス
 
-address_dvz=${address_dvz_latin} # 避難したDVZアドレス
+address_mod=${address_mod_latin} # 避難したDQVZアドレス
 address_visi=${address_visi_latin} # 避難した識別性向上アドレス
 address_zenhan=${address_zenhan_latinkana} # 避難した全角半角アドレス
 address_store_end=$((address_zenhan + 281)) # 避難したグリフの最終アドレス(縦書きの゠)
@@ -71,8 +72,8 @@ address_ss_figure=$((address_ss + 3)) # ss置換アドレス(桁区切り付き�
 address_ss_vert=$((address_ss_figure + 50)) # ss置換の全角縦書きアドレス(縦書きの（)
 address_ss_zenhan=$((address_ss_vert + 109)) # ss置換の全角半角アドレス(！)
 address_ss_visibility=$((address_ss_zenhan + 172)) # ss置換の識別性向上アドレス(/)
-address_ss_dvz=$((address_ss_visibility + 39)) # ss置換のDVZアドレス
-address_ss_end=$((address_ss_dvz + 17)) # ss置換の最終アドレス (Ｚ)
+address_ss_mod=$((address_ss_visibility + 39)) # ss置換のDQVZアドレス
+address_ss_end=$((address_ss_mod + num_mod_glyphs * 6 -1)) # ss置換の最終アドレス (Ｚ)
 num_ss_glyphs=$((address_ss_end - address_ss + 1)) # ss置換のグリフ数
 lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブルのlookupナンバー
 num_ss_lookups="8" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
@@ -199,7 +200,7 @@ visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
 improve_visibility_flag="true" # ダッシュ破線化
 underline_flag="true" # 全角半角に下線
-dvz_flag="true" # DVZ改変
+mod_flag="true" # DVQZ改変
 calt_flag="true" # calt対応
 ss_flag="false" # ss対応
 nerd_flag="true" # Nerd fonts 追加
@@ -291,7 +292,7 @@ font_generator_help()
     echo "  -z                     Disable visible hankaku space"
     echo "  -u                     Disable zenkaku hankaku underline"
     echo "  -b                     Disable glyphs with improved visibility"
-    echo "  -t                     Disable modified D, V and Z"
+    echo "  -t                     Disable modified D,Q,V and Z"
     echo "  -c                     Disable calt feature"
     echo "  -s                     Disable thousands separator"
     echo "  -e                     Disable add Nerd fonts"
@@ -364,8 +365,8 @@ do
             fi
             ;;
         "t" )
-            echo "Option: Disable modified D, V and Z"
-            dvz_flag="false"
+            echo "Option: Disable modified D,Q,V and Z"
+            mod_flag="false"
             ;;
         "c" )
             echo "Option: Disable calt feature"
@@ -394,7 +395,7 @@ do
             underline_flag="true"
             improve_visibility_flag="true"
  #            underline_flag="false" # デフォルトで下線無しにする場合
-            dvz_flag="false"
+            mod_flag="false"
             calt_flag="true"
             separator_flag="false"
             ss_flag="true"
@@ -992,14 +993,14 @@ while (i < SizeOf(input_list))
  #    Select(0u023a) # Ⱥ
  #    Select(0u1e00) # Ḁ
 
-# D (クロスバーを付加することで少しくどい感じに)
+# D (ss 用、クロスバーを付加することで少しくどい感じに)
     Select(0u0044); Copy() # D
-    Select(${address_dvz_latin}); Paste() # 避難所
-    Select(${address_dvz_latin} + 3); Paste()
-    Select(${address_dvz_latin} + 6); Paste()
-    Select(${address_dvz_latin} + 9); Paste()
-    Select(${address_dvz_latin} + 12); Paste()
-    Select(${address_dvz_latin} + 15); Paste()
+    Select(${address_mod_latin}); Paste() # 避難所
+    Select(${address_mod_latin} + ${num_mod_glyphs}); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 2); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 3); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 4); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 5); Paste()
 
     Select(0u00af); Copy()  # macron
     Select(65552);  Paste() # Temporary glyph
@@ -1179,7 +1180,6 @@ while (i < SizeOf(input_list))
     # 開いた隙間を埋める
     Select(0u002d); Copy() # Hyphen-minus
     Select(65552);  Paste() # Temporary glyph
-
     if (input_list[i] == "${input_latin_regular}")
         Scale(22, 100); Copy()
         Select(0u0051); PasteWithOffset(6, -320) # Q
@@ -1198,14 +1198,36 @@ while (i < SizeOf(input_list))
  #    Select(0ua756) # Ꝗ
  #    Select(0ua758) # Ꝙ
 
-# V (左上にセリフを追加してYやレと区別しやすく)
+# Q (ss用、突き抜けた尻尾でOと区別しやすく)
+    Select(0u0051); Copy() # Q
+    Select(${address_mod_latin} + 1); Paste() # 避難所
+    Select(${address_mod_latin} + ${num_mod_glyphs} + 1); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 2 + 1); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 3 + 1); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 4 + 1); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 5 + 1); Paste()
+
+    Select(0u002d); Copy() # Hyphen-minus
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(22, 300); Copy()
+        Select(0u0051); PasteWithOffset(6, -190) # Q
+    else
+        Scale(36, 230); Copy()
+        Select(0u0051); PasteWithOffset(3, -170) # Q
+    endif
+
+    SetWidth(500)
+    RemoveOverlap()
+
+# V (ss用、左上にセリフを追加してYやレと区別しやすく)
     Select(0u0056); Copy() # V
-    Select(${address_dvz_latin} + 1); Paste() # 避難所
-    Select(${address_dvz_latin} + 4); Paste()
-    Select(${address_dvz_latin} + 7); Paste()
-    Select(${address_dvz_latin} + 10); Paste()
-    Select(${address_dvz_latin} + 13); Paste()
-    Select(${address_dvz_latin} + 16); Paste()
+    Select(${address_mod_latin} + 2); Paste() # 避難所
+    Select(${address_mod_latin} + ${num_mod_glyphs} + 2); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 2 + 2); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 3 + 2); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 4 + 2); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 5 + 2); Paste()
 
     # 右上の先端を少し延ばす
     Select(0u2588); Copy() # Full block
@@ -1280,14 +1302,14 @@ while (i < SizeOf(input_list))
 
     endif
 
-# Z (クロスバーを付加してゼェーットな感じに)
-    Select(0u005a); Copy() # V
-    Select(${address_dvz_latin} + 2); Paste() # 避難所
-    Select(${address_dvz_latin} + 5); Paste()
-    Select(${address_dvz_latin} + 8); Paste()
-    Select(${address_dvz_latin} + 11); Paste()
-    Select(${address_dvz_latin} + 14); Paste()
-    Select(${address_dvz_latin} + 17); Paste()
+# Z (ss用、クロスバーを付加してゼェーットな感じに)
+    Select(0u005a); Copy() # Z
+    Select(${address_mod_latin} + 3); Paste() # 避難所
+    Select(${address_mod_latin} + ${num_mod_glyphs} + 3); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 2 + 3); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 3 + 3); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 4 + 3); Paste()
+    Select(${address_mod_latin} + ${num_mod_glyphs} * 5 + 3); Paste()
 
     Select(0u00af); Copy()  # macron
     Select(65552);  Paste() # Temporary glyph
@@ -1497,26 +1519,63 @@ while (i < SizeOf(input_list))
     Move(5, 0)
     SetWidth(500)
 
-# k (/ の線を少し太くする)
+# k (くの線を調整)
     if (input_list[i] == "${input_latin_regular}")
+        # 右上
         Select(0u2588); Copy() # Full block
         Select(65552);  Paste() # Temporary glyph
         Scale(20, 25)
-        Move(-10, 100)
+        Move(-10, 95)
         Rotate(-47)
         Select(0u006b); Copy() # k
         Select(65552);  PasteInto() # Temporary glyph
         OverlapIntersect()
+
+        # 右下
+        Select(0u2588); Copy() # Full block
+        Select(65553);  Paste() # Temporary glyph
+        Scale(20, 30)
+        Move(100, -210)
+        Rotate(40)
+        Select(0u006b); Copy() # k
+        Select(65553);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Move(-7, 0)
+        Select(0u006b); Copy() # k
+        Select(65553);  PasteInto() # Temporary glyph
+        OverlapIntersect()
         Copy()
 
+       # 縦棒と右上
+        Select(0u2588); Copy() # Full block
+        Select(65554);  Paste() # Temporary glyph
+        Scale(20, 25)
+        Move(40, 74)
+        Rotate(-47)
+        PasteWithOffset(-305, 0)
+        RemoveOverlap()
+        Select(0u006b); Copy() # k
+        Select(65554);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+
+        # 合成
         Select(0u006b) # k
-        PasteWithOffset(-7, 1)
+        Paste()
+        Select(65552); Copy() # Temporary glyph
+        Select(0u006b) # k
+        PasteWithOffset(-2, 0)
+        Select(65553); Copy() # Temporary glyph
+        Select(0u006b) # k
+        PasteWithOffset(0, 0)
 
         SetWidth(500)
         RemoveOverlap()
         Simplify()
 
         Select(65552); Clear() # Temporary glyph
+        Select(65553); Clear() # Temporary glyph
+        Select(65554); Clear() # Temporary glyph
 
         Select(0u2588); Copy() # Full block
         Select(0u0137); PasteWithOffset(0, -1015); OverlapIntersect() # ķ
@@ -1536,26 +1595,63 @@ while (i < SizeOf(input_list))
  #        Select(0ua7a3) # ꞣ
     endif
 
-# ĸ (/ の線を少し太くする)
+# ĸ (くの線を調整)
     if (input_list[i] == "${input_latin_regular}")
-        Select(0u2588); Copy() # Full block
+        # 右上
+        Select(0u2588); Copy() # Full blocĸ
         Select(65552);  Paste() # Temporary glyph
         Scale(20, 25)
-        Move(-10, 100)
+        Move(-10, 95)
         Rotate(-47)
-        Select(0u0138); Copy() # k
+        Select(0u0138); Copy() # ĸ
         Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+
+        # 右下
+        Select(0u2588); Copy() # Full blocĸ
+        Select(65553);  Paste() # Temporary glyph
+        Scale(20, 30)
+        Move(100, -210)
+        Rotate(40)
+        Select(0u0138); Copy() # ĸ
+        Select(65553);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Move(-7, 0)
+        Select(0u0138); Copy() # ĸ
+        Select(65553);  PasteInto() # Temporary glyph
         OverlapIntersect()
         Copy()
 
-        Select(0u0138) # k
-        PasteWithOffset(-7, 1)
+       # 縦棒と右上
+        Select(0u2588); Copy() # Full blocĸ
+        Select(65554);  Paste() # Temporary glyph
+        Scale(20, 25)
+        Move(40, 74)
+        Rotate(-47)
+        PasteWithOffset(-305, 0)
+        RemoveOverlap()
+        Select(0u0138); Copy() # ĸ
+        Select(65554);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+
+        # 合成
+        Select(0u0138) # ĸ
+        Paste()
+        Select(65552); Copy() # Temporary glyph
+        Select(0u0138) # ĸ
+        PasteWithOffset(-2, 0)
+        Select(65553); Copy() # Temporary glyph
+        Select(0u0138) # ĸ
+        PasteWithOffset(0, 0)
 
         SetWidth(500)
         RemoveOverlap()
         Simplify()
 
         Select(65552); Clear() # Temporary glyph
+        Select(65553); Clear() # Temporary glyph
+        Select(65554); Clear() # Temporary glyph
     endif
 
 # l (縦線を少し細くし、セリフを少しカットして少し左へ移動)
@@ -10476,7 +10572,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u1e97) # ẗ
         SelectMore(0u1e9e) # ẞ
         SelectMore(0u1ea0, 0u1ef9) # Ạ - ỹ
-        SelectMore(${address_dvz_latin}, ${address_dvz_latin} + 17)# 避難したDVZ
+        SelectMore(${address_mod_latin}, ${address_mod_latin} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
         Scale(${width_percent_latin}, ${height_percent_latin}, 250, 0); SetWidth(500)
     endif
 
@@ -10838,27 +10934,27 @@ while (i < SizeOf(latin_sfd_list))
         j += 1
     endloop
 
-# 保管しているDVZに下線追加
+# 保管しているDQVZに下線追加
     j = 0
-    while (j < 3)
-        Select(${address_dvz_latinkana} + j) # 下線無し半角
+    while (j < ${num_mod_glyphs})
+        Select(${address_mod_latinkana} + j) # 下線無し時の半角
         SetWidth(500)
         Copy()
-        Select(${address_dvz_latinkana} + 9 + j); Paste() # 下線付き全角用の半角
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} * 3 + j); Paste() # 下線付き時の半角
         SetWidth(500)
-        Select(${address_dvz_latinkana} + 3 + j); Paste() # 下線無し全角横書き
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} + j); Paste() # 下線無し全角横書き
         Move(230+${x_pos_zenkaku_kana}, 0)
         SetWidth(1000)
         Copy()
-        Select(${address_dvz_latinkana} + 6 + j); Paste() # 下線無し全角縦書き
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} * 2 + j); Paste() # 下線無し全角縦書き
         SetWidth(1000)
-        Select(${address_dvz_latinkana} + 12 + j); Paste() # 下線付き全角横書き
-        Select(${address_dvz_latinkana} + 15 + j); Paste() # 下線付き全角縦書き
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} * 4 + j); Paste() # 下線付き全角横書き
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} * 5 + j); Paste() # 下線付き全角縦書き
         Select(65552); Copy() # 下線追加
-        Select(${address_dvz_latinkana} + 12 + j); PasteInto()
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} * 4 + j); PasteInto()
         SetWidth(1000)
         Select(65553); Copy() # 縦線追加
-        Select(${address_dvz_latinkana} + 15 + j); PasteInto()
+        Select(${address_mod_latinkana} + ${num_mod_glyphs} * 5 + j); PasteInto()
         SetWidth(1000)
         j += 1
     endloop
@@ -12258,11 +12354,13 @@ while (i < \$argc)
     l = 0
     while (j < 109) # 全角縦書き
         if (j == 48)
-            Select(${address_dvz} + 6)
+            Select(${address_mod} + ${num_mod_glyphs} * 2) # 縦書きＤ
+        elseif (j == 61)
+            Select(${address_mod} + ${num_mod_glyphs} * 2 + 1) # 縦書きＱ
         elseif (j == 66)
-            Select(${address_dvz} + 7)
+            Select(${address_mod} + ${num_mod_glyphs} * 2 + 2) # 縦書きＶ
         elseif (j == 70)
-            Select(${address_dvz} + 8)
+            Select(${address_mod} + ${num_mod_glyphs} * 2 + 3) # 縦書きＺ
         else
             Select(${address_zenhan_latinkana} + l)
         endif
@@ -12279,11 +12377,13 @@ while (i < \$argc)
     j = 0
     while (j < 159) # 全角半角横書き
         if (j == 35)
-            Select(${address_dvz} + 3)
+            Select(${address_mod} + ${num_mod_glyphs}) # Ｄ
+        elseif (j == 48)
+            Select(${address_mod} + ${num_mod_glyphs} + 1) # Ｑ
         elseif (j == 53)
-            Select(${address_dvz} + 4)
+            Select(${address_mod} + ${num_mod_glyphs} + 2) # Ｖ
         elseif (j == 57)
-            Select(${address_dvz} + 5)
+            Select(${address_mod} + ${num_mod_glyphs} + 3) # Ｚ
         else
             Select(${address_zenhan_latinkana} + l)
         endif
@@ -12328,11 +12428,13 @@ while (i < \$argc)
  #      j = 0 # デフォルトで下線無しにする場合
  #      while (j < 109) # 全角縦書き
  #          if (j == 48)
- #              Select(${address_dvz} + 15) # Ｄ
+ #              Select(${address_mod} + ${num_mod_glyphs} * 5) # 縦書きＤ
+ #          elseif (j == 61)
+ #              Select(${address_mod} + ${num_mod_glyphs} * 5 + 1) # 縦書きＱ
  #          elseif (j == 66)
- #              Select(${address_dvz} + 16) # Ｖ
+ #              Select(${address_mod} + ${num_mod_glyphs} * 5 + 2) # 縦書きＶ
  #          elseif (j == 70)
- #              Select(${address_dvz} + 17) # Ｚ
+ #              Select(${address_mod} + ${num_mod_glyphs} * 5 + 3) # 縦書きＺ
  #          else
  #              Select(${address_vert} + j)
  #          endif
@@ -12348,11 +12450,13 @@ while (i < \$argc)
  #    j = 0
  #    while (j < 159) # 全角半角横書き
  #        if (j == 35)
- #            Select(${address_dvz} + 12) # Ｄ
+ #            Select(${address_mod} + ${num_mod_glyphs} * 4) # Ｄ
+ #        elseif (j == 48)
+ #            Select(${address_mod} + ${num_mod_glyphs} * 4 + 1) # Ｑ
  #        elseif (j == 53)
- #            Select(${address_dvz} + 13) # Ｖ
+ #            Select(${address_mod} + ${num_mod_glyphs} * 4 + 2) # Ｖ
  #        elseif (j == 57)
- #            Select(${address_dvz} + 14) # Ｚ
+ #            Select(${address_mod} + ${num_mod_glyphs} * 4 + 3) # Ｚ
  #        else
  #            Select(0uff01 + j)
  #        endif
@@ -12455,12 +12559,12 @@ while (i < \$argc)
     k += 1
     ss += 1
 
-# ss08 DVZ
+# ss08 DQVZ
     lookupName = "'ss0" + ToString(ss) + "' スタイルセット" + ToString(ss)
     lookupSub = lookupName + "サブテーブル"
 
-    orig = [0u0044, 0u0056, 0u005A] # DVZ
-    num = [3, 21, 25] # 左に移動したAからDVZまでの数
+    orig = [0u0044, 0u0051, 0u0056, 0u005A] # DQVZ
+    num = [3, 16, 21, 25] # 左に移動したAからDQVZまでの数
     j = 0
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
@@ -12473,7 +12577,7 @@ while (i < \$argc)
     endloop
 
     j = 0
-    while (j < SizeOf(orig)) # 左に移動したDVZ
+    while (j < SizeOf(orig)) # 左に移動したDQVZ
         Select(orig[j]); Copy()
         Select(k); Paste()
         Move(-${x_pos_calt}, 0)
@@ -12486,7 +12590,7 @@ while (i < \$argc)
     endloop
 
     j = 0
-    while (j < SizeOf(orig)) # 右に移動したDVZ
+    while (j < SizeOf(orig)) # 右に移動したDQVZ
         Select(orig[j]); Copy()
         Select(k); Paste()
         Move(${x_pos_calt}, 0)
@@ -12500,8 +12604,8 @@ while (i < \$argc)
     ss += 1
 
  # (デフォルトで下線無しにする場合はコメントアウトを外し、glyphName を付加する Select 対象を変える)
-    orig = [0uff24, 0uff36, 0uff3a] # 全角横書きDVZ(下線付き)
- #    num0 = [35, 53, 57] # 全角横書きDVZ(下線付き) ！から全角DVZまでの数
+    orig = [0uff24, 0uff31, 0uff36, 0uff3a] # 全角横書きDQVZ(下線付き)
+ #    num0 = [35, 48, 53, 57] # 全角横書きDQVZ(下線付き) ！から全角DQVZまでの数
     j = 0
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
@@ -12514,7 +12618,7 @@ while (i < \$argc)
         k += 1
     endloop
 
-    num1 = [48, 66, 70] # 全角縦書きDVZ(下線付き) （から全角DVZまでの数
+    num1 = [48, 61, 66, 70] # 全角縦書きDQVZ(下線付き) （から全角DQVZまでの数
     j = 0
     while (j < SizeOf(num))
         Select(${address_vert} + num1[j]); Copy()
@@ -12527,8 +12631,8 @@ while (i < \$argc)
         k += 1
     endloop
 
-    num0 = [35, 53, 57] # 全角横書きDVZ(下線付き) ！から全角DVZまでの数
-    num1 = [48, 66, 70] # 全角縦書きDVZ(下線なし) （から全角DVZまでの数
+    num0 = [35, 48, 53, 57] # 全角横書きDQVZ(下線付き) ！から全角DQVZまでの数
+    num1 = [48, 61, 66, 70] # 全角縦書きDQVZ(下線なし) （から全角DQVZまでの数
     j = 0
     while (j < SizeOf(num))
         Select(${address_zenhan_latinkana} + num1[j]); Copy()
@@ -13273,22 +13377,22 @@ while (i < \$argc)
         endloop
     endif
 
-# DVZのクロスバー等消去
-    if ("${dvz_flag}" == "false")
-        Print("Option: Disable modified D, V and Z")
+# DQVZのクロスバー等消去
+    if ("${mod_flag}" == "false")
+        Print("Option: Disable modified D,Q,V and Z")
         if ("${underline_flag}" == "false")
             k = 0
         else
-            k = 9
+            k = ${num_mod_glyphs} * 3
         endif
         j = 0
-        orig = [0u0044, 0u0056, 0u005a,\
-                0uff24, 0uff36, 0uff3a,\
-               "uniFF24.vert", "uniFF36.vert", "uniFF3A.vert"] # DVZ
+        orig = [0u0044, 0u0051, 0u0056, 0u005a,\
+                0uff24, 0uff31, 0uff36, 0uff3a,\
+               "uniFF24.vert", "uniFF31.vert", "uniFF36.vert", "uniFF3A.vert"] # DQVZ
         while (j < SizeOf(orig))
-            Select(${address_dvz} + j + k); Copy()
+            Select(${address_mod} + j + k); Copy()
             Select(orig[j]); Paste()
-            if (j <= 2)
+            if (j <= ${num_mod_glyphs} - 1)
                 SetWidth(512)
             else
                 SetWidth(1024)
@@ -13362,7 +13466,7 @@ while (i < \$argc)
 
 # 保管したグリフ消去
     Print("Remove stored glyphs")
-    Select(${address_dvz}, ${address_store_end}); Clear() # 保管したグリフを消去
+    Select(${address_mod}, ${address_store_end}); Clear() # 保管したグリフを消去
 
 # --------------------------------------------------
 
