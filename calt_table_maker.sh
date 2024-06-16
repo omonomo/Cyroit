@@ -8,8 +8,8 @@
 #
 # 条件成立時に呼び出す異体字変換テーブルは font_generator にて生成済みであること
 
- #glyphNo="13706" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
-glyphNo="22940" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
+ #glyphNo="14055" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
+glyphNo="24144" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="3" # オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
 caltListName="caltList" # caltテーブルリストの名称
@@ -115,7 +115,7 @@ chain_context() {
     input=("${input[@]//${S}/}") # input から移動しないグリフを削除
   done
 
-<< "#SUPPLEMENT" # 設定漏れを補完 ====================
+<< "#SUPPLEMENT" # 設定漏れを補完 (処理に時間がかかりすぎるため無効) ====================
 
   S=${input: -1} # input と lookupIndex から文字がどちらに移動しようとしているか判定
   bt=(${backtrack[@]})
@@ -172,7 +172,7 @@ chain_context() {
   done
   if [ -n "${T}" ]; then
     T=("$(printf '%s\n' "${T[@]}" | sort -u | tr '\n' ' ')")
-    echo "Added backtrack setting ${T[@]//_/}"
+    echo "Add backtrack setting ${T[@]//_/}"
   fi
   T=(${lookAhead[@]})
   for S in ${la[@]}; do
@@ -180,7 +180,7 @@ chain_context() {
   done
   if [ -n "${T}" ]; then
     T=("$(printf '%s\n' "${T[@]}" | sort -u | tr '\n' ' ')")
-    echo "Added lookAhead setting ${T[@]//_/}"
+    echo "Add lookAhead setting ${T[@]//_/}"
   fi
 
 #SUPPLEMENT
@@ -250,7 +250,7 @@ if [ "${optimize_flag}" == "true" ] && [ ${listNo} -le ${optimizeListNo} ]; then
 
       if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、input から重複したグリフを削除
         input=("${input[@]/${S}/}")
-        echo "Removed input setting ${S//_/}"
+        echo "Remove input setting ${S//_/}"
       fi
     done # S
 
@@ -303,7 +303,7 @@ if [ "${optimize_flag}" == "true" ] && [ ${listNo} -le ${optimizeListNo} ]; then
 
         if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、backtrack から重複したグリフを削除
           backtrack=("${backtrack[@]/${S}/}")
-          echo "Removed backtrack setting ${S//_/}"
+          echo "Remove backtrack setting ${S//_/}"
         fi
       done # S
 
@@ -357,7 +357,7 @@ if [ "${optimize_flag}" == "true" ] && [ ${listNo} -le ${optimizeListNo} ]; then
 
         if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、lookAhead から重複したグリフを削除
           lookAhead=("${lookAhead[@]/${S}/}")
-          echo "Removed lookAhead setting ${S//_/}"
+          echo "Remove lookAhead setting ${S//_/}"
         fi
       done # S
 
@@ -914,7 +914,7 @@ if [ "${basic_only_flag}" = "true" ]; then
 
   S="__a"; class+=("${S}"); eval ${S}=\(a\) # a # 設定の重複チェック用ファイル作成時に区別するため
   S="__b"; class+=("${S}"); eval ${S}=\(b\) # b # 変数の命名規則を大文字と小文字で変える
-  S="__c"; class+=("${S}"); eval ${S}=\(c\) # c # (APFS だと通常ファイル名の大文字と小文字を区別しないため)
+  S="__c"; class+=("${S}"); eval ${S}=\(c\) # c # (通常の APFS だとファイル名の大文字と小文字を区別しないため)
   S="__d"; class+=("${S}"); eval ${S}=\(d\) # d
   S="__e"; class+=("${S}"); eval ${S}=\(e\) # e
   S="__f"; class+=("${S}"); eval ${S}=\(f\) # f
@@ -1416,8 +1416,8 @@ _asterisk_ _less_ _equal_ _greater_ _at_\) # 幅のある記号
 S="figureE";    class+=("${S}"); eval ${S}=\(_0_ _2_ _3_ _4_ _5_ _6_ _7_ _8_ _9_\) # 幅のある数字
 S="figureC";    class+=("${S}"); eval ${S}=\(_1_\) # 幅の狭い数字
 S="operatorH";  class+=("${S}"); eval ${S}=\(_asterisk_ _plus_ _hyphen_ _equal_\) # 前後の記号が上下に移動する記号
-S="bracketL";    class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
-S="bracketR";    class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
+S="bracketL";   class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
+S="bracketR";   class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
 
 # 略号生成 (N: 通常)
 
@@ -1628,7 +1628,7 @@ input=(${_LN[@]})
 lookAhead=("")
 chain_context "index" "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-# ○右が右寄り、中間、Vの字、狭い文字、LWwUu の場合 L 右に移動
+# ○右が右寄り、中間、Vの字、狭い文字、LWw の場合 L 右に移動
 backtrack=("")
 input=(${_LN[@]})
 lookAhead=(${gravityRN[@]} ${gravityMN[@]} ${gravityVN[@]} ${gravityCN[@]} \
