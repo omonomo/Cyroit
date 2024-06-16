@@ -10,10 +10,12 @@ set -e
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_familyname_suffix_def=("BS" "SP" "FX" "HB" "DG") # バージョン違いの名称 (デフォルト設定)
-#font_familyname_suffix_def=("BS" "SP" "FX" "HB" "DG" "DS" "TM" "TS")
+font_familyname_suffix_def=(BS SP FX HB DG) # バージョン違いの名称 (デフォルト設定)
+font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp) # 各バージョンのオプション (デフォルト設定)
+#font_familyname_suffix_def=(BS SP FX HB DG DS TM TS)
+#font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp tp zp p)
 build_fonts_dir="build" # 完成品を保管するフォルダ
-illegal_opt_fg="hVxfNn" # font_generator の使用できないオプション
+illegal_opt_fg="hVxfNn" # font_generator に指定できないオプション
 
 opt_fg="" # font_generator のオプション
 opt_tm="" # table_modificator のオプション
@@ -221,6 +223,7 @@ case ${mode} in
     exit 1
     ;;
 esac
+
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
   option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
   if [ -n "${opt_fg}" ]; then
@@ -237,22 +240,13 @@ fi
 # -F オプション(かつ引き数がない)の場合
 if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
-    for S in ${font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
-      case "${S}" in
-        "BS" ) opt_fg="ztsp" ;;
-        "SP" ) opt_fg="tsp" ;;
-        "FX" ) opt_fg="ztcp" ;;
-        "HB" ) opt_fg="Zzubtsp" ;;
-        "DG" ) opt_fg="ztp" ;;
-        "DS" ) opt_fg="tp" ;;
-        "TM" ) opt_fg="zp" ;;
-        "TS" ) opt_fg="p" ;;
-      esac
+    for i in ${!font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
+      opt_fg=${font_familyname_suffix_def_opt[${i}]}
       option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
       if [ -n "${opt_fg}" ]; then
-        sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${S}"
+        sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       else
-        sh font_generator.sh -N "${font_familyname}" -n "${S}"
+        sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       fi
     done
   fi
@@ -284,6 +278,7 @@ fi
 # -F が有効で、-l が無効、引数にも l が無い場合、一時ファイルを削除
 if [ "${leaving_tmp_flag}" = "false" ]; then
   remove_temp
+  echo
 fi
 
 # -F オプションの場合、完成したフォントを移動
