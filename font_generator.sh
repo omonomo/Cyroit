@@ -3,12 +3,21 @@
 # Custom font generator
 #
 # Copyright (c) 2023 omonomo
-
+#
 # [Original Script]
 # Ricty Generator (ricty_generator.sh)
 #
 # Copyright (c) 2011-2017 Yasunori Yusa
 # All rights reserved.
+
+
+# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+<< "#LOG"
+LOG_OUT=/tmp/font_generator.log
+LOG_ERR=/tmp/font_generator_err.log
+exec 1> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
+#LOG
 
 font_familyname="Cyroit"
 font_familyname_suffix=""

@@ -3,9 +3,17 @@
 # Table modificator
 #
 # Copyright (c) 2023 omonomo
-
-# 各種テーブルの修正・追加プログラム
 #
+# 各種テーブルの修正・追加プログラム
+
+
+# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+<< "#LOG"
+LOG_OUT=/tmp/table_modificator.log
+LOG_ERR=/tmp/table_modificator_err.log
+exec 1> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
+#LOG
 
 font_familyname="Cyroit"
 
@@ -326,7 +334,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         fi
         caltlist_txt=$(find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1)
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
-          option_format_cm "opt_fg" "" "${leaving_tmp_flag}" "${basic_only_flag}" "${optimize_flag}"
+          option_format_cm opt_fg "" "${leaving_tmp_flag}" "${basic_only_flag}" "${optimize_flag}"
           sh calt_table_maker.sh -"${opt_fg}"
         fi
         # フィーチャリストを変更

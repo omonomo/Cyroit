@@ -3,12 +3,21 @@
 # UVS table maker
 #
 # Copyright (c) 2023 omonomo
-
+#
 # 異体字に対応するため、フォント生成時に失われたUVS情報を復元させるファイルを作成するプログラム
 #
 # 生成フォントのGSUBテーブルを利用して、
 # 漢字用フォントのglyph番号を生成フォントのglyph番号に置き換え、
 # 新しいcmapテーブル(format_14)を作成する
+
+
+# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+<< "#LOG"
+LOG_OUT=/tmp/uvs_table_maker.log
+LOG_ERR=/tmp/uvs_table_maker_err.log
+exec 1> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
+#LOG
 
 fromFontName="BIZUDGothic-Regular" # 抽出元フォント名
 font_familyname="Cyroit" # 生成フォントファミリー名

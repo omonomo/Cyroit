@@ -4,8 +4,17 @@ set -e
 # FontForge and TTX runner
 #
 # Copyright (c) 2023 omonomo
+#
+# 一連の操作を自動化するプログラム
 
-# 一連の操作を自動化したプログラム
+
+# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+<< "#LOG"
+LOG_OUT=/tmp/run_ff_ttx.log
+LOG_ERR=/tmp/run_ff_ttx_err.log
+exec 1> >(tee -a $LOG_OUT)
+exec 2>>$LOG_ERR
+#LOG
 
 font_familyname="Cyroit"
 font_familyname_suffix=""
@@ -225,7 +234,7 @@ case ${mode} in
 esac
 
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
-  option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
+  option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
   if [ -n "${opt_fg}" ]; then
     sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   else
@@ -242,7 +251,7 @@ if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
     for i in ${!font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
       opt_fg=${font_familyname_suffix_def_opt[${i}]}
-      option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
+      option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
       if [ -n "${opt_fg}" ]; then
         sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       else
@@ -252,7 +261,7 @@ if [ "${mode}" = "-F" ]; then
   fi
   if [ $# -eq 0 ]; then # 引き数がない場合、通常版を生成
     opt_fg="Sp"
-    option_format_fg "opt_fg" "${opt_fg}" "${leaving_tmp_flag}"
+    option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
     if [ -n "${opt_fg}" ]; then
       sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
     else
@@ -268,7 +277,7 @@ case ${mode} in
   "-F" ) opt_tm="o" ;;
      * ) opt_tm="b" ;;
 esac
-option_format_tm "opt_tm" "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"
+option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"
 if [ -n "${opt_tm}" ]; then
   sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else
