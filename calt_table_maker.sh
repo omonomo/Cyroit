@@ -15,7 +15,7 @@
 LOG_OUT=/tmp/calt_table_maker.log
 LOG_ERR=/tmp/calt_table_maker_err.log
 exec 1> >(tee -a $LOG_OUT)
-exec 2>>$LOG_ERR
+exec 2> >(tee -a $LOG_ERR)
 #LOG
 
  #glyphNo="14055" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
@@ -88,7 +88,7 @@ pre_add_lookup() {
 # グリフの略号を通し番号と名前に変換する関数 ||||||||||||||||||||||||||||||||||||||||
 
 glyph_name() {
-  echo $(grep " ${1} " "${tmpdir}/${dict}.txt" | head -n 1 | cut -d ' ' -f 1,3)
+  echo $(grep -m 1 " ${1} " "${tmpdir}/${dict}.txt" | cut -d ' ' -f 1,3)
 }
 
 # グリフの通し番号と名前を backtrack、input、lookAhead の XML に変換する関数 ||||||||||||||||||||||||||||||||||||||||
@@ -100,18 +100,18 @@ glyph_value() {
 # LookupType 6 を作成するための関数 ||||||||||||||||||||||||||||||||||||||||
 
 chain_context() {
-  local opti # なんちゃって最適化を実行するか (optional の場合、0の時のみ実行)
+  local opti optiCheck0 optiCheck1 # なんちゃって最適化を実行するか (optional の場合、0の時のみ実行)
   local substIndex # 設定番号
-  local backtrack bt # 1文字前
-  local input # 入力
-  local lookAhead la # 1文字後
+  local backtrack bt addBt removeBt # 1文字前
+  local input ip removeIp # 入力
+  local lookAhead la addLa removeLa # 1文字後
   local lookupIndex # ジャンプする(グリフを置換する)テーブル番号
   local backtrack1 bt1 # 2文字前
   local lookAhead1 la1 # 2文字後
   local lookAheadX laX # 3文字後以降
   local aheadMax # lookAheadのIndex2以降はその数(最大のIndexNo)を入れる(当然内容は全て同じになる)
   local overlap # 全ての設定が重複しているか
-  local S T U V W X Y line0 line1
+  local S T line0 line1
   opti="${1}"
   substIndex="${3}"
   backtrack=(${4})
@@ -127,7 +127,7 @@ chain_context() {
     input=("${input[@]//${S}/}") # input から移動しないグリフを削除
   done
 
-<< "#SUPPLEMENT" # 設定漏れを補完 (処理に時間がかかりすぎるため無効) ====================
+<< "#SUPPLEMENT" # 設定漏れを補完 (処理に時間がかかりすぎるため通常は無効) ====================
 
   S=${input: -1} # input と lookupIndex から文字がどちらに移動しようとしているか判定
   bt=(${backtrack[@]})
@@ -178,65 +178,64 @@ chain_context() {
     fi
   fi
 
-  T=(${backtrack[@]}) # メッセージ用、追加した設定を抽出
+  addBt=(${backtrack[@]}) # 追加した設定を抽出
   for S in ${bt[@]}; do
-    T=(${T[@]//${S}/})
+    addBt=(${addBt[@]//${S}/})
   done
-  if [ -n "${T}" ]; then
-    T=("$(printf '%s\n' "${T[@]}" | sort -u | tr '\n' ' ')")
-    echo "Add backtrack setting ${T[@]//_/}"
+  if [ -n "${addBt}" ]; then
+    addBt=$(printf '%s\n' "${addBt[@]}" | sort -u | tr '\n' ' ')
+    echo "Add backtrack setting ${addBt//_/}"
   fi
-  T=(${lookAhead[@]})
+  addLa=(${lookAhead[@]})
   for S in ${la[@]}; do
-    T=("${T[@]//${S}/}")
+    addLa=("${addLa[@]//${S}/}")
   done
-  if [ -n "${T}" ]; then
-    T=("$(printf '%s\n' "${T[@]}" | sort -u | tr '\n' ' ')")
-    echo "Add lookAhead setting ${T[@]//_/}"
+  if [ -n "${addLa}" ]; then
+    addLa=$(printf '%s\n' "${addLa[@]}" | sort -u | tr '\n' ' ')
+    echo "Add lookAhead setting ${addLa//_/}"
   fi
 
 #SUPPLEMENT
 # 重複している配列要素を削除 ====================
 
-  input=("$(printf '%s\n' "${input[@]}" | sort -u)")
-  backtrack=("$(printf '%s\n' "${backtrack[@]}"  | sort -u)")
-  lookAhead=("$(printf '%s\n' "${lookAhead[@]}"  | sort -u)")
-  backtrack1=("$(printf '%s\n' "${backtrack1[@]}" | sort -u)")
-  lookAhead1=("$(printf '%s\n' "${lookAhead1[@]}" | sort -u)")
-  lookAheadX=("$(printf '%s\n' "${lookAheadX[@]}" | sort -u)")
+  input=($(printf '%s\n' "${input[@]}" | sort -u))
+  backtrack=($(printf '%s\n' "${backtrack[@]}" | sort -u))
+  lookAhead=($(printf '%s\n' "${lookAhead[@]}" | sort -u))
+  backtrack1=($(printf '%s\n' "${backtrack1[@]}" | sort -u))
+  lookAhead1=($(printf '%s\n' "${lookAhead1[@]}" | sort -u))
+  lookAheadX=($(printf '%s\n' "${lookAheadX[@]}" | sort -u))
 
 # 重複している設定を削除 ====================
 
   if [ ${listNo} -le ${optimizeListNo} ]; then # 指定の listNo 以下で
     if [ "${optimize_mode}" == "force" ] || [ "${optimize_mode}" == "optional" ]; then # 最適化が有効の場合
+      optiCheck0=0
+      optiCheck1=0
 
 # input --------------------
 
+      unset removeIp
       for S in ${input[@]}; do # input の各グリフについて調査
         rm -f ${tmpdir}/${checkListName}*.tmp.txt
         overlap="true"
-        if [ -n "${backtrack}" ]; then bt=(${backtrack[@]}); else bt=("|"); fi
-        for T in ${bt[@]}; do
-          if [ -n "${lookAhead}" ]; then la=(${lookAhead[@]}); else la=("|"); fi
-          for U in ${la[@]}; do
-            echo "${S},${T},${U},|,|,|" >> "${tmpdir}/${checkListName}.short.tmp.txt" # 前後2文字以上を省いた文字列を保存
-            if [ -n "${backtrack1}" ]; then bt1=(${backtrack1[@]}); else bt1=("|"); fi
-            for V in ${bt1[@]}; do
-              if [ -n "${lookAhead1}" ]; then la1=(${lookAhead1[@]}); else la1=("|"); fi
-              for W in ${la1[@]}; do
-                if [ -n "${lookAheadX}" ]; then laX=(${lookAheadX[@]}); else laX=("|"); fi
-                for X in ${laX[@]}; do
-                  if [ "${bt1}${la1}${laX}" != "|||" ]; then
-                    echo "${S},${T},${U},${V},${W},${X}" >> "${tmpdir}/${checkListName}.long.tmp.txt" # 前後2文字以上も含めた文字列を保存
-                  fi
-                done # X
-              done # W
-            done # V
-          done # U
-        done # T
+
+        if [ -n "${backtrack}" ]; then bt="${backtrack[@]}"; else bt="@"; fi
+        bt=${bt// /,}
+        if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
+        la=${la// /,}
+        eval echo ${S}{${bt}}{${la}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.tmp.txt" # 前後2文字以上を省いた文字列を保存
+        if [ -n "${backtrack1}" ]; then bt1="${backtrack1[@]}"; else bt1="@"; fi
+        bt1=${bt1// /,}
+        if [ -n "${lookAhead1}" ]; then la1="${lookAhead1[@]}"; else la1="@"; fi
+        la1=${la1// /,}
+        if [ -n "${lookAheadX}" ]; then laX="${lookAheadX[@]}"; else laX="@"; fi
+        laX=${laX// /,}
+        if [ "${bt1}${la1}${laX}" != "@@@" ]; then
+          eval echo ${S}{${bt}}{${la}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.long.tmp.txt" # 前後2文字以上も含めた文字列を保存
+        fi
 
         if [ "${optimize_mode}" == "optional" ] && [ ${opti} -ne 0 ]; then # 最適化処理をスキップする場合
-          overlap="false"
+          overlap="false" # 無条件でチェックリストに追加
           if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then
             cat "${tmpdir}/${checkListName}.long.tmp.txt" >> "${tmpdir}/${checkListName}Long${S}.txt"
           else
@@ -248,68 +247,71 @@ chain_context() {
             :>| "${tmpdir}/${checkListName}Short${S}.txt"
           fi
           while read line0; do
-            Y=$(grep -x "${line0}" "${tmpdir}/${checkListName}Short${S}.txt") # 前後1文字のみで重複する設定がないかチェック
-            if [ -z "${Y}" ]; then # 重複していない設定があった場合
-              if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then # 前後2文字以上参照する設定の場合は追試
+            if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Short${S}.txt")" ]; then # 前後1文字のみで重複する設定がないかチェック
+              if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then # 重複していない設定があった場合、前後2文字以上参照する設定の場合は追試
                 if [[ ! -e "${tmpdir}/${checkListName}Long${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
                   :>| "${tmpdir}/${checkListName}Long${S}.txt"
                 fi
                 while read line1; do
-                  Y=$(grep -x "${line1}" "${tmpdir}/${checkListName}Long${S}.txt") # 前後2文字以上で重複する設定がないかチェック
-                  if [ -z "${Y}" ]; then # 重複していない設定があればチェックリストに追加して break
-                    overlap="false"
+                  if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Long${S}.txt")" ]; then # 前後2文字以上で重複する設定がないかチェック
+                    overlap="false" # 重複していない設定があればチェックリストに追加して break
                     cat "${tmpdir}/${checkListName}.long.tmp.txt" >> "${tmpdir}/${checkListName}Long${S}.txt"
                     break 2
-                  fi # -z "${Y}" (前後2文字以上)
+                  fi # -z "${T}" (前後2文字以上)
                 done  < "${tmpdir}/${checkListName}.long.tmp.txt"
               else # -e "${tmpdir}/${checkListName}.long.tmp.txt" 前後1文字のみ参照の場合、追試なしでチェックリストに追加して break
                 overlap="false"
                 cat "${tmpdir}/${checkListName}.short.tmp.txt" >> "${tmpdir}/${checkListName}Short${S}.txt"
               fi # -e "${tmpdir}/${checkListName}.long.tmp.txt"
               break
-            fi # -z "${Y}" (前後1文字のみ)
+            fi # -z "${T}" (前後1文字のみ)
           done < "${tmpdir}/${checkListName}.short.tmp.txt" # 重複する設定がない場合、スルー
 
           if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、input から重複したグリフを削除
-            input=("${input[@]/${S}/}")
-            echo "Remove input setting ${S//_/}"
+            input=(${input[@]/${S}/})
+            removeIp+=" ${S}"
           fi
 
         fi # "${optimize_mode}" == "optional" && ${opti} -ne 0
       done # S
 
-      if [ $(echo ${input} | wc -c) -le 1 ]; then # input のグリフが全て重複していた場合、設定を追加せず ruturn
+      if [ -n "${removeIp}" ]; then
+        echo "Remove input setting${removeIp//_/}"
+        if [ ${opti} -ge 1 ]; then # 最適化が有効となる条件なのにスキップするように設定してある場合、加算
+          optiCheck1=$((optiCheck1 + 1))
+        fi
+      elif [ ${opti} -eq 0 ]; then # 最適化が有効にならない条件なのにスキップしないように設定してある場合、加算
+        optiCheck0=$((optiCheck0 + 1))
+      fi
+      if [ -z "${input}" ]; then # input のグリフが全て重複していた場合、設定を追加せず ruturn
         echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
         eval "${2}=\${substIndex}" # 戻り値を入れる変数名を1番目の引数に指定する
         return
       fi
 
-
 # backtrack --------------------
 
+      unset removeBt
       if [ -n "${backtrack}" ]; then # backtrack がある場合
         for S in ${backtrack[@]}; do # backtrack の各グリフについて調査
           rm -f ${tmpdir}/${checkListName}*.tmp.txt
           overlap="true"
-          for T in ${input[@]}; do
-            echo "${S},${T},|,|,|,|" >> "${tmpdir}/${checkListName}.backOnly.tmp.txt" # lookAhead がない設定のチェック用に保存
-            if [ -n "${lookAhead}" ]; then la=(${lookAhead[@]}); else la=("|"); fi
-            for U in ${la[@]}; do
-              if [ -n "${backtrack1}" ]; then bt1=(${backtrack1[@]}); else bt1=("|"); fi
-              for V in ${bt1[@]}; do
-                if [ -n "${lookAhead1}" ]; then la1=(${lookAhead1[@]}); else la1=("|"); fi
-                for W in ${la1[@]}; do
-                  if [ -n "${lookAheadX}" ]; then laX=(${lookAheadX[@]}); else laX=("|"); fi
-                  for X in ${laX[@]}; do
-                    echo "${S},${T},${U},${V},${W},${X}" >> "${tmpdir}/${checkListName}.back.tmp.txt" # 前後2文字以上も含めた文字列を保存
-                  done # X
-                done # W
-              done # V
-            done # U
-          done # T
+
+          ip="${input[@]}"
+          ip=${ip// /,}
+          eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.backOnly.tmp.txt" # lookAhead がない設定のチェック用に保存
+          if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
+          la=${la// /,}
+          if [ -n "${backtrack1}" ]; then bt1="${backtrack1[@]}"; else bt1="@"; fi
+          bt1=${bt1// /,}
+          if [ -n "${lookAhead1}" ]; then la1="${lookAhead1[@]}"; else la1="@"; fi
+          la1=${la1// /,}
+          if [ -n "${lookAheadX}" ]; then laX="${lookAheadX[@]}"; else laX="@"; fi
+          laX=${laX// /,}
+          eval echo ${S}{${ip}}{${la}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.back.tmp.txt" # 前後2文字以上も含めた文字列を保存
 
           if [ "${optimize_mode}" == "optional" ] && [ ${opti} -ne 0 ]; then # 最適化処理をスキップする場合
-            overlap="false"
+            overlap="false" # 無条件でチェックリストに追加
             cat "${tmpdir}/${checkListName}.back.tmp.txt" >> "${tmpdir}/${checkListName}Back${S}.txt"
 
           else # "${optimize_mode}" == "optional" && ${opti} -ne 0
@@ -317,29 +319,38 @@ chain_context() {
               :>| "${tmpdir}/${checkListName}Back${S}.txt"
             fi
             while read line0; do
-              Y=$(grep -x "${line0}" "${tmpdir}/${checkListName}Back${S}.txt") # lookAhead が無い設定がすでに存在しないかチェック
-              if [ -z "${Y}" ]; then # lookAhead がない設定に抜けがあった場合追試
-                while read line1; do
-                  Y=$(grep -x "${line1}" "${tmpdir}/${checkListName}Back${S}.txt") # 重複する設定がないかチェック
-                  if [ -z "${Y}" ]; then # 重複していない設定があった場合チェックリストに追加して break
-                    overlap="false"
+              if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Back${S}.txt")" ]; then # lookAhead が無い設定がすでに存在しないかチェック
+                while read line1; do # lookAhead がない設定に抜けがあった場合追試
+                  if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Back${S}.txt")" ]; then # 重複する設定がないかチェック
+                    overlap="false" # 重複していない設定があった場合チェックリストに追加して break
                     cat "${tmpdir}/${checkListName}.back.tmp.txt" >> "${tmpdir}/${checkListName}Back${S}.txt"
                     break 2
-                  fi # -z "${Y}" (重複する設定)
+                  fi # -z "${T}" (重複する設定)
                 done < "${tmpdir}/${checkListName}.back.tmp.txt" # 重複する設定がない場合、何もせずに break
                 break
-              fi # -z "${Y}" (lookAhead が無い)
+              fi # -z "${T}" (lookAhead が無い)
             done < "${tmpdir}/${checkListName}.backOnly.tmp.txt" # すでに lookAhead がない設定が全て存在した場合、スルー
 
             if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、backtrack から重複したグリフを削除
-              backtrack=("${backtrack[@]/${S}/}")
-              echo "Remove backtrack setting ${S//_/}"
+              backtrack=(${backtrack[@]/${S}/})
+              removeBt+=" ${S}"
             fi
 
           fi # "${optimize_mode}" == "optional" && ${opti} -ne 0
         done # S
 
-        if [ "${bt}" != "|" ] && [ $(echo ${backtrack} | wc -c) -le 1 ]; then # backtrack のグリフが全て重複していた場合、設定を追加せず ruturn
+        if [ -n "${removeBt}" ]; then
+          echo "Remove backtrack setting${removeBt//_/}"
+          if [ " ${addBt}" == "${removeBt} " ]; then # 設定漏れ補完で追加したグリフと最適化で除去したグリフが同じ場合
+            echo "Added backtrack settings and Removed backtrack settings are the same"
+          fi
+          if [ ${opti} -ge 1 ]; then # 最適化が有効となる条件なのにスキップするように設定してある場合、加算
+            optiCheck1=$((optiCheck1 + 1))
+          fi
+        elif [ ${opti} -eq 0 ]; then # 最適化が有効にならない条件なのにスキップしないように設定してある場合、加算
+          optiCheck0=$((optiCheck0 + 1))
+        fi
+        if [ "${bt}" != "|" ] && [ -z "${backtrack}" ]; then # backtrack のグリフが全て重複していた場合、設定を追加せず ruturn
           echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
           eval "${2}=\${substIndex}" # 戻り値を入れる変数名を1番目の引数に指定する
           return
@@ -348,29 +359,27 @@ chain_context() {
 
 # lookAhead --------------------
 
+      unset removeLa
       if [ -n "${lookAhead}" ]; then # lookAhead がある場合
         for S in ${lookAhead[@]}; do # lookAhead の各グリフについて調査
           rm -f ${tmpdir}/${checkListName}*.tmp.txt
           overlap="true"
-          for T in ${input[@]}; do
-            echo "${S},${T},|,|,|,|" >> "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # backtrack がない設定のチェック用に保存
-            if [ -n "${backtrack}" ]; then bt=(${backtrack[@]}); else bt=("|"); fi
-            for U in ${bt[@]}; do
-              if [ -n "${backtrack1}" ]; then bt1=(${backtrack1[@]}); else bt1=("|"); fi
-              for V in ${bt1[@]}; do
-                if [ -n "${lookAhead1}" ]; then la1=(${lookAhead1[@]}); else la1=("|"); fi
-                for W in ${la1[@]}; do
-                  if [ -n "${lookAheadX}" ]; then laX=(${lookAheadX[@]}); else laX=("|"); fi
-                  for X in ${laX[@]}; do
-                    echo "${S},${T},${U},${V},${W},${X}" >> "${tmpdir}/${checkListName}.ahead.tmp.txt" # 前後2文字以上も含めた文字列を保存
-                  done # X
-                done # W
-              done # V
-            done # U
-          done # T
+
+          ip="${input[@]}"
+          ip=${ip// /,}
+          eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # backtrack がない設定のチェック用に保存
+          if [ -n "${backtrack}" ]; then bt="${backtrack[@]}"; else bt="@"; fi
+          bt=${bt// /,}
+          if [ -n "${backtrack1}" ]; then bt1="${backtrack1[@]}"; else bt1="@"; fi
+          bt1=${bt1// /,}
+          if [ -n "${lookAhead1}" ]; then la1="${lookAhead1[@]}"; else la1="@"; fi
+          la1=${la1// /,}
+          if [ -n "${lookAheadX}" ]; then laX="${lookAheadX[@]}"; else laX="@"; fi
+          laX=${laX// /,}
+          eval echo ${S}{${ip}}{${bt}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.ahead.tmp.txt" # 前後2文字以上も含めた文字列を保存
 
           if [ "${optimize_mode}" == "optional" ] && [ ${opti} -ne 0 ]; then # 最適化処理をスキップする場合
-            overlap="false"
+            overlap="false" # 無条件でチェックリストに追加
             cat "${tmpdir}/${checkListName}.ahead.tmp.txt" >> "${tmpdir}/${checkListName}Ahead${S}.txt"
 
           else # "${optimize_mode}" == "optional" && ${opti} -ne 0
@@ -378,29 +387,38 @@ chain_context() {
               :>| "${tmpdir}/${checkListName}Ahead${S}.txt"
             fi
             while read line0; do
-              Y=$(grep -x "${line0}" "${tmpdir}/${checkListName}Ahead${S}.txt") # backtrack が無い設定がすでに存在しないかチェック
-              if [ -z "${Y}" ]; then # backtrack がない設定に抜けがあった場合追試
-                while read line1; do
-                  Y=$(grep -x "${line1}" "${tmpdir}/${checkListName}Ahead${S}.txt") # 重複する設定がないかチェック
-                  if [ -z "${Y}" ]; then # 重複していない設定があった場合チェックリストに追加して break
-                    overlap="false"
+              if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Ahead${S}.txt")" ]; then # backtrack が無い設定がすでに存在しないかチェック
+                while read line1; do # backtrack がない設定に抜けがあった場合追試
+                  if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Ahead${S}.txt")" ]; then # 重複する設定がないかチェック
+                    overlap="false" # 重複していない設定があった場合チェックリストに追加して break
                     cat "${tmpdir}/${checkListName}.ahead.tmp.txt" >> "${tmpdir}/${checkListName}Ahead${S}.txt"
                     break 2
-                  fi # -z "${Y}" (重複する設定)
+                  fi # -z "${T}" (重複する設定)
                 done < "${tmpdir}/${checkListName}.ahead.tmp.txt" # 重複する設定がない場合、何もせずに break
                 break
-              fi # -z "${Y}" (lookAhead が無い)
+              fi # -z "${T}" (lookAhead が無い)
             done < "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # すでに backtrack がない設定が全て存在した場合、スルー
 
             if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、lookAhead から重複したグリフを削除
-              lookAhead=("${lookAhead[@]/${S}/}")
-              echo "Remove lookAhead setting ${S//_/}"
+              lookAhead=(${lookAhead[@]/${S}/})
+              removeLa+=" ${S}"
             fi
 
           fi # "${optimize_mode}" == "optional" && ${opti} -ne 0
         done # S
 
-        if [ "${la}" != "|" ] && [ $(echo ${lookAhead} | wc -c) -le 1 ]; then # lookAhead のグリフが全て重複していた場合、設定を追加せず ruturn
+        if [ -n "${removeLa}" ]; then
+          echo "Remove lookAhead setting${removeLa//_/}"
+          if [ " ${addLa}" == "${removeLa} " ]; then # 設定漏れ補完で追加したグリフと最適化で除去したグリフが同じ場合
+            echo "Added lookAhead settings and Removed lookAhead settings are the same"
+          fi
+          if [ ${opti} -ge 1 ]; then # 最適化が有効となる条件なのにスキップするように設定してある場合、加算
+            optiCheck1=$((optiCheck1 + 1))
+          fi
+        elif [ ${opti} -eq 0 ]; then # 最適化が有効にならない条件なのにスキップしないように設定してある場合、加算
+          optiCheck0=$((optiCheck0 + 1))
+        fi
+        if [ "${la}" != "|" ] && [ -z "${lookAhead}" ]; then # lookAhead のグリフが全て重複していた場合、設定を追加せず ruturn
           echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
           eval "${2}=\${substIndex}" # 戻り値を入れる変数名を1番目の引数に指定する
           return
@@ -408,6 +426,12 @@ chain_context() {
       fi # -n "${lookAhead}"
 
 # ---
+
+      if [ ${opti} -ge 1 ] && [ ${optiCheck1} -ge 1 ]; then # input、backtrack、lookAhead の全てで最適化が有効ななる条件なのに
+          echo "Attention: Optimization flag is set to false" # スキップするように設定してある場合、注意を表示
+      elif [ ${opti} -eq 0 ] && [ ${optiCheck0} -ge 3 ]; then # input、backtrack、lookAhead の全てで最適化が有効にならない条件なのに
+        echo "Attention: Optimization flag is set to true" # スキップしないように設定してある場合、注意を表示
+      fi
 
     fi # "${optimize_mode}" == "force" || "${optimize_mode}" == "optional"
   fi # ${listNo} -le ${optimizeListNo}
@@ -589,7 +613,7 @@ if [ "${glyphNo_flag}" = "false" ]; then
   gsubList_txt=$(find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1)
   if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
     echo "Found GSUB List"
-    caltNo=$(grep 'Substitution in="A"' "${gsubList}.txt")
+    caltNo=$(grep -m 1 'Substitution in="A"' "${gsubList}.txt")
     if [ -n "${caltNo}" ]; then # calt用の異体字があった場合gSubListからglyphナンバーを取得
       temp=${caltNo##*glyph} # glyphナンバーより前を削除
       glyphNo=${temp%\"*} # glyphナンバーより後を削除してオフセット値追加
@@ -1510,7 +1534,7 @@ for S in ${class[@]}; do
   eval input=("\${${S}N[@]}")
   eval lookAhead=("\${${S}N[@]}")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
- done
+done
 
 # A に関する例外処理 1 ----------------------------------------
 
@@ -3796,15 +3820,13 @@ if [ "${symbol_only_flag}" = "false" ]; then
 
 # 同じ文字を等間隔にさせる処理 ----------------------------------------
 
-# j
-  # ▲右から元に戻る (広がる)
-backtrack1=("")
-backtrack=("")
-input=(${_jR[@]})
-lookAhead=(${_jN[@]})
-lookAhead1=(${_jL[@]})
-lookAheadX=(${_jL[@]}); aheadMax="2"
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+# ▲左が全ての文字の場合 狭い文字、L 元に戻らない
+backtrack=(${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} \
+${outLgravityLR[@]} ${gravityRR[@]} ${gravityWR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]} ${gravityCR[@]} \
+${outLgravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+input=(${gravityCR[@]} ${_LR[@]})
+lookAhead=("")
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # L
   # △右から元に戻る (広がる)
@@ -3821,6 +3843,31 @@ backtrack=(${_LN[@]})
 input=(${_LL[@]} ${_LR[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
+
+  # △右から元に戻る (中)
+backtrack=(${_LN[@]})
+input=(${_LR[@]})
+lookAhead=(${_LN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# △左が左寄り、中間、Vの字、狭い文字の場合 左寄り、右寄り、幅広、均等、丸い文字 元に戻らない
+backtrack=(${gravityLL[@]} ${gravityML[@]} ${gravityVL[@]} ${gravityCL[@]} \
+${gravityCR[@]} \
+${gravityVN[@]} ${gravityCN[@]} ${_LN[@]})
+input=(${gravityLL[@]} ${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} \
+${circleCL[@]})
+lookAhead=("")
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+
+# j
+  # △右から元に戻る (広がる)
+backtrack1=("")
+backtrack=("")
+input=(${_jR[@]})
+lookAhead=(${_jN[@]})
+lookAhead1=(${_jL[@]})
+lookAheadX=(${_jL[@]}); aheadMax="2"
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
 
 # 丸い小文字
 class=(_e _o)
@@ -3858,7 +3905,7 @@ for S in ${class[@]}; do
   eval input=("\${${S}L[@]}")
   eval lookAhead=("\${${S}N[@]}")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
- done
+done
 
 #  L 以外の左寄りの大文字、左が丸い文字、右が丸い文字 h
 class=(_B _D _E _F _K _P _R _TH _C _G _c _d _g _q _b _p _th _h)
@@ -3870,7 +3917,7 @@ for S in ${class[@]}; do
   eval lookAhead=("\${${S}N[@]}")
   eval lookAhead1=("\${${S}N[@]}")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
- done
+done
 
 #  L 以外の左寄りの文字、右寄りの文字
 class=(_B _D _E _F _K _P _R _TH _b _h _k _p _th _kg \
@@ -3882,7 +3929,7 @@ for S in ${class[@]}; do
   eval input=("\${${S}R[@]}")
   lookAhead=("")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
- done
+done
 
 # 移動しない文字以外の幅広の文字
 class=(_M _W _m _w)
@@ -3901,7 +3948,7 @@ for S in ${class[@]}; do
   eval input=("\${${S}R[@]}")
   lookAhead=("")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
- done
+done
 
 # 均等な文字
 class=(_H _N _O _Q _U _n _u)
@@ -3921,7 +3968,7 @@ for S in ${class[@]}; do
   eval input=("\${${S}R[@]}")
   lookAhead=("")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
- done
+done
 
 # 狭い文字
 class=(_I _J _f _i _j _l _r _t)
@@ -3942,7 +3989,7 @@ for S in ${class[@]}; do
   eval input=("\${${S}L[@]}")
   lookAhead=("")
   chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
- done
+done
 
 # 移動しない、元に戻らない処理 ----------------------------------------
 
