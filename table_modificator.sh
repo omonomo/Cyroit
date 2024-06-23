@@ -213,16 +213,16 @@ if [ "${other_flag}" = "true" ]; then
 #    ttx -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
 
     # head, OS/2 (フォントスタイルを修正)
-    if [ "$(cat ${P%%.ttf}.ttx | grep "Bold Oblique")" ]; then
+    if [ "$(grep -m 1 "Bold Oblique" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000011",' "${P%%.ttf}.ttx"
       sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000010 10100001",' "${P%%.ttf}.ttx"
-    elif [ "$(cat ${P%%.ttf}.ttx | grep "Oblique")" ]; then
+    elif [ "$(grep -m 1 "Oblique" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000010",' "${P%%.ttf}.ttx"
       sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000010 10000001",' "${P%%.ttf}.ttx"
-    elif [ "$(cat ${P%%.ttf}.ttx | grep "Bold")" ]; then
+    elif [ "$(grep -m 1 "Bold" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000001",' "${P%%.ttf}.ttx"
       sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000000 10100000",' "${P%%.ttf}.ttx"
-    elif [ "$(cat ${P%%.ttf}.ttx | grep "Regular")" ]; then
+    elif [ "$(grep -m 1 "Regular" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000000",' "${P%%.ttf}.ttx"
       sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000000 11000000",' "${P%%.ttf}.ttx"
     fi
@@ -316,11 +316,9 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     ttx -t GSUB "$P"
 
     # GSUB (用字、言語全て共通に変更)
-    gpc=$(grep 'FeatureTag value="calt"' "${P%%.ttf}.ttx") # caltフィーチャがすでにあるか判定
-    gpz=$(grep 'FeatureTag value="zero"' "${P%%.ttf}.ttx") # zeroフィーチャ(caltのダミー)があるか判定
-    if [ -n "${gpc}" ]; then
+    if [ -n "$(grep -m 1 'FeatureTag value="calt"' "${P%%.ttf}.ttx")" ]; then # caltフィーチャがすでにあるか判定
       echo "Already calt feature exist. Do not overwrite the table."
-    elif [ -n "${gpz}" ]; then
+    elif [ -n "$(grep -m 1 'FeatureTag value="zero"' "${P%%.ttf}.ttx")" ]; then # zeroフィーチャ(caltのダミー)があるか判定
       echo "Compatible with calt feature." # フォントがcaltフィーチャに対応していた場合
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
@@ -370,8 +368,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     sed -i.bak -e 's,FeatureIndex index="7" value="..",FeatureIndex index="7" value="11",' "${P%%.ttf}.ttx"
     sed -i.bak -e 's,FeatureIndex index="8" value="..",FeatureIndex index="8" value="12",' "${P%%.ttf}.ttx"
 
-    gps=$(grep 'FeatureTag value="ss01"' "${P%%.ttf}.ttx") # ssフィーチャがあるか判定
-    if [ -n "${gps}" ]; then # ss対応の場合
+    if [ -n "$(grep -m 1 'FeatureTag value="ss01"' "${P%%.ttf}.ttx")" ]; then # ssフィーチャがあるか判定、ss対応の場合
       sed -i.bak -e 's,<FeatureIndex index="9" value=".."/>,<FeatureIndex index="9" value="13"/>\
       <FeatureIndex index="10" value="14"/>\
       <FeatureIndex index="11" value="15"/>\

@@ -132,7 +132,7 @@ grep "map uv=" "${fromFontName}.ttx" >> "${cmapList}.txt"
 
 # 取り出したリストから外字のみのリストを作成
 echo "Make external char list"
-line=$(grep "map uv=\"0x${findUv}\"" "${cmapList}.txt" | head -n 1)
+line=$(grep -m 1 "map uv=\"0x${findUv}\"" "${cmapList}.txt")
 temp=${line#*glyph} # glyphナンバーより前を削除
 fromNum=${temp%\"*} # glyphナンバーより後を削除
 echo "${fromFontName}: 0x${findUv} -> glyph${fromNum}"
@@ -144,14 +144,14 @@ done
 
 # 作成するフォントのGSUBから置換用リストを作成
 echo "Make GSUB list"
-line=$(grep "Substitution in=\"uni${findUv}\"" "${toFontName}.ttx" | head -n 1)
+line=$(grep -m 1 "Substitution in=\"uni${findUv}\"" "${toFontName}.ttx")
 temp=${line#*glyph} # glyphナンバーより前を削除
 toNum=${temp%\"*} # glyphナンバーより後を削除
 echo "${toFontName}: 0x${findUv} -> glyph${toNum}"
 
 for i in $(seq 0 ${samplingNum})
 do
-  grep "glyph$((toNum + i))" "${toFontName}.ttx" | head -n 1 >> "${gsubList}.txt"
+  grep -m 1 "glyph$((toNum + i))" "${toFontName}.ttx" >> "${gsubList}.txt"
 done
 
 # 異体字セレクタリストのglyphナンバーを置換用リストの物に置き換える
