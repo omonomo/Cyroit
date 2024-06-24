@@ -16,7 +16,7 @@
 LOG_OUT=/tmp/font_generator.log
 LOG_ERR=/tmp/font_generator_err.log
 exec 1> >(tee -a $LOG_OUT)
-exec 2>>$LOG_ERR
+exec 2> >(tee -a $LOG_ERR)
 #LOG
 
 font_familyname="Cyroit"

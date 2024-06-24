@@ -13,7 +13,7 @@ set -e
 LOG_OUT=/tmp/run_ff_ttx.log
 LOG_ERR=/tmp/run_ff_ttx_err.log
 exec 1> >(tee -a $LOG_OUT)
-exec 2>>$LOG_ERR
+exec 2> >(tee -a $LOG_ERR)
 #LOG
 
 font_familyname="Cyroit"

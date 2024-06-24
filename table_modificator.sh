@@ -12,7 +12,7 @@
 LOG_OUT=/tmp/table_modificator.log
 LOG_ERR=/tmp/table_modificator_err.log
 exec 1> >(tee -a $LOG_OUT)
-exec 2>>$LOG_ERR
+exec 2> >(tee -a $LOG_ERR)
 #LOG
 
 font_familyname="Cyroit"

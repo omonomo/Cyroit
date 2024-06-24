@@ -16,7 +16,7 @@
 LOG_OUT=/tmp/uvs_table_maker.log
 LOG_ERR=/tmp/uvs_table_maker_err.log
 exec 1> >(tee -a $LOG_OUT)
-exec 2>>$LOG_ERR
+exec 2> >(tee -a $LOG_ERR)
 #LOG
 
 fromFontName="BIZUDGothic-Regular" # 抽出元フォント名
