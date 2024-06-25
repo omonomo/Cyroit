@@ -68,7 +68,7 @@ address_vert_kabu=$((address_vert_mm + 333)) # vert置換アドレス ㍿
 address_calt=$((address_vert_kabu + 7)) # calt置換の先頭アドレス(左に移動した A)
 address_calt_middle=$((address_calt + 239)) # calt置換の中間アドレス(右に移動した A)
 address_calt_figure=$((address_calt_middle + 239)) # calt置換アドレス(桁区切り付きの数字)
-address_calt_bar=$((address_calt_figure + 50)) # calt置換アドレス (下に移動した |)
+address_calt_bar=$((address_calt_figure + 52)) # calt置換アドレス (下に移動した |)
 address_calt_end=$((address_calt_bar + 6)) # calt置換の最終アドレス (上に移動した =)
 lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
 num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
@@ -182,7 +182,7 @@ x_pos_oblique="-4800" # 移動量 * 100
 
 # calt用
 x_pos_calt="20" # ラテン文字の移動量
-x_pos_calt_hyphen="30" # - の移動量
+x_pos_calt_hyphen="30" # -_ の移動量
 y_pos_calt_colon="55" # : の移動量
 y_pos_calt_bar="-38" # | の移動量
 y_pos_calt_tilde="-195" # ~ の移動量
@@ -12091,6 +12091,17 @@ while (i < \$argc)
     AddPosSub(lookupSub1, glyphName) # 左←中
     k += 1
 
+    Select(0u005f); Copy() # _
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    Move(-${x_pos_calt_hyphen}, 0)
+    SetWidth(512)
+    AddPosSub(lookupSub0, glyphName) # 左→中
+    glyphName = GlyphInfo("Name")
+    Select(0u005f) # _
+    AddPosSub(lookupSub1, glyphName) # 左←中
+    k += 1
+
     lookupName = "単純置換 (右・記号)"
     AddLookup(lookupName, "gsub_single", 0, [], lookups[numlookups - 1])
     lookupSub1 = lookupName + "サブテーブル"
@@ -12148,6 +12159,17 @@ while (i < \$argc)
     AddPosSub(lookupSub0, glyphName) # 中←右
     glyphName = GlyphInfo("Name")
     Select(0u005c) # reverse solidus
+    AddPosSub(lookupSub1, glyphName) # 中→右
+    k += 1
+
+    Select(0u005f); Copy() # _
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    Move(${x_pos_calt_hyphen}, 0)
+    SetWidth(512)
+    AddPosSub(lookupSub0, glyphName) # 中←右
+    glyphName = GlyphInfo("Name")
+    Select(0u005f) # _
     AddPosSub(lookupSub1, glyphName) # 中→右
     k += 1
 
