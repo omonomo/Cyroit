@@ -81,7 +81,7 @@ pre_add_lookup() {
   } >> "${caltList}.txt"
   index="0"
   if [ ${listNo} -le ${optimizeListNo} ]; then # 最適化する listNo の場合、チェックリストを削除
-    rm -f ${tmpdir}/${checkListName}*.txt
+    rm -f ${tmpdir}/${checkListName}*.txt # (デバッグで使えるかもしれないため最後のチェックリストは残す)
   fi
 }
 
@@ -690,8 +690,9 @@ latin45_name=(${latin45[@]})
 bracketLeft=("LBK") # 単独で変数を使用するため他と分けて代入
 rSolidus=("BSH")
 bracketRight=("RBK")
+underscore=("USC")
 grave=("GRV")
-symbol5x=("${bracketLeft}" "${rSolidus}" "${bracketRight}" "^" "_" "${grave}")
+symbol5x=("${bracketLeft}" "${rSolidus}" "${bracketRight}" "^" "${underscore}" "${grave}")
 symbol5x_name=("bracketleft" "backslash" "bracketright" "asciicircum" "underscore" "grave")
 
 latin67=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字
@@ -924,7 +925,7 @@ done
 
 # 左に移動した記号 ----------------------------------------
 
-word=("${hyphen}" "${solidus}" "${less}" "${greater}" "${rSolidus}")
+word=(${hyphen} ${solidus} ${less} ${greater} ${rSolidus} ${underscore})
 
 for S in ${word[@]}; do
   echo "$i ${S}L glyph${i}" >> "${tmpdir}/${dict}.txt"
@@ -940,7 +941,7 @@ done
 
 # 下に移動した記号 ----------------------------------------
 
-word=("${bar}" "${tilde}") # | ~
+word=(${bar} ${tilde}) # | ~
 
 for S in ${word[@]}; do
   echo "$i ${S}D glyph${i}" >> "${tmpdir}/${dict}.txt"
@@ -949,7 +950,7 @@ done
 
 # 上に移動した記号 ----------------------------------------
 
-word=("${colon}" "${asterisk}" "+" "${hyphen}" "=") # :
+word=(${colon} ${asterisk} "+" ${hyphen} "=") # :
 
 for S in ${word[@]}; do
   echo "$i ${S}U glyph${i}" >> "${tmpdir}/${dict}.txt"
@@ -1166,28 +1167,39 @@ S="outhbpthgravitySmallL"; class+=("${S}"); eval ${S}=\(__k __kg\) # hbpþ を�
 S="outbpthgravitySmallL";  class+=("${S}"); eval ${S}=\(${outhbpthgravitySmallL[@]} __h\) # bpþ を除く左寄りの小文字 (ß を除く)
 S="outhgravitySmallL";     class+=("${S}"); eval ${S}=\(${outhbpthgravitySmallL[@]} __b __p __th\) # h を除く左寄りの小文字 (ß を除く)
 S="gravitySmallL";         class+=("${S}"); eval ${S}=\(${outhbpthgravitySmallL[@]} __h __b __p __th\) # 左寄りの小文字 (ß を除く)
- #S="gravitySmallL";         class+=("${S}"); eval ${S}=\(__b __h __k __p __th __ss __kg\) # 左寄りの小文字
+ # gravityCapitalL=("_B" "_D" "_E" "_F" "_K" "_L" "_P" "_R" "_TH")
+ # gravitySmallL=("_b" "_h" "_k" "_p" "_th" "_ss" "_kg")
 
 S="outcgravitySmallR"; class+=("${S}"); eval ${S}=\(__a __d __g __q\) # c 以外の右寄りの小文字
 S="gravityCapitalR";   class+=("${S}"); eval ${S}=\(_C_ _G_\) # 右寄りの大文字
 S="gravitySmallR";     class+=("${S}"); eval ${S}=\(${outcgravitySmallR[@]} __c\) # 右寄りの小文字
+ # gravityCapitalR=("_C" "_G")
+ # gravitySmallR=("_a" "_c" "_d" "_g" "_q")
 
 S="outWgravityCapitalW"; class+=("${S}"); eval ${S}=\(_M_ _AE_ _OE_\) # W 以外の幅広の大文字
 S="outwgravitySmallW";   class+=("${S}"); eval ${S}=\(__m __ae __oe\) # w 以外の幅広の小文字
 S="gravityCapitalW";     class+=("${S}"); eval ${S}=\(${outWgravityCapitalW[@]} _W_\) # 幅広の大文字
 S="gravitySmallW";       class+=("${S}"); eval ${S}=\(${outwgravitySmallW[@]} __w\) # 幅広の小文字
+ # gravityCapitalW=("_M" "_W" "_AE" "_OE")
+ # gravitySmallW=("_m" "_w" "_ae" "_oe")
 
 S="outOQgravityCapitalE"; class+=("${S}"); eval ${S}=\(_H_ _N_ _U_\) # OQ 以外の均等な大文字
 S="gravityCapitalE";      class+=("${S}"); eval ${S}=\(${outOQgravityCapitalE[@]} _O_ _Q_\) # 均等な大文字
 S="gravitySmallE";        class+=("${S}"); eval ${S}=\(__n __u\) # 均等な小文字
+ # gravityCapitalE=("_H" "_N" "_O" "_Q" "_U")
+ # gravitySmallE=("_n" "_u")
 
 S="outAgravityCapitalM"; class+=("${S}"); eval ${S}=\(_S_ _X_ _Z_\) # A 以外の中間の大文字
 S="gravityCapitalM";     class+=("${S}"); eval ${S}=\(${outAgravityCapitalM[@]} _A_\) # 中間の大文字
 S="outeogravitySmallM";  class+=("${S}"); eval ${S}=\(__s __x __z\) # eo 以外の中間の小文字
 S="gravitySmallM";       class+=("${S}"); eval ${S}=\(${outeogravitySmallM[@]} __e __o\) # 中間の小文字
+ # gravityCapitalM=("_A" "_S" "_X" "_Z")
+ # gravitySmallM=("_e" "_o" "_s" "_x" "_z")
 
 S="gravityCapitalV"; class+=("${S}"); eval ${S}=\(_T_ _V_ _Y_\) # Vの字の大文字
 S="gravitySmallV";   class+=("${S}"); eval ${S}=\(__v __y\) # vの字の小文字
+ # gravityCapitalV=("_T" "_V" "_Y")
+ # gravitySmallV=("_v" "_y")
 
 S="outJgravityCapitalC"; class+=("${S}"); eval ${S}=\(_I_\) # J 以外の狭い大文字
 S="gravityCapitalC";     class+=("${S}"); eval ${S}=\(${outJgravityCapitalC[@]} _J_\) # 狭い大文字
@@ -1195,6 +1207,8 @@ S="outjrtgravitySmallC"; class+=("${S}"); eval ${S}=\(__f __i __l\) # jrt 以外
 S="outjgravitySmallC";   class+=("${S}"); eval ${S}=\(__f __i __l __r __t\) # j 以外の狭い小文字
 S="outrtgravitySmallC";  class+=("${S}"); eval ${S}=\(__f __i __j __l\) # rt 以外の狭い小文字
 S="gravitySmallC";       class+=("${S}"); eval ${S}=\(${outjrtgravitySmallC[@]} __j __r __t\) # 狭い小文字
+ # gravityCapitalC=("_I" "_J")
+ # gravitySmallC=("_f" "_i" "_j" "_l" "_r" "_t")
 
 S="gravityL"; class+=("${S}"); eval ${S}=\(${gravityCapitalL[@]} ${gravitySmallL[@]}\) # 左寄り
 S="gravityR"; class+=("${S}"); eval ${S}=\(${gravityCapitalR[@]} ${gravitySmallR[@]}\) # 右寄り
@@ -1389,17 +1403,19 @@ done
 # 記号 (左右移動、ここで定義した変数は直接使用しないこと) ====================
 class=("")
 
-S="_solidus_";  class+=("${S}"); eval ${S}=\("${solidus}"\) # solidus
-S="_less_";     class+=("${S}"); eval ${S}=\("${less}"\) # <
-S="_greater_";  class+=("${S}"); eval ${S}=\("${greater}"\) # >
-S="_rSolidus_"; class+=("${S}"); eval ${S}=\("${rSolidus}"\) # reverse solidus
+S="_solidus_";    class+=("${S}"); eval ${S}=\("${solidus}"\) # solidus
+S="_less_";       class+=("${S}"); eval ${S}=\("${less}"\) # <
+S="_greater_";    class+=("${S}"); eval ${S}=\("${greater}"\) # >
+S="_rSolidus_";   class+=("${S}"); eval ${S}=\("${rSolidus}"\) # reverse solidus
+S="_underscore_"; class+=("${S}"); eval ${S}=\("${underscore}"\) # _
 
 # 記号 (左右移動) 単独 ====================
 
-S="_solidus";  class+=("${S}"); eval ${S}=\(_solidus_\) # solidus
-S="_less";     class+=("${S}"); eval ${S}=\(_less_\) # <
-S="_greater";  class+=("${S}"); eval ${S}=\(_greater_\) # >
-S="_rSolidus"; class+=("${S}"); eval ${S}=\(_rSolidus_\) # reverse solidus
+S="_solidus";    class+=("${S}"); eval ${S}=\(_solidus_\) # solidus
+S="_less";       class+=("${S}"); eval ${S}=\(_less_\) # <
+S="_greater";    class+=("${S}"); eval ${S}=\(_greater_\) # >
+S="_rSolidus";   class+=("${S}"); eval ${S}=\(_rSolidus_\) # reverse solidus
+S="_underscore"; class+=("${S}"); eval ${S}=\(_underscore_\) # _
 
 # 略号生成 (N: 通常、L: 左移動後、R: 右移動後)
 
@@ -1781,11 +1797,11 @@ input=(${_jN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-# ○左が ad で、右が il の場合 j 移動しない
-backtrack=(${_aR[@]} ${_dR[@]})
+# ○左が Cc 以外の右寄りの文字、均等な大文字で、右が il の場合 j 移動しない
+backtrack=(${outcgravitySmallRR[@]} ${gravityCapitalER[@]} ${_GR[@]})
 input=(${_jN[@]})
 lookAhead=(${_iN[@]} ${_lN[@]})
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ○左が幅広の文字で 右が右寄り、均等、中間の小文字の場合 j 移動しない
 backtrack=(${gravityWR[@]})
@@ -1801,8 +1817,11 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が全ての文字の場合 j 左に移動
 backtrack=(${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} \
-${gravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]} ${gravityCR[@]} \
+${outLgravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]} ${gravityCR[@]} \
 ${capitalN[@]} ${smallN[@]})
+ #backtrack=(${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} \
+ #${gravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]} ${gravityCR[@]} \
+ #${capitalN[@]} ${smallN[@]})
 input=(${_jN[@]})
 lookAhead=("")
 chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
@@ -2344,7 +2363,8 @@ ${circleSmallCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○左が右寄り、均等、中間、Vの小文字、h で 右が右寄り、幅広、均等、中間、Vの小文字の場合 f 右に移動
-backtrack=(${gravitySmallRR[@]} ${gravitySmallER[@]} ${gravitySmallMR[@]} ${gravitySmallVR[@]} ${_hR[@]})
+backtrack=(${gravitySmallER[@]} ${gravitySmallMR[@]} ${gravitySmallVR[@]} ${_hR[@]})
+ #backtrack=(${gravitySmallRR[@]} ${gravitySmallER[@]} ${gravitySmallMR[@]} ${gravitySmallVR[@]} ${_hR[@]})
 input=(${_fN[@]})
 lookAhead=(${gravitySmallRN[@]} ${gravitySmallEN[@]} ${gravityMN[@]} ${gravitySmallVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
@@ -4929,6 +4949,17 @@ input=(${_hyphenN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
+# _ に関する処理の始め ----------------------------------------
+
+# ☆右が、左下が詰まっている文字の場合 _ 左に移動
+backtrack=("")
+input=(${_underscoreN[@]})
+lookAhead=(${gravityLL[@]} ${outWwgravityWL[@]} ${_HL[@]} ${_NL[@]} ${_AL[@]} ${_XL[@]} ${_ZL[@]} \
+${_gL[@]} ${_nL[@]} ${_xL[@]} ${_zL[@]} ${_yL[@]} ${_jL[@]} \
+${gravityLN[@]} ${outWwgravityWN[@]} ${_HN[@]} ${_NN[@]} ${_AN[@]} ${_XN[@]} ${_ZN[@]} \
+${_gN[@]} ${_nN[@]} ${_xN[@]} ${_zN[@]} ${_yN[@]} ${_jN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
 # reverse solidus に関する処理の始め ----------------------------------------
 
 # ☆左が、右上が開いている文字、狭い文字、A の場合 reverse solidus 左に移動
@@ -4989,6 +5020,32 @@ backtrack=("")
 input=(${_hyphenL[@]})
 lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} \
 ${midSpaceLN[@]} ${midSpaceCN[@]} ${figureN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# _ に関する処理の続き ----------------------------------------
+
+# ▽右が、数字、_ の場合 _ 移動しない (次の処理とセット)
+backtrack=("")
+input=(${_underscoreN[@]})
+lookAhead=(${figureN[@]} ${_underscoreN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽左が、右下が詰まっている文字の場合 _ 右に移動
+backtrack=(${outWwgravityWR[@]} ${_ER[@]} ${_KR[@]} ${_LR[@]} ${_RR[@]} ${_HR[@]} ${_NR[@]} ${_QR[@]} ${_AR[@]} ${_XR[@]} ${_ZR[@]} \
+${outcgravitySmallRR[@]} ${_hR[@]} ${_kR[@]} ${_nR[@]} ${_uR[@]} ${_xR[@]} ${_zR[@]} \
+${outWwgravityWN[@]} ${_EN[@]} ${_KN[@]} ${_LN[@]} ${_RN[@]} ${_HN[@]} ${_NN[@]} ${_QN[@]} ${_AN[@]} ${_XN[@]} ${_ZN[@]} \
+${outcgravitySmallRN[@]} ${_hN[@]} ${_kN[@]} ${_nN[@]} ${_uN[@]} ${_xN[@]} ${_zN[@]})
+input=(${_underscoreN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# ▽左が、右下が詰まっている文字、数字、_ の場合 _ 元に戻る
+backtrack=(${outWwgravityWR[@]} ${_ER[@]} ${_KR[@]} ${_LR[@]} ${_RR[@]} ${_HR[@]} ${_NR[@]} ${_QR[@]} ${_AR[@]} ${_XR[@]} ${_ZR[@]} \
+${outcgravitySmallRR[@]} ${_hR[@]} ${_kR[@]} ${_nR[@]} ${_uR[@]} ${_xR[@]} ${_zR[@]} \
+${outWwgravityWN[@]} ${_EN[@]} ${_KN[@]} ${_LN[@]} ${_RN[@]} ${_HN[@]} ${_NN[@]} ${_QN[@]} ${_AN[@]} ${_XN[@]} ${_ZN[@]} \
+${outcgravitySmallRN[@]} ${_hN[@]} ${_kN[@]} ${_nN[@]} ${_uN[@]} ${_xN[@]} ${_zN[@]} ${figureN[@]} ${_underscoreN[@]})
+input=(${_underscoreL[@]})
+lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # reverse solidus に関する処理の続き ----------------------------------------
