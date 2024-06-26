@@ -53,20 +53,16 @@ glyphNo_flag="false" # glyphナンバーの指定があるか
 # エラー処理
 trap "exit 3" HUP INT QUIT
 
-# [@]なしで 同じ基底文字のメンバーを取得する関数 ||||||||||||||||||||||||||||||||||||||||
+# [@]なしで 同じ基底文字のバリエーション (例: A À Á...) を取得する関数 ||||||||||||||||||||||||||||||||||||||||
 
 letter_members() {
   local class # 基底文字
-  local member # 同じ基底文字を持つ文字のバリエーション (例: A À Á Â Ã Ä Å Ā Ă Ą) の配列
-  local S
   class=(${2})
-  member=("")
 
   if [ -n "${class}" ]; then
-    for S in ${class[@]}; do
-      eval "member+=(\"\${${S}[@]}\")"
-    done
-    eval "${1}=\${member[@]}" # 戻り値を入れる変数名を1番目の引数に指定する
+    class=(${class[@]/#/\$\{}) # 先頭に ${ を付加
+    class=(${class[@]/%/[@]\}}) # 末尾に [@]} を付加
+    eval "${1}=(${class[@]})" # 戻り値を入れる変数名を1番目の引数に指定する
   fi
 }
 
@@ -4951,6 +4947,15 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # _ に関する処理の始め ----------------------------------------
 
+# ☆左が、Vの字、狭い大文字、FPÞfijlr の場合 _ 左に移動
+backtrack=(${gravityVL[@]} ${_IL[@]} ${_JL[@]} ${_FL[@]} ${_PL[@]} ${_THL[@]} \
+${_fL[@]} ${_iL[@]} ${_jL[@]} ${_lL[@]} ${_rL[@]} \
+${gravityVN[@]} ${_JN[@]} ${_FN[@]} ${_PN[@]} ${_THN[@]} \
+${_fN[@]} ${_jN[@]} ${_rN[@]})
+input=(${_underscoreN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
 # ☆右が、左下が詰まっている文字の場合 _ 左に移動
 backtrack=("")
 input=(${_underscoreN[@]})
@@ -5024,10 +5029,36 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # _ に関する処理の続き ----------------------------------------
 
-# ▽右が、数字、_ の場合 _ 移動しない (次の処理とセット)
+# ▽左が、数字、Iit_ の場合 _ 移動しない、元に戻る (この後の処理とセット)
+backtrack=(${_IR[@]} ${_iR[@]} ${_tR[@]} \
+${_tN[@]} \
+${figureN[@]} ${_underscoreN[@]})
+input=(${_underscoreL[@]} \
+${_underscoreN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽右がVの大文字、狭い小文字、Iv の場合 _ 右に移動
 backtrack=("")
 input=(${_underscoreN[@]})
-lookAhead=(${figureN[@]} ${_underscoreN[@]})
+lookAhead=(${gravityCapitalVR[@]} ${gravitySmallCR[@]} ${_IR[@]} ${_vR[@]} \
+${gravityCapitalVN[@]} ${_vN[@]} ${_fN[@]} ${_lN[@]} ${_tN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# ▽右がVの大文字、狭い小文字、Iv の場合 _ 元に戻る
+backtrack=("")
+input=(${_underscoreL[@]})
+lookAhead=(${gravityCapitalVR[@]} ${gravitySmallCR[@]} ${_IR[@]} ${_vR[@]} \
+${gravityCapitalVN[@]} ${_vN[@]} ${_fN[@]} ${_lN[@]} ${_tN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽右が、数字、JIi_ の場合 _ 移動しない、元に戻る (次の処理とセット)
+backtrack=("")
+input=(${_underscoreL[@]} \
+${_underscoreN[@]})
+lookAhead=(${_JL[@]} ${_IL[@]} ${_iL[@]} \
+${_JN[@]} \
+${figureN[@]} ${_underscoreN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ▽左が、右下が詰まっている文字の場合 _ 右に移動
@@ -5039,11 +5070,11 @@ input=(${_underscoreN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
-# ▽左が、右下が詰まっている文字、数字、_ の場合 _ 元に戻る
+# ▽左が、右下が詰まっている文字の場合 _ 元に戻る
 backtrack=(${outWwgravityWR[@]} ${_ER[@]} ${_KR[@]} ${_LR[@]} ${_RR[@]} ${_HR[@]} ${_NR[@]} ${_QR[@]} ${_AR[@]} ${_XR[@]} ${_ZR[@]} \
 ${outcgravitySmallRR[@]} ${_hR[@]} ${_kR[@]} ${_nR[@]} ${_uR[@]} ${_xR[@]} ${_zR[@]} \
 ${outWwgravityWN[@]} ${_EN[@]} ${_KN[@]} ${_LN[@]} ${_RN[@]} ${_HN[@]} ${_NN[@]} ${_QN[@]} ${_AN[@]} ${_XN[@]} ${_ZN[@]} \
-${outcgravitySmallRN[@]} ${_hN[@]} ${_kN[@]} ${_nN[@]} ${_uN[@]} ${_xN[@]} ${_zN[@]} ${figureN[@]} ${_underscoreN[@]})
+${outcgravitySmallRN[@]} ${_hN[@]} ${_kN[@]} ${_nN[@]} ${_uN[@]} ${_xN[@]} ${_zN[@]})
 input=(${_underscoreL[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
