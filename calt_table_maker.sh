@@ -1558,7 +1558,7 @@ done
 
 # A に関する例外処理 1 ----------------------------------------
 
-# ○左が W で 右が 左寄り、幅広の文字の場合 A 左に移動
+# ○左が W で 右が左寄り、幅広の文字の場合 A 左に移動
 backtrack=(${_WL[@]} \
 ${_WN[@]})
 input=(${_AN[@]})
@@ -1633,12 +1633,6 @@ ${_EN[@]} ${_FN[@]} ${_KN[@]} ${_LN[@]} ${_PN[@]} ${_THN[@]})
 input=(${_IN[@]})
 lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
-
-# ○左が幅広の文字で 右が左寄り、右寄り、均等、中間、Vの字の場合 I 右に移動
-#backtrack=(${gravityWN[@]})
-#input=(${_IN[@]})
-#lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
-#chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○左が均等な大文字、右寄りの文字で 右が右寄り、中間の大文字の場合 I 右に移動
 backtrack=(${gravityRR[@]} ${gravityCapitalER[@]})
@@ -3230,7 +3224,7 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # EF に関する例外処理 ----------------------------------------
 
-# ○左が EF で 右が 左寄り、均等な文字の場合 左寄りの文字 左に移動
+# ○左が EF で 右が左寄り、均等な文字の場合 左寄りの文字 左に移動
 backtrack=(${_EL[@]} ${_FL[@]})
 input=(${gravityLN[@]})
 lookAhead=(${gravityLN[@]} ${gravityEN[@]})
