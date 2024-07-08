@@ -17,7 +17,7 @@ Copyright (c) 2023 omonomo ([https://omonomo.github.io/Cyroit/](https://omonomo.
 | カーニング機能      |  ○  | ○ | ○ | ○ | ✕ | ○ |
 | Nerd Fonts          |  ○  | ○ | ○ | ○ | ○ | ○ |
 
-**無印**: 通常版 (ss フィーチャにて機能の ON/OFF が可能)  
+**無印**: 通常版 (GSUB の ss フィーチャにて機能の ON/OFF が可能)  
 **BS**: 基本版  
 **SP**: スペシャルスペース版  
 **DG**: 桁区切り表示版  
