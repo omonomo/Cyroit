@@ -18,8 +18,8 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-glyphNo="14055" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
- #glyphNo="24144" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
+glyphNo="14654" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
+ #glyphNo="24743" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
 caltListName="caltList" # caltテーブルリストの名称
@@ -3656,12 +3656,12 @@ input=(${_IN[@]})
 lookAhead=(${gravitySmallRN[@]} ${gravitySmallMN[@]} ${gravitySmallVN[@]})
 chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
-# ○右が左寄り、均等な文字、右寄り、中間、Vの大文字で その右が Vの字、狭い文字の場合 I 右に移動
+# ○右が左寄り、均等な文字、右寄り、中間、Vの大文字で その右が Vの字、I 以外の狭い文字の場合 I 右に移動
 backtrack1=("")
 backtrack=("")
 input=(${_IN[@]})
 lookAhead=(${gravityLN[@]} ${gravityCapitalRN[@]} ${gravityEN[@]} ${gravityCapitalMN[@]} ${gravityCapitalVN[@]})
-lookAhead1=(${gravityVN[@]} ${gravityCN[@]})
+lookAhead1=(${gravityVN[@]} ${gravitySmallCN[@]} ${_JN[@]})
 chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
 # 左が丸い文字に関する例外処理 4 ----------------------------------------
@@ -4841,6 +4841,12 @@ lookAhead=(${outWwgravityWR[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # 右側が左に寄って詰まった間隔を整える処理 ----------------------------------------
+
+# □左が左寄り、右寄り、均等、中間、Vの字で 右が幅広の文字の場合 Iil 左に移動
+backtrack=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+input=(${_IN[@]} ${_iN[@]} ${_lN[@]})
+lookAhead=(${gravityWL[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # □左が左寄り、均等、中間の小文字、EFKPÞX で 右が左寄りの文字、右寄り、均等な大文字の場合 Iil 左に移動
 backtrack=(${gravitySmallLR[@]} ${gravitySmallMR[@]} \
