@@ -2110,6 +2110,43 @@ while (i < SizeOf(input_list))
 
     Select(65552); Clear() # Temporary glyph
 
+# 点字 (追加)
+    Print("Edit braille pattern dots")
+    Select(0u002e); Copy()
+    Select(65552); Paste() # Temporary glyph
+    Scale(87); Copy()
+    j = 0
+    while (j < 256)
+        Select(0u2800 + j)
+        if (0 != j % 2)
+            PasteWithOffset( -87,  460)
+        endif
+        if (2 <= j % 4)
+            PasteWithOffset( -87,  260)
+        endif
+        if (4 <= j % 8)
+            PasteWithOffset( -87,   60)
+        endif
+        if (8 <= j % 16)
+            PasteWithOffset( 113,  460)
+        endif
+        if (16 <= j % 32)
+            PasteWithOffset( 113,  260)
+        endif
+        if (32 <= j % 64)
+            PasteWithOffset( 113,   60)
+        endif
+        if (64 <= j % 128)
+            PasteWithOffset( -87, -140)
+        endif
+        if (128 <= j % 256)
+            PasteWithOffset( 113, -140)
+        endif
+        SetWidth(500)
+        j += 1
+    endloop
+    Select(65552); Clear() # Temporary glyph
+
 # 記号のグリフを加工
     Print("Edit symbols")
 # ^ -> magnified ^
@@ -2130,7 +2167,7 @@ while (i < SizeOf(input_list))
 # , -> magnified ,
     Select(0u002c); Scale(115, 115, 250, 0); SetWidth(500)
 
-# . -> magnified .
+# . -> magnified . ※ 点字より後に加工すること
     Select(0u002e); Scale(115, 115, 250, 0); SetWidth(500)
 
 # : -> magnified :
@@ -2458,7 +2495,7 @@ while (i < SizeOf(input_list))
     Move(230, 170)
     SetWidth(1000)
 
-# ⌂ (全角にする) ※ ⌴の後に加工すること
+# ⌂ (全角にする) ※ ⌴ より後に加工すること
     Select(0u2302) # ⌂
     Scale(150)
     CorrectDirection()
@@ -2501,7 +2538,7 @@ while (i < SizeOf(input_list))
     Move(230, 50)
     SetWidth(1000)
 
-# ⎇ (追加 ) ※ ⌥ の加工より後にすること
+# ⎇ (追加 ) ※ ⌥ より後に加工すること
     Select(0u2325); Copy() # ⌥
     Select(0u2387); Paste()
     VFlip()
@@ -2566,7 +2603,7 @@ while (i < SizeOf(input_list))
     CorrectDirection()
     SetWidth(500)
 
-# ⚹ (カナフォントを置換) ※ * の加工より後にすること
+# ⚹ (カナフォントを置換) ※ * より後に加工すること
     Select(0u002a); Copy() # *
     Select(0u26b9); Paste() # ⚹
     Rotate(90)
@@ -2613,7 +2650,7 @@ while (i < SizeOf(input_list))
     Rotate(90, 490, 340)
     Select(65552); Clear() # Temporary glyph
 
-# | (破線にし、縦に延ばして少し上へ移動) ※ ⌀⌖⌭⎈ の加工より後にすること
+# | (破線にし、縦に延ばして少し上へ移動) ※ ⌀⌖⌭⎈ より後に加工すること
 # ¦ (隙間を開ける)
     Select(0u007c); Copy() # |
     Select(${address_visi_latin} + 1); Paste() # 避難所
@@ -7953,7 +7990,7 @@ while (i < SizeOf(input_list))
     Move(230, 0)
     SetWidth(1000)
 
-# ⌯ (追加) ※ ␥の後に加工すること
+# ⌯ (追加) ※ ␥ より後に加工すること
     Select(0u2425); Copy() # ␥
     Select(0u232f); Paste() # ⌯
     # 回転
@@ -9124,7 +9161,7 @@ while (i < SizeOf(input_list))
 # 記号のグリフを加工
     Print("Edit symbols")
 
-# 🎤 (追加) ※ ∪ の加工より前にすること
+# 🎤 (追加)
     # マイク
     Select(0u222a); Copy() # ∪
     Select(65552);  Paste() # Temporary glyph
@@ -9260,7 +9297,7 @@ while (i < SizeOf(input_list))
     Move(-222, 0)
     SetWidth(512)
 
-# ⊼ (追加) ※ ∧ の加工より後にすること
+# ⊼ (追加) ※ ∧ より後に加工すること
     Select(0u2227); Copy() # ∧
     Select(0u22bc); Paste() # ⊼
     Select(0u2212); Copy() # −
@@ -9279,7 +9316,7 @@ while (i < SizeOf(input_list))
     Move(-222, 0)
     SetWidth(512)
 
-# ∩ (半角にする)
+# ∩ (半角にする) ※ 🎤 より後に加工すること
     Select(0u2229) # ∩
     Scale(75, 100)
     Move(-231, 0); Copy()
@@ -9323,7 +9360,7 @@ while (i < SizeOf(input_list))
     Move(-326, 0)
     SetWidth(512)
 
-# ⊻ (追加) ※ ∨ の加工より後にすること
+# ⊻ (追加) ※ ∨ より後に加工すること
     Select(0u2228); Copy() # ∨
     Select(0u22bb); Paste() # ⊻
     Select(0u2212); Copy() # −
@@ -9416,7 +9453,7 @@ while (i < SizeOf(input_list))
     SetWidth(1024)
     Select(65552); Clear() # Temporary glyph
 
-# ⌤ (追加) ※ ⌃ の加工より後にすること
+# ⌤ (追加) ※ ⌃ より後に加工すること
     Select(0u2303); Copy() # ⌃
     Select(0u2324); Paste() # ⌤
     Select(0u002d); Copy() # -
@@ -10588,7 +10625,7 @@ while (i < SizeOf(latin_sfd_list))
 # 記号のグリフを加工
     Print("Copy and edit symbols")
 
-# ° (移動) # ℃℉ の前に加工すること
+# ° (移動)
     Select(0u00b0) # °
     Move(-10, 80)
     SetWidth(500)
@@ -10614,7 +10651,7 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u212b); Paste() # Å
     SetWidth(500)
 
-# ℃ (漢字フォントを置換)
+# ℃ (漢字フォントを置換) ※ ° より後に加工すること
     Select(0u00b0); Copy() # °
     Select(0u2103); Paste() # ℃
     Select(0u0043); Copy() # C
@@ -10623,7 +10660,7 @@ while (i < SizeOf(latin_sfd_list))
     if ("${draft_flag}" == "false"); Move(${x_pos_zenkaku_kana}, 0); endif
     SetWidth(1000)
 
-# ℉ (追加)
+# ℉ (追加) ※ ° より後に加工すること
     Select(0u00b0); Copy() # °
     Select(0u2109); Paste() # ℉
     Move(-10, 0)
