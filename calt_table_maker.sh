@@ -18,8 +18,8 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-glyphNo="14654" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
- #glyphNo="24743" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
+glyphNo="14671" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
+ #glyphNo="24760" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
 caltListName="caltList" # caltテーブルリストの名称
@@ -2624,10 +2624,10 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # 2つ右を見て移動させない例外処理 ----------------------------------------
 
-# ○左が IJijl で 右が IJijl で その右が Vの字、狭い文字の場合 右寄り、均等、中間の文字 移動しない
+# ○左が IJijlt で 右が IJijl で その右が Vの字、狭い文字の場合 右寄り、均等、中間の文字 移動しない
 backtrack1=("")
-backtrack=(${_IN[@]} ${_iN[@]} ${_lN[@]})
- #backtrack=(${_IN[@]} ${_JN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]})
+backtrack=(${_IN[@]} ${_iN[@]} ${_lN[@]} ${_tN[@]})
+ #backtrack=(${_IN[@]} ${_JN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]} ${_tN[@]})
 input=(${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]})
 lookAhead=(${_IN[@]} ${_JN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]})
 lookAhead1=(${gravityVN[@]} ${gravityCN[@]})
