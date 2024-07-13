@@ -220,6 +220,8 @@ chain_context() {
         bt=${bt// /,}
         if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
         la=${la// /,}
+        eval echo ${S}{${bt}}"@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.backOnly.tmp.txt" # lookAhead がない設定のチェック用に保存
+        eval echo ${S}"@"{${la}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.aheadOnly.tmp.txt" # backtrack がない設定のチェック用に保存
         eval echo ${S}{${bt}}{${la}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.tmp.txt" # 前後2文字以上を省いた文字列を保存
         if [ -n "${backtrack1}" ]; then bt1="${backtrack1[@]}"; else bt1="@"; fi
         bt1=${bt1// /,}
@@ -243,26 +245,41 @@ chain_context() {
           if [[ ! -e "${tmpdir}/${checkListName}Short${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
             :>| "${tmpdir}/${checkListName}Short${S}.txt"
           fi
-          while read line0; do
-            if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Short${S}.txt")" ]; then # 前後1文字のみで重複する設定がないかチェック
-              if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then # 重複していない設定があった場合、前後2文字以上参照する設定の場合は追試
-                if [[ ! -e "${tmpdir}/${checkListName}Long${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
-                  :>| "${tmpdir}/${checkListName}Long${S}.txt"
-                fi
-                while read line1; do
-                  if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Long${S}.txt")" ]; then # 前後2文字以上で重複する設定がないかチェック
-                    overlap="false" # 重複していない設定があればチェックリストに追加して break
-                    cat "${tmpdir}/${checkListName}.long.tmp.txt" >> "${tmpdir}/${checkListName}Long${S}.txt"
-                    break 2
-                  fi # -z "${grep (前後2文字以上)
-                done  < "${tmpdir}/${checkListName}.long.tmp.txt"
-              else # -e "${tmpdir}/${checkListName}.long.tmp.txt" 前後1文字のみ参照の場合、追試なしでチェックリストに追加して break
-                overlap="false"
-                cat "${tmpdir}/${checkListName}.short.tmp.txt" >> "${tmpdir}/${checkListName}Short${S}.txt"
-              fi # -e "${tmpdir}/${checkListName}.long.tmp.txt"
-              break
-            fi # -z "${grep (前後1文字のみ)
-          done < "${tmpdir}/${checkListName}.short.tmp.txt" # 重複する設定がない場合、スルー
+
+          while read line0; do # 前後1文字のみで lookAhead が無い設定がすでに存在しないかチェック
+            if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Short${S}.txt")" ]; then
+              while read line1; do # lookAhead が無い設定に抜けがあった場合、前後1文字のみで backtrack が無い設定がすでに存在しないかチェック
+                if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Short${S}.txt")" ]; then
+                  overlap="false" # backtrack と lookAhead の両方に重複していない設定があればフラグを立てて break
+                  break 2
+                fi # -z "${grep (backtrack 無し)
+              done < "${tmpdir}/${checkListName}.short.aheadOnly.tmp.txt"
+            fi # -z "${grep (lookAhead 無し)
+          done < "${tmpdir}/${checkListName}.short.backOnly.tmp.txt" # backtrack か lookAhead 無しの設定のいずれかが全て重複していた場合、スルー
+
+          if [ "${overlap}" == "false" ]; then # backtrack と lookAhead 両方の設定に抜けがあった場合追試
+            overlap="true"
+            while read line0; do
+              if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Short${S}.txt")" ]; then # 前後1文字のみで重複する設定がないかチェック
+                if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then # 重複していない設定があった場合、前後2文字以上参照する設定の場合は追試
+                  if [[ ! -e "${tmpdir}/${checkListName}Long${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
+                    :>| "${tmpdir}/${checkListName}Long${S}.txt"
+                  fi
+                  while read line1; do
+                    if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Long${S}.txt")" ]; then # 前後2文字以上で重複する設定がないかチェック
+                      overlap="false" # 重複していない設定があればチェックリストに追加して break
+                      cat "${tmpdir}/${checkListName}.long.tmp.txt" >> "${tmpdir}/${checkListName}Long${S}.txt"
+                      break 2
+                    fi # -z "${grep (前後2文字以上)
+                  done  < "${tmpdir}/${checkListName}.long.tmp.txt"
+                else # -e "${tmpdir}/${checkListName}.long.tmp.txt" 前後1文字のみ参照の場合、追試なしでチェックリストに追加して break
+                  overlap="false"
+                  cat "${tmpdir}/${checkListName}.short.tmp.txt" >> "${tmpdir}/${checkListName}Short${S}.txt"
+                fi # -e "${tmpdir}/${checkListName}.long.tmp.txt"
+                break
+              fi # -z "${grep (前後1文字のみ)
+            done < "${tmpdir}/${checkListName}.short.tmp.txt" # 重複する設定がない場合、スルー
+          fi
 
           if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、input から重複したグリフを削除
             input=(${input[@]/${S}/})
@@ -312,21 +329,21 @@ chain_context() {
             cat "${tmpdir}/${checkListName}.back.tmp.txt" >> "${tmpdir}/${checkListName}Back${S}.txt"
 
           else # "${optimize_mode}" == "optional" && ${opti} -ne 0
-            if [[ ! -e "${tmpdir}/${checkListName}Back${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
+            if [[ ! -e "${tmpdir}/${checkListName}Back${S}.txt" ]]; then # 既設定ファイルが無い場合は空のファイルを作成
               :>| "${tmpdir}/${checkListName}Back${S}.txt"
             fi
             while read line0; do
               if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Back${S}.txt")" ]; then # lookAhead が無い設定がすでに存在しないかチェック
-                while read line1; do # lookAhead がない設定に抜けがあった場合追試
+                while read line1; do # lookAhead が無い設定に抜けがあった場合追試
                   if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Back${S}.txt")" ]; then # 重複する設定がないかチェック
                     overlap="false" # 重複していない設定があった場合チェックリストに追加して break
                     cat "${tmpdir}/${checkListName}.back.tmp.txt" >> "${tmpdir}/${checkListName}Back${S}.txt"
                     break 2
                   fi # -z "${T}" (重複する設定)
-                done < "${tmpdir}/${checkListName}.back.tmp.txt" # 重複する設定がない場合、何もせずに break
+                done < "${tmpdir}/${checkListName}.back.tmp.txt" # 重複する設定が無い場合、何もせずに break
                 break
               fi # -z "${grep (lookAhead が無い)
-            done < "${tmpdir}/${checkListName}.backOnly.tmp.txt" # すでに lookAhead がない設定が全て存在した場合、スルー
+            done < "${tmpdir}/${checkListName}.backOnly.tmp.txt" # すでに lookAhead が無い設定が全て存在した場合、スルー
 
             if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、backtrack から重複したグリフを削除
               backtrack=(${backtrack[@]/${S}/})
@@ -369,7 +386,7 @@ chain_context() {
 
           ip="${input[@]}"
           ip=${ip// /,}
-          eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # backtrack がない設定のチェック用に保存
+          eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # backtrack が無い設定のチェック用に保存
           if [ -n "${backtrack}" ]; then bt="${backtrack[@]}"; else bt="@"; fi
           bt=${bt// /,}
           if [ -n "${backtrack1}" ]; then bt1="${backtrack1[@]}"; else bt1="@"; fi
@@ -385,21 +402,21 @@ chain_context() {
             cat "${tmpdir}/${checkListName}.ahead.tmp.txt" >> "${tmpdir}/${checkListName}Ahead${S}.txt"
 
           else # "${optimize_mode}" == "optional" && ${opti} -ne 0
-            if [[ ! -e "${tmpdir}/${checkListName}Ahead${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
+            if [[ ! -e "${tmpdir}/${checkListName}Ahead${S}.txt" ]]; then # 既設定ファイルが無い場合は空のファイルを作成
               :>| "${tmpdir}/${checkListName}Ahead${S}.txt"
             fi
             while read line0; do
               if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Ahead${S}.txt")" ]; then # backtrack が無い設定がすでに存在しないかチェック
-                while read line1; do # backtrack がない設定に抜けがあった場合追試
+                while read line1; do # backtrack が無い設定に抜けがあった場合追試
                   if [ -z "$(grep -x -m 1 "${line1}" "${tmpdir}/${checkListName}Ahead${S}.txt")" ]; then # 重複する設定がないかチェック
-                    overlap="false" # 重複していない設定があった場合チェックリストに追加して break
+                    overlap="false" # 重複してい無い設定があった場合チェックリストに追加して break
                     cat "${tmpdir}/${checkListName}.ahead.tmp.txt" >> "${tmpdir}/${checkListName}Ahead${S}.txt"
                     break 2
                   fi # -z "${grep (重複する設定)
-                done < "${tmpdir}/${checkListName}.ahead.tmp.txt" # 重複する設定がない場合、何もせずに break
+                done < "${tmpdir}/${checkListName}.ahead.tmp.txt" # 重複する設定が無い場合、何もせずに break
                 break
               fi # -z "${grep (lookAhead が無い)
-            done < "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # すでに backtrack がない設定が全て存在した場合、スルー
+            done < "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # すでに backtrack が無い設定が全て存在した場合、スルー
 
             if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、lookAhead から重複したグリフを削除
               lookAhead=(${lookAhead[@]/${S}/})
@@ -1832,8 +1849,10 @@ chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左が左寄り、中間、Vの字、狭い文字で 右が j の場合 左寄り、均等な文字、中間の小文字、CcIfilrt 右に移動
 backtrack=(${gravityCR[@]} \
 ${gravityLN[@]} ${gravityMN[@]} ${gravityVN[@]} ${_IN[@]} ${_JN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_tN[@]})
-input=(${gravityLN[@]} ${gravityEN[@]} ${gravitySmallMN[@]} \
+input=(${outLgravityLN[@]} ${gravityEN[@]} ${gravitySmallMN[@]} \
 ${_CN[@]} ${_cN[@]} ${_IN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
+ #input=(${gravityLN[@]} ${gravityEN[@]} ${gravitySmallMN[@]} \
+ #${_CN[@]} ${_cN[@]} ${_IN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
 lookAhead=(${_jN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
@@ -1907,7 +1926,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が t で 右が左寄り、均等な文字の場合 左寄り、均等な文字 左に移動 (次の処理とセット)
 backtrack=(${_tL[@]})
-input=(${gravityLN[@]} ${gravityEN[@]})
+input=(${outLgravityLN[@]} ${gravityEN[@]})
+ #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${gravityLN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -1916,6 +1936,12 @@ backtrack=(${_tL[@]} \
 ${_rN[@]} ${_tN[@]})
 input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=("")
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ○左が t で 右が Vの字、狭い文字の場合 右寄り、中間、Vの字 移動しない
+backtrack=(${_tN[@]})
+input=(${gravityRN[@]} ${gravityMN[@]} ${gravityVN[@]})
+lookAhead=(${gravityVN[@]} ${gravityCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # 左が rt で 右が幅広の文字の場合 幅広と狭い文字以外 左に移動 (次の処理とセット、なんちゃって最適化により無くてもよさそう)
@@ -1931,8 +1957,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
  #lookAhead=("")
  #chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-# ○左が rt で 右が j の場合 右寄り、中間の文字 左に移動しない
-backtrack=(${_rN[@]} ${_tN[@]})
+# ○左が r で 右が j の場合 右寄り、中間の文字 左に移動しない
+backtrack=(${_rN[@]})
 input=(${gravityRN[@]} ${gravityMN[@]})
 lookAhead=(${_jN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
@@ -2306,7 +2332,7 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が均等な小文字で 右が左寄り、右寄り、均等、中間の小文字の場合 狭い文字 左に移動
 backtrack=(${gravitySmallEN[@]})
-input=(${outrtgravitySmallCN[@]} ${_JN[@]})
+input=(${outjrtgravitySmallCN[@]} ${_JN[@]})
  #input=(${gravityCN[@]})
 lookAhead=(${gravityCapitalLN[@]} ${gravityCapitalRN[@]} ${gravityCapitalEN[@]} ${gravityCapitalMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
@@ -2419,7 +2445,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左が均等な大文字、右寄りの文字で 右が ac で その右が左寄り、右寄り、幅広、均等、中間の文字の場合 狭い文字 右に移動しない (次の処理とセット)
 backtrack1=("")
 backtrack=(${gravityRR[@]} ${gravityCapitalER[@]})
-input=(${gravityCN[@]})
+input=(${outjgravityCN[@]})
+ #input=(${gravityCN[@]})
 lookAhead=(${_aN[@]} ${_cN[@]})
 lookAhead1=(${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
@@ -2432,7 +2459,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が Cc 以外の右寄り、均等な大文字で 右が Vの大文字の場合 左寄り、均等な文字 右に移動
 backtrack=(${outcgravitySmallRL[@]} ${gravityCapitalEL[@]}} ${_GL[@]})
-input=(${gravityLN[@]} ${gravityEN[@]})
+input=(${outLgravityLN[@]} ${gravityEN[@]})
+ #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${gravityCapitalVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
@@ -2476,7 +2504,8 @@ backtrack=(${gravityCapitalRR[@]} ${gravityCapitalER[@]} ${gravityCapitalMR[@]} 
 ${outOQgravityEN[@]})
  #backtrack=(${gravityCapitalRR[@]} ${gravityCapitalER[@]} ${gravityCapitalMR[@]} \
  #${gravityEN[@]})
-input=(${gravityCN[@]})
+input=(${outjgravityCN[@]})
+ #input=(${gravityCN[@]})
 lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
@@ -2497,18 +2526,6 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 backtrack=(${gravityVR[@]})
 input=(${_aN[@]} ${_SN[@]} ${_sN[@]})
 lookAhead=(${gravityCN[@]})
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
-
-# ○左が et で 右が frt (両側が少しでも左に寄っている文字)の場合 右寄り、中間、Vの字 移動しない
-backtrack=(${_eN[@]} ${_tN[@]})
-input=(${gravityRN[@]} ${gravityMN[@]} ${gravityVN[@]})
-lookAhead=(${_fN[@]} ${_rN[@]} ${_tN[@]})
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
-
-# ○左が t で 右が ly (両側が少しでも左に寄っている文字)の場合 右寄り、中間、Vの字 移動しない
-backtrack=(${_tN[@]})
-input=(${gravityRN[@]} ${gravityMN[@]} ${gravityVN[@]})
-lookAhead=(${_lN[@]} ${_yN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ○左が EKXkĸsxz で 右が左寄り、右寄り、均等、中間の文字の場合 SXZsxz 移動しない
@@ -2590,26 +2607,30 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が均等な小文字で 右が frt の場合 幅広、狭い文字以外 右に移動しない (例外で h を追加、この後の処理とセット)
 backtrack=(${gravitySmallEL[@]} ${_hL[@]})
-input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+input=(${outLgravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+ #input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 lookAhead=(${_fN[@]} ${_rN[@]} ${_tN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ○左が、左が丸い小文字で 右が t の場合 左寄り、右寄り、均等、中間の文字 右に移動しない (この後の処理とセット)
 backtrack=(${circleSmallRL[@]} ${circleSmallCL[@]})
-input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]})
+input=(${outLgravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]})
+ #input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]})
 lookAhead=(${_tN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ○左が右寄り、幅広、均等な文字で 右が狭い文字の場合 左寄り、右寄り、均等、中間、狭い文字 右に移動 (例外で h を追加、j を省く)
 backtrack=(${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} ${_hL[@]})
-input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outjgravityCN[@]})
+input=(${outLgravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outjgravityCN[@]})
+ #input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outjgravityCN[@]})
 lookAhead=(${gravityCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○左が左寄り、中間の文字で 右が ijl の場合 左寄りの文字、均等な大文字 右に移動 (次の処理とセット)
 backtrack=(${outLhgravityLL[@]} ${gravityML[@]})
  #backtrack=(${gravityLL[@]} ${gravityML[@]})
-input=(${gravityLN[@]} ${gravityCapitalEN[@]})
+input=(${outLgravityLN[@]} ${gravityCapitalEN[@]})
+ #input=(${gravityLN[@]} ${gravityCapitalEN[@]})
 lookAhead=(${_iN[@]} ${_jN[@]} ${_lN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
@@ -2618,16 +2639,17 @@ backtrack=(${outLgravityLL[@]} ${gravityML[@]} ${gravityVL[@]} ${_tL[@]} \
 ${outrtgravityCR[@]})
  #backtrack=(${gravityLL[@]} ${gravityML[@]} ${gravityVL[@]} ${_tL[@]} \
  #${gravityCR[@]})
-input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+input=(${outLgravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+ #input=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 lookAhead=(${gravityCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # 2つ右を見て移動させない例外処理 ----------------------------------------
 
-# ○左が IJijlt で 右が IJijl で その右が Vの字、狭い文字の場合 右寄り、均等、中間の文字 移動しない
+# ○左が IJijl で 右が IJijl で その右が Vの字、狭い文字の場合 右寄り、均等、中間の文字 移動しない
 backtrack1=("")
-backtrack=(${_IN[@]} ${_iN[@]} ${_lN[@]} ${_tN[@]})
- #backtrack=(${_IN[@]} ${_JN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]} ${_tN[@]})
+backtrack=(${_IN[@]} ${_iN[@]} ${_lN[@]})
+ #backtrack=(${_IN[@]} ${_JN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]})
 input=(${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]})
 lookAhead=(${_IN[@]} ${_JN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]})
 lookAhead1=(${gravityVN[@]} ${gravityCN[@]})
@@ -2638,7 +2660,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左が狭い文字で 右が全ての文字の場合 引き寄せない文字 左に移動 (この後の処理とセット)
 backtrack=(${outJjgravityCL[@]})
  #backtrack=(${gravityCL[@]})
-input=(${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]})
+input=(${outLgravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]})
+ #input=(${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]})
 lookAhead=(${capitalN[@]} ${smallN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -2748,7 +2771,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左右を見て 左寄り、均等な文字 移動しない
 backtrack=(${gravityRL[@]} ${gravityEL[@]} \
 ${gravityVN[@]})
-input=(${gravityLN[@]} ${gravityEN[@]})
+input=(${outLgravityLN[@]} ${gravityEN[@]})
+ #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${gravityRN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
@@ -2836,7 +2860,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左側基準で 左寄り、均等な文字 左に移動
 backtrack=(${outLgravityLL[@]} ${gravityML[@]})
  #backtrack=(${gravityLL[@]} ${gravityML[@]})
-input=(${gravityLN[@]} ${gravityEN[@]})
+input=(${outLgravityLN[@]} ${gravityEN[@]})
+ #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${gravityWN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -2868,7 +2893,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左側基準で 狭い文字 左に移動
 backtrack=(${gravityWL[@]})
-input=(${gravityCN[@]})
+input=(${outjgravityCN[@]})
+ #input=(${gravityCN[@]})
 lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -2899,7 +2925,7 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 backtrack=(${outjrtgravitySmallCN[@]})
  #backtrack=(${gravityVL[@]} \
  #${gravityCN[@]})
-input=(${gravityLN[@]} ${gravityCapitalEN[@]})
+input=(${outLgravityLN[@]} ${gravityCapitalEN[@]})
  #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${outjgravityCN[@]})
  #lookAhead=(${gravityCN[@]})
@@ -2910,7 +2936,8 @@ backtrack=(${outLgravityLL[@]} ${gravityML[@]} ${gravityVL[@]} \
 ${gravityVN[@]} ${outjrtgravitySmallCN[@]})
  #backtrack=(${gravityLL[@]} ${gravityML[@]} ${gravityVL[@]} \
  #${gravityVN[@]} ${gravityCN[@]})
-input=(${gravityLN[@]})
+input=(${outLgravityLN[@]})
+ #input=(${gravityLN[@]})
 lookAhead=(${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
@@ -3226,7 +3253,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が EF で 右が左寄り、均等な文字の場合 左寄りの文字 左に移動
 backtrack=(${_EL[@]} ${_FL[@]})
-input=(${gravityLN[@]})
+input=(${outLgravityLN[@]})
+ #input=(${gravityLN[@]})
 lookAhead=(${gravityLN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -3287,6 +3315,14 @@ ${circleRN[@]} ${circleSmallCN[@]})
  #${circleRN[@]} ${circleCN[@]})
 lookAhead=(${gravityRN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ○右が A で その右が W の場合 Rh 左に移動しない (次の処理とセット)
+backtrack1=("")
+backtrack=("")
+input=(${_RN[@]} ${_hN[@]})
+lookAhead=(${_AN[@]})
+lookAhead1=(${_WN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
 # ○右が L 以外の左寄り、右寄りの文字、均等、中間の大文字で その右が幅広の文字の場合 右寄り、均等、右が丸い文字、PRÞShs 左に移動
 backtrack1=("")
@@ -3479,7 +3515,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○左が EFKXkxzĸ で 右が a の場合 bhpþ 左に移動
 backtrack=(${_EL[@]} ${_FL[@]} ${_KL[@]} ${_XL[@]} ${_kL[@]} ${_xL[@]} ${_zL[@]} ${_kgL[@]})
-input=(${_bN[@]} ${_hN[@]} ${_pN[@]} ${_thN[@]})
+input=(${_hN[@]})
+ #input=(${_bN[@]} ${_hN[@]} ${_pN[@]} ${_thN[@]})
 lookAhead=(${_aN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -3543,7 +3580,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○右側基準で 狭い文字 左に移動
 backtrack=(${outLgravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]})
  #backtrack=(${gravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]})
-input=(${gravityCN[@]})
+input=(${outJjrtgravityCN[@]})
+ #input=(${gravityCN[@]})
 lookAhead=(${gravityWN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -3568,7 +3606,8 @@ backtrack=(${gravityRL[@]} ${gravityEL[@]} \
 ${outrtgravityCR[@]})
  #backtrack=(${gravityRL[@]} ${gravityEL[@]} \
  #${gravityCR[@]})
-input=(${gravityLN[@]} ${gravityMN[@]})
+input=(${outLgravityLN[@]} ${gravityMN[@]})
+ #input=(${gravityLN[@]} ${gravityMN[@]})
 lookAhead=(${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
@@ -3604,7 +3643,7 @@ chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○右側基準で 左寄り、中間の文字 左に移動しない
 backtrack=(${gravityRL[@]} ${gravityEL[@]})
-input=(${gravityMN[@]})
+input=(${_XN[@]} ${_ZN[@]} ${_xN[@]} ${_zN[@]})
  #input=(${gravityLN[@]} ${gravityMN[@]})
 lookAhead=(${outLgravityLN[@]} ${gravityCapitalEN[@]})
  #lookAhead=(${gravityLN[@]} ${gravityEN[@]})
@@ -3613,7 +3652,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○右側基準で 左寄り 左に移動しない (例外で h を省く)
 backtrack=(${outLgravityLL[@]} ${gravityML[@]})
  #backtrack=(${gravityLL[@]} ${gravityML[@]})
-input=(${outhgravityLN[@]})
+input=(${outLgravityCapitalLN[@]} ${outhbpthgravitySmallLN[@]})
+ #input=(${outhgravityLN[@]})
 lookAhead=(${outLgravityLN[@]} ${gravityEN[@]})
  #lookAhead=(${gravityLN[@]} ${gravityEN[@]})
 chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
@@ -3820,7 +3860,8 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ○右側基準で 左寄り、均等な文字 右に移動
 backtrack=(${gravityVN[@]})
-input=(${gravityLN[@]} ${gravityEN[@]})
+input=(${outLgravityLN[@]} ${gravityEN[@]})
+ #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${outjgravityCN[@]})
  #lookAhead=(${gravityCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
@@ -3858,14 +3899,14 @@ backtrack=(${outLgravityLR[@]} ${gravitySmallRR[@]} ${gravitySmallER[@]} ${gravi
 ${gravityRN[@]})
  #backtrack=(${gravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]} \
  #${gravityRN[@]} ${gravityEN[@]})
-input=(${gravitySmallCN[@]} ${_JN[@]})
+input=(${outjgravitySmallCN[@]} ${_JN[@]})
  #input=(${gravityCN[@]})
 lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ○右側基準で 狭い文字 右に移動しない
 backtrack=(${gravityWN[@]})
-input=(${gravitySmallCN[@]} ${_JN[@]})
+input=(${outjrtgravitySmallCN[@]})
  #input=(${gravityCN[@]})
 lookAhead=(${gravityLN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
@@ -4356,8 +4397,7 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # △左が、左が丸い小文字で 右が、左が丸い小文字の場合 均等、右が丸い文字 元に戻らない (次の処理とセット)
 backtrack=(${circleSmallLN[@]})
-input=(${gravityCapitalER[@]} \
-${circleRR[@]})
+input=(${circleRR[@]})
  #input=(${gravityER[@]} \
  #${circleRR[@]} ${circleCR[@]})
 lookAhead=(${circleSmallLN[@]} ${circleSmallCN[@]})
