@@ -159,9 +159,9 @@ y_pos_sub="-166" # 下付きY座標移動量
 
 # 分数用
 x_pos_numerator="0" # 分子のX座標移動量
-y_pos_numerator="270" # 分子のY座標移動量
+y_pos_numerator="260" # 分子のY座標移動量
 x_pos_denominator="480" # 分母のX座標移動量
-y_pos_denominator="-20" # 分母のY座標移動量
+y_pos_denominator="-30" # 分母のY座標移動量
 
 # 演算子移動量
 y_pos_math="-25" # 通常
@@ -641,7 +641,7 @@ while (i < SizeOf(input_list))
             Print("Remove GSUB_" + lookups[j])
             RemoveLookup(lookups[j])
         endif
-        j++
+        j += 1
     endloop
 
     lookups = GetLookups("GPOS"); numlookups = SizeOf(lookups); j = 0
@@ -2120,12 +2120,13 @@ while (i < SizeOf(input_list))
 
 # 点字 (追加)
     Print("Edit braille pattern dots")
+    # 点
     Select(0u002e); Copy()
     Select(65552); Paste() # Temporary glyph
-    Scale(87); Copy()
+    Scale(90); Copy()
     j = 0
     while (j < 256)
-        Select(0u2800 + j)
+        Select(0u2800 + j); Clear()
         if (0 != j % 2)
             PasteWithOffset( -87,  460)
         endif
@@ -2150,10 +2151,29 @@ while (i < SizeOf(input_list))
         if (128 <= j % 256)
             PasteWithOffset( 113, -140)
         endif
+        if (input_list[i] == "${input_latin_bold}")
+            Move(0, -17)
+        endif
         SetWidth(500)
         j += 1
     endloop
+    # 外枠
+    Select(0u2588); Copy() # Full block
+    Select(65553); Paste() # Temporary glyph
+    Scale(103, 65)
+    Select(65552); Paste() # Temporary glyph
+    VFlip()
+    Scale(97, 63)
+    Copy()
+    Select(65553); PasteInto() # Temporary glyph
+    Move(0, -94)
+    Copy()
+    Select(0u2800); PasteInto()
+    Scale(70) ;Move(0, 99) # 縮小しなければ全ての点字の外枠として使用可
+    SetWidth(500)
+
     Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
 
 # 記号のグリフを加工
     Print("Edit symbols")
@@ -2420,7 +2440,7 @@ while (i < SizeOf(input_list))
     Scale(${percent_super_sub}, 250, 0)
     ChangeWeight(${weight_extend_super_sub})
     CorrectDirection()
-    Move(-95, 390)
+    Move(-95, 395)
 
     Select(0u221a); Copy() # √
     Select(0u221b); PasteInto() # ∛
@@ -2432,7 +2452,7 @@ while (i < SizeOf(input_list))
     Scale(${percent_super_sub}, 250, 0)
     ChangeWeight(${weight_extend_super_sub})
     CorrectDirection()
-    Move(-95, 390)
+    Move(-95, 395)
 
     Select(0u221a); Copy() # √
     Select(0u221c); PasteInto() # ∜
@@ -2838,7 +2858,7 @@ while (i < SizeOf(input_list))
     Select(65552);  Paste() # Temporary glyph
     Scale(85, 110)
     Rotate(-35)
-    Move(230, 100)
+    Move(230, 90)
     Copy()
     Select(0u00bc); # ¼
     SelectMore(0u00bd); # ½
@@ -8946,7 +8966,7 @@ while (i < SizeOf(input_list))
             Print("Remove GSUB_" + lookups[j])
             RemoveLookup(lookups[j])
         endif
-        j++
+        j += 1
     endloop
 
     lookups = GetLookups("GPOS"); numlookups = SizeOf(lookups); j = 0
@@ -10646,16 +10666,9 @@ while (i < SizeOf(latin_sfd_list))
     OverlapIntersect()
 
     Copy()
-    Select(0u2800); Paste() # 点字ブランク
-    Move(0, 235)
-
     Select(0u00a0); Paste() # No-break space
     VFlip()
     CorrectDirection()
-    SetWidth(500)
-
-    Copy()
-    Select(0u2800); PasteWithOffset(0, 719) # 点字ブランク
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
@@ -13526,7 +13539,7 @@ while (i < \$argc)
                 Print("Remove GSUB_" + lookups[j])
                 RemoveLookup(lookups[j])
             endif
-            j++
+            j += 1
         endloop
 
         Select(${address_ss}, ${address_ss_end})
@@ -13736,7 +13749,7 @@ while (i < \$argc)
                 Print("Remove GSUB_" + lookups[j])
                 RemoveLookup(lookups[j])
             endif
-            j++
+            j += 1
         endloop
 
         Select(${address_calt}, ${address_calt_end})
