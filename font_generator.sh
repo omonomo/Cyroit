@@ -39,7 +39,8 @@ tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 # グリフ保管アドレス
 num_mod_glyphs="4" # -t オプションで改変するグリフ数
 address_mod_latin="64336" # 0ufb50 latinフォントの避難したDQVZアドレス
-address_visi_latin=$((address_mod_latin + num_mod_glyphs * 6)) # latinフォントの避難した識別性向上アドレス ⁄|
+address_braille_latin=$((address_mod_latin + num_mod_glyphs * 6)) # latinフォントの避難した点字アドレス
+address_visi_latin=$((address_braille_latin + 256)) # latinフォントの避難した識別性向上アドレス ⁄|
 
 address_visi_kana=$((address_visi_latin + 2)) # 仮名フォントの避難した識別性向上アドレス ゠-➓
 address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
@@ -48,13 +49,15 @@ address_visi_kanzi=$((address_visi_kana + 26)) # 漢字フォントの避難し�
 address_calt_kanzi="1114841" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi2="1115493" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi3="1115623" # 漢字フォントのcalt置換アドレス
-address_calt_kanzi4="1115776" # 漢字フォントのcalt置換アドレス
+address_ss_kanzi="1115776" # 漢字フォントのss置換アドレス
+address_ss_dummy="1114115" # ダミーフォントのss置換アドレス
 
 address_mod_latinkana=${address_mod_latin} # latin仮名フォントの避難したDQVZアドレス
 address_zenhan_latinkana=$((address_visi_kanzi + 9)) # latin仮名フォントの避難した全角半角アドレス(縦書きの（-゠)
 address_vert_latinkana="65682" # latin仮名フォントのvert置換アドレス
 
 address_mod=${address_mod_latin} # 避難したDQVZアドレス
+address_braille=${address_braille_latin} # 避難した点字アドレス
 address_visi=${address_visi_latin} # 避難した識別性向上アドレス
 address_zenhan=${address_zenhan_latinkana} # 避難した全角半角アドレス
 address_store_end=$((address_zenhan + 281)) # 避難したグリフの最終アドレス(縦書きの゠)
@@ -77,13 +80,16 @@ lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlo
 num_replace_lookups="10" # 単純置換のルックアップ数 (lookupの数を変えた場合はcalt_table_makerも変更すること)
 
 address_ss=$((address_calt_end + 1)) # ss置換の先頭アドレス(全角スペース)
-address_ss_figure=$((address_ss + 4)) # ss置換アドレス(桁区切り付きの数字)
-address_ss_vert=$((address_ss_figure + 50)) # ss置換の全角縦書きアドレス(縦書きの（)
-address_ss_zenhan=$((address_ss_vert + 109)) # ss置換の全角半角アドレス(！)
-address_ss_visibility=$((address_ss_zenhan + 172)) # ss置換の識別性向上アドレス(/)
+address_ss_figure=$((address_ss + 3)) # ss置換アドレス(桁区切り付きの数字)
+address_ss_vert=$((address_ss_figure + 50)) # ss置換の縦書き全角アドレス(縦書きの（)
+address_ss_zenhan=$((address_ss_vert + 109)) # ss置換の横書き全角半角アドレス(！)
+address_ss_braille=$((address_ss_zenhan + 172)) # ss置換の点字アドレス
+address_ss_visibility=$((address_ss_braille + 256)) # ss置換の識別性向上アドレス(/)
 address_ss_mod=$((address_ss_visibility + 39)) # ss置換のDQVZアドレス
-address_ss_end=$((address_ss_mod + num_mod_glyphs * 6 -1)) # ss置換の最終アドレス (Ｚ)
-num_ss_glyphs=$((address_ss_end - address_ss + 1)) # ss置換のグリフ数
+address_ss_end=$((address_ss_mod + num_mod_glyphs * 6 - 1)) # ss置換の最終アドレス (Ｚ)
+num_ss_glyphs_former=$((address_ss_braille - address_ss)) # ss置換のグリフ数(点字の前まで)
+num_ss_glyphs_latter=$((address_ss_end + 1 - address_ss_braille)) # ss置換のグリフ数(点字から後)
+num_ss_glyphs=$((address_ss_end + 1 - address_ss)) # ss置換の総グリフ数
 lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブルのlookupナンバー
 num_ss_lookups="8" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 
@@ -259,9 +265,11 @@ parameter_modificator="parameter_modificator.pe"
 
 oblique_converter="oblique_converter.pe"
 
+modified_dummy_generator="modified_dummy_generator.pe"
+modified_dummy="modified-dummy.ttf"
+
 modified_hentai_kana_generator="modified_hentai_kana_generator.pe"
 modified_hentai_kana="modified-hentai-kana.ttf"
-merged_hentai_kana_generator="merged_hentai_kana_generator.pe"
 
 modified_nerd_generator="modified_nerd_generator.pe"
 modified_nerd="modified-nerd.ttf"
@@ -2157,7 +2165,48 @@ while (i < SizeOf(input_list))
         SetWidth(500)
         j += 1
     endloop
-    # 外枠
+
+    j = 0
+    while (j < 256)
+        Select(0u2800 + j); Copy()
+        Select(${address_braille_latin} + j); Paste() # 避難所
+        j += 1
+    endloop
+
+ #    # ブランク (全ての点字に枠を付けたため無効)
+ #    # 点
+ #    Select(0u002e); Copy()
+ #    Select(65552); Paste() # Temporary glyph
+ #    Scale(25); Copy()
+ #    Select(0u2800)
+ #    PasteWithOffset( -87,  460)
+ #    PasteWithOffset( -87,  260)
+ #    PasteWithOffset( -87,   60)
+ #    PasteWithOffset( 113,  460)
+ #    PasteWithOffset( 113,  260)
+ #    PasteWithOffset( 113,   60)
+ #    if (input_list[i] == "${input_latin_bold}")
+ #        Move(0, -17)
+ #    endif
+ #    # 外枠
+ #    Select(0u2588); Copy() # Full block
+ #    Select(65553); Paste() # Temporary glyph
+ #    Scale(103, 65)
+ # #    Scale(103, 51)
+ #    Select(65552); Paste() # Temporary glyph
+ #    VFlip()
+ #    Scale(97, 63)
+ # #    Scale(97, 49)
+ #    Copy()
+ #    Select(65553); PasteInto() # Temporary glyph
+ #    Move(0, 5)
+ #    Copy()
+ #    # 合成
+ #    Select(0u2800); PasteInto()
+ #    Scale(70)
+ #    SetWidth(500)
+
+    # 8点用外枠
     Select(0u2588); Copy() # Full block
     Select(65553); Paste() # Temporary glyph
     Scale(103, 65)
@@ -2166,11 +2215,47 @@ while (i < SizeOf(input_list))
     Scale(97, 63)
     Copy()
     Select(65553); PasteInto() # Temporary glyph
+    ChangeWeight(-6)
+    CorrectDirection()
     Move(0, -94)
+    # 8点点字にコピー
     Copy()
-    Select(0u2800); PasteInto()
-    Scale(70) ;Move(0, 99) # 縮小しなければ全ての点字の外枠として使用可
-    SetWidth(500)
+    j = 0
+    while (j < 192)
+        Select(0u2840 + j); PasteInto()
+        SetWidth(500)
+        j += 1
+    endloop
+
+    # 6点用外枠
+    # 下線を上にコピー
+    Select(0u2588); Copy() # Full block
+    Select(65552); Paste() # Temporary glyph
+    Scale(105, 100)
+    Move(0, -800)
+    Select(65553); Copy() # Temporary glyph
+    Select(65552); PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(65553); PasteWithOffset(0, 200) # Temporary glyph
+ #    Select(65553); PasteWithOffset(0, 248) # Temporary glyph
+    RemoveOverlap()
+    # コピー元を削除
+    Select(0u2588); Copy() # Full block
+    Select(65552); Paste() # Temporary glyph
+    Scale(105, 100)
+    Copy()
+    Select(65553); PasteWithOffset(0, 354) # Temporary glyph
+ #    Select(65553); PasteWithOffset(0, 402) # Temporary glyph
+    OverlapIntersect()
+    # 6点点字にコピー
+    Copy()
+    j = 0
+    while (j < 64)
+        Select(0u2800 + j); PasteInto()
+        SetWidth(500)
+        j += 1
+    endloop
 
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
@@ -2732,7 +2817,7 @@ while (i < SizeOf(input_list))
         Select(65552); Paste() # Temporary glyph
         Scale(80, 100)
         Select(65553); Paste() # Temporary glyph
-        Scale(87, 100) ; 
+        Scale(87, 100)
         Select(65552); Copy() # Temporary glyph
         Select(65553); PasteInto() # Temporary glyph
         RemoveOverlap()
@@ -10297,13 +10382,13 @@ while (i < SizeOf(input_list))
 
     j = 0
     while (j < 8)
-        Select(0u0020); Copy() # Ș-ț のダミー
+        Select(0u0063); Copy() # Ș-ț のダミー
         Select(k); Paste()
         k += 1
         j += 1
     endloop
 
-    Select(0u0020); Copy() # ẞ のダミー
+    Select(0u0063); Copy() # ẞ のダミー
     Select(k); Paste()
     k += 1
     Select(k); Paste()
@@ -10360,10 +10445,10 @@ while (i < SizeOf(input_list))
     k += 1
 
 # ss 対応 (スロットの確保、後でグリフ上書き)
-    k = ${address_calt_kanzi4}
+    k = ${address_ss_kanzi}
     j = 0
-    while (j < ${num_ss_glyphs})
-        Select(0u0020); Copy() # 避難したグリフのダミー
+    while (j < ${num_ss_glyphs_former})
+        Select(0u0073); Copy() # 避難したグリフのダミー
         Select(k); Paste()
         k += 1
         j += 1
@@ -10473,6 +10558,104 @@ while (i < SizeOf(input_list))
     Print("Save " + output_list[i])
     Save("${tmpdir}/" + output_list[i])
  #    Generate("${tmpdir}/" + output_list[i], "", 0x04)
+ #    Generate("${tmpdir}/" + output_list[i], "", 0x84)
+    Close()
+    Print("")
+
+    i += 1
+endloop
+
+Quit()
+_EOT_
+
+################################################################################
+# Generate script for dummy fonts
+################################################################################
+# ss 用のエンコーディングスロットが足りなくなり、追加しようとしてもエラーになるため
+# 苦肉の策として空のグリフのみのフォントを作成して後でマージする
+
+cat > ${tmpdir}/${modified_dummy_generator} << _EOT_
+#!$fontforge_command -script
+
+Print("- Generate dummy fonts -")
+
+# Set parameters
+input_list  = ["${input_kanzi_regular}"]
+output_list = ["${modified_dummy}"]
+
+# Begin loop of regular and bold
+i = 0
+while (i < SizeOf(input_list))
+# Open kanzi font
+    Print("Open " + input_list[i])
+    Open(input_list[i])
+    SelectWorthOutputting()
+    UnlinkReference()
+    ScaleToEm(${typo_ascent1024}, ${typo_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
+    SetOS2Value("WinAscent",             ${win_ascent1024}) # Windows用(この範囲外は描画されない)
+    SetOS2Value("WinDescent",            ${win_descent1024})
+    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版用(em値と合わせる)
+    SetOS2Value("TypoDescent",          -${typo_descent1024})
+    SetOS2Value("TypoLineGap",           ${typo_linegap1024})
+    SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
+    SetOS2Value("HHeadDescent",         -${hhea_descent1024})
+    SetOS2Value("HHeadLineGap",          ${hhea_linegap1024})
+
+# --------------------------------------------------
+
+# 全てのグリフクリア
+    Print("Remove all glyphs")
+    SelectWorthOutputting(); Clear(); DetachAndRemoveGlyphs()
+
+# Clear kerns, position, substitutions
+    Print("Clear kerns, position, substitutions")
+    RemoveAllKerns()
+
+    lookups = GetLookups("GSUB"); numlookups = SizeOf(lookups); j = 0
+    while (j < numlookups)
+        Print("Remove GSUB_" + lookups[j])
+        RemoveLookup(lookups[j]); j++
+    endloop
+
+    lookups = GetLookups("GPOS"); numlookups = SizeOf(lookups); j = 0
+    while (j < numlookups)
+        Print("Remove GPOS_" + lookups[j])
+        RemoveLookup(lookups[j]); j++
+    endloop
+
+# Clear instructions, hints
+    Print("Clear instructions, hints")
+    SelectWorthOutputting()
+    ClearInstrs()
+    ClearHints()
+
+# --------------------------------------------------
+
+# ss 対応 (スロットの確保、後でグリフ上書き)
+    Print("Add encoding slots")
+    j = 0
+    while (j < ${num_ss_glyphs_latter})
+        Select(${address_ss_dummy} + j); SetWidth(512) # 避難したグリフのダミー
+        j += 1
+    endloop
+
+# --------------------------------------------------
+
+# Proccess before saving
+ #    Print("Process before saving")
+ #    if (0 < SelectIf(".notdef"))
+ #        Clear(); DetachAndRemoveGlyphs()
+ #    endif
+ #    RemoveDetachedGlyphs()
+ #    SelectWorthOutputting()
+ #    RoundToInt()
+
+# --------------------------------------------------
+
+# Save modified dummy fonts
+    Print("Save " + output_list[i])
+ #    Save("${tmpdir}/" + output_list[i])
+    Generate("${tmpdir}/" + output_list[i], "", 0x04)
  #    Generate("${tmpdir}/" + output_list[i], "", 0x84)
     Close()
     Print("")
@@ -11389,6 +11572,8 @@ Print("- Generate custom fonts -")
 # Set parameters
 latin_kana_sfd_list = ["${tmpdir}/${modified_latin_kana_regular}", \\
                        "${tmpdir}/${modified_latin_kana_bold}"]
+dummy_ttf_list      = ["${tmpdir}/${modified_dummy}", \\
+                       "${tmpdir}/${modified_dummy}"] # ボールドが無いため
 hentai_kana_ttf_list = ["${tmpdir}/${modified_hentai_kana}", \\
                        "${tmpdir}/${modified_hentai_kana}"] # ボールドが無いため
 kanzi_sfd_list      = ["${tmpdir}/${modified_kanzi_regular}", \\
@@ -11460,6 +11645,7 @@ while (i < SizeOf(fontstyle_list))
           + " with " + hentai_kana_ttf_list[i]:t)
     MergeFonts(latin_kana_sfd_list[i])
     MergeFonts(kanzi_sfd_list[i])
+    MergeFonts(dummy_ttf_list[i])
     MergeFonts(hentai_kana_ttf_list[i])
 
 # --------------------------------------------------
@@ -12574,7 +12760,7 @@ while (i < \$argc)
     lookupName = "'ss0" + ToString(ss) + "' スタイルセット" + ToString(ss)
     lookupSub = lookupName + "サブテーブル"
 
-    orig = [0u0020, 0u00a0, 0u2800] # space, no-break space, 点字ブランク
+    orig = [0u0020, 0u00a0] # space, no-break space
     j = 0
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
@@ -12718,6 +12904,17 @@ while (i < \$argc)
         l += 1
     endloop
 
+    j = 0
+    while (j < 256) # 点字
+        Select(${address_braille} + j); Copy()
+        Select(k); Paste()
+        glyphName = GlyphInfo("Name")
+        Select(0u2800 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
  #      j = 0 # デフォルトで下線無しにする場合
  #      while (j < 109) # 全角縦書き
  #          if (j == 48)
@@ -12785,6 +12982,19 @@ while (i < \$argc)
  #        j += 1
  #        k += 1
  #    endloop
+ #
+ #    j = 0
+ #    while (j < 256) # 点字
+ #        Select(0u2800 + j); Copy()
+ #        Select(k); Paste()
+ #        glyphName = GlyphInfo("Name")
+ #        Select(0u2800 + j)
+ #        AddPosSub(lookupSub, glyphName)
+ #        j += 1
+ #        k += 1
+ #    endloop
+
+
     ss += 1
 
 # ss07 破線・ウロコ
@@ -13557,7 +13767,6 @@ while (i < \$argc)
         Print("Option: Disable visible hankaku space")
         Select(0u0020); Clear(); SetWidth(512) # 半角スペース
         Select(0u00a0); Clear(); SetWidth(512) # ノーブレークスペース
-        Select(0u2800); Clear(); SetWidth(512) # 点字ブランク
     endif
 
 # 下線付きの全角・半角形を元に戻す
@@ -13612,6 +13821,15 @@ while (i < \$argc)
             SetWidth(1024)
             j += 1
             k += 1
+        endloop
+
+        # 点字
+        j = 0
+        while (j < 256)
+            Select(${address_braille} + j); Copy()
+            Select(0u2800 + j); Paste()
+            SetWidth(512)
+            j += 1
         endloop
     endif
 
@@ -13787,9 +14005,11 @@ if [ "${patch_only_flag}" = "false" ]; then
         2> $redirection_stderr || exit 4
     $fontforge_command -script ${tmpdir}/${modified_kana_generator} \
         2> $redirection_stderr || exit 4
-    $fontforge_command -script ${tmpdir}/${modified_hentai_kana_generator} \
-        2> $redirection_stderr || exit 4
     $fontforge_command -script ${tmpdir}/${modified_kanzi_generator} \
+        2> $redirection_stderr || exit 4
+    $fontforge_command -script ${tmpdir}/${modified_dummy_generator} \
+        2> $redirection_stderr || exit 4
+    $fontforge_command -script ${tmpdir}/${modified_hentai_kana_generator} \
         2> $redirection_stderr || exit 4
     $fontforge_command -script ${tmpdir}/${modified_latin_kana_generator} \
         2> $redirection_stderr || exit 4
