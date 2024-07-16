@@ -381,10 +381,11 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       <FeatureIndex index="18" value="22"/>\
       <FeatureIndex index="19" value="23"/>\
       <FeatureIndex index="20" value="24"/>\
-      ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(14 + ss フィーチャの数) を追加
+      <FeatureIndex index="21" value="25"/>\
+      ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(12 + ss フィーチャの数)、value(index + 4) を追加
       if [ "${calt_ok_flag}" = "true" ]; then # calt対応であればさらに1つ index 追加
-        sed -i.bak -e 's,<FeatureIndex index="20" value=".."/>,<FeatureIndex index="20" value="24"/>\
-        <FeatureIndex index="21" value="25"/>\
+        sed -i.bak -e 's,<FeatureIndex index="21" value=".."/>,<FeatureIndex index="21" value="25"/>\
+        <FeatureIndex index="22" value="26"/>\
         ,' "${P%%.ttf}.ttx"
       fi
     else # ss非対応の場合
