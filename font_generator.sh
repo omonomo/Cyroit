@@ -10336,7 +10336,7 @@ while (i < SizeOf(input_list))
     # 上の細い横線
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(0, 600)
+    Move(0, 570)
     Select(0u253c); Copy() # ┼
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
@@ -10352,7 +10352,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u2537) # ┷
     SelectMore(0u253c) # ┼
     SelectMore(0u253f) # ┿
-    PasteWithOffset(0, 200)
+    PasteWithOffset(0, 230)
     RemoveOverlap()
     Simplify()
     SetWidth(1024)
@@ -10360,7 +10360,7 @@ while (i < SizeOf(input_list))
     # 下の細い横線
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(0, -600)
+    Move(0, -570)
     Select(0u253c); Copy() # ┼
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
@@ -10376,7 +10376,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u252f) # ┯
     SelectMore(0u253c) # ┼
     SelectMore(0u253f) # ┿
-    PasteWithOffset(0, -200)
+    PasteWithOffset(0, -230)
     RemoveOverlap()
     Simplify()
     SetWidth(1024)
@@ -10432,7 +10432,7 @@ while (i < SizeOf(input_list))
     # 上の太い横線
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(0, 600)
+    Move(0, 570)
     Select(0u254b); Copy() # ╋
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
@@ -10448,7 +10448,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u253b) # ┻
     SelectMore(0u2542) # ╂
     SelectMore(0u254b) # ╋
-    PasteWithOffset(0, 200)
+    PasteWithOffset(0, 230)
     RemoveOverlap()
     Simplify()
     SetWidth(1024)
@@ -10456,7 +10456,7 @@ while (i < SizeOf(input_list))
     # 下の太い横線
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
-    Move(0, -600)
+    Move(0, -570)
     Select(0u254b); Copy() # ╋
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
@@ -10472,7 +10472,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u2533) # ┳
     SelectMore(0u2542) # ╂
     SelectMore(0u254b) # ╋
-    PasteWithOffset(0, -200)
+    PasteWithOffset(0, -230)
     RemoveOverlap()
     Simplify()
     SetWidth(1024)
