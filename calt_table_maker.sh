@@ -96,7 +96,7 @@ glyph_value() {
 # LookupType 6 を作成するための関数 ||||||||||||||||||||||||||||||||||||||||
 
 chain_context() {
-  local opti optiCheck0 optiCheck1 # 最適化を実行するか (optional の場合、0: 実行、1: データベース作成のみ、2: 完全スキップ)
+  local optim optimCheck # 最適化を実行するか (optional の場合、0: 実行、1: データベース作成のみ、2: 完全スキップ)
   local substIndex # 設定番号
   local backtrack bt addBt removeBt # 1文字前
   local input ip removeIp # 入力
@@ -108,7 +108,7 @@ chain_context() {
   local aheadMax # lookAheadのIndex2以降はその数(最大のIndexNo)を入れる(当然内容は全て同じになる)
   local overlap # 全ての設定が重複しているか
   local S T line0 line1
-  opti="${1}"
+  optim="${1}"
   substIndex="${3}"
   backtrack=(${4})
   input=(${5})
@@ -205,9 +205,8 @@ chain_context() {
 
   if [ ${listNo} -le ${optimizeListNo} ]; then # 指定の listNo 以下で
     if [ "${optimize_mode}" == "force" ] || \
-      [[ "${optimize_mode}" == "optional" && ${opti} -le 1 ]]; then # 最適化を実行する場合
-      optiCheck0=0
-      optiCheck1=0
+      [[ "${optimize_mode}" == "optional" && ${optim} -le 1 ]]; then # 最適化を実行する場合
+      optimCheck=0
 
 # input --------------------
 
@@ -220,7 +219,7 @@ chain_context() {
         bt=${bt// /,}
         if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
         la=${la// /,}
-        if [ "${optimize_mode}" == "force" ] || [ ${opti} -eq 0 ]; then # 最適化処理を実行する場合
+        if [ "${optimize_mode}" == "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
           eval echo ${S}{${bt}}"@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.backOnly.tmp.txt" # lookAhead が無い設定のチェック用に保存
           eval echo ${S}"@"{${la}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.aheadOnly.tmp.txt" # backtrack が無い設定のチェック用に保存
         fi
@@ -235,7 +234,7 @@ chain_context() {
           eval echo ${S}{${bt}}{${la}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.long.tmp.txt" # 前後2文字以上も含めた文字列を保存
         fi
 
-        if [ "${optimize_mode}" == "optional" ] && [ ${opti} -ne 0 ]; then # 最適化処理をスキップする場合
+        if [ "${optimize_mode}" == "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
           overlap="false" # 無条件でチェックリストに追加
           if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then
             cat "${tmpdir}/${checkListName}.long.tmp.txt" >> "${tmpdir}/${checkListName}Long${S}.txt"
@@ -243,7 +242,7 @@ chain_context() {
             cat "${tmpdir}/${checkListName}.short.tmp.txt" >> "${tmpdir}/${checkListName}Short${S}.txt"
           fi
 
-        else # "${optimize_mode}" == "optional" && ${opti} -ne 0
+        else # "${optimize_mode}" == "optional" && ${optim} -ne 0
           if [[ ! -e "${tmpdir}/${checkListName}Short${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
             :>| "${tmpdir}/${checkListName}Short${S}.txt"
           fi
@@ -288,16 +287,12 @@ chain_context() {
             removeIp+=" ${S}"
           fi
 
-        fi # "${optimize_mode}" == "optional" && ${opti} -ne 0
+        fi # "${optimize_mode}" == "optional" && ${optim} -ne 0
       done # S
 
       if [ -n "${removeIp}" ]; then
         echo "Remove input setting${removeIp//_/}"
-        if [ ${opti} -ge 1 ]; then # 最適化が有効となる条件なのにスキップするように設定してある場合、加算
-          optiCheck1=$((optiCheck1 + 1))
-        fi
-      elif [ ${opti} -eq 0 ]; then # 最適化が有効にならない条件なのにスキップしないように設定してある場合、加算
-        optiCheck0=$((optiCheck0 + 1))
+        optimCheck=$((optimCheck + 1)) # 最適化が有効なので + 1
       fi
       if [ -z "${input}" ]; then # input のグリフが全て重複していた場合、設定を追加せず ruturn
         echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
@@ -315,7 +310,7 @@ chain_context() {
 
           ip="${input[@]}"
           ip=${ip// /,}
-          if [ "${optimize_mode}" == "force" ] || [ ${opti} -eq 0 ]; then # 最適化処理を実行する場合
+          if [ "${optimize_mode}" == "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
             eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.backOnly.tmp.txt" # lookAhead がない設定のチェック用に保存
           fi
           if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
@@ -328,11 +323,11 @@ chain_context() {
           laX=${laX// /,}
           eval echo ${S}{${ip}}{${la}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.back.tmp.txt" # 前後2文字以上も含めた文字列を保存
 
-          if [ "${optimize_mode}" == "optional" ] && [ ${opti} -ne 0 ]; then # 最適化処理をスキップする場合
+          if [ "${optimize_mode}" == "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
             overlap="false" # 無条件でチェックリストに追加
             cat "${tmpdir}/${checkListName}.back.tmp.txt" >> "${tmpdir}/${checkListName}Back${S}.txt"
 
-          else # "${optimize_mode}" == "optional" && ${opti} -ne 0
+          else # "${optimize_mode}" == "optional" && ${optim} -ne 0
             if [[ ! -e "${tmpdir}/${checkListName}Back${S}.txt" ]]; then # 既設定ファイルが無い場合は空のファイルを作成
               :>| "${tmpdir}/${checkListName}Back${S}.txt"
             fi
@@ -354,7 +349,7 @@ chain_context() {
               removeBt+=" ${S}"
             fi
 
-          fi # "${optimize_mode}" == "optional" && ${opti} -ne 0
+          fi # "${optimize_mode}" == "optional" && ${optim} -ne 0
         done # S
 
         if [ -n "${removeBt}" ]; then
@@ -367,11 +362,7 @@ chain_context() {
             done
             printf "Difference in backtrack settings: %s\n" "$(echo ${addBt//_/} | tr -s "[:space:]")"
           fi
-          if [ ${opti} -ge 1 ]; then # 最適化が有効となる条件なのにスキップするように設定してある場合、加算
-            optiCheck1=$((optiCheck1 + 1))
-          fi
-        elif [ ${opti} -eq 0 ]; then # 最適化が有効にならない条件なのにスキップしないように設定してある場合、加算
-          optiCheck0=$((optiCheck0 + 1))
+          optimCheck=$((optimCheck + 1)) # 最適化が有効なので + 1
         fi
         if [ "${bt}" != "|" ] && [ -z "${backtrack}" ]; then # backtrack のグリフが全て重複していた場合、設定を追加せず ruturn
           echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
@@ -390,7 +381,7 @@ chain_context() {
 
           ip="${input[@]}"
           ip=${ip// /,}
-          if [ "${optimize_mode}" == "force" ] || [ ${opti} -eq 0 ]; then # 最適化処理を実行する場合
+          if [ "${optimize_mode}" == "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
             eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # backtrack が無い設定のチェック用に保存
           fi
           if [ -n "${backtrack}" ]; then bt="${backtrack[@]}"; else bt="@"; fi
@@ -403,11 +394,11 @@ chain_context() {
           laX=${laX// /,}
           eval echo ${S}{${ip}}{${bt}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.ahead.tmp.txt" # 前後2文字以上も含めた文字列を保存
 
-          if [ "${optimize_mode}" == "optional" ] && [ ${opti} -ne 0 ]; then # 最適化処理をスキップする場合
+          if [ "${optimize_mode}" == "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
             overlap="false" # 無条件でチェックリストに追加
             cat "${tmpdir}/${checkListName}.ahead.tmp.txt" >> "${tmpdir}/${checkListName}Ahead${S}.txt"
 
-          else # "${optimize_mode}" == "optional" && ${opti} -ne 0
+          else # "${optimize_mode}" == "optional" && ${optim} -ne 0
             if [[ ! -e "${tmpdir}/${checkListName}Ahead${S}.txt" ]]; then # 既設定ファイルが無い場合は空のファイルを作成
               :>| "${tmpdir}/${checkListName}Ahead${S}.txt"
             fi
@@ -429,7 +420,7 @@ chain_context() {
               removeLa+=" ${S}"
             fi
 
-          fi # "${optimize_mode}" == "optional" && ${opti} -ne 0
+          fi # "${optimize_mode}" == "optional" && ${optim} -ne 0
         done # S
 
         if [ -n "${removeLa}" ]; then
@@ -442,11 +433,7 @@ chain_context() {
             done
             printf "Difference in lookAhead settings: %s\n" "$(echo ${addLa//_/} | tr -s "[:space:]")"
           fi
-          if [ ${opti} -ge 1 ]; then # 最適化が有効となる条件なのにスキップするように設定してある場合、加算
-            optiCheck1=$((optiCheck1 + 1))
-          fi
-        elif [ ${opti} -eq 0 ]; then # 最適化が有効にならない条件なのにスキップしないように設定してある場合、加算
-          optiCheck0=$((optiCheck0 + 1))
+          optimCheck=$((optimCheck + 1)) # 最適化が有効なので + 1
         fi
         if [ "${la}" != "|" ] && [ -z "${lookAhead}" ]; then # lookAhead のグリフが全て重複していた場合、設定を追加せず ruturn
           echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
@@ -457,9 +444,9 @@ chain_context() {
 
 # ---
 
-      if [ ${opti} -ge 1 ] && [ ${optiCheck1} -ge 1 ]; then # input、backtrack、lookAhead の全てで最適化が有効ななる条件なのに
+      if [ ${optim} -ge 1 ] && [ ${optimCheck} -ge 1 ]; then # input、backtrack、lookAhead のいずれかで最適化が有効な条件なのに
           echo "Attention: Optimization flag is set to false" # スキップするように設定してある場合、注意を表示
-      elif [ ${opti} -eq 0 ] && [ ${optiCheck0} -ge 3 ]; then # input、backtrack、lookAhead の全てで最適化が有効にならない条件なのに
+      elif [ ${optim} -eq 0 ] && [ ${optimCheck} -eq 0 ]; then # input、backtrack、lookAhead の全てで最適化が有効ではない条件なのに
         echo "Attention: Optimization flag is set to true" # スキップしないように設定してある場合、注意を表示
       fi
 
@@ -2109,10 +2096,11 @@ input=(${highSpaceLN[@]} ${highSpaceCN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
-# ○左が、右上が開いている文字で 右が左寄り、均等な文字の場合 両下が開いている大文字 左に移動
-backtrack=(${highSpaceRN[@]} ${highSpaceCN[@]})
+# ○左が、右上が開いている文字で 右が左寄り、幅広、均等な文字の場合 両下が開いている大文字 左に移動
+backtrack=(${highSpaceRR[@]} ${highSpaceCR[@]} \
+${highSpaceRN[@]} ${highSpaceCN[@]})
 input=(${lowSpaceCapitalCN[@]})
-lookAhead=(${gravityLN[@]} ${gravityEN[@]})
+lookAhead=(${gravityLN[@]} ${gravityWN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # 丸い文字に関する例外処理 1 ----------------------------------------
@@ -2785,7 +2773,7 @@ backtrack=(${highSpaceRR[@]} ${highSpaceCR[@]} \
 ${highSpaceRN[@]} ${highSpaceCN[@]})
 input=(${_TN[@]})
 lookAhead=(${highSpaceLN[@]} ${highSpaceCN[@]})
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ○左が、右が丸い文字、PRÞ の場合 右寄り、均等な小文字、丸い文字 右に移動 (丸い文字の処理と統合)
 backtrack=(${circleRR[@]} ${_PR[@]} ${_RR[@]} ${_THR[@]})
@@ -3733,26 +3721,20 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # I に関する例外処理 4 ----------------------------------------
 
-# ○左が左寄り、右寄り、均等、中間、Vの字の場合 I 移動しない
+# ○左が左寄り、右寄り、幅広、均等、中間、Vの字の場合 I 移動しない
 backtrack=(${outLgravityLR[@]} ${gravitySmallRR[@]} ${gravitySmallER[@]} ${gravitySmallMR[@]} ${gravityVR[@]} \
-${outBDLgravityLN[@]} ${gravityRN[@]} ${outOQgravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+${outBDLgravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${outOQgravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
  #backtrack=(${gravityLR[@]} ${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} ${gravityVR[@]} \
- #${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
+ #${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 input=(${_IN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
-
-# ○左が幅広の文字の場合 I 右に移動
-backtrack=(${gravityWN[@]})
-input=(${_IN[@]})
-lookAhead=("")
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○右が右寄り、中間、Vの小文字の場合 I 右に移動
 backtrack=("")
 input=(${_IN[@]})
 lookAhead=(${gravitySmallRN[@]} ${gravitySmallMN[@]} ${gravitySmallVN[@]})
-chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○右が左寄り、均等な文字、右寄り、中間、Vの大文字で その右が Vの字、I 以外の狭い文字の場合 I 右に移動
 backtrack1=("")
@@ -3760,7 +3742,7 @@ backtrack=("")
 input=(${_IN[@]})
 lookAhead=(${gravityLN[@]} ${gravityCapitalRN[@]} ${gravityEN[@]} ${gravityCapitalMN[@]} ${gravityCapitalVN[@]})
 lookAhead1=(${gravityVN[@]} ${gravitySmallCN[@]} ${_JN[@]})
-chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}" "${lookAhead1[*]}"
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
 # 左が丸い文字に関する例外処理 4 ----------------------------------------
 
@@ -4974,6 +4956,13 @@ ${gravitySmallWN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # 右側が元に戻って詰まった間隔を整える処理 ----------------------------------------
+
+# □左が幅広の小文字で 右が幅広の文字の場合 Vの字 元に戻る
+backtrack=(${gravitySmallWR[@]} \
+${gravitySmallWN[@]})
+input=(${gravityVR[@]})
+lookAhead=(${gravityWN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # □左が幅広の文字、OQ 以外の均等な大文字で 右が左寄り、OQ 以外の均等な大文字、M の場合 幅広、均等な大文字、I 元に戻る
 backtrack=(${gravityWN[@]} ${outOQgravityCapitalEN[@]})
