@@ -4266,7 +4266,7 @@ for S in ${class[@]}; do
     eval lookAhead=(\${${S}N[@]})
     eval lookAhead1=(\${${S}N[@]})
     chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
-     fi
+  fi
 
   # △△△△ △△△△左から元に戻る (広がる)
   eval backtrack1=(\${${S}N[@]})
