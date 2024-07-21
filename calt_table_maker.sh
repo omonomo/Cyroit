@@ -18,7 +18,7 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-glyphNo="14328" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
+glyphNo="14329" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
  #glyphNo="24417" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
