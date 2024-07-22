@@ -13466,7 +13466,7 @@ while (i < \$argc)
         SetWidth(1024)
         glyphName = GlyphInfo("Name")
         Select(${address_ss_zenhan} + num0[j]) # ss変換後横書き
- #        Select(orig[j]) # 返還前横書き
+ #        Select(orig[j]) # 変換前横書き
         AddPosSub(lookupSub, glyphName)
         Select(${address_ss_vert} + num1[j]) # ss変換後縦書き
  #        Select(${address_vert} + num1[j]) # vert変換後ss変換前縦書き
