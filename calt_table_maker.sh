@@ -568,8 +568,8 @@ calt_table_maker_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -n number  Set glyph number of \"A moved left\""
-    echo "  -b         Make kerning settings for basic Latin characters only"
-    echo "  -s         Don't Make calt settings for Latin characters"
+    echo "  -b         Make kerning settings for basic latin characters only"
+    echo "  -s         Don't make calt settings for latin characters"
     echo "  -O         Enable force optimization process"
     echo "  -o         Enable optimization process"
     exit 0
@@ -604,11 +604,11 @@ do
             glyphNo="${OPTARG}"
             ;;
         "b" )
-            echo "Option: Make calt settings for basic Latin characters only"
+            echo "Option: Make calt settings for basic latin characters only"
             basic_only_flag="true"
             ;;
         "s" )
-            echo "Option: Don't Make calt settings for Latin characters"
+            echo "Option: Don't make calt settings for latin characters"
             symbol_only_flag="true"
             ;;
         "O" )
@@ -5298,6 +5298,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 pre_add_lookup
 
 # アルファベット ++++++++++++++++++++++++++++++++++++++++
+if [ "${symbol_only_flag}" = "false" ]; then
 
 # 右側が左に寄って詰まった間隔を整える処理 ----------------------------------------
 
@@ -5326,6 +5327,7 @@ input=(${gravityEN[@]})
 lookAhead=(${gravityLN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
+fi
 # 記号類 ++++++++++++++++++++++++++++++++++++++++
 
 # |~: に関する処理 4回目 ----------------------------------------
