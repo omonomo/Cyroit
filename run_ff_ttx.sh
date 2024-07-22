@@ -34,6 +34,7 @@ draft_flag="false" # 下書きモード
 leaving_tmp_flag="true" # 一時ファイル残す
 reuse_list_flag="false" # 生成済みのリストを使う
 table_modify_flag="true" # フィーチャテーブルを編集する
+symbol_only_flag="false" # カーニング設定を記号、桁区切りのみにする
 
 font_version="0.1.0"
 
@@ -65,15 +66,20 @@ option_format_tm() { # table_modificator 用のオプションを整形 (戻り�
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
   local reuse_list_flag # 作成済みのリストを使用するか
+  local symbol_only_flag # カーニング設定を記号、桁区切りのみにするか
   opt="${2}"
   leaving_tmp_flag="${3}"
   reuse_list_flag="${4}"
+  symbol_only_flag="${5}"
 
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションか 引数に l がある場合
     opt="${opt}l"
   fi
   if [ "${reuse_list_flag}" != "false" ]; then # -r オプションがある場合
     opt="${opt}r"
+  fi
+  if [ "${symbol_only_flag}" != "false" ]; then # -s オプションがある場合
+    opt="${opt}s"
   fi
   eval "${1}=\${opt}" # 戻り値を入れる変数名を1番目の引数に指定する
 }
@@ -101,6 +107,7 @@ forge_ttx_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -r         Reuse an existing list"
+    echo "  -s         Don't make calt settings for latin characters"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -n string  Set fontfamily suffix (\"string\")"
     echo "  -d         Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
@@ -115,7 +122,7 @@ echo "*** FontForge and TTX runner ***"
 echo
 
 # オプションを取得
-while getopts hxlrN:n:dCpF OPT
+while getopts hxlrsN:n:dCpF OPT
 do
     case "${OPT}" in
         "h" )
@@ -134,6 +141,10 @@ do
         "r" )
             echo "Option: Reuse an existing list"
             reuse_list_flag="true"
+            ;;
+        "s" )
+            echo "Option: Don't make calt settings for latin characters"
+            symbol_only_flag="true"
             ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
@@ -277,7 +288,7 @@ case ${mode} in
   "-F" ) opt_tm="o" ;;
      * ) opt_tm="b" ;;
 esac
-option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}"
+option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}" "${symbol_only_flag}"
 if [ -n "${opt_tm}" ]; then
   sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else

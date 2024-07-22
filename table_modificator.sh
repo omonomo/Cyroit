@@ -46,6 +46,7 @@ calt_insert_flag="true" # caltテーブルを挿入するか
 patch_only_flag="false" # caltテーブルのみ編集
 calt_ok_flag="true" # フォントがcaltに対応しているか
 
+symbol_only_flag="false" # カーニング設定を記号、桁区切りのみにするか
 basic_only_flag="false" # カーニング設定を基本ラテン文字に限定するか
 optimize_flag="false" # なんちゃって最適化ルーチンを実行するか
 
@@ -55,15 +56,20 @@ trap "exit 3" HUP INT QUIT
 option_format_cm() { # calt_table_maker 用のオプションを整形 (戻り値: 整形したオプション)
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
+  local symbol_only_flag # カーニング設定を記号、桁区切りのみにするか
   local basic_only_flag # カーニング設定を基本ラテン文字に限定するか
   local optimize_flag="false" # なんちゃって最適化ルーチンを実行するか
   opt="${2}"
   leaving_tmp_flag="${3}"
-  basic_only_flag="${4}"
-  optimize_flag="${5}"
+  symbol_only_flag="${4}"
+  basic_only_flag="${5}"
+  optimize_flag="${6}"
 
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションがある場合
     opt="${opt}l"
+  fi
+  if [ "${symbol_only_flag}" != "false" ]; then # -s オプションがある場合
+    opt="${opt}s"
   fi
   if [ "${basic_only_flag}" != "false" ]; then # -b オプションがある場合
     opt="${opt}b"
@@ -104,6 +110,7 @@ table_modificator_help()
     echo "  -m         Disable edit cmap tables"
     echo "  -g         Disable edit GSUB tables"
     echo "  -t         Disable edit other tables"
+    echo "  -s         Don't make calt settings for latin characters"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
     echo "  -b         Make kerning settings for basic Latin characters only"
@@ -116,7 +123,7 @@ echo "= Font tables Modificator ="
 echo
 
 # Get options
-while getopts hxlrN:mgtCpbo OPT
+while getopts hxlrN:mgtsCpbo OPT
 do
     case "${OPT}" in
         "h" )
@@ -152,6 +159,10 @@ do
         "t" )
             echo "Option: Disable edit other tables"
             other_flag="false"
+            ;;
+        "s" )
+            echo "Option: Don't make calt settings for latin characters"
+            symbol_only_flag="true"
             ;;
         "C" )
             echo "Option: End just before editing calt feature"
@@ -332,7 +343,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         fi
         caltlist_txt=$(find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1)
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
-          option_format_cm opt_fg "" "${leaving_tmp_flag}" "${basic_only_flag}" "${optimize_flag}"
+          option_format_cm opt_fg "" "${leaving_tmp_flag}" "${symbol_only_flag}" "${basic_only_flag}" "${optimize_flag}"
           sh calt_table_maker.sh -"${opt_fg}"
         fi
         # フィーチャリストを変更
