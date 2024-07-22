@@ -106,18 +106,18 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 設定方法については、[Fira Code](https://github.com/tonsky/FiraCode) の[説明](https://github.com/tonsky/FiraCode/wiki/How-to-enable-stylistic-sets)が分かりやすいと思います。  
 
-| タグ名 | サンプル                                             | 内容                                                                          |
-| ------ | ---------------------------------------------------- | ----------------------------------------------------------------------------- |
-| ss01   | <img alt="ss01" src="./images/ss01.png" width="260"> | 全角スペース可視化。                                                          |
-| ss02   | <img alt="ss02" src="./images/ss02.png" width="260"> | 半角スペース可視化。                                                          |
-| ss03   | <img alt="ss03" src="./images/ss03.png" width="260"> | 3桁区切りマーク表示。                                                         |
-| ss04   | <img alt="ss04" src="./images/ss04.png" width="260"> | 4桁区切りマーク表示。                                                         |
-| ss05   | <img alt="ss05" src="./images/ss05.png" width="260"> | 小数小文字化。                                                                |
-| ss06   | <img alt="ss06" src="./images/ss06.png" width="260"> | 全角・半角形の下線、点字の外枠消去。                                          |
-| ss07   | <img alt="ss07" src="./images/ss07.png" width="260"> | 識別性向上グリフ無効化。                                                      |
-| ss08   | <img alt="ss08" src="./images/ss08.png" width="260"> | DQVZ のグリフ変更。                                                           |
-| ss09   | <img alt="ss09" src="./images/ss09.png" width="260"> | JIS に含まれる罫線を全角に置換 (環境によっては全角にならない場合があります)。 |
-| ss10   | <img alt="ss10" src="./images/ss10.png" width="260"> | 0のスラッシュ消去。                                                           |
+| タグ名 | サンプル                                             | 内容                                                                        |
+| ------ | ---------------------------------------------------- | --------------------------------------------------------------------------- |
+| ss01   | <img alt="ss01" src="./images/ss01.png" width="260"> | 全角スペース可視化。                                                        |
+| ss02   | <img alt="ss02" src="./images/ss02.png" width="260"> | 半角スペース可視化。                                                        |
+| ss03   | <img alt="ss03" src="./images/ss03.png" width="260"> | 3桁区切りマーク表示。                                                       |
+| ss04   | <img alt="ss04" src="./images/ss04.png" width="260"> | 4桁区切りマーク表示。                                                       |
+| ss05   | <img alt="ss05" src="./images/ss05.png" width="260"> | 小数小文字化。                                                              |
+| ss06   | <img alt="ss06" src="./images/ss06.png" width="260"> | 全角・半角形の下線、点字の外枠消去。                                        |
+| ss07   | <img alt="ss07" src="./images/ss07.png" width="260"> | 識別性向上グリフ無効化。                                                    |
+| ss08   | <img alt="ss08" src="./images/ss08.png" width="260"> | DQVZ のグリフ変更。                                                         |
+| ss09   | <img alt="ss09" src="./images/ss09.png" width="260"> | JIS に含まれる罫線を全角に置換 (環境によって全角にならないことがあります)。 |
+| ss10   | <img alt="ss10" src="./images/ss10.png" width="260"> | 0のスラッシュ消去。                                                         |
 
 ## ライセンス
 
@@ -154,7 +154,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 #### `run_ff_ttx.sh`
 
 一連の処理を自動化します。全スクリプトの中のリーダーです。  
-`-F` オプションを付けずに生成したフォントは、表示確認用になります。  
+`-F` オプションを付けずに生成したフォントは、表示確認用の未完成品になります。  
 パラメータとして引数に font_generator のオプション (`hVxfNn` 以外) をハイフン無しで羅列することにより、生成フォントをカスタマイズすることができます。  
 
 (例) 接尾語に「NoNF」を付けて、Nerd Fonts 抜きの基本版 (完成品) を生成する場合  
@@ -168,7 +168,7 @@ Cyroit の生成には5つの Shell スクリプトを使用します。
 `-l` 一時作成ファイルを残したままにします。`-d` `-C` `-p` の場合、`-l` に関係なく一時作成ファイルを残します。  
 `-r` cmap や calt 用のテーブルファイルがすでに存在していた場合、作り直さずにそのファイルを使用します。  
 `-s` calt 作成時にカーニング以外の設定 (桁区切り、記号の移動) のみ作成します。  
-　　文字間隔を調整しない代わりにフォントの動作が軽くなります。  
+　　文字間隔を調整しない代わりに動作の軽いフォントを生成します。  
 `-N string` フォントファミリー名を *string* にします。省略すると「Cyroit」になります。  
 `-n string` フォントファミリー名の接尾語 (「BS」や「SP」の部分) を *string* にします。  
 `-d` 下書きモード。時間のかかる処理を飛ばします。改変したグリフの確認用です。  
