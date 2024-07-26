@@ -458,7 +458,7 @@ chain_context() {
   if [ -n "${lookupIndex}" ]; then
     echo "Make ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
   else
-    echo "Make ${caltList} index ${substIndex}: Lookup = no number"
+    echo "Make ${caltList} index ${substIndex}: Lookup = none"
   fi
 
   echo "<ChainContextSubst index=\"${substIndex}\" Format=\"3\">" >> "${caltList}.txt"
