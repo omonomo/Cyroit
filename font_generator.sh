@@ -3089,11 +3089,11 @@ while (i < SizeOf(input_list))
     # バーの中身
     Select(0u2588); Copy() # Full block
     Select(65552); Paste() # Temporary glyph
-    Scale(106, 38)
+    Scale(106, 37)
     Copy()
-    Select(0uee03); PasteWithOffset(92 + 60, 0) # 
+    Select(0uee03); PasteWithOffset(99 + 60, 0) # 
     Select(0uee04); PasteInto(); SetWidth(500) # 
-    Select(0uee05); PasteWithOffset(-92 - 60, 0) # 
+    Select(0uee05); PasteWithOffset(-99 - 60, 0) # 
     # はみ出た部分をカット
     Select(0u2588); Copy() # Full block
     Select(65552); Paste() # Temporary glyph
