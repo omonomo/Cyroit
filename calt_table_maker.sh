@@ -4156,6 +4156,13 @@ lookAhead=(${gravityLR[@]} ${gravityCapitalRR[@]} ${gravityER[@]} \
 ${gravityLN[@]} ${gravityCapitalRN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
+# △左が eo 以外の中間の文字で 右が左寄り、均等な文字の場合 L 以外の左寄り、均等な文字 元に戻る
+backtrack=(${outeogravityMN[@]})
+input=(${outLgravityLR[@]} ${gravityER[@]})
+lookAhead=(${gravityLR[@]} ${gravityER[@]} \
+${gravityLN[@]} ${gravityEN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
 # 移動しない、元に戻らない処理 ----------------------------------------
 
 # △左が均等、右が丸い大文字の場合 右寄り、中間の文字 左に移動しない
