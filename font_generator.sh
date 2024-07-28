@@ -1187,6 +1187,66 @@ while (i < SizeOf(input_list))
  #    Select(0u1e26) # Ḧ
  #    Select(0u2c67) # Ⱨ
 
+# I (頭とつま先を少しスリムに)
+    # 中心の棒を保管
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    Scale(50, 100)
+    Select(0u0049); Copy() # I
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    # 頭とつま先をカット
+    Select(0u0049); Copy() # I
+    Move(5, 0)
+    PasteWithOffset(-5, 0)
+    OverlapIntersect()
+    # 合成
+    Select(65552);  Copy() # Temporary glyph
+    Select(0u0049); PasteInto()
+    SetWidth(500)
+    RemoveOverlap()
+
+    Select(65552); Clear() # Temporary glyph
+
+    Select(0u2588); Copy() # Full block
+    Select(0u00cc); PasteWithOffset(0,  1035); OverlapIntersect() # Ì
+    Select(0u00cd); PasteWithOffset(0,  1035); OverlapIntersect() # Í
+    Select(0u00ce); PasteWithOffset(0,  1035); OverlapIntersect() # Î
+    Select(0u00cf); PasteWithOffset(0,  1035); OverlapIntersect() # Ï
+    Select(0u0128); PasteWithOffset(0,  1035); OverlapIntersect() # Ĩ
+    Select(0u012a); PasteWithOffset(0,  1035); OverlapIntersect() # Ī
+    Select(0u012c); PasteWithOffset(0,  1035); OverlapIntersect() # Ĭ
+    Select(0u012e); PasteWithOffset(0, -1000); OverlapIntersect() # Į
+    if (input_list[i] == "${input_latin_regular}")
+        Move(-5, 0)
+    else
+        Move(-11, 0)
+    endif
+    Select(0u0130); PasteWithOffset(0,  1035); OverlapIntersect() # İ
+    Select(0u0208); PasteWithOffset(0,  1035); OverlapIntersect() # Ȉ
+    Select(0u020a); PasteWithOffset(0,  1035); OverlapIntersect() # Ȋ
+    Select(0u1e2e); PasteWithOffset(0,  1035); OverlapIntersect() # Ḯ
+    Select(0u1ec8); PasteWithOffset(0,  1035); OverlapIntersect() # Ỉ
+    Select(0u1eca); PasteWithOffset(0, -1001); OverlapIntersect() # Ị
+    Select(0u0049); Copy() # I
+    Select(0u00cc); PasteInto(); SetWidth(500) # Ì
+    Select(0u00cd); PasteInto(); SetWidth(500) # Í
+    Select(0u00ce); PasteInto(); SetWidth(500) # Î
+    Select(0u00cf); PasteInto(); SetWidth(500) # Ï
+    Select(0u0128); PasteInto(); SetWidth(500) # Ĩ
+    Select(0u012a); PasteInto(); SetWidth(500) # Ī
+    Select(0u012c); PasteInto(); SetWidth(500) # Ĭ
+    Select(0u012e); PasteInto(); RemoveOverlap(); SetWidth(500) # Į
+    Select(0u0130); PasteInto(); SetWidth(500) # İ
+    Select(0u0208); PasteInto(); SetWidth(500) # Ȉ
+    Select(0u020a); PasteInto(); SetWidth(500) # Ȋ
+    Select(0u1e2e); PasteInto(); SetWidth(500) # Ḯ
+    Select(0u1ec8); PasteInto(); SetWidth(500) # Ỉ
+    Select(0u1eca); PasteInto(); SetWidth(500) # Ị
+ #    Select(0u0197) # Ɨ
+ #    Select(0u01cf) # Ǐ
+ #    Select(0u1e2c) # Ḭ
+
 # K (ほんの少し右へ移動)
     Select(0u004b) # K
     SelectMore(0u0136) # Ķ
