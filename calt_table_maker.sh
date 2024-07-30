@@ -2562,10 +2562,10 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
  #lookAhead=(${gravityCN[@]})
  #chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ○左が、丸い文字で 右が左寄り、中間の文字、右寄りの大文字の場合 eo 以外の中間の文字 移動しない
+# ○左が、丸い文字で 右が左寄り、右寄り、均等な大文字の場合 eo 以外の中間の文字 移動しない
 backtrack=(${circleSmallCR[@]})
 input=(${outeogravityMN[@]})
-lookAhead=(${gravityLN[@]} ${gravityCapitalRN[@]} ${gravityEN[@]})
+lookAhead=(${gravityCapitalLN[@]} ${gravityCapitalRN[@]} ${gravityCapitalEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ○左が Vの字で 右が狭い文字の場合 aSs 右に移動しない
@@ -3990,22 +3990,16 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # 右を見て右に移動させる通常処理 ----------------------------------------
 
-# ○右側基準で 狭い文字 右に移動 (例外で JIjrt を省く)
-backtrack=("")
-input=(${outjrtgravitySmallCN[@]})
-lookAhead=(${gravityLN[@]} ${gravityEN[@]})
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
-
-# ○右側基準で Vの字、狭い文字 右に移動 (例外で JIjrt を省く)
-backtrack=("")
-input=(${gravityVN[@]} ${outjrtgravitySmallCN[@]})
-lookAhead=(${gravityRN[@]} ${gravityMN[@]})
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
-
 # ○右側基準で Vの字 右に移動
 backtrack=("")
 input=(${gravityVN[@]})
 lookAhead=(${gravityCN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+
+# ○右側基準で 狭い文字 右に移動 (例外で JIjrt を省く)
+backtrack=("")
+input=(${outjrtgravitySmallCN[@]})
+lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○右側基準で 狭い文字 右に移動 (例外で I を省く)
@@ -4014,6 +4008,16 @@ input=(${gravitySmallCN[@]} ${_JN[@]})
 lookAhead=(${gravityVN[@]})
  #lookAhead=(${gravityVN[@]} ${gravityCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+
+# 2つ右を見て移動させる例外処理 4 ----------------------------------------
+
+# ○右が右寄り、中間の文字で その右が Vの字、狭い文字の場合 Vの字 右に移動
+backtrack1=("")
+backtrack=("")
+input=(${gravityVN[@]})
+lookAhead=(${gravityRN[@]} ${gravityMN[@]})
+lookAhead1=(${gravityVN[@]} ${gravityCN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
 # 2つ左を見て移動させる例外処理 2 ----------------------------------------
 
@@ -4163,12 +4167,27 @@ if [ "${symbol_only_flag}" = "false" ]; then
 
 # 右側が元に戻って詰まった間隔を整える処理 1 ----------------------------------------
 
-# ▲左が、丸い文字で 右が左寄り、中間の文字、右寄りの大文字の場合 eo 以外の中間の文字 左に移動
+# ▲左が、丸い文字で 右が左寄り、右寄り、均等な大文字の場合 eo 以外の中間の文字 左に移動
 backtrack=(${circleSmallCN[@]})
 input=(${outeogravityMN[@]})
-lookAhead=(${gravityLL[@]} ${gravityCapitalRL[@]} ${gravityEL[@]} \
-${gravityLN[@]} ${gravityEN[@]})
+lookAhead=(${gravityCapitalLL[@]} ${gravityCapitalRL[@]} ${gravityCapitalEL[@]} \
+${gravityCapitalLR[@]} ${gravityWR[@]} ${gravityCapitalER[@]} \
+${gravityCapitalLN[@]} ${gravityCapitalEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+
+# △左が、丸い文字で 右が左寄り、均等な小文字の場合 eo 以外の中間の文字 元に戻る
+backtrack=(${circleSmallCR[@]})
+input=(${outeogravityMR[@]})
+lookAhead=(${gravitySmallLR[@]} ${gravitySmallER[@]} \
+${gravitySmallLN[@]} ${gravitySmallEN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# △左が中間の文字で 右が左寄り、均等な文字の場合 左寄り、均等な小文字 元に戻る
+backtrack=(${gravityMN[@]})
+input=(${gravitySmallLR[@]} ${gravitySmallER[@]})
+lookAhead=(${gravityLR[@]} ${gravityER[@]} \
+${gravityLN[@]} ${gravityEN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # 移動しない、元に戻らない処理 ----------------------------------------
 
@@ -4464,7 +4483,9 @@ chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # △左が均等、右が丸い小文字で 右が、左寄り、均等な小文字の場合 右が丸い小文字 元に戻る
 backtrack=(${gravitySmallEN[@]} \
-${circleSmallRN[@]} ${circleSmallCN[@]})
+${circleSmallRN[@]})
+ #backtrack=(${gravitySmallEN[@]} \
+ #${circleSmallRN[@]} ${circleSmallCN[@]})
 input=(${circleSmallRR[@]})
 lookAhead=(${gravitySmallLR[@]} ${gravitySmallER[@]} \
 ${gravitySmallLN[@]} ${gravitySmallEN[@]})
@@ -4762,9 +4783,9 @@ lookAhead=(${gravityLL[@]} ${outcgravityRL[@]} ${gravityEL[@]} \
 ${circleCL[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
-# △左が Vの小文字、狭い文字、hkĸsxz で 右が左寄り、均等な文字の場合 L 以外の左寄り、c 以外の右寄り、均等、中間、y 以外の Vの字 左に移動
+# △左が Vの小文字、狭い文字、hkĸsxz で 右が左寄り、均等な文字の場合 c 以外の右寄り、均等、中間、y 以外の Vの字 左に移動
 backtrack=(${gravitySmallVN[@]} ${gravityCN[@]} ${_hN[@]} ${_kN[@]} ${_kgN[@]} ${_sN[@]} ${_xN[@]} ${_zN[@]})
-input=(${outLgravityLN[@]} ${outcgravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outygravityVN[@]})
+input=(${outcgravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outygravityVN[@]})
 lookAhead=(${gravityLL[@]} ${gravityEL[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
@@ -5353,9 +5374,9 @@ lookAhead=(${gravityLL[@]} ${outcgravityRL[@]} ${gravityEL[@]} \
 ${circleCL[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
-# □左が Vの小文字、狭い文字、hkĸsxz で 右が左寄り、均等な文字の場合 L 以外の左寄り、c 以外の右寄り、均等、中間、y 以外の Vの字 左に移動
+# □左が Vの小文字、狭い文字、hkĸsxz で 右が左寄り、均等な文字の場合 c 以外の右寄り、均等、中間、y 以外の Vの字 左に移動
 backtrack=(${gravitySmallVN[@]} ${gravityCN[@]} ${_hN[@]} ${_kN[@]} ${_kgN[@]} ${_sN[@]} ${_xN[@]} ${_zN[@]})
-input=(${outLgravityLN[@]} ${outcgravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outygravityVN[@]})
+input=(${outcgravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${outygravityVN[@]})
 lookAhead=(${gravityLL[@]} ${gravityEL[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
