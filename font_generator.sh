@@ -1197,8 +1197,8 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     # 頭とつま先をカット
     Select(0u0049); Copy() # I
-    Move(5, 0)
-    PasteWithOffset(-5, 0)
+    Move(10, 0)
+    PasteWithOffset(-10, 0)
     OverlapIntersect()
     # 合成
     Select(65552);  Copy() # Temporary glyph
@@ -1218,9 +1218,9 @@ while (i < SizeOf(input_list))
     Select(0u012c); PasteWithOffset(0,  1035); OverlapIntersect() # Ĭ
     Select(0u012e); PasteWithOffset(0, -1000); OverlapIntersect() # Į
     if (input_list[i] == "${input_latin_regular}")
-        Move(-5, 0)
+        Move(-10, 0)
     else
-        Move(-11, 0)
+        Move(-16, 0)
     endif
     Select(0u0130); PasteWithOffset(0,  1035); OverlapIntersect() # İ
     Select(0u0208); PasteWithOffset(0,  1035); OverlapIntersect() # Ȉ
