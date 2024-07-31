@@ -3968,7 +3968,7 @@ ${outLgravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[
  #${gravityLR[@]} ${gravityMR[@]} ${gravityCR[@]} \
  #${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 input=(${gravityVN[@]})
-lookAhead=(${gravityRN[@]} ${gravityMN[@]})
+lookAhead=(${gravityRN[@]} ${gravityLN[@]} ${gravityEN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ○右側基準で 狭い文字 右に移動しない
@@ -4010,6 +4010,14 @@ lookAhead=(${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # 2つ右を見て移動させる例外処理 4 ----------------------------------------
+
+# ○右が左寄り、均等な文字で その右が幅広の文字の場合 Vの字 左に移動
+backtrack1=("")
+backtrack=("")
+input=(${gravityVN[@]})
+lookAhead=(${gravityLN[@]} ${gravityEN[@]})
+lookAhead1=(${gravityWN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
 # ○右が右寄り、中間の文字で その右が Vの字、狭い文字の場合 Vの字 右に移動
 backtrack1=("")
