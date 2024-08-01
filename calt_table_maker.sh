@@ -3605,6 +3605,12 @@ input=(${_rN[@]} ${_tN[@]})
 lookAhead=(${gravityWN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
+# ○左が右寄り、均等な小文字、Vの大文字の場合 r 右に移動しない (次の処理とセット)
+backtrack=(${gravitySmallRR[@]} ${gravitySmallER[@]} ${gravityVR[@]})
+input=(${_rN[@]})
+lookAhead=("")
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
 # ○右が、左が丸い小文字、AXZsで その右が幅広の文字の場合 r 右に移動
 backtrack1=("")
 backtrack=("")
