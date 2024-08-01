@@ -2989,8 +2989,8 @@ while (i < SizeOf(input_list))
     ChangeWeight(${weight_extend_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator} -10, ${y_pos_numerator}); Copy()
-    Select(0u00bc); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 60, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¼
-    Select(0u00be); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 60, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¾
+    Select(0u00bc); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 50, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¼
+    Select(0u00be); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 50, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¾
 
     Select(0u0035); Copy() # 5
     Select(0u215a); Paste() # ⅚
