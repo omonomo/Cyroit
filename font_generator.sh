@@ -765,7 +765,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-# 3 (全体を少し横に拡げて少し左に移動)
+# 3 (全体を少し横に拡げる)
     # 太くなった縦線を元に戻すための準備
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
@@ -796,13 +796,11 @@ while (i < SizeOf(input_list))
     Select(0u0033); PasteWithOffset(4, 0) # 3
     OverlapIntersect()
     Simplify()
-
-    Move(-10, 0)
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
 
-# 4 (縦線を少し細くして横棒の右を少し延ばす)
+# 4 (縦線を少し細くして横棒の右を少し延ばし、少し左に移動)
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
     Move(-112,0)
@@ -820,11 +818,12 @@ while (i < SizeOf(input_list))
     Select(0u0034); PasteInto() # 4
 
     RemoveOverlap()
+    Move(-15, 0)
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
 
-# 7 (左上を折り曲げる、太さ変更)
+# 7 (左上を折り曲げる、太さ変更し、少し右に移動)
     # 折り曲げ
     Select(0u00af); Copy()  # macron
     Select(65552);  Paste() # Temporary glyph
@@ -847,6 +846,7 @@ while (i < SizeOf(input_list))
     Select(0u2588); Copy() # Full block
     Select(0u0037); PasteWithOffset(0, -377) # 7
 
+    Move(5, 0)
     SetWidth(500)
     OverlapIntersect()
 
