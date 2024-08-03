@@ -818,7 +818,7 @@ while (i < SizeOf(input_list))
     Select(0u0034); PasteInto() # 4
 
     RemoveOverlap()
-    Move(-15, 0)
+    Move(-10, 0)
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
