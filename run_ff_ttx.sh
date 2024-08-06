@@ -166,6 +166,7 @@ do
             echo "Option: End just before editing calt feature"
             option_check
             mode="-C"
+            draft_flag="false"
             leaving_tmp_flag="true"
             table_modify_flag="true"
             ;;
@@ -173,6 +174,7 @@ do
             echo "Option: Run calt patch only"
             option_check
             mode="-p"
+            draft_flag="false"
             leaving_tmp_flag="true"
             table_modify_flag="true"
             ;;
@@ -180,6 +182,7 @@ do
             echo "Option: Complete Mode (generate finished fonts)"
             option_check
             mode="-F"
+            draft_flag="false"
             leaving_tmp_flag="false"
             table_modify_flag="true"
             ;;
