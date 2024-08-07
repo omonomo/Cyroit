@@ -1833,13 +1833,19 @@ chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ---
 
-# ○左が左寄り、中間、Vの字、狭い文字で 右が j の場合 左寄り、均等な文字、中間の小文字、CcIfilrt 右に移動
+# ○左 Jjt で 右が j の場合 t 右に移動
+backtrack=(${_JR[@]} ${_jR[@]} ${_tR[@]})
+input=(${_tN[@]})
+lookAhead=(${_jN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
+
+# ○左が左寄り、中間、Vの字、狭い文字で 右が j の場合 左寄り、均等な文字、中間の小文字、CcIfilr 右に移動
 backtrack=(${gravityCR[@]} \
 ${gravityLN[@]} ${gravityMN[@]} ${gravityVN[@]} ${_IN[@]} ${_JN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_tN[@]})
 input=(${outLgravityLN[@]} ${gravityEN[@]} ${gravitySmallMN[@]} \
-${_CN[@]} ${_cN[@]} ${_IN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
+${_CN[@]} ${_cN[@]} ${_IN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]})
  #input=(${gravityLN[@]} ${gravityEN[@]} ${gravitySmallMN[@]} \
- #${_CN[@]} ${_cN[@]} ${_IN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
+ #${_CN[@]} ${_cN[@]} ${_IN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]})
 lookAhead=(${_jN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
@@ -2611,6 +2617,14 @@ backtrack=(${gravitySmallMN[@]} ${_kN[@]} ${_kgN[@]})
 input=(${gravityCapitalMN[@]} ${_sN[@]} ${_xN[@]} ${_zN[@]})
 lookAhead=(${gravityCN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ○左が狭い文字で 右が狭い文字の場合 左寄りの文字 左に移動しない
+backtrack=(${outJgravityCapitalCL[@]} ${outjgravitySmallCL[@]})
+ #backtrack=(${gravityCL[@]})
+input=(${outLgravityLN[@]})
+ #input=(${gravityLN[@]})
+lookAhead=(${gravityCN[@]})
+chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # 統合した通常処理 ----------------------------------------
 
@@ -5219,6 +5233,12 @@ chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 backtrack=(${gravitySmallLR[@]} ${gravitySmallER[@]} ${gravitySmallMR[@]} ${gravitySmallVR[@]} ${_aR[@]} ${_cR[@]})
 input=(${_tN[@]})
 lookAhead=(${gravityLL[@]} ${gravityRL[@]} ${gravityEL[@]} ${gravityML[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
+
+# □左 Ifil で 右が j 以外の狭い文字の場合 t 左に移動
+backtrack=(${_IR[@]} ${_fR[@]} ${_iR[@]} ${_lR[@]})
+input=(${_tN[@]})
+lookAhead=(${outjgravityCL[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # 右側が元に戻って詰まった間隔を整える処理 ----------------------------------------
