@@ -247,12 +247,18 @@ case ${mode} in
     ;;
 esac
 
+if [ "${mode}" = "-F" ]; then
+  font_familyname_suffix0=""
+else
+  font_familyname_suffix0="${font_familyname_suffix}"
+fi
+
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
   option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
   if [ -n "${opt_fg}" ]; then
-    sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
+    sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix0}" auto
   else
-    sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}" auto
+    sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix0}" auto
   fi
 fi
 
@@ -260,7 +266,7 @@ if [ "${table_modify_flag}" = "false" ]; then # 下書きモードか、引数�
   exit 0
 fi
 
-# -F オプション(かつ引き数がない)の場合
+# -F オプション(かつ引数がない)の場合
 if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
     for i in ${!font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
