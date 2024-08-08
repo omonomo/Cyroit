@@ -258,6 +258,8 @@ if [ "${other_flag}" = "true" ]; then
     sed -i.bak -e "s,width=\"3..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # .notdef
     sed -i.bak -e "s,width=\"4..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # 半角
     sed -i.bak -e "s,width=\"5..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"6..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"7..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
     sed -i.bak -e "s,width=\"9..\",width=\"${full_width}\"," "${P%%.ttf}.ttx" # 全角
     sed -i.bak -e "s,width=\"1...\",width=\"${full_width}\"," "${P%%.ttf}.ttx"
 
