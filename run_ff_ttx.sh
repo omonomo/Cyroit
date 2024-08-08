@@ -222,7 +222,7 @@ fi
 case ${mode} in
   "-d" )
     if [ $# -eq 0 ]; then
-      opt_fg="oP" # 引数が無い場合の設定
+      opt_fg="oP" # 引数が無い場合の設定 (パッチ適用前で終了)
     fi
     ;;
   "-C" )
@@ -234,7 +234,7 @@ case ${mode} in
     ;;
   "-F" )
     if [ $# -eq 0 ]; then
-      opt_fg="P" # 引数が無い場合、パッチ適用直前まで作成
+      opt_fg="P" # 引数が無い場合の設定 (一旦パッチ適用前で終了し、その後続きを実行)
     fi
     ;;
   "" )
@@ -247,18 +247,12 @@ case ${mode} in
     ;;
 esac
 
-if [ "${mode}" = "-F" ]; then
-  font_familyname_suffix0=""
-else
-  font_familyname_suffix0="${font_familyname_suffix}"
-fi
-
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
   option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
   if [ -n "${opt_fg}" ]; then
-    sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix0}" auto
+    sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   else
-    sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix0}" auto
+    sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   fi
 fi
 
@@ -266,7 +260,7 @@ if [ "${table_modify_flag}" = "false" ]; then # 下書きモードか、引数�
   exit 0
 fi
 
-# -F オプション(かつ引数がない)の場合
+# -F オプションの場合、パッチ適用前からの続きを実行
 if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
     for i in ${!font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる

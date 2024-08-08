@@ -12006,19 +12006,19 @@ while (i < SizeOf(fontstyle_list))
     Reencode("unicode")
 
 # Set configuration
-    if (fontfamilysuffix != "")
-        SetFontNames(fontfamily + fontfamilysuffix + "-" + fontstyle_list[i], \\
-                     fontfamily + " " + fontfamilysuffix, \\
-                     fontfamily + " " + fontfamilysuffix + " " + fontstyle_list[i], \\
-                     fontstyle_list[i], \\
-                     copyright, version)
-    else
+ #    if (fontfamilysuffix != "") # パッチを当てる時にSuffixを追加するので無効化
+ #        SetFontNames(fontfamily + fontfamilysuffix + "-" + fontstyle_list[i], \\
+ #                     fontfamily + " " + fontfamilysuffix, \\
+ #                     fontfamily + " " + fontfamilysuffix + " " + fontstyle_list[i], \\
+ #                     fontstyle_list[i], \\
+ #                     copyright, version)
+ #    else
         SetFontNames(fontfamily + "-" + fontstyle_list[i], \\
                      fontfamily, \\
                      fontfamily + " " + fontstyle_list[i], \\
                      fontstyle_list[i], \\
                      copyright, version)
-    endif
+ #    endif
     SetTTFName(0x409, 2, fontstyle_list[i])
     SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + "FontTools ${ttx_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
     ScaleToEm(${typo_ascent1024}, ${typo_descent1024})
