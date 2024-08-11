@@ -31,7 +31,8 @@ opt_tm="" # table_modificator のオプション
 mode="" # 生成モード
 
 draft_flag="false" # 下書きモード
-leaving_tmp_flag="true" # 一時ファイル残す
+leaving_tmp_flag="false" # 一時ファイル残す
+wide_flag="false" # Wide 版にする
 reuse_list_flag="false" # 生成済みのリストを使う
 table_modify_flag="true" # フィーチャテーブルを編集する
 symbol_only_flag="false" # カーニング設定を記号、桁区切りのみにする
@@ -50,11 +51,18 @@ fi
 option_format_fg() { # font_generator 用のオプションを整形 (戻り値: 整形したオプション)
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
+  local wide_flag # Wide 版にするか
+  local draft_flag= # 下書きモードか
   opt="${2}"
   leaving_tmp_flag="${3}"
+  wide_flag="${4}"
+  draft_flag="${5}"
 
   if [ "${leaving_tmp_flag}" = "true" ]; then # 引数に l はないが、一時作成ファイルを残す場合
     opt="${opt}l"
+  fi
+  if [ "${wide_flag}" = "true" ]; then # 引数に w はないが、Wide 版にする場合
+    opt="${opt}w"
   fi
   if [ "${draft_flag}" = "true" ]; then # 引数に d はないが、下書きモードで処理する場合
     opt="${opt}d"
@@ -65,15 +73,20 @@ option_format_fg() { # font_generator 用のオプションを整形 (戻り値:
 option_format_tm() { # table_modificator 用のオプションを整形 (戻り値: 整形したオプション)
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
+  local wide_flag # Wide 版にするか
   local reuse_list_flag # 作成済みのリストを使用するか
   local symbol_only_flag # カーニング設定を記号、桁区切りのみにするか
   opt="${2}"
   leaving_tmp_flag="${3}"
-  reuse_list_flag="${4}"
-  symbol_only_flag="${5}"
+  wide_flag="${4}"
+  reuse_list_flag="${5}"
+  symbol_only_flag="${6}"
 
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションか 引数に l がある場合
     opt="${opt}l"
+  fi
+  if [ "${wide_flag}" != "false" ]; then # -w オプションか 引数に w がある場合
+    opt="${opt}w"
   fi
   if [ "${reuse_list_flag}" != "false" ]; then # -r オプションがある場合
     opt="${opt}r"
@@ -94,8 +107,8 @@ option_check() {
 remove_temp() {
   echo "Remove temporary files"
   sh font_generator.sh -x
-  sh table_modificator.sh -x
-  rm -f ${font_familyname}*.nopatch.ttf
+  sh table_modificator.sh -x -N "${font_familyname}"
+  rm -f *.nopatch.ttf
 }
 
 forge_ttx_help()
@@ -106,10 +119,11 @@ forge_ttx_help()
     echo "  -h         Display this information"
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
-    echo "  -r         Reuse an existing list"
-    echo "  -s         Don't make calt settings for latin characters"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -n string  Set fontfamily suffix (\"string\")"
+    echo "  -w         Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -r         Reuse an existing list"
+    echo "  -s         Don't make calt settings for latin characters"
     echo "  -d         Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
     echo "  -C         End just before editing calt feature" # caltの編集・確認を繰り返す時用にcalt適用前のフォントを作成する
     echo "  -p         Run calt patch only" # -C の続きを実行
@@ -122,7 +136,7 @@ echo "*** FontForge and TTX runner ***"
 echo
 
 # オプションを取得
-while getopts hxlrsN:n:dCpF OPT
+while getopts hxlN:n:wrsdCpF OPT
 do
     case "${OPT}" in
         "h" )
@@ -138,14 +152,6 @@ do
             echo "Option: Leave (do NOT remove) temporary files"
             leaving_tmp_flag="true"
             ;;
-        "r" )
-            echo "Option: Reuse an existing list"
-            reuse_list_flag="true"
-            ;;
-        "s" )
-            echo "Option: Don't make calt settings for latin characters"
-            symbol_only_flag="true"
-            ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
             font_familyname=${OPTARG// /}
@@ -153,6 +159,18 @@ do
         "n" )
             echo "Option: Set fontfamily suffix: ${OPTARG}"
             font_familyname_suffix=${OPTARG// /}
+            ;;
+        "w" )
+            echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
+            wide_flag="true"
+            ;;
+        "r" )
+            echo "Option: Reuse an existing list"
+            reuse_list_flag="true"
+            ;;
+        "s" )
+            echo "Option: Don't make calt settings for latin characters"
+            symbol_only_flag="true"
             ;;
         "d" )
             echo "Option: Draft mode (skip time-consuming processes)"
@@ -183,7 +201,6 @@ do
             option_check
             mode="-F"
             draft_flag="false"
-            leaving_tmp_flag="false"
             table_modify_flag="true"
             ;;
         * )
@@ -206,6 +223,8 @@ if [ "${mode}" != "-p" ]; then # -p オプション以外は引数を取得
         exit 1
       elif [ "${S}" = "l" ]; then # l が含まれていれば一時作成ファイルを残す (-l オプションと区別)
         leaving_tmp_flag="true_arg"
+      elif [ "${S}" = "w" ]; then # w が含まれていれば Wide 版にする (-w オプションと区別)
+        wide_flag="true_arg"
       elif [ "${S}" = "d" ]; then # d が含まれていれば下書きモードで処理 (-d オプションと区別)
         draft_flag="true_arg"
       elif [ "${S}" = "P" ]; then # P が含まれていればテーブルを編集する前に終了
@@ -248,7 +267,7 @@ case ${mode} in
 esac
 
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
-  option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
+  option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${wide_flag}" "${draft_flag}"
   if [ -n "${opt_fg}" ]; then
     sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   else
@@ -265,7 +284,7 @@ if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
     for i in ${!font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
       opt_fg=${font_familyname_suffix_def_opt[${i}]}
-      option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
+      option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${wide_flag}" "${draft_flag}"
       if [ -n "${opt_fg}" ]; then
         sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       else
@@ -275,7 +294,7 @@ if [ "${mode}" = "-F" ]; then
   fi
   if [ $# -eq 0 ]; then # 引き数がない場合、通常版を生成
     opt_fg="Sp"
-    option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}"
+    option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${wide_flag}" "${draft_flag}"
     if [ -n "${opt_fg}" ]; then
       sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
     else
@@ -291,7 +310,7 @@ case ${mode} in
   "-F" ) opt_tm="o" ;;
      * ) opt_tm="b" ;;
 esac
-option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${reuse_list_flag}" "${symbol_only_flag}"
+option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${wide_flag}" "${reuse_list_flag}" "${symbol_only_flag}"
 if [ -n "${opt_tm}" ]; then
   sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else
@@ -307,23 +326,24 @@ fi
 # -F オプションの場合、完成したフォントを移動
 if [ "${mode}" = "-F" ]; then
   echo "Move finished fonts"
-  mkdir -p "${build_fonts_dir}"
+  mkdir -p "${build_fonts_dir}/${font_familyname}"
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then # 引数が無く、suffix も無い場合、デフォルト設定で各フォルダにフォントを移動
     for S in ${font_familyname_suffix_def[@]}; do
-      mkdir -p "${build_fonts_dir}/${S}"
-      mv -f ${font_familyname}${S}*.ttf "${build_fonts_dir}/${S}/."
+      mkdir -p "${build_fonts_dir}/${font_familyname}/${S}"
+      mv -f ${font_familyname}${S}*.ttf "${build_fonts_dir}/${font_familyname}/${S}/."
     done
   elif [ -n "${font_familyname_suffix}" ]; then # suffix がある場合、フォルダを作ってフォントを移動
-    mkdir -p "${build_fonts_dir}/${font_familyname_suffix}"
-    mv -f ${font_familyname}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname_suffix}/."
+    mkdir -p "${build_fonts_dir}/${font_familyname}/${font_familyname_suffix}"
+    mv -f ${font_familyname}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname}/${font_familyname_suffix}/."
   fi
   # パッチ未適用のフォントを除外して移動
   find . -not -name "*.nopatch.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read line
   do
-    mv -f "${line}" "${build_fonts_dir}/."
+    mv -f "${line}" "${build_fonts_dir}/${font_familyname}/."
   done
   echo
+
   # Exit
   echo "Succeeded in generating custom fonts!"
   echo "Font version : ${font_version}"

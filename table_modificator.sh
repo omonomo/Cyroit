@@ -26,8 +26,9 @@ extList="extList" # 異体字のglyphナンバーリスト
 gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
 
 zero_width="0" # 文字幅ゼロ
-half_width="512" # 半角文字幅
-full_width="1024" # 全角文字幅
+hankaku_width="512" # 半角文字幅
+hankaku_width_W="576" # 半角文字幅 (Wide 版)
+zenkaku_width="1024" # 全角文字幅
 underline="-80" # アンダーライン位置
 #vhea_ascent1024="994"
 #vhea_descent1024="256"
@@ -35,7 +36,9 @@ underline="-80" # アンダーライン位置
 
 mode="" # 生成モード
 
-leaving_tmp_flag="false" # 一時ファイル残す
+leaving_tmp_flag="false" # 一時ファイルを残すか
+wide_flag="false" # Wide 版にするか
+reuse_list_flag="false" # 生成済みのリストを使うか
 
 cmap_flag="true" # cmapを編集するか
 gsub_flag="true" # GSUBを編集するか
@@ -105,8 +108,9 @@ table_modificator_help()
     echo "  -h         Display this information"
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
-    echo "  -r         Reuse an existing list"
     echo "  -N string  Set fontfamily (\"string\")"
+    echo "  -w         Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -r         Reuse an existing list"
     echo "  -m         Disable edit cmap tables"
     echo "  -g         Disable edit GSUB tables"
     echo "  -t         Disable edit other tables"
@@ -123,7 +127,7 @@ echo "= Font tables Modificator ="
 echo
 
 # Get options
-while getopts hxlrN:mgtsCpbo OPT
+while getopts hxlN:wrmgtsCpbo OPT
 do
     case "${OPT}" in
         "h" )
@@ -132,7 +136,7 @@ do
         "x" )
             echo "Option: Cleaning temporary files"
             remove_temp
-            sh uvs_table_maker.sh -x
+            sh uvs_table_maker.sh -x -N "${font_familyname}"
             sh calt_table_maker.sh -x
             exit 0
             ;;
@@ -140,13 +144,18 @@ do
             echo "Option: Leave (do NOT remove) temporary files"
             leaving_tmp_flag="true"
             ;;
-        "r" )
-            echo "Option: Reuse an existing list"
-            reuse_list_flag="true"
-            ;;
         "N" )
             echo "Option: Set fontfamily: ${OPTARG}"
             font_familyname=${OPTARG// /}
+            ;;
+        "w" )
+            echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
+            wide_flag="true"
+            hankaku_width="${hankaku_width_W}"
+            ;;
+        "r" )
+            echo "Option: Reuse an existing list"
+            reuse_list_flag="true"
             ;;
         "m" )
             echo "Option: Disable edit cmap tables"
@@ -242,7 +251,7 @@ if [ "${other_flag}" = "true" ]; then
     sed -i.bak -e 's,flags value="........ ........",flags value="00000000 00000011",' "${P%%.ttf}.ttx"
 
     # OS/2 (全体のWidthの修正)
-    sed -i.bak -e "s,xAvgCharWidth value=\"...\",xAvgCharWidth value=\"${half_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,xAvgCharWidth value=\"...\",xAvgCharWidth value=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
 
     # post (アンダーラインの位置を指定、等幅フォントであることを示す)
     sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
@@ -255,13 +264,14 @@ if [ "${other_flag}" = "true" ]; then
 
     # hmtx (Widthのブレを修正)
     sed -i.bak -e "s,width=\".\",width=\"${zero_width}\"," "${P%%.ttf}.ttx" # zero width
-    sed -i.bak -e "s,width=\"3..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # .notdef
-    sed -i.bak -e "s,width=\"4..\",width=\"${half_width}\"," "${P%%.ttf}.ttx" # 半角
-    sed -i.bak -e "s,width=\"5..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"6..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"7..\",width=\"${half_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"9..\",width=\"${full_width}\"," "${P%%.ttf}.ttx" # 全角
-    sed -i.bak -e "s,width=\"1...\",width=\"${full_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"3..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx" # .notdef
+    sed -i.bak -e "s,width=\"4..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx" # 半角
+    sed -i.bak -e "s,width=\"5..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"6..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"7..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"8..\",width=\"${zenkaku_width}\"," "${P%%.ttf}.ttx" # 全角
+    sed -i.bak -e "s,width=\"9..\",width=\"${zenkaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"1...\",width=\"${zenkaku_width}\"," "${P%%.ttf}.ttx"
 
     # テーブル更新
     mv "$P" "${P%%.ttf}.orig.ttf"
