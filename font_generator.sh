@@ -207,11 +207,11 @@ x_pos_oblique="-4800" # 移動量 * 100
 # calt用
 x_pos_calt="20" # ラテン文字のX座標移動量
 x_pos_calt_symbol="30" # 記号のX座標移動量
-x_pos_calt_separate="-489" # 桁区切り表示のX座標移動量
 y_pos_calt_colon="55" # : のY座標移動量
 y_pos_calt_bar="-38" # | のY座標移動量
 y_pos_calt_tilde="-195" # ~ のY座標移動量
 y_pos_calt_math="25" # *+-= のY座標移動量
+x_pos_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
 y_pos_calt_separate3="-510" # 3桁区切り表示のY座標
 y_pos_calt_separate4="452" # 4桁区切り表示のY座標
 percent_calt_decimal="93" # 小数の拡大比率
@@ -226,7 +226,7 @@ y_pos_center_W="373" # 半角文字Y座標中心
 x_pos_hankaku_W=$(((hankaku_width_W - ${hankaku_width}) / 2)) # 半角文字移動量 (Wide 版)
 x_pos_calt_W="22" # ラテン文字のX座標移動量 (Wide 版)
 x_pos_calt_symbol_W="33" # 記号のX座標移動量 (Wide 版)
-x_pos_calt_separate_W="-489" # 桁区切り表示のX座標移動量 (Wide 版)
+x_pos_calt_separate_W="-512" # 桁区切り表示のX座標移動量 (Wide 版、下書きモードとその他で位置が変わるので注意)
 
 # Set path to command
 fontforge_command="fontforge"
@@ -12344,12 +12344,13 @@ while (i < SizeOf(input_list))
 
     # Wide 版対応
     if ("${wide_flag}" == "true")
-        SelectMore(0ue0b0, 0ue0b1)
+        Select(0ue0b0, 0ue0b1)
         SelectMore(0ue0b4)
         SelectMore(0ue0b5)
         SelectMore(0ue0b8, 0ue0b9)
         SelectMore(0ue0bc, 0ue0bd)
         Move(-${x_pos_hankaku_W}, 0)
+        SetWidth(512)
 
         Select(0ue0b2, 0ue0b3)
         SelectMore(0ue0b6)
@@ -12357,6 +12358,7 @@ while (i < SizeOf(input_list))
         SelectMore(0ue0ba, 0ue0bb)
         SelectMore(0ue0be, 0ue0bf)
         Move(${x_pos_hankaku_W}, 0)
+        SetWidth(512)
     endif
 
 # Font Awesome Extension
@@ -12464,6 +12466,18 @@ while (i < SizeOf(input_list))
     Scale(161, 66, 522, 1009)
     Move(507, -248)
     SetWidth(1024)
+
+    # Wide 版対応
+    if ("${wide_flag}" == "true")
+        Select(0u25e3, 0u25e4) # ◣◤
+        Move(${x_pos_hankaku_W} + 20, 0)
+        SetWidth(1024)
+
+        Select(0u25e2) #◢
+        SelectMore(0u25e5)# ◥
+        Move(-${x_pos_hankaku_W} - 20, 0)
+        SetWidth(1024)
+    endif
 
 #  (Mac用)
     Select(0ue711); Copy() # 
