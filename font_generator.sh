@@ -133,11 +133,16 @@ hhea_descent1024="${win_descent1024}"
 hhea_linegap1024="0"
 
 # em値変更でのY座標のズレ修正用
-y_pos_em_revice="-10" #Y座標移動量
+y_pos_em_revice="-10" # Y座標移動量
+
+# NerdFonts 用
+y_pos_nerd="30" # 全体Y座標移動量
+scale_pomicons="91" # Pomicons の拡大比率
+scale_nerd="88" # その他の拡大比率
 
 # Powerline 変形、移動用
-height_percent_pl="123" # PowelineY座標拡大比率
-height_percent_block="89" # ボックス要素Y座標拡大比率
+height_scale_pl="123" # PowelineY座標拡大比率
+height_scale_block="89" # ボックス要素Y座標拡大比率
 height_center_pl="297" # PowerlineリサイズY座標中心
 y_pos_pl="76" # PowerlineY座標移動量
 
@@ -145,29 +150,25 @@ y_pos_pl="76" # PowerlineY座標移動量
 y_pos_space="-235"
 
 # ウェイト調整用
-weight_extend_kanzi_regular="8" # 主に漢字レギュラー
-weight_extend_kanzi_bold="8" # 主に漢字ボールド
-weight_extend_kanzi_symbols_regular="6" # 漢字フォントの記号類レギュラー
-weight_extend_kanzi_symbols_bold="12" # 漢字フォントの記号類ボールド
-weight_reduce_kanzi_roman_regular="-6" # 漢字フォントのローマ数字レギュラー
-weight_reduce_kanzi_roman_bold="-8" # 漢字フォントのローマ数字ボールド
+weight_kanzi_regular="8" # 主に漢字レギュラー
+weight_kanzi_bold="8" # 主に漢字ボールド
+weight_kanzi_symbols_regular="6" # 漢字フォントの記号類レギュラー
+weight_kanzi_symbols_bold="12" # 漢字フォントの記号類ボールド
+weight_kanzi_roman_regular="-6" # 漢字フォントのローマ数字レギュラー
+weight_kanzi_roman_bold="-8" # 漢字フォントのローマ数字ボールド
 
-weight_extend_kana_geometry_regular="16" # 仮名フォントの幾何学模様レギュラー
-weight_extend_kana_geometry_bold="16" # 仮名フォントの幾何学模様ボールド
-weight_reduce_kana_bold="-8" # 主に仮名ボールド
-weight_reduce_kana_others_regular="-2" # 仮名フォントのその他レギュラー
-weight_reduce_kana_others_bold="-12" # 仮名フォントのその他ボールド
+weight_kana_geometry_regular="16" # 仮名フォントの幾何学模様レギュラー
+weight_kana_geometry_bold="16" # 仮名フォントの幾何学模様ボールド
+weight_kana_bold="-8" # 主に仮名ボールド
+weight_kana_others_regular="-2" # 仮名フォントのその他レギュラー
+weight_kana_others_bold="-12" # 仮名フォントのその他ボールド
 
-weight_extend_small_kana_regular="10" # 小仮名拡張レギュラー
-weight_extend_small_kana_bold="4" # 小仮名拡張ボールド(weight_reduce_kana_boldは適用しない)
-
-# 英数文字の縦横拡大率
-width_percent_latin="98" # 横拡大比率
-height_percent_latin="102" # 縦拡大比率
+weight_small_kana_regular="10" # 小仮名拡張レギュラー
+weight_small_kana_bold="4" # 小仮名拡張ボールド(weight_kana_boldは適用しない)
 
 # 上付き、下付き、ルート、分数用
-percent_super_sub="75" # 拡大比率
-weight_extend_super_sub="12" # ウェイト調整
+scale_super_sub="75" # 拡大比率
+weight_super_sub="12" # ウェイト調整
 
 # 上付き、下付き数字用
 y_pos_super="273" # 上付きY座標移動量
@@ -204,6 +205,22 @@ x_pos_zenkaku_kanzi="34"
 tan_oblique="16" # 傾きの係数 * 100
 x_pos_oblique="-4800" # 移動量 * 100
 
+# 英数文字の縦横拡大率
+width_scale_latin="98" # 横拡大比率
+height_scale_latin="102" # 縦拡大比率
+
+# Wide 版用
+width_scale_hankaku_W="104" # 横拡大比率
+height_scale_hankaku_W="104" # 縦拡大比率
+hankaku_width="512" # 半角文字幅 (通常版)
+hankaku_width_W="576" # 半角文字幅 (Wide 版)
+x_pos_center_W=$((hankaku_width_W / 2)) # 半角文字X座標中心 (Wide 版)
+y_pos_center_W="373" # 半角文字Y座標中心
+x_pos_hankaku_W=$(((hankaku_width_W - ${hankaku_width}) / 2)) # 半角文字移動量 (Wide 版)
+x_pos_calt_W="22" # ラテン文字のX座標移動量 (Wide 版)
+x_pos_calt_symbol_W="33" # 記号のX座標移動量 (Wide 版)
+x_pos_calt_separate_W="-512" # 桁区切り表示のX座標移動量 (Wide 版、下書きモードとその他で位置が変わるので注意)
+
 # calt用
 x_pos_calt="20" # ラテン文字のX座標移動量
 x_pos_calt_symbol="30" # 記号のX座標移動量
@@ -214,19 +231,40 @@ y_pos_calt_math="25" # *+-= のY座標移動量
 x_pos_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
 y_pos_calt_separate3="-510" # 3桁区切り表示のY座標
 y_pos_calt_separate4="452" # 4桁区切り表示のY座標
-percent_calt_decimal="93" # 小数の拡大比率
+scale_calt_decimal="93" # 小数の拡大比率
 
-# Wide 版用
-width_percent_hankaku_W="104" # 横拡大比率
-height_percent_hankaku_W="102" # 縦拡大比率
-hankaku_width="512" # 半角文字幅 (通常版)
-hankaku_width_W="576" # 半角文字幅 (Wide 版)
-x_pos_center_W=$((hankaku_width_W / 2)) # 半角文字X座標中心 (Wide 版)
-y_pos_center_W="373" # 半角文字Y座標中心
-x_pos_hankaku_W=$(((hankaku_width_W - ${hankaku_width}) / 2)) # 半角文字移動量 (Wide 版)
-x_pos_calt_W="22" # ラテン文字のX座標移動量 (Wide 版)
-x_pos_calt_symbol_W="33" # 記号のX座標移動量 (Wide 版)
-x_pos_calt_separate_W="-512" # 桁区切り表示のX座標移動量 (Wide 版、下書きモードとその他で位置が変わるので注意)
+# デバッグ用
+
+# NerdFonts
+#scale_pomicons="150" # Pomicons の拡大比率
+#scale_nerd="150" # その他の拡大比率
+
+# ウェイト調整
+#weight_kanzi_regular="50" # 主に漢字レギュラー
+#weight_kanzi_bold="50" # 主に漢字ボールド
+#weight_kanzi_symbols_regular="50" # 漢字フォントの記号類レギュラー
+#weight_kanzi_symbols_bold="50" # 漢字フォントの記号類ボールド
+#weight_kanzi_roman_regular="50" # 漢字フォントのローマ数字レギュラー
+#weight_kanzi_roman_bold="50" # 漢字フォントのローマ数字ボールド
+
+#weight_kana_geometry_regular="50" # 仮名フォントの幾何学模様レギュラー
+#weight_kana_geometry_bold="50" # 仮名フォントの幾何学模様ボールド
+#weight_kana_bold="50" # 主に仮名ボールド
+#weight_kana_others_regular="50" # 仮名フォントのその他レギュラー
+#weight_kana_others_bold="50" # 仮名フォントのその他ボールド
+
+#weight_small_kana_regular="50" # 小仮名拡張レギュラー
+#weight_small_kana_bold="50" # 小仮名拡張ボールド(weight_kana_boldは適用しない)
+
+# 英数文字の縦横拡大率
+#width_scale_latin="150" # 横拡大比率
+#height_scale_latin="50" # 縦拡大比率
+
+# Wide 版
+#width_scale_hankaku_W="150" # 横拡大比率
+#height_scale_hankaku_W="50" # 縦拡大比率
+
+# デバッグ用ここまで
 
 # Set path to command
 fontforge_command="fontforge"
@@ -2364,7 +2402,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-    # Wide 版 対応
+    # Wide 版 対応 (とりあえず拡大しておく)
     if ("${wide_flag}" == "true")
         Select(0u2800, 0u28ff)
         SelectMore(${address_braille}, ${address_braille} + 255) # 避難した点字
@@ -2590,7 +2628,7 @@ while (i < SizeOf(input_list))
 # ℊ (追加)
     Select(0u0067); Copy() # g
     Select(0u210a); Paste() # ℊ
-    Scale(${width_percent_latin}, ${height_percent_latin}, 250, 0); SetWidth(500)
+    Scale(${width_scale_latin}, ${height_scale_latin}, 250, 0); SetWidth(500)
 
 # ∇ (漢字フォントを置換)
     Select(0u2206); Copy() # ∆
@@ -2634,8 +2672,8 @@ while (i < SizeOf(input_list))
 # ∛ (追加) ※ √ より後に加工すること
     Select(0u0033); Copy() # 3
     Select(0u221b); Paste() # ∛
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(-95, 400)
 
@@ -2646,8 +2684,8 @@ while (i < SizeOf(input_list))
 # ∜ (追加) ※ √ より後に加工すること
     Select(0u0034); Copy() # 4
     Select(0u221c); Paste() # ∜
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(-95, 400)
 
@@ -2932,16 +2970,16 @@ while (i < SizeOf(input_list))
 
     Select(65541); Copy() # スラッシュ無し0
     Select(${address_zero_latin} + 1); Paste()
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(0, ${y_pos_super})
     SetWidth(500)
 
     Select(65541); Copy() # スラッシュ無し0
     Select(${address_zero_latin} + 2); Paste()
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(0, ${y_pos_sub})
     SetWidth(500)
@@ -2964,8 +3002,8 @@ while (i < SizeOf(input_list))
     Select(65541) # スラッシュ無し0
     Copy()
     Select(0u2189); Paste() # ↉
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
     Select(0u2152); Paste()
@@ -2973,8 +3011,8 @@ while (i < SizeOf(input_list))
 
     Select(0u0031); Copy() # 1
     Select(0u00bc); Paste() # ¼
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator} + 30, ${y_pos_numerator}); Copy()
     Select(0u00bd); Paste() # ½
@@ -2991,16 +3029,16 @@ while (i < SizeOf(input_list))
 
     Select(0u0032); Copy() # 2
     Select(0u2154); Paste() # ⅔
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
     Select(0u2156); Paste() # ⅖
 
     Select(0u0032); Copy() # 2
     Select(0u2154); Paste() # ⅔
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
     Select(0u2156); Paste() # ⅖
@@ -3008,8 +3046,8 @@ while (i < SizeOf(input_list))
 
     Select(0u0033); Copy() # 3
     Select(0u00be); Paste() # ¾
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
     Select(0u2157); Paste() # ⅗
@@ -3020,8 +3058,8 @@ while (i < SizeOf(input_list))
 
     Select(0u0034); Copy() # 4
     Select(0u2158); Paste() # ⅘
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator} -10, ${y_pos_numerator}); Copy()
     Select(0u00bc); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 50, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¼
@@ -3029,8 +3067,8 @@ while (i < SizeOf(input_list))
 
     Select(0u0035); Copy() # 5
     Select(0u215a); Paste() # ⅚
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator} - 20, ${y_pos_numerator}); Copy()
     Select(0u215d); Paste() # ⅝
@@ -3041,8 +3079,8 @@ while (i < SizeOf(input_list))
 
     Select(0u0036); Copy() # 6
     Select(65552);  Paste() # Temporary glyph
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_denominator}, ${y_pos_denominator}); Copy()
     Select(0u2159); PasteInto() # ⅙
@@ -3050,16 +3088,16 @@ while (i < SizeOf(input_list))
 
     Select(0u0037); Copy() # 7
     Select(0u215e); Paste() # ⅞
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_numerator} + 40, ${y_pos_numerator}); Copy()
     Select(0u2150); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 20, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅐
 
     Select(0u0038); Copy() # 8
     Select(65552);  Paste() # Temporary glyph
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_denominator}, ${y_pos_denominator}); Copy()
     Select(0u215b); PasteInto() # ⅛
@@ -3069,8 +3107,8 @@ while (i < SizeOf(input_list))
 
     Select(0u0039); Copy() # 9
     Select(65552);  Paste() # Temporary glyph
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(${x_pos_denominator}, ${y_pos_denominator}); Copy()
     Select(0u2151); PasteInto() # ⅑
@@ -3249,32 +3287,32 @@ while (i < SizeOf(input_list))
 
     Select(0u0031); Copy() # 1
     Select(0u00b9); Paste() # ¹
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(0, ${y_pos_super})
     SetWidth(500)
 
     Select(0u0032); Copy() # 2
     Select(0u00b2); Paste() # ²
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(0, ${y_pos_super})
     SetWidth(500)
 
     Select(0u0033); Copy() # 3
     Select(0u00b3); Paste() # ³
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(0, ${y_pos_super})
     SetWidth(500)
 
     Select(0u0069); Copy() # i
     Select(0u2071); Paste() # ⁱ
-    Scale(${percent_super_sub}, 250, 0)
-    ChangeWeight(${weight_extend_super_sub})
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
     CorrectDirection()
     Move(0, ${y_pos_super})
     SetWidth(500)
@@ -3288,8 +3326,8 @@ while (i < SizeOf(input_list))
         if (j < 1 || 3 < j)
             Select(0u0030 + j); Copy()
             Select(0u2070 + j); Paste()
-            Scale(${percent_super_sub}, 250, 0)
-            ChangeWeight(${weight_extend_super_sub})
+            Scale(${scale_super_sub}, 250, 0)
+            ChangeWeight(${weight_super_sub})
             CorrectDirection()
             Move(0, ${y_pos_super})
             SetWidth(500)
@@ -3303,8 +3341,8 @@ while (i < SizeOf(input_list))
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
         Select(0u207a + j); Paste()
-        Scale(${percent_super_sub}, 250, 0)
-        ChangeWeight(${weight_extend_super_sub})
+        Scale(${scale_super_sub}, 250, 0)
+        ChangeWeight(${weight_super_sub})
         CorrectDirection()
         Move(0, ${y_pos_super})
         SetWidth(500)
@@ -3324,8 +3362,8 @@ while (i < SizeOf(input_list))
     while (j < 10)
         Select(0u0030 + j); Copy()
         Select(0u2080 + j); Paste()
-        Scale(${percent_super_sub}, 250, 0)
-        ChangeWeight(${weight_extend_super_sub})
+        Scale(${scale_super_sub}, 250, 0)
+        ChangeWeight(${weight_super_sub})
         CorrectDirection()
         Move(0, ${y_pos_sub})
         SetWidth(500)
@@ -3342,8 +3380,8 @@ while (i < SizeOf(input_list))
         if (j != 5)
             Select(orig[j]); Copy()
             Select(0u208a + j); Paste()
-            Scale(${percent_super_sub}, 250, 0)
-            ChangeWeight(${weight_extend_super_sub})
+            Scale(${scale_super_sub}, 250, 0)
+            ChangeWeight(${weight_super_sub})
             CorrectDirection()
             Move(0, ${y_pos_sub})
             SetWidth(500)
@@ -8900,7 +8938,7 @@ while (i < SizeOf(input_list))
             SelectMore(1114433) # 縦書き ー
             SelectMore(${address_visi_kana}) # 避難した゠
             SelectMore(${address_visi_kana} + 1) # 避難した⼣
-            ChangeWeight(${weight_reduce_kana_bold}); CorrectDirection()
+            ChangeWeight(${weight_kana_bold}); CorrectDirection()
         endif
     endif
 
@@ -8942,9 +8980,9 @@ while (i < SizeOf(input_list))
         SelectMore(0u2c71) # ⱱ
         SelectMore(0ufb00, 0ufb04) # ﬀ
         if (input_list[i] == "${input_kana_regular}")
-            ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
+            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
         else
-            ChangeWeight(${weight_reduce_kana_others_bold})
+            ChangeWeight(${weight_kana_others_bold})
             CorrectDirection()
             Move(0, -9)
         endif
@@ -8967,9 +9005,9 @@ while (i < SizeOf(input_list))
         SelectMore(0u2a2f) # ⨯
         SelectMore(0u339b, 0u33a6) # 単位
         if (input_list[i] == "${input_kana_regular}")
-            ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
+            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
         else
-            ChangeWeight(${weight_reduce_kana_others_bold})
+            ChangeWeight(${weight_kana_others_bold})
         endif
         CorrectDirection()
 
@@ -8979,12 +9017,11 @@ while (i < SizeOf(input_list))
  #        SelectMore(0u25d9) # ◙
         SelectMore(0u25da, 0u2667) # 幾何学模様
         if (input_list[i] == "${input_kana_regular}")
-            ChangeWeight(${weight_extend_kana_geometry_regular})
+            ChangeWeight(${weight_kana_geometry_regular})
         else
-            ChangeWeight(${weight_extend_kana_geometry_bold})
+            ChangeWeight(${weight_kana_geometry_bold})
         endif
         CorrectDirection()
-
 
     endif
 
@@ -9147,9 +9184,9 @@ while (i < SizeOf(input_list))
     SelectMore(0u1b167) # 小仮名ン
     Scale(80, 80, 500, 0)
     if (input_list[i] == "${input_kana_regular}")
-        ChangeWeight(${weight_extend_small_kana_regular})
+        ChangeWeight(${weight_small_kana_regular})
     else
-        ChangeWeight(${weight_extend_small_kana_bold}) # 他のグリフとは別でウェイトを調整
+        ChangeWeight(${weight_small_kana_bold}) # 他のグリフとは別でウェイトを調整
     endif
     CorrectDirection()
     Move(0, -9)
@@ -10882,22 +10919,20 @@ while (i < SizeOf(input_list))
 # --------------------------------------------------
 
 # ボールド漢字等のウェイト調整
-    if ("${draft_flag}" == "false")
-        if (input_list[i] == "${input_kanzi_bold}")
-            Print("Edit kanji weight of glyphs (it may take a few minutes)")
-            Select(0u2e80, 0u2fdf)
-            SelectMore(0u3003) # 〃
-            SelectMore(0u3005, 0u3007) # 々〆〇
-            SelectMore(0u3021, 0u3029) # 蘇州数字
-            SelectMore(0u3038, 0u303d) # 蘇州数字
-            SelectMore(0u3400, 0u4dbf)
-            SelectMore(0u4e00, 0u9fff)
-            SelectMore(0uf900, 0ufaff)
-            SelectMore(0u20000, 0u3ffff)
-            SelectMore(1115184, 1115492) # 異体字
-            SelectMore(${address_visi_kanzi}, ${address_visi_kanzi} + 8) #避難した漢字
-            ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
-        endif
+    if ("${draft_flag}" == "false" && input_list[i] == "${input_kanzi_bold}")
+        Print("Edit kanji weight of glyphs (it may take a few minutes)")
+        Select(0u2e80, 0u2fdf)
+        SelectMore(0u3003) # 〃
+        SelectMore(0u3005, 0u3007) # 々〆〇
+        SelectMore(0u3021, 0u3029) # 蘇州数字
+        SelectMore(0u3038, 0u303d) # 蘇州数字
+        SelectMore(0u3400, 0u4dbf)
+        SelectMore(0u4e00, 0u9fff)
+        SelectMore(0uf900, 0ufaff)
+        SelectMore(0u20000, 0u3ffff)
+        SelectMore(1115184, 1115492) # 異体字
+        SelectMore(${address_visi_kanzi}, ${address_visi_kanzi} + 8) #避難した漢字
+        ChangeWeight(${weight_kanzi_bold}); CorrectDirection()
     endif
 
 # 記号等のウェイト調整
@@ -10921,24 +10956,24 @@ while (i < SizeOf(input_list))
         SelectMore(0u2934, 0u2935) # ⤴⤵
         SelectMore(0u29fa, 0u29fb) # ⧺⧻
         if (input_list[i] == "${input_kanzi_regular}")
-            ChangeWeight(${weight_extend_kanzi_symbols_regular}); CorrectDirection()
+            ChangeWeight(${weight_kanzi_symbols_regular}); CorrectDirection()
         else
-            ChangeWeight(${weight_extend_kanzi_symbols_bold}); CorrectDirection()
+            ChangeWeight(${weight_kanzi_symbols_bold}); CorrectDirection()
         endif
         Select(0u2602, 0u2603) # ☂☃
         SelectMore(0u261c, 0u261f) # ☜-☟
         if (input_list[i] == "${input_kanzi_regular}")
-            ChangeWeight(${weight_extend_kanzi_regular}); CorrectDirection()
+            ChangeWeight(${weight_kanzi_regular}); CorrectDirection()
         else
-            ChangeWeight(${weight_extend_kanzi_bold}); CorrectDirection()
+            ChangeWeight(${weight_kanzi_bold}); CorrectDirection()
         endif
  #        Select(0u2160, 0u2188) # ローマ数字
         Select(0u216c, 0u216f) # Ⅼ-Ⅿ
         SelectMore(0u217c, 0u2184) # ⅼ-ↄ
         if (input_list[i] == "${input_kanzi_regular}")
-            ChangeWeight(${weight_reduce_kanzi_roman_regular}); CorrectDirection()
+            ChangeWeight(${weight_kanzi_roman_regular}); CorrectDirection()
         else
-            ChangeWeight(${weight_reduce_kanzi_roman_bold}); CorrectDirection()
+            ChangeWeight(${weight_kanzi_roman_bold}); CorrectDirection()
         endif
     endif
 
@@ -10954,15 +10989,13 @@ while (i < SizeOf(input_list))
 
 # 一部を除いた半角文字を拡大 (Wide 版対応)
     if ("${wide_flag}" == "true")
-        Select(0u0020, 0u04ff)
-        SelectMore(0u1d00, 0u24ff)
-        SelectMore(0u25a0, 0u27ff)
-        SelectMore(0u2900, 0u2c7f)
-        SelectMore(0ua720, 0ua7ff)
+        Print("Edit hankaku aspect ratio")
+        Select(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
+        SelectMore(0u29fa, 0u29fb) # ⧺⧻
         foreach
             if (WorthOutputting())
-                if (300 <= GlyphInfo("Width") && GlyphInfo("Width") <= 700)
-                    Scale(${width_percent_hankaku_W}, ${height_percent_hankaku_W}, 256, 0)
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${width_scale_hankaku_W}, ${height_scale_hankaku_W}, 256, 0)
                     SetWidth(512)
                 endif
             endif
@@ -11365,11 +11398,11 @@ while (i < SizeOf(latin_sfd_list))
         Print("Edit some weight of glyphs")
         if (latin_sfd_list[i] == "${tmpdir}/${modified_latin_regular}")
             Select(0u01f5) # ǵ
-            ExpandStroke(${weight_reduce_kana_others_regular}, 0, 0, 0, 2)
+            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2)
             CorrectDirection()
         else
             Select(0u01f5) # ǵ
-            ChangeWeight(${weight_reduce_kana_others_bold})
+            ChangeWeight(${weight_kana_others_bold})
             CorrectDirection()
             Move(0, -9)
         endif
@@ -11444,7 +11477,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(${address_mod_latin}, ${address_mod_latin} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
         SelectMore(${address_zero_latinkana}) # 避難したスラッシュ無し0
         SelectMore(${address_zero_latinkana} + 3, ${address_zero_latinkana} + 5) # 避難したスラッシュ無し全角0
-        Scale(${width_percent_latin}, ${height_percent_latin}, 250, 0); SetWidth(500)
+        Scale(${width_scale_latin}, ${height_scale_latin}, 250, 0); SetWidth(500)
     endif
 
 # 記号のグリフを加工
@@ -11513,15 +11546,20 @@ while (i < SizeOf(latin_sfd_list))
 
 # 一部を除いた半角文字を拡大 (Wide 版対応)
     if ("${wide_flag}" == "true")
-        Select(0u0020, 0u04ff)
-        SelectMore(0u1d00, 0u24ff)
-        SelectMore(0u25a0, 0u27ff)
-        SelectMore(0u2900, 0u2c7f)
-        SelectMore(0ua720, 0ua7ff)
+        Print("Edit hankaku aspect ratio")
+        Select(0u0020, 0u04ff) # 基本ラテン - キリル文字
+        SelectMore(0u1d00, 0u1fff) # 音声記号拡張 - ギリシャ文字拡張
+        SelectMore(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
+        SelectMore(0u2600, 0u27ff) # その他の記号 - 補助矢印 A
+        SelectMore(0u2900, 0u2a2f) # 補助矢印 B - 補助数学記号
+        SelectMore(0u2c71, 0u2c7d) # ラテン文字拡張 C
+        SelectMore(0u2e12, 0u2e29) # 補助句読点
+        SelectMore(0ua78b, 0ua78c) # ラテン文字拡張 D
+        SelectMore(0ufb00, 0ufb04) # アルファベット表示形
         foreach
             if (WorthOutputting())
-                if (300 <= GlyphInfo("Width") && GlyphInfo("Width") <= 700)
-                    Scale(${width_percent_hankaku_W}, ${height_percent_hankaku_W}, 250, 0)
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${width_scale_hankaku_W}, ${height_scale_hankaku_W}, 250, 0)
                     SetWidth(500)
                 endif
             endif
@@ -11531,7 +11569,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(${address_zero_latinkana}, ${address_zero_latinkana} + 5) # 避難したスラッシュ無し0
         SelectMore(${address_visi_latinkana}, ${address_visi_latinkana} + 1) # 避難した ⁄|
         SelectMore(${address_visi_latinkana} + 4) # 避難した –
-        Scale(${width_percent_hankaku_W}, ${height_percent_hankaku_W}, 250, 0)
+        Scale(${width_scale_hankaku_W}, ${height_scale_hankaku_W}, 250, 0)
         SetWidth(500)
     endif
 
@@ -12292,19 +12330,19 @@ while (i < SizeOf(input_list))
 
 # 全て少し移動
     Print("Move all glyphs")
-    SelectWorthOutputting(); Move(0, 30)
+    SelectWorthOutputting(); Move(0, ${y_pos_nerd})
 
 # IEC Power Symbols
     Print("Edit IEC Power Symbols")
     Select(0u23fb, 0u23fe)
     SelectMore(0u2b58)
-    Scale(88)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Pomicons
     Print("Edit Pomicons")
     Select(0ue000, 0ue00a)
-    Scale(91)
+    Scale(${scale_pomicons})
     SetWidth(1024)
 
 # Powerline Glyphs (Win(HHead)Ascent と Win(HHead)Descent の長さより少し大きくして位置を合わす)
@@ -12314,35 +12352,35 @@ while (i < SizeOf(input_list))
     SelectMore(0ue0ca)
     SelectMore(0ue0cc, 0ue0d2)
     SelectMore(0ue0d4)
-    Move(0, -30)
+    Move(0, -${y_pos_nerd}) # 元の位置に戻す
     Move(0, ${y_pos_em_revice}) # em値変更でのズレ修正
-    Select(0ue0b0, 0ue0b1); Scale(70,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b2, 0ue0b3); Scale(70,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b4);         Scale(80,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b5);         Scale(95,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b6);         Scale(80,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b7);         Scale(95,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b8, 0ue0b9); Scale(50,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0ba, 0ue0bb); Scale(50,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bc, 0ue0bd); Scale(50,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0be, 0ue0bf); Scale(50,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0c0, 0ue0c1); Scale(95,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c2, 0ue0c3); Scale(95,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c4);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c5);         Scale(105, ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c6);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c7);         Scale(105, ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c8);         Scale(95,  ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0ca);         Scale(95,  ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0cc, 0ue0cd); Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0b0, 0ue0b1); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b2, 0ue0b3); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b4);         Scale(80,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b5);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b6);         Scale(80,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b7);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b8, 0ue0b9); Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0ba, 0ue0bb); Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0bc, 0ue0bd); Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0be, 0ue0bf); Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0c0, 0ue0c1); Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0c2, 0ue0c3); Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0c4);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0c5);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0c6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0c7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0c8);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0ca);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0cc, 0ue0cd); Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0ce, 0ue0d0); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d1);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d2);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d4);         Scale(105, ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
-    Select(0ue0d6);         Scale(105, ${height_percent_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d7);         Scale(105, ${height_percent_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
+    Select(0ue0d1);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0d2);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0d4);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
+    Select(0ue0d6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0d7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
 
-    # Wide 版対応
+    # Wide 版対応 (とりあえず移動させておく)
     if ("${wide_flag}" == "true")
         Select(0ue0b0, 0ue0b1)
         SelectMore(0ue0b4)
@@ -12364,7 +12402,7 @@ while (i < SizeOf(input_list))
 # Font Awesome Extension
     Print("Edit Font Awesome Extension")
     Select(0ue200, 0ue2a9)
-    Scale(88)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Weather Icons
@@ -12379,7 +12417,8 @@ while (i < SizeOf(input_list))
     SelectMore(0ue381, 0ue3a9)
     SelectMore(0ue3af, 0ue3bb)
     SelectMore(0ue3c4, 0ue3e3)
-    Scale(88)
+    Scale(${scale_nerd})
+    SetWidth(1024)
 
     Select(0ue300, 0ue3e3)
     SetWidth(1024)
@@ -12387,14 +12426,15 @@ while (i < SizeOf(input_list))
 # Seti-UI + Customs
     Print("Edit Seti-UI + Costoms")
     Select(0ue5fa, 0ue6b5)
-    Scale(88)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Devicons
     Print("Edit Devicons")
     Select(0ue700, 0ue7bc)
     SelectMore(0ue7c4, 0ue7c5)
-    Scale(88)
+    Scale(${scale_nerd})
+    SetWidth(1024)
 
     Select(0ue700, 0ue7c5)
     SetWidth(1024)
@@ -12405,7 +12445,7 @@ while (i < SizeOf(input_list))
     while (j <= 0uec1e)
         Select(j)
         if (WorthOutputting())
-            Scale(88)
+            Scale(${scale_nerd})
             SetWidth(1024)
         endif
         j += 1
@@ -12416,33 +12456,33 @@ while (i < SizeOf(input_list))
     Select(0ued00, 0uedff)
     SelectMore(0uee0c, 0uefce)
     SelectMore(0uf000, 0uf2ff)
-    Scale(88)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Font Logos
     Print("Edit Font Logos")
     Select(0uf300, 0uf375)
-    Scale(88)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Octicons
     Print("Edit Octicons")
     Select(0u26a1)
     SelectMore(0uf400, 0uf533)
-    Scale(88)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Material Design Icons
     Print("Edit Material Design Icons")
- #    Select(0uf500, 0uf8ff); Scale(83) # v2.3.3まで 互換用
- #    SetWidth(1024)
-    Select(0uf0001, 0uf1af0); Scale(88)
+ #    Select(0uf500, 0uf8ff); Scale(83); SetWidth(1024) # v2.3.3まで 互換用
+    Select(0uf0001, 0uf1af0)
+    Scale(${scale_nerd})
     SetWidth(1024)
 
 # Others
     Print("Edit Other glyphs")
-    Select(0u2630); Scale(88); SetWidth(1024)
-    Select(0u276c, 0u2771) #; Scale(88)
+    Select(0u2630); Scale(${scale_nerd}); SetWidth(1024)
+    Select(0u276c, 0u2771) #; Scale(${scale_nerd}) # 縮小しない
     SetWidth(1024)
 
 # ◢◣◤◥
@@ -12467,7 +12507,7 @@ while (i < SizeOf(input_list))
     Move(507, -248)
     SetWidth(1024)
 
-    # Wide 版対応
+    # Wide 版対応 (Powerline グリフが移動するため補正する)
     if ("${wide_flag}" == "true")
         Select(0u25e3, 0u25e4) # ◣◤
         Move(${x_pos_hankaku_W} + 20, 0)
@@ -12577,7 +12617,7 @@ while (i < \$argc)
 # ブロック要素を加工 (Powerline対応)
     Print("Edit box drawing and block")
     Select(0u2580, 0u259f)
-    Scale(100, ${height_percent_block}, 0, ${height_center_pl}) # Powerlineに合わせて縦を縮小
+    Scale(100, ${height_scale_block}, 0, ${height_center_pl}) # Powerlineに合わせて縦を縮小
     Move(0, ${y_pos_pl})
 
     Select(0ue0d1); RemoveOverlap(); Copy() # 
@@ -12712,6 +12752,7 @@ while (i < \$argc)
         Scale(113, 100, 256, ${y_pos_center_W})
         SetWidth(512)
 
+        # 全ての半角
         SelectWorthOutputting()
         foreach
             if (300 <= GlyphInfo("Width") && GlyphInfo("Width") <= 700)
@@ -13069,7 +13110,7 @@ while (i < \$argc)
         Select(0u0030 + j); Copy() # 0
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Scale(${percent_calt_decimal}, ${percent_calt_decimal}, 256, 0)
+        Scale(${scale_calt_decimal}, ${scale_calt_decimal}, 256, 0)
         SetWidth(${hankaku_width})
  #        AddPosSub(lookupSub0, glyphName) # ノーマル←小数
         glyphName = GlyphInfo("Name")
@@ -13781,7 +13822,7 @@ while (i < \$argc)
     # 小数
     Select(${address_zero}); Copy() # スラッシュ無し0
     Select(k); Paste()
-    Scale(${percent_calt_decimal}, ${percent_calt_decimal}, 256, 0)
+    Scale(${scale_calt_decimal}, ${scale_calt_decimal}, 256, 0)
     SetWidth(${hankaku_width})
     glyphName = GlyphInfo("Name")
     Select(${address_ss_figure} + 30) # ssで変換したグリフからの変換
