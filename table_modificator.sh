@@ -28,6 +28,7 @@ gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用
 zero_width="0" # 文字幅ゼロ
 hankaku_width="512" # 半角文字幅
 hankaku_width_W="576" # 半角文字幅 (Wide 版)
+xAvg_char_width=${hankaku_width} # フォントの半角文字幅は常に1:2とする
 zenkaku_width="1024" # 全角文字幅
 underline="-80" # アンダーライン位置
 #vhea_ascent1024="994"
@@ -251,7 +252,7 @@ if [ "${other_flag}" = "true" ]; then
     sed -i.bak -e 's,flags value="........ ........",flags value="00000000 00000011",' "${P%%.ttf}.ttx"
 
     # OS/2 (全体のWidthの修正)
-    sed -i.bak -e "s,xAvgCharWidth value=\"...\",xAvgCharWidth value=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,xAvgCharWidth value=\"...\",xAvgCharWidth value=\"${xAvg_char_width}\"," "${P%%.ttf}.ttx"
 
     # post (アンダーラインの位置を指定、等幅フォントであることを示す)
     sed -i.bak -e "s,underlinePosition value=\"-..\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
