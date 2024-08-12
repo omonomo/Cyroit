@@ -3405,15 +3405,6 @@ input=(${_JN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
 
-# ○左が右寄り、均等な文字で その左が幅広の文字の場合 r 左に移動
-backtrack1=(${gravityWL[@]} \
-${gravityWR[@]} \
-${gravityWN[@]})
-backtrack=(${gravityRR[@]} ${gravityER[@]})
-input=(${_rN[@]})
-lookAhead=("")
-chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
-
 # A に関する例外処理 3 ----------------------------------------
 
 # ○右が W の場合 A 右に移動しない
@@ -3725,8 +3716,8 @@ input=(${_rN[@]} ${_tN[@]})
 lookAhead=(${gravitySmallWN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
-# ○左が右寄り、均等な小文字、Vの大文字の場合 r 右に移動しない (次の処理とセット)
-backtrack=(${gravitySmallRR[@]} ${gravitySmallER[@]} ${gravityVR[@]})
+# ○左が右寄り、均等、Vの字の場合 r 右に移動しない (次の処理とセット)
+backtrack=(${gravityRR[@]} ${gravityER[@]} ${gravityVR[@]})
 input=(${_rN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
