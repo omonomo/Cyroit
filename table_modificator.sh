@@ -27,7 +27,7 @@ gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用
 
 zero_width="0" # 文字幅ゼロ
 hankaku_width="512" # 半角文字幅
-hankaku_width_W="576" # 半角文字幅 (Wide 版)
+hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
 xAvg_char_width=${hankaku_width} # フォントの半角文字幅は常に1:2とする
 zenkaku_width="1024" # 全角文字幅
 underline="-80" # アンダーライン位置
@@ -38,7 +38,7 @@ underline="-80" # アンダーライン位置
 mode="" # 生成モード
 
 leaving_tmp_flag="false" # 一時ファイルを残すか
-wide_flag="false" # Wide 版にするか
+loose_flag="false" # Loose 版にするか
 reuse_list_flag="false" # 生成済みのリストを使うか
 
 cmap_flag="true" # cmapを編集するか
@@ -72,8 +72,8 @@ option_format_cm() { # calt_table_maker 用のオプションを整形 (戻り�
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションがある場合
     opt="${opt}l"
   fi
-  if [ "${symbol_only_flag}" != "false" ]; then # -s オプションがある場合
-    opt="${opt}s"
+  if [ "${symbol_only_flag}" != "false" ]; then # -S オプションがある場合
+    opt="${opt}S"
   fi
   if [ "${basic_only_flag}" != "false" ]; then # -b オプションがある場合
     opt="${opt}b"
@@ -110,16 +110,16 @@ table_modificator_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
-    echo "  -w         Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -L         Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -S         Don't make calt settings for latin characters"
+    echo "  -b         Make kerning settings for basic Latin characters only"
+    echo "  -o         Enable optimization process when make kerning settings"
     echo "  -r         Reuse an existing list"
     echo "  -m         Disable edit cmap tables"
     echo "  -g         Disable edit GSUB tables"
     echo "  -t         Disable edit other tables"
-    echo "  -s         Don't make calt settings for latin characters"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
-    echo "  -b         Make kerning settings for basic Latin characters only"
-    echo "  -o         Enable optimization process when make kerning settings"
     exit 0
 }
 
@@ -128,7 +128,7 @@ echo "= Font tables Modificator ="
 echo
 
 # Get options
-while getopts hxlN:wrmgtsCpbo OPT
+while getopts hxlN:LSbormgtCp OPT
 do
     case "${OPT}" in
         "h" )
@@ -149,10 +149,22 @@ do
             echo "Option: Set fontfamily: ${OPTARG}"
             font_familyname=${OPTARG// /}
             ;;
-        "w" )
+        "L" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
-            wide_flag="true"
-            hankaku_width="${hankaku_width_W}"
+            loose_flag="true"
+            hankaku_width="${hankaku_width_Loose}"
+            ;;
+        "S" )
+            echo "Option: Don't make calt settings for latin characters"
+            symbol_only_flag="true"
+            ;;
+        "b" )
+            echo "Option: Make calt settings for basic Latin characters only"
+            basic_only_flag="true"
+            ;;
+        "o" )
+            echo "Option: Enable optimization process when make kerning settings"
+            optimize_flag="true"
             ;;
         "r" )
             echo "Option: Reuse an existing list"
@@ -169,10 +181,6 @@ do
         "t" )
             echo "Option: Disable edit other tables"
             other_flag="false"
-            ;;
-        "s" )
-            echo "Option: Don't make calt settings for latin characters"
-            symbol_only_flag="true"
             ;;
         "C" )
             echo "Option: End just before editing calt feature"
@@ -193,14 +201,6 @@ do
             cmap_flag="false"
             gsub_flag="true"
             calt_insert_flag="true"
-            ;;
-        "b" )
-            echo "Option: Make calt settings for basic Latin characters only"
-            basic_only_flag="true"
-            ;;
-        "o" )
-            echo "Option: Enable optimization process when make kerning settings"
-            optimize_flag="true"
             ;;
         * )
             exit 1

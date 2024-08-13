@@ -209,17 +209,17 @@ x_pos_oblique="-4800" # 移動量 * 100
 width_scale_latin="98" # 横拡大比率
 height_scale_latin="102" # 縦拡大比率
 
-# Wide 版用
-width_scale_hankaku_W="104" # 横拡大比率
-height_scale_hankaku_W="104" # 縦拡大比率
+# Loose 版用
+width_scale_hankaku_Loose="104" # 横拡大比率
+height_scale_hankaku_Loose="104" # 縦拡大比率
 hankaku_width="512" # 半角文字幅 (通常版)
-hankaku_width_W="576" # 半角文字幅 (Wide 版)
-x_pos_center_W=$((hankaku_width_W / 2)) # 半角文字X座標中心 (Wide 版)
-y_pos_center_W="373" # 半角文字Y座標中心
-x_pos_hankaku_W=$(((hankaku_width_W - ${hankaku_width}) / 2)) # 半角文字移動量 (Wide 版)
-x_pos_calt_W="22" # ラテン文字のX座標移動量 (Wide 版)
-x_pos_calt_symbol_W="33" # 記号のX座標移動量 (Wide 版)
-x_pos_calt_separate_W="-512" # 桁区切り表示のX座標移動量 (Wide 版、下書きモードとその他で位置が変わるので注意)
+hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
+x_pos_center_Loose=$((hankaku_width_Loose / 2)) # 半角文字X座標中心 (Loose 版)
+y_pos_center_Loose="373" # 半角文字Y座標中心
+x_pos_hankaku_Loose=$(((hankaku_width_Loose - ${hankaku_width}) / 2)) # 半角文字移動量 (Loose 版)
+x_pos_calt_Loose="22" # ラテン文字のX座標移動量 (Loose 版)
+x_pos_calt_symbol_Loose="33" # 記号のX座標移動量 (Loose 版)
+x_pos_calt_separate_Loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
 
 # calt用
 x_pos_calt="20" # ラテン文字のX座標移動量
@@ -260,9 +260,9 @@ scale_calt_decimal="93" # 小数の拡大比率
 #width_scale_latin="150" # 横拡大比率
 #height_scale_latin="50" # 縦拡大比率
 
-# Wide 版
-#width_scale_hankaku_W="150" # 横拡大比率
-#height_scale_hankaku_W="50" # 縦拡大比率
+# Loose 版
+#width_scale_hankaku_Loose="150" # 横拡大比率
+#height_scale_hankaku_Loose="50" # 縦拡大比率
 
 # デバッグ用ここまで
 
@@ -282,7 +282,7 @@ ${HOME}/Library/Fonts /Library/Fonts \
 mode="" # 生成モード
 
 leaving_tmp_flag="false" # 一時ファイル残す
-wide_flag="false" # Wide 版にする
+loose_flag="false" # Loose 版にする
 visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
 improve_visibility_flag="true" # ダッシュ破線化
@@ -378,7 +378,7 @@ font_generator_help()
     echo "  -l                     Leave (do NOT remove) temporary files"
     echo "  -N string              Set fontfamily (\"string\")"
     echo "  -n string              Set fontfamily suffix (\"string\")"
-    echo "  -w                     Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -L                     Set the ratio of hankaku to zenkaku characters to 9:16"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
     echo "  -u                     Disable zenkaku hankaku underline"
@@ -397,7 +397,7 @@ font_generator_help()
 }
 
 # Get options
-while getopts hVxf:vlN:n:wZzubtOsceoSdPp OPT
+while getopts hVxf:vlN:n:LZzubtOsceoSdPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -432,13 +432,13 @@ do
             echo "Option: Set fontfamily suffix: ${OPTARG}"
             font_familyname_suffix=${OPTARG// /}
             ;;
-        "w" )
+        "L" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
-            wide_flag="true"
-            hankaku_width=${hankaku_width_W} # 半角文字幅
-            x_pos_calt=${x_pos_calt_W} # ラテン文字のX座標移動量
-            x_pos_calt_symbol=${x_pos_calt_symbol_W} # 記号のX座標移動量
-            x_pos_calt_separate=${x_pos_calt_separate_W} # 桁区切り表示のX座標移動量
+            loose_flag="true"
+            hankaku_width=${hankaku_width_Loose} # 半角文字幅
+            x_pos_calt=${x_pos_calt_Loose} # ラテン文字のX座標移動量
+            x_pos_calt_symbol=${x_pos_calt_symbol_Loose} # 記号のX座標移動量
+            x_pos_calt_separate=${x_pos_calt_separate_Loose} # 桁区切り表示のX座標移動量
             ;;
         "Z" )
             echo "Option: Disable visible zenkaku space"
@@ -2402,8 +2402,8 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-    # Wide 版 対応 (とりあえず拡大しておく)
-    if ("${wide_flag}" == "true")
+    # Loose 版 対応 (とりあえず拡大しておく)
+    if ("${loose_flag}" == "true")
         Select(0u2800, 0u28ff)
         SelectMore(${address_braille}, ${address_braille} + 255) # 避難した点字
         Scale(112.5, 112.5, 256, 211)
@@ -10987,15 +10987,15 @@ while (i < SizeOf(input_list))
 
 # --------------------------------------------------
 
-# 一部を除いた半角文字を拡大 (Wide 版対応)
-    if ("${wide_flag}" == "true")
+# 一部を除いた半角文字を拡大 (Loose 版対応)
+    if ("${loose_flag}" == "true")
         Print("Edit hankaku aspect ratio")
         Select(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
         SelectMore(0u29fa, 0u29fb) # ⧺⧻
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${width_scale_hankaku_W}, ${height_scale_hankaku_W}, 256, 0)
+                    Scale(${width_scale_hankaku_Loose}, ${height_scale_hankaku_Loose}, 256, 0)
                     SetWidth(512)
                 endif
             endif
@@ -11544,8 +11544,8 @@ while (i < SizeOf(latin_sfd_list))
 
 # --------------------------------------------------
 
-# 一部を除いた半角文字を拡大 (Wide 版対応)
-    if ("${wide_flag}" == "true")
+# 一部を除いた半角文字を拡大 (Loose 版対応)
+    if ("${loose_flag}" == "true")
         Print("Edit hankaku aspect ratio")
         Select(0u0020, 0u04ff) # 基本ラテン - キリル文字
         SelectMore(0u1d00, 0u1fff) # 音声記号拡張 - ギリシャ文字拡張
@@ -11559,7 +11559,7 @@ while (i < SizeOf(latin_sfd_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${width_scale_hankaku_W}, ${height_scale_hankaku_W}, 250, 0)
+                    Scale(${width_scale_hankaku_Loose}, ${height_scale_hankaku_Loose}, 250, 0)
                     SetWidth(500)
                 endif
             endif
@@ -11569,7 +11569,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(${address_zero_latinkana}, ${address_zero_latinkana} + 5) # 避難したスラッシュ無し0
         SelectMore(${address_visi_latinkana}, ${address_visi_latinkana} + 1) # 避難した ⁄|
         SelectMore(${address_visi_latinkana} + 4) # 避難した –
-        Scale(${width_scale_hankaku_W}, ${height_scale_hankaku_W}, 250, 0)
+        Scale(${width_scale_hankaku_Loose}, ${height_scale_hankaku_Loose}, 250, 0)
         SetWidth(500)
     endif
 
@@ -12380,14 +12380,14 @@ while (i < SizeOf(input_list))
     Select(0ue0d6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0d7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
 
-    # Wide 版対応 (とりあえず移動させておく)
-    if ("${wide_flag}" == "true")
+    # Loose 版対応 (とりあえず移動させておく)
+    if ("${loose_flag}" == "true")
         Select(0ue0b0, 0ue0b1)
         SelectMore(0ue0b4)
         SelectMore(0ue0b5)
         SelectMore(0ue0b8, 0ue0b9)
         SelectMore(0ue0bc, 0ue0bd)
-        Move(-${x_pos_hankaku_W}, 0)
+        Move(-${x_pos_hankaku_Loose}, 0)
         SetWidth(512)
 
         Select(0ue0b2, 0ue0b3)
@@ -12395,7 +12395,7 @@ while (i < SizeOf(input_list))
         SelectMore(0ue0b7)
         SelectMore(0ue0ba, 0ue0bb)
         SelectMore(0ue0be, 0ue0bf)
-        Move(${x_pos_hankaku_W}, 0)
+        Move(${x_pos_hankaku_Loose}, 0)
         SetWidth(512)
     endif
 
@@ -12507,15 +12507,15 @@ while (i < SizeOf(input_list))
     Move(507, -248)
     SetWidth(1024)
 
-    # Wide 版対応 (Powerline グリフが移動するため補正する)
-    if ("${wide_flag}" == "true")
+    # Loose 版対応 (Powerline グリフが移動するため補正する)
+    if ("${loose_flag}" == "true")
         Select(0u25e3, 0u25e4) # ◣◤
-        Move(${x_pos_hankaku_W} + 20, 0)
+        Move(${x_pos_hankaku_Loose} + 20, 0)
         SetWidth(1024)
 
         Select(0u25e2) #◢
         SelectMore(0u25e5)# ◥
-        Move(-${x_pos_hankaku_W} - 20, 0)
+        Move(-${x_pos_hankaku_Loose} - 20, 0)
         SetWidth(1024)
     endif
 
@@ -12743,21 +12743,21 @@ while (i < \$argc)
 
 # --------------------------------------------------
 
-# 半角の文字幅変更 (Wide 版対応)
-    if ("${wide_flag}" == "true")
+# 半角の文字幅変更 (Loose 版対応)
+    if ("${loose_flag}" == "true")
         Print("Change width of hankaku glyphs (it may take a few minutes)")
 
         # ブロック要素 (Nerd fonts での改変があるため、ここで調整)
         Select(0u2580, 0u259f)
-        Scale(113, 100, 256, ${y_pos_center_W})
+        Scale(113, 100, 256, ${y_pos_center_Loose})
         SetWidth(512)
 
         # 全ての半角
         SelectWorthOutputting()
         foreach
             if (300 <= GlyphInfo("Width") && GlyphInfo("Width") <= 700)
-                Move(${x_pos_hankaku_W}, 0)
-                SetWidth(${hankaku_width_W})
+                Move(${x_pos_hankaku_Loose}, 0)
+                SetWidth(${hankaku_width_Loose})
             endif
         endloop
     endif
