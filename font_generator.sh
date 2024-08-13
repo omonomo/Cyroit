@@ -1649,7 +1649,7 @@ while (i < SizeOf(input_list))
     else
         PasteWithOffset(0, 10)
     endif
-     RemoveOverlap()
+    RemoveOverlap()
 
     Move(10, 0)
     SetWidth(500)
@@ -8643,8 +8643,8 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
 
 # ✂ (縦書き用ダミー、後でグリフ上書き)
-   Select(0u0020); Copy() # スペース
-   Select(0u2702); Paste() # ✂
+    Select(0u0020); Copy() # スペース
+    Select(0u2702); Paste() # ✂
 
 # ➀-➓ (下線を引く)
     j = 0
@@ -11134,7 +11134,7 @@ while (i < SizeOf(input_list))
 
 # Save modified dummy fonts
     Print("Save " + output_list[i])
-     Save("${tmpdir}/" + output_list[i])
+    Save("${tmpdir}/" + output_list[i])
  #    Generate("${tmpdir}/" + output_list[i], "", 0x04)
  #    Generate("${tmpdir}/" + output_list[i], "", 0x84)
     Close()
@@ -14400,7 +14400,7 @@ Print("- Patch the generated fonts -")
 i = 1
 while (i < \$argc)
 # Check filename
-     input_ttf = \$argv[i]
+    input_ttf = \$argv[i]
     input_nop = input_ttf:t:r # :t:r ファイル名のみ抽出
     if (input_ttf:t:e != "ttf") # :t:e 拡張子のみ抽出
         Print(usage)
