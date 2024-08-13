@@ -378,7 +378,7 @@ font_generator_help()
     echo "  -l                     Leave (do NOT remove) temporary files"
     echo "  -N string              Set fontfamily (\"string\")"
     echo "  -n string              Set fontfamily suffix (\"string\")"
-    echo "  -L                     Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -w                     Set the ratio of hankaku to zenkaku characters to 9:16"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
     echo "  -u                     Disable zenkaku hankaku underline"
@@ -393,15 +393,15 @@ font_generator_help()
     echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -P                     End just before patching"
     echo "  -p                     Run font patch only"
-    exit 0
 }
 
 # Get options
-while getopts hVxf:vlN:n:LZzubtOsceoSdPp OPT
+while getopts hVxf:vlN:n:wZzubtOsceoSdPp OPT
 do
     case "${OPT}" in
         "h" )
             font_generator_help
+            exit 0
             ;;
         "V" )
             exit 0
@@ -432,7 +432,7 @@ do
             echo "Option: Set fontfamily suffix: ${OPTARG}"
             font_familyname_suffix=${OPTARG// /}
             ;;
-        "L" )
+        "w" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
             loose_flag="true"
             hankaku_width=${hankaku_width_Loose} # 半角文字幅

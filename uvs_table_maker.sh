@@ -49,7 +49,6 @@ uvs_table_maker_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
-    exit 0
 }
 
 echo
@@ -62,6 +61,7 @@ do
     case "${OPT}" in
         "h" )
             uvs_table_maker_help
+            exit 0
             ;;
         "x" )
             echo "Option: Cleaning temporary files"
@@ -77,6 +77,7 @@ do
             font_familyname=${OPTARG// /}
             ;;
         * )
+            uvs_table_maker_help
             exit 1
             ;;
     esac

@@ -574,11 +574,10 @@ calt_table_maker_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -n number  Set glyph number of \"A moved left\""
-    echo "  -S         Don't make calt settings for latin characters"
+    echo "  -k         Don't make calt settings for latin characters"
     echo "  -b         Make kerning settings for basic latin characters only"
     echo "  -O         Enable force optimization process"
     echo "  -o         Enable optimization process"
-    exit 0
 }
 
 # メイン ||||||||||||||||||||||||||||||||||||||||
@@ -588,11 +587,12 @@ echo "- GSUB table [calt, LookupType 6] maker -"
 echo
 
 # Get options
-while getopts hxln:SbOo OPT
+while getopts hxln:kbOo OPT
 do
     case "${OPT}" in
         "h" )
             calt_table_maker_help
+            exit 0
             ;;
         "x" )
             echo "Option: Cleaning temporary files"
@@ -609,7 +609,7 @@ do
             glyphNo_flag="true"
             glyphNo="${OPTARG}"
             ;;
-        "S" )
+        "k" )
             echo "Option: Don't make calt settings for latin characters"
             symbol_only_flag="true"
             ;;
@@ -626,6 +626,7 @@ do
             optimize_mode="optional"
             ;;
         * )
+            calt_table_maker_help
             exit 1
             ;;
     esac
