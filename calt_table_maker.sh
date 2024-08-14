@@ -574,11 +574,10 @@ calt_table_maker_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -n number  Set glyph number of \"A moved left\""
-    echo "  -S         Don't make calt settings for latin characters"
+    echo "  -k         Don't make calt settings for latin characters"
     echo "  -b         Make kerning settings for basic latin characters only"
     echo "  -O         Enable force optimization process"
     echo "  -o         Enable optimization process"
-    exit 0
 }
 
 # メイン ||||||||||||||||||||||||||||||||||||||||
@@ -588,11 +587,12 @@ echo "- GSUB table [calt, LookupType 6] maker -"
 echo
 
 # Get options
-while getopts hxln:SbOo OPT
+while getopts hxln:kbOo OPT
 do
     case "${OPT}" in
         "h" )
             calt_table_maker_help
+            exit 0
             ;;
         "x" )
             echo "Option: Cleaning temporary files"
@@ -609,7 +609,7 @@ do
             glyphNo_flag="true"
             glyphNo="${OPTARG}"
             ;;
-        "S" )
+        "k" )
             echo "Option: Don't make calt settings for latin characters"
             symbol_only_flag="true"
             ;;
@@ -626,6 +626,7 @@ do
             optimize_mode="optional"
             ;;
         * )
+            calt_table_maker_help
             exit 1
             ;;
     esac
@@ -2157,11 +2158,11 @@ input=(${highSpaceLN[@]} ${highSpaceCN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
-# ○左が、右上が開いている文字で 右が左寄り、幅広、均等な文字の場合 両下が開いている大文字 左に移動
+# ○左が、右上が開いている文字で 右が左寄り、幅広、均等な文字、右寄りの大文字の場合 両下が開いている大文字 左に移動
 backtrack=(${highSpaceRR[@]} ${highSpaceCR[@]} \
 ${highSpaceRN[@]} ${highSpaceCN[@]})
 input=(${lowSpaceCapitalCN[@]})
-lookAhead=(${gravityLN[@]} ${gravityWN[@]} ${gravityEN[@]})
+lookAhead=(${gravityLN[@]} ${gravityCapitalRN[@]} ${gravityWN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # 丸い文字に関する例外処理 1 ----------------------------------------
@@ -3445,6 +3446,15 @@ backtrack=(${outLgravityLR[@]} ${gravityMR[@]} ${gravityVR[@]})
  #backtrack=(${gravityLR[@]} ${gravityMR[@]} ${gravityVR[@]})
 input=(${_JN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
  #input=(${_JN[@]} ${_fN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
+lookAhead=("")
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
+
+# ○左が右寄り、均等な文字で その左が幅広の文字の場合 r 左に移動
+backtrack1=(${outWwgravityWL[@]} \
+${gravityWR[@]} \
+${outWwgravityWN[@]})
+backtrack=(${gravityRR[@]} ${gravityER[@]})
+input=(${_rN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
 
@@ -5067,10 +5077,10 @@ input=(${gravityLL[@]} ${gravityCapitalEL[@]})
 lookAhead=(${gravityWR[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-# △左が狭い文字の場合 f 右に移動しない (次の処理とセット)
-backtrack=(${gravityCL[@]} \
-${_IR[@]} ${_fR[@]} ${_iR[@]} ${_lR[@]} ${_rR[@]} \
-${gravityCN[@]})
+# △左が狭い文字、L の場合 f 右に移動しない (次の処理とセット)
+backtrack=(${gravityCL[@]} ${_LL[@]} \
+${_LR[@]} ${_IR[@]} ${_fR[@]} ${_iR[@]} ${_lR[@]} ${_rR[@]} \
+${gravityCN[@]} ${_LN[@]})
 input=(${_fN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
