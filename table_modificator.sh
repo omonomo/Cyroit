@@ -72,8 +72,8 @@ option_format_cm() { # calt_table_maker 用のオプションを整形 (戻り�
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションがある場合
     opt="${opt}l"
   fi
-  if [ "${symbol_only_flag}" != "false" ]; then # -S オプションがある場合
-    opt="${opt}S"
+  if [ "${symbol_only_flag}" != "false" ]; then # -k オプションがある場合
+    opt="${opt}k"
   fi
   if [ "${basic_only_flag}" != "false" ]; then # -b オプションがある場合
     opt="${opt}b"
@@ -110,8 +110,8 @@ table_modificator_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
-    echo "  -L         Set the ratio of hankaku to zenkaku characters to 9:16"
-    echo "  -S         Don't make calt settings for latin characters"
+    echo "  -w         Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -k         Don't make calt settings for latin characters"
     echo "  -b         Make kerning settings for basic Latin characters only"
     echo "  -o         Enable optimization process when make kerning settings"
     echo "  -r         Reuse an existing list"
@@ -120,7 +120,6 @@ table_modificator_help()
     echo "  -t         Disable edit other tables"
     echo "  -C         End just before editing calt feature"
     echo "  -p         Run calt patch only"
-    exit 0
 }
 
 echo
@@ -128,11 +127,12 @@ echo "= Font tables Modificator ="
 echo
 
 # Get options
-while getopts hxlN:LSbormgtCp OPT
+while getopts hxlN:wkbormgtCp OPT
 do
     case "${OPT}" in
         "h" )
             table_modificator_help
+            exit 0
             ;;
         "x" )
             echo "Option: Cleaning temporary files"
@@ -149,12 +149,12 @@ do
             echo "Option: Set fontfamily: ${OPTARG}"
             font_familyname=${OPTARG// /}
             ;;
-        "L" )
+        "w" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
             loose_flag="true"
             hankaku_width="${hankaku_width_Loose}"
             ;;
-        "S" )
+        "k" )
             echo "Option: Don't make calt settings for latin characters"
             symbol_only_flag="true"
             ;;
@@ -203,6 +203,7 @@ do
             calt_insert_flag="true"
             ;;
         * )
+            table_modificator_help
             exit 1
             ;;
     esac
