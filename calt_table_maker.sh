@@ -2158,11 +2158,11 @@ input=(${highSpaceLN[@]} ${highSpaceCN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
-# ○左が、右上が開いている文字で 右が左寄り、幅広、均等な文字の場合 両下が開いている大文字 左に移動
+# ○左が、右上が開いている文字で 右が左寄り、幅広、均等な文字、右寄りの大文字の場合 両下が開いている大文字 左に移動
 backtrack=(${highSpaceRR[@]} ${highSpaceCR[@]} \
 ${highSpaceRN[@]} ${highSpaceCN[@]})
 input=(${lowSpaceCapitalCN[@]})
-lookAhead=(${gravityLN[@]} ${gravityWN[@]} ${gravityEN[@]})
+lookAhead=(${gravityLN[@]} ${gravityCapitalRN[@]} ${gravityWN[@]} ${gravityEN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
 # 丸い文字に関する例外処理 1 ----------------------------------------
@@ -3446,6 +3446,15 @@ backtrack=(${outLgravityLR[@]} ${gravityMR[@]} ${gravityVR[@]})
  #backtrack=(${gravityLR[@]} ${gravityMR[@]} ${gravityVR[@]})
 input=(${_JN[@]} ${_fN[@]} ${_iN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
  #input=(${_JN[@]} ${_fN[@]} ${_iN[@]} ${_jN[@]} ${_lN[@]} ${_rN[@]} ${_tN[@]})
+lookAhead=("")
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
+
+# ○左が右寄り、均等な文字で その左が幅広の文字の場合 r 左に移動
+backtrack1=(${outWwgravityWL[@]} \
+${gravityWR[@]} \
+${outWwgravityWN[@]})
+backtrack=(${gravityRR[@]} ${gravityER[@]})
+input=(${_rN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}" "${backtrack1[*]}"
 
@@ -5068,10 +5077,10 @@ input=(${gravityLL[@]} ${gravityCapitalEL[@]})
 lookAhead=(${gravityWR[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-# △左が狭い文字の場合 f 右に移動しない (次の処理とセット)
-backtrack=(${gravityCL[@]} \
-${_IR[@]} ${_fR[@]} ${_iR[@]} ${_lR[@]} ${_rR[@]} \
-${gravityCN[@]})
+# △左が狭い文字、L の場合 f 右に移動しない (次の処理とセット)
+backtrack=(${gravityCL[@]} ${_LL[@]} \
+${_LR[@]} ${_IR[@]} ${_fR[@]} ${_iR[@]} ${_lR[@]} ${_rR[@]} \
+${gravityCN[@]} ${_LN[@]})
 input=(${_fN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
