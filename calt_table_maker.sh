@@ -2002,6 +2002,12 @@ input=(${outjgravityCN[@]})
 lookAhead=(${gravityLN[@]} ${gravityRN[@]} ${gravityEN[@]} ${gravityMN[@]} ${gravityVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexL}"
 
+# ○左が rt で 右が狭い文字の場合 ac 移動しない
+backtrack=(${_rR[@]} ${_tR[@]})
+input=(${_aN[@]} ${_cN[@]})
+lookAhead=(${gravityCN[@]})
+chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
 # il に関する例外処理 ----------------------------------------
 
 # ○左が均等な大文字、右寄りの文字で、右が il の場合 j 以外の狭い文字 右に移動
@@ -2541,23 +2547,24 @@ input=(${_fN[@]})
 lookAhead=(${gravitySmallRN[@]} ${gravitySmallEN[@]} ${gravityMN[@]} ${gravitySmallVN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
-# ○左が均等な大文字、右寄りの文字で 右が ac で その右が左寄り、右寄り、幅広、均等、中間の文字の場合 狭い文字 右に移動しない (次の処理とセット)
+# ○左が均等な大文字、右寄りの文字、BDER で 右が a で その右が左寄り、右寄り、幅広、均等、中間の文字の場合 狭い文字 右に移動しない (次の処理とセット)
 backtrack1=("")
-backtrack=(${gravityRR[@]} ${gravityCapitalER[@]})
+backtrack=(${gravityRR[@]} ${gravityCapitalER[@]} ${_BR[@]} ${_DR[@]} ${_ER[@]} ${_RR[@]})
 input=(${outjgravityCN[@]})
  #input=(${gravityCN[@]})
-lookAhead=(${_aN[@]} ${_cN[@]})
+lookAhead=(${_aN[@]})
 lookAhead1=(${gravityLN[@]} ${gravityRN[@]} ${gravityWN[@]} ${gravityEN[@]} ${gravityMN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "" "${backtrack1[*]}" "${lookAhead1[*]}"
 
-# ○左が均等な大文字、右寄りの文字で 右が Vの大文字、acsxz の場合 狭い文字 右に移動
-backtrack=(${gravityRR[@]} ${gravityCapitalER[@]}})
-input=(${gravityCN[@]})
+# ○左が均等な大文字、右寄りの文字、BDER で 右が Vの大文字、acsxz の場合 狭い文字 右に移動
+backtrack=(${gravityRR[@]} ${gravityCapitalER[@]} ${_BR[@]} ${_DR[@]} ${_ER[@]} ${_RR[@]})
+input=(${outjgravityCN[@]})
+ #input=(${gravityCN[@]})
 lookAhead=(${gravityCapitalVN[@]} ${_aN[@]} ${_cN[@]} ${_sN[@]} ${_xN[@]} ${_zN[@]})
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexR}"
 
 # ○左が Cc 以外の右寄り、均等な大文字で 右が Vの大文字の場合 左寄り、均等な文字 右に移動
-backtrack=(${outcgravitySmallRL[@]} ${gravityCapitalEL[@]}} ${_GL[@]})
+backtrack=(${outcgravitySmallRL[@]} ${gravityCapitalEL[@]} ${_GL[@]})
 input=(${outLgravityLN[@]} ${gravityEN[@]})
  #input=(${gravityLN[@]} ${gravityEN[@]})
 lookAhead=(${gravityCapitalVN[@]})
