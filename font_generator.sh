@@ -209,20 +209,8 @@ x_pos_oblique="-4800" # 移動量 * 100
 width_scale_latin="98" # 横拡大比率
 height_scale_latin="102" # 縦拡大比率
 
-# Loose 版用
-width_scale_hankaku_Loose="104" # 横拡大比率
-height_scale_hankaku_Loose="104" # 縦拡大比率
-hankaku_width="512" # 半角文字幅 (通常版)
-hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
-x_pos_center_Loose=$((hankaku_width_Loose / 2)) # 半角文字X座標中心 (Loose 版)
-y_pos_center_Loose="373" # 半角文字Y座標中心
-x_pos_hankaku_Loose=$(((hankaku_width_Loose - ${hankaku_width}) / 2)) # 半角文字移動量 (Loose 版)
-x_pos_calt_Loose="22" # ラテン文字のX座標移動量 (Loose 版)
-x_pos_calt_symbol_Loose="33" # 記号のX座標移動量 (Loose 版)
-x_pos_calt_separate_Loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
-
 # calt用
-x_pos_calt="20" # ラテン文字のX座標移動量
+x_pos_calt="15" # ラテン文字のX座標移動量
 x_pos_calt_symbol="30" # 記号のX座標移動量
 y_pos_calt_colon="55" # : のY座標移動量
 y_pos_calt_bar="-38" # | のY座標移動量
@@ -232,6 +220,19 @@ x_pos_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモ
 y_pos_calt_separate3="-510" # 3桁区切り表示のY座標
 y_pos_calt_separate4="452" # 4桁区切り表示のY座標
 scale_calt_decimal="93" # 小数の拡大比率
+
+# Loose 版用
+width_scale_latin_Loose="102" # 半角 Latin フォントの横拡大比率 (Loose 版)
+width_scale_hankaku_Loose="104" # 半角すべての横拡大比率 (Loose 版)
+height_scale_hankaku_Loose="104" # 半角すべての縦拡大比率 (Loose 版)
+hankaku_width="512" # 半角文字幅 (通常版)
+hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
+x_pos_center_Loose=$((hankaku_width_Loose / 2)) # 半角文字X座標中心 (Loose 版)
+y_pos_center_Loose="373" # 半角文字Y座標中心
+x_pos_hankaku_Loose=$(((hankaku_width_Loose - ${hankaku_width}) / 2)) # 半角文字移動量 (Loose 版)
+x_pos_calt_Loose="15" # ラテン文字のX座標移動量 (Loose 版)
+x_pos_calt_symbol_Loose="30" # 記号のX座標移動量 (Loose 版)
+x_pos_calt_separate_Loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
 
 # デバッグ用
 
@@ -261,8 +262,8 @@ scale_calt_decimal="93" # 小数の拡大比率
 #height_scale_latin="50" # 縦拡大比率
 
 # Loose 版
-#width_scale_hankaku_Loose="150" # 横拡大比率
-#height_scale_hankaku_Loose="50" # 縦拡大比率
+#width_scale_hankaku_Loose="150" # 半角すべての横拡大比率 (Loose 版)
+#height_scale_hankaku_Loose="50" # 半角すべての縦拡大比率 (Loose 版)
 
 # デバッグ用ここまで
 
@@ -435,6 +436,7 @@ do
         "w" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
             loose_flag="true"
+            width_scale_latin=${width_scale_latin_Loose} # 半角 Latin フォントの横拡大比率
             hankaku_width=${hankaku_width_Loose} # 半角文字幅
             x_pos_calt=${x_pos_calt_Loose} # ラテン文字のX座標移動量
             x_pos_calt_symbol=${x_pos_calt_symbol_Loose} # 記号のX座標移動量
