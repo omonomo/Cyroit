@@ -35,13 +35,13 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v3.0.1)  
+最新版 (v3.0.2)  
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.0.1/Cyroit_v3.0.1.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.0.1/CyroitLoose_v3.0.1.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.0.1.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.0.2/Cyroit_v3.0.2.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.0.2/CyroitLoose_v3.0.2.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.0.2.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -101,6 +101,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 - Cyroit は全角幅の値を1024に設定してあります。Loose 版は半角幅を半分の512ではなく、576に設定しました。
 - 全角幅と半角幅の最小公倍数は9216になるため、理論上は全角文字9文字と半角文字16文字でちょうど同じ幅になります。
 - 実際は環境や文字の大きさ等の条件によって誤差が生じ、表示がずれることがあります。
+- 拡がった文字間隔に合わせて半角英数文字の大きさや縦横比を調整しています。
 
 ## 収録フォントの違い
 
