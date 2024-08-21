@@ -3426,7 +3426,6 @@ while (i < SizeOf(input_list))
 # 記号を一部クリア
     Print("Remove some glyphs")
     Select(0u2190, 0u21ff); Clear() # 矢印
-    Select(0u2190, 0u21ff); Clear() # 矢印
  #    Select(0u2500, 0u256c); Clear() # 罫線
     Select(0u25c6, 0u25c7); Clear() # ダイアモンド
     Select(0u25cb, 0u25cf); Clear() # 円
