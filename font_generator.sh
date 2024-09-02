@@ -123,8 +123,8 @@ hhea_ascent1000="860"
 hhea_descent1000="140"
 hhea_linegap1000="0"
 
-typo_ascent1024="809" # em値1024用
-typo_descent1024="215"
+typo_ascent1024="885" # em値1024用
+typo_descent1024="139"
 typo_linegap1024="226"
 win_ascent1024="998"
 win_descent1024="252"
@@ -138,13 +138,13 @@ y_pos_em_revice="-10" # Y座標移動量
 # NerdFonts 用
 y_pos_nerd="30" # 全体Y座標移動量
 scale_pomicons="91" # Pomicons の拡大比率
-scale_nerd="88" # その他の拡大比率
 
-# Powerline 変形、移動用
-height_scale_pl="123" # PowelineY座標拡大比率
+height_scale_pl="121" # PowelineY座標拡大比率
 height_scale_block="89" # ボックス要素Y座標拡大比率
 height_center_pl="297" # PowerlineリサイズY座標中心
 y_pos_pl="76" # PowerlineY座標移動量
+
+scale_nerd="88" # その他の拡大比率
 
 # 可視化したスペース等、下線のY座標移動量
 y_pos_space="-235"
@@ -1468,8 +1468,17 @@ while (i < SizeOf(input_list))
  #        Select(0u1e86) # Ẇ
  #        Select(0u1e88) # Ẉ
  #        Select(0u2c72) # Ⱳ
-
     endif
+
+# Ẕẕ (kana フォントを上書き)
+    Select(0u1e5f); Copy()# ṟ
+    Select(0u1e94, 0u1e95); Paste()# Ẕẕ
+    Select(0u2588); Copy() # Full block
+    Select(0u1e94, 0u1e95); PasteWithOffset(0, -1001); OverlapIntersect() # Ẕẕ
+    Select(0u005a); Copy() # Z
+    Select(0u1e94); PasteInto(); SetWidth(500) # Ẕ
+    Select(0u007a); Copy() # z
+    Select(0u1e95); PasteInto(); SetWidth(500) # ẕ
 
 # Z (ss用、クロスバーを付加してゼェーットな感じに)
     Select(0u005a); Copy() # Z
@@ -1988,6 +1997,7 @@ while (i < SizeOf(input_list))
     Select(0u0211); PasteWithOffset(0,   878); OverlapIntersect() # ȑ
     Select(0u0213); PasteWithOffset(0,   878); OverlapIntersect() # ȓ
     Select(0u1e5b); PasteWithOffset(0, -1001); OverlapIntersect() # ṛ
+    Select(0u1e5f); PasteWithOffset(0, -1001); OverlapIntersect() # ṟ
     Select(0u0072); Copy() # r
     Select(0u0155); PasteInto(); SetWidth(500)
     Select(0u0157); PasteInto(); SetWidth(500)
@@ -1995,11 +2005,11 @@ while (i < SizeOf(input_list))
     Select(0u0211); PasteInto(); SetWidth(500)
     Select(0u0213); PasteInto(); SetWidth(500)
     Select(0u1e5b); PasteInto(); SetWidth(500)
+    Select(0u1e5f); PasteInto(); SetWidth(500)
  #    Select(0u027c, 0u027e) # ɼɽɾ
  #    Select(0u1d72, 0u1d73) # ᵲᵳ
  #    Select(0u1d89) # ᶉ
  #    Select(0u1e5d) # ṝ
- #    Select(0u1e5f) # ṟ
  #    Select(0ua75b) # ꝛ
  #    Select(0ua7a7) # ꞧ
  #    Select(0uab47) # ꭇ
@@ -2412,7 +2422,7 @@ while (i < SizeOf(input_list))
         SetWidth(500)
     endif
 
-    # 記号のグリフを加工
+# 記号のグリフを加工
     Print("Edit symbols")
 # ^ -> magnified ^
     Select(0u005e); Scale(110, 110, 250, 600); SetWidth(500)
@@ -2638,6 +2648,39 @@ while (i < SizeOf(input_list))
     Select(0u0067); Copy() # g
     Select(0u210a); Paste() # ℊ
     Scale(${width_scale_latin}, ${height_scale_latin}, 250, 0); SetWidth(500)
+
+# ℗ (追加)
+    # R を P にするスクリーン
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(20, 10)
+        Rotate(-9)
+        Move(73, -106)
+    else
+        Scale(20, 9)
+        Rotate(-9)
+        Move(59, -105)
+    endif
+    VFlip()
+    Select(0u2588); Copy() # Full block
+    Select(65552);  PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2117); Paste() # ℗
+    # 合成
+    Select(0u00ae); Copy() # ®
+    Select(0u2117); PasteInto() # ℗
+    OverlapIntersect()
+    Simplify()
+    SetWidth(500)
+
+    Select(65552); Clear() # Temporary glyph
+
+# ⅋ (追加)
+    Select(0u0026); Copy() # &
+    Select(0u214b); Paste() # ⅋
+    Rotate(180)
+    SetWidth(500)
 
 # ∇ (漢字フォントを置換)
     Select(0u2206); Copy() # ∆
@@ -3321,8 +3364,10 @@ while (i < SizeOf(input_list))
     Move(0, ${y_pos_super})
     SetWidth(500)
 
-    # ʰ-ʳ
-    orig = [0u0068, 0u0000, 0u006a, 0u0072] # 0u0000はダミー
+    # ʰ-ʸ
+    orig = [0u0068, 0u0000, 0u006a, 0u0072,\
+            0u0000, 0u027b, 0u0000, 0u0077,\
+            0u0079] # 0u0000はダミー
     j = 0
     while (j < SizeOf(orig))
         if (orig[j] != 0u0000)
@@ -3337,23 +3382,6 @@ while (i < SizeOf(input_list))
             Select(orig[j])
             AddPosSub(lookups[0][0],glyphName)
         endif
-        j += 1
-    endloop
-
-    # ʷ-ʸ
-    orig = [0u0077, 0u0079]
-    j = 0
-    while (j < SizeOf(orig))
-        Select(orig[j]); Copy()
-        Select(0u02b7 + j); Paste()
-        Scale(${scale_super_sub}, 250, 0)
-        ChangeWeight(${weight_super_sub})
-        CorrectDirection()
-        Move(0, ${y_pos_super})
-        SetWidth(500)
-        glyphName = GlyphInfo("Name") # sups フィーチャ追加
-        Select(orig[j])
-        AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
 
@@ -3432,6 +3460,11 @@ while (i < SizeOf(input_list))
     Select(0u0069); Copy() # i
     Select(0u1d4e); Paste() # ᵎ
     Rotate(180)
+    if (input_list[i] == "${input_latin_regular}")
+        Move(0, -199)
+    else
+        Move(0, -212)
+    endif
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
@@ -9171,54 +9204,117 @@ while (i < SizeOf(input_list))
     if ("${draft_flag}" == "false")
         Print("Edit latin greek cyrillic weight of glyphs")
         Select(0u00a1, 0u0173) # Latin
-        SelectMore(0u174, 0u0175) # W
-        SelectMore(0u176, 0u017f)
-        SelectMore(0u180, 0u01c3)
+        SelectMore(0u0174, 0u0175) # Ŵŵ
+        SelectMore(0u0176, 0u0179) # ŶŷŸŹ
+        SelectMore(0u017a) # ź latin フォント優先、kana フォントで上書きの場合、形が崩れるので注意
+        SelectMore(0u017b) # Ż
+        SelectMore(0u017c) # ż latin フォント優先、kana フォントで上書きの場合、形が崩れるので注意
+        SelectMore(0u017d) # Ž
+        SelectMore(0u017e) # ž latin フォント優先、kana フォントで上書きの場合、形が崩れるので注意
+        SelectMore(0u017f, 0u019c)
+        SelectMore(0u019e, 0u01c3)
  #        SelectMore(0u01c4, 0u01cc) # リガチャ
-        SelectMore(0u01cd, 0u01f0)
+        SelectMore(0u01cd, 0u01ee)
+        SelectMore(0u01f0) # ǰ
  #        SelectMore(0u01f1, 0u01f3) # リガチャ
-        SelectMore(0u01f4)
+        SelectMore(0u01f4) # Ǵ
  #        SelectMore(0u01f5) # g オープンテイル製作用、modified_latin_kana_generatorで調整
-        SelectMore(0u01f7, 0u028c)
-        SelectMore(0u028d) # w
-        SelectMore(0u028e, 0u02a2)
+        SelectMore(0u01f7, 0u026d)
+ #        SelectMore(0u026e) # リガチャ
+        SelectMore(0u026f, 0u028c)
+        SelectMore(0u028d) # ʍ
+        SelectMore(0u028e, 0u028f) # ʎʏ
+        SelectMore(0u0294, 0u02a2)
  #        SelectMore(0u02a3, 0u02ac) # リガチャ
-        SelectMore(0u02ad, 0u02af)
-        SelectMore(0u02b9, 0u02ff) # 装飾文字
+        SelectMore(0u02ad, 0u02af) # ʭʮʯ
+        SelectMore(0u02b9, 0u02bf) # 装飾文字
+ #        SelectMore(0u02c0, 0u02c1) # ˀˁ
+        SelectMore(0u02c2, 0u02df) # 装飾文字
+        SelectMore(0u02e5, 0u02ff) # 装飾文字
         SelectMore(0u0372, 0u03ff) # Greek
         SelectMore(0u0400, 0u04ff) # Cyrillic
-        SelectMore(0u1d05) # Latin
-        SelectMore(0u1d07)
+        SelectMore(0u1d05) # ᴅ
+        SelectMore(0u1d07) # ᴇ
         SelectMore(0u1e00, 0u1e3d)
-        SelectMore(0u1e3e) # M
-        SelectMore(0u1e3f)
-        SelectMore(0u1e40) # M
-        SelectMore(0u1e41)
-        SelectMore(0u1e42) # M
+        SelectMore(0u1e3e) # Ḿ
+        SelectMore(0u1e3f) # ḿ
+        SelectMore(0u1e40) # Ṁ
+        SelectMore(0u1e41) # ṁ
+        SelectMore(0u1e42) # Ṃ
         SelectMore(0u1e43, 0u1e7f)
-        SelectMore(0u1e80, 0u1e89) # W
-        SelectMore(0u1e8a, 0u1e97)
-        SelectMore(0u1e98) # W
-        SelectMore(0u1e99, 0u1eff)
-        SelectMore(0u1f00, 0u1fff) # Greek
+        SelectMore(0u1e80, 0u1e89) # Ẁ-ẉ
+        SelectMore(0u1e8a, 0u1e92)
+        SelectMore(0u1e93) # ẓ latin フォント優先、kana フォントで上書きの場合、形が崩れるので注意
+        SelectMore(0u1e94) # Ẕ
+        SelectMore(0u1e95) # ẕ latin フォント優先、kana フォントで上書きの場合、形が崩れるので注意
+        SelectMore(0u1e96, 0u1e97)
+        SelectMore(0u1e98) # ẘ
+        SelectMore(0u1e99, 0u1efe)
+        SelectMore(0u1f00, 0u1f0e) # Greek
+        SelectMore(0u1f10, 0u1f8e) # Greek
+        SelectMore(0u1f90, 0u1fff) # Greek
         SelectMore(0u2422) # ␢
         SelectMore(0u2c71) # ⱱ
-        SelectMore(0ufb00, 0ufb04) # ﬀ
+        SelectMore(0ufb00, 0ufb04) # ﬀ-ﬄ
         if (input_list[i] == "${input_kana_regular}")
-            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
+            ChangeWeight(${weight_kana_others_regular})
+            Move(0, -2)
         else
             ChangeWeight(${weight_kana_others_bold})
-            CorrectDirection()
             Move(0, -9)
         endif
         CorrectDirection()
+
+        Select(0u1f0f) # Ἇ
+        SelectMore(0u1f8f) # ᾏ
+        if (input_list[i] == "${input_kana_regular}")
+            ExpandStroke(1, 0, 0, 0, 1) # いきなりChangeWeight()だと形が崩れる
+            ChangeWeight(${weight_kana_others_regular} - 1)
+            Move(0, -2)
+        else
+            ChangeWeight(${weight_kana_others_bold})
+            Move(0, -9)
+        endif
+        CorrectDirection()
+
+        Select(0u0291) # ʑ
+        if (input_list[i] == "${input_kana_regular}")
+            ExpandStroke(1, 0, 0, 0, 1) # いきなりChangeWeight()だと形が崩れる
+            CorrectDirection()
+            ExpandStroke(-1, 0, 0, 0, 2)
+            CorrectDirection()
+            ChangeWeight(${weight_kana_others_regular})
+            Move(0, -2)
+        else
+            ChangeWeight(${weight_kana_others_bold})
+            Move(0, -9)
+        endif
+        CorrectDirection()
+
+        Select(0u019d) # Ɲ
+        SelectMore(0u01ef) # ǯ
+        SelectMore(0u0290) # ʐ
+        SelectMore(0u0292) # ʒ
+        SelectMore(0u0293) # ʓ
+        SelectMore(0u1eff) # ỿ
+        if (input_list[i] == "${input_kana_regular}")
+            Scale(200) # いきなりChangeWeight()だと形が崩れる
+            ChangeWeight(${weight_kana_others_regular} * 2)
+            Scale(50)
+            Move(0, -2)
+        else
+            ChangeWeight(${weight_kana_others_bold})
+            Move(0, -9)
+        endif
+        CorrectDirection()
+        SetWidth(500)
 
         Select(0u20a0, 0u212d) # 記号類
  #        SelectMore(0u212e) # ℮
         SelectMore(0u212f, 0u214f) # 記号類
         SelectMore(0u2150, 0u21cf) # ローマ数字、矢印
         SelectMore(0u21dc, 0u21e5) # 矢印
-        SelectMore(0u21ee, 0u22ed) # 記号類
+        SelectMore(0u21f0, 0u22ed) # 記号類
         SelectMore(0u22f0, 0u2306) # 記号類
         SelectMore(0u2308, 0u2311) # 記号類
  #        SelectMore(0u2312, 0u2313) # ⌒⌓ # グリフ加工でウェイト調整済
@@ -9228,9 +9324,21 @@ while (i < SizeOf(input_list))
  #        SelectMore(0u2425) # ␥ # グリフ加工でウェイト調整済
         SelectMore(0u27e8, 0u27e9) # ⟨⟩
         SelectMore(0u2a2f) # ⨯
-        SelectMore(0u339b, 0u33a6) # 単位
+        SelectMore(0u339b, 0u339d) # ㎛㎜㎝
+        SelectMore(0u339f, 0u33a1) # ㎟㎠㎡
+        SelectMore(0u33a3, 0u33a5) # ㎣㎤㎥
         if (input_list[i] == "${input_kana_regular}")
-            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れるグリフがある
+            ChangeWeight(${weight_kana_others_regular})
+        else
+            ChangeWeight(${weight_kana_others_bold})
+        endif
+        CorrectDirection()
+
+        Select(0u339e) # ㎞
+        SelectMore(0u33a2) # ㎢
+        SelectMore(0u33a6) # ㎦
+        if (input_list[i] == "${input_kana_regular}")
+            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2) # ChangeWeight()だと形が崩れる
         else
             ChangeWeight(${weight_kana_others_bold})
         endif
@@ -10686,14 +10794,15 @@ while (i < SizeOf(input_list))
     SetWidth(1024)
 
 # ㎟㎠㎡㎢ (数字拡大)
+    # 数字
     Select(0u25a0); Copy() # Black square
     Select(65553);  Paste() # Temporary glyph
-    Move(500, 550)
+    Move(500, 570)
     Select(0u339f); Copy() # ㎟
     Select(65553);  PasteWithOffset(0, 20) # Temporary glyph
     OverlapIntersect()
     Scale(130)
-
+    # その他
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-350, 150)
@@ -10709,7 +10818,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     Select(0u33a2); PasteInto() # ㎢
     OverlapIntersect()
-
+    # 合成
     Select(65553);  Copy() # Temporary glyph
     Select(0u339f); PasteInto(); SetWidth(1024) # ㎟
     Select(0u33a0); PasteInto(); SetWidth(1024) # ㎠
@@ -10720,14 +10829,15 @@ while (i < SizeOf(input_list))
     Select(65553); Clear() # Temporary glyph
 
 # ㎣㎤㎥㎦ (数字拡大)
+    # 数字
     Select(0u25a0); Copy() # Black square
     Select(65553);  Paste() # Temporary glyph
-    Move(500, 550)
+    Move(500, 570)
     Select(0u33a3); Copy() # ㎣
     Select(65553);  PasteWithOffset(0, 20) # Temporary glyph
     OverlapIntersect()
     Scale(130)
-
+    # その他
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
     Move(-350, 150)
@@ -10743,7 +10853,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     Select(0u33a6); PasteInto() # ㎦
     OverlapIntersect()
-
+    # 合成
     Select(65553);  Copy() # Temporary glyph
     Select(0u33a3); PasteInto(); SetWidth(1024) # ㎣
     Select(0u33a4); PasteInto(); SetWidth(1024) # ㎤
@@ -11631,16 +11741,14 @@ while (i < SizeOf(latin_sfd_list))
     # modified_kana_generatorで実行しなかったウェイト調整を実行
     if ("${draft_flag}" == "false")
         Print("Edit some weight of glyphs")
+        Select(0u01f5) # ǵ
         if (latin_sfd_list[i] == "${tmpdir}/${modified_latin_regular}")
-            Select(0u01f5) # ǵ
-            ExpandStroke(${weight_kana_others_regular}, 0, 0, 0, 2)
-            CorrectDirection()
+            ChangeWeight(${weight_kana_others_regular})
         else
-            Select(0u01f5) # ǵ
             ChangeWeight(${weight_kana_others_bold})
-            CorrectDirection()
             Move(0, -9)
         endif
+        CorrectDirection()
     endif
 
 # latin フォントの縦横比調整
@@ -11706,6 +11814,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u1e80, 0u1e85) # Ẁ - ẅ
         SelectMore(0u1e8e, 0u1e8f) # Ẏ - ẏ
         SelectMore(0u1e92, 0u1e93) # Ẓ - ẓ
+        SelectMore(0u1e94, 0u1e95) # Ẕ - ẕ kana フォントのウェイトを調整すると形が崩れるため latin フォントに追加したグリフ
         SelectMore(0u1e97) # ẗ
         SelectMore(0u1e9e) # ẞ
         SelectMore(0u1ea0, 0u1ef9) # Ạ - ỹ
@@ -11737,6 +11846,21 @@ while (i < SizeOf(latin_sfd_list))
     HFlip()
     CorrectDirection()
     Move(-11, 0)
+    SetWidth(500)
+
+# ℄ (追加)
+    Select(0u004c); Copy() # L
+    Select(0u2104); Paste() # ℄
+    Select(0u0063); Copy() # c
+    Select(0u2104); PasteWithOffset(-160, 120) # ℄
+    Move(80, 0)
+    RemoveOverlap()
+    Scale(98, 100, 250, 0)
+    SetWidth(500)
+
+# K (追加)
+    Select(0u004b); Copy() # K
+    Select(0u212a); Paste() # K
     SetWidth(500)
 
 # Å (漢字フォントを置換)
@@ -11782,8 +11906,62 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u0031) # 1
     lookups = GetPosSub("*") # フィーチャを取り出す
 
+    # ʱ-ʁ
+    orig = [0u0266, 0u0000, 0u0000, 0u0279,\
+            0u0000, 0u0281] # 0u0000はダミー
+    j = 0
+    while (j < SizeOf(orig))
+        if (orig[j] != 0u0000)
+            Select(orig[j]); Copy()
+            Select(0u02b1 + j); Paste()
+            Scale(${scale_super_sub}, 250, 0)
+            ChangeWeight(${weight_super_sub})
+            CorrectDirection()
+            Move(0, ${y_pos_super})
+            SetWidth(500)
+            glyphName = GlyphInfo("Name") # sups フィーチャ追加
+            Select(orig[j])
+            AddPosSub(lookups[0][0],glyphName)
+        endif
+        j += 1
+    endloop
+
+    # ˁˤ
+    Select(0u0295); Copy() # ʕ
+    Select(0u02c1) # ˁ
+    SelectMore(0u02e4); Paste() # ˤ
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
+    CorrectDirection()
+    Move(0, ${y_pos_super})
+    SetWidth(500)
+
+    # ˀ
+    Select(0u0294); Copy() # ʔ
+    Select(0u02c0); Paste() # ˀ
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
+    CorrectDirection()
+    Move(0, ${y_pos_super})
+    SetWidth(500)
+    glyphName = GlyphInfo("Name") # sups フィーチャ追加
+    Select(0u0294) # ʔ
+    AddPosSub(lookups[0][0],glyphName)
+
+    # ˠ
+    Select(0u0263); Copy() # ɣ
+    Select(0u02e0); Paste() # ˠ
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
+    CorrectDirection()
+    Move(0, ${y_pos_super})
+    SetWidth(500)
+    glyphName = GlyphInfo("Name") # sups フィーチャ追加
+    Select(0u0263) # ɣ
+    AddPosSub(lookups[0][0],glyphName)
+
     # ᵄ-ᵅ
-    orig = [0u0250, 0u251]
+    orig = [0u0250, 0u0251]
     j = 0
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
@@ -11862,6 +12040,18 @@ while (i < SizeOf(latin_sfd_list))
         AddPosSub(lookups[0][0],glyphName)
         j += 1
     endloop
+
+    # н
+    Select(0u043d); Copy() # н
+    Select(0u1d78); Paste() # ᵸ
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
+    CorrectDirection()
+    Move(0, ${y_pos_super})
+    SetWidth(500)
+    glyphName = GlyphInfo("Name") # sups フィーチャ追加
+    Select(0u043d) # н
+    AddPosSub(lookups[0][0],glyphName)
 
     # ᶛ-ᶝ
     orig = [0u0252, 0u0000, 0u0255,\
@@ -13124,6 +13314,17 @@ while (i < \$argc)
 # Open file and set configuration
     Print("Open " + input_ttf)
     Open(input_ttf)
+
+# --------------------------------------------------
+
+# 記号のグリフを加工
+    Print("Edit symbols")
+# 🄯 (追加)
+    Select(0u00a9); Copy() # ©
+    Select(0u1f12f); Paste() # 🄯
+    HFlip()
+    CorrectDirection()
+    SetWidth(512)
 
 # --------------------------------------------------
 
