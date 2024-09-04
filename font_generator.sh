@@ -123,9 +123,9 @@ hhea_ascent1000="860"
 hhea_descent1000="140"
 hhea_linegap1000="0"
 
-typo_ascent1024="915" # em値1024用 (WindosTerminal で Powerline がズレないようにするには 885 - y_pos_nerd ?)
-#typo_ascent1024="885" # em値1024用
-typo_descent1024="109" # (139 - y_pos_nerd ?)
+typo_ascent1024="915" # em値1024用 (WindosTerminal で Powerline がズレないようにするには
+#typo_ascent1024="885" #  win_ascent1024 - typo_linegap1024 / 2 - y_pos_nerd ?)
+typo_descent1024="109" # (win_descent1024 - typo_linegap1024 /2 - y_pos_nerd ?)
 #typo_descent1024="139"
 typo_linegap1024="226"
 win_ascent1024="998"
