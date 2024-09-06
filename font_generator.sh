@@ -123,13 +123,11 @@ hhea_ascent1000="860"
 hhea_descent1000="140"
 hhea_linegap1000="0"
 
-typo_ascent1024="915" # em値1024用 (WindosTerminal で Powerline がズレないようにするには
-#typo_ascent1024="885" #  win_ascent1024 - typo_linegap1024 / 2 - y_pos_nerd ?)
-typo_descent1024="109" # (win_descent1024 - typo_linegap1024 /2 - y_pos_nerd ?)
-#typo_descent1024="139"
+typo_ascent1024="807" # em値1024用
+typo_descent1024="217"
 typo_linegap1024="226"
-win_ascent1024="998"
-win_descent1024="252"
+win_ascent1024="899"
+win_descent1024="349"
 hhea_ascent1024="${win_ascent1024}"
 hhea_descent1024="${win_descent1024}"
 hhea_linegap1024="0"
@@ -141,22 +139,22 @@ y_pos_em_revice="-10" # Y座標移動量
 y_pos_nerd="30" # 全体Y座標移動量
 scale_pomicons="91" # Pomicons の拡大比率
 
-height_scale_pl="121" # PowerlineY座標拡大比率
+height_scale_pl="120.7" # PowerlineY座標拡大比率
 height_scale_block="88" # ボックス要素Y座標拡大比率
 y_pos_plbox="6" # ボックス要素切り取り時  Y座標オフセット量
 height_center_pl=$((277 + y_pos_nerd + y_pos_em_revice)) # PowerlineリサイズY座標中心
-y_pos_pl="76" # PowerlineY座標移動量
+y_pos_pl="-22" # PowerlineY座標移動量
 y_pos_pl2=$((y_pos_pl + 3)) # PowerlineY座標移動量
 y_pos_pl3=$((y_pos_pl - 48)) # PowerlineY座標移動量
 
-width_scale_triangle="161" # 直角二等辺三角形のX座標拡大比率
-height_scale_triangle="67" # 直角二等辺三角形のY座標拡大比率
-height_upper_triangle=$((979 + y_pos_nerd + y_pos_em_revice)) # 直角二等辺三角形のY座標拡大中心 (上側)
-height_lower_triangle=$((-273 + y_pos_nerd + y_pos_em_revice)) # 直角二等辺三角形のY座標拡大中心 (下側)
-y_pos_upper_triangle="-260" # 直角二等辺三角形のY座標移動量 (上側)
-y_pos_lower_triangle="153" # 直角二等辺三角形のY座標移動量 (下側)
+width_scale_triangle="162" # 直角二等辺三角形のX座標拡大比率
+height_scale_triangle="67.7" # 直角二等辺三角形のY座標拡大比率
+height_upper_triangle="899" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
+height_lower_triangle="-349" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
+y_pos_upper_triangle="-154" # 直角二等辺三角形のY座標移動量 (上側)
+y_pos_lower_triangle="249" # 直角二等辺三角形のY座標移動量 (下側)
 
-scale_nerd="88" # Pomicons Powerline 以外の拡大比率
+scale_nerd="89" # Pomicons Powerline 以外の拡大比率
 
 # 可視化したスペース等、下線のY座標移動量
 y_pos_space="-235"
@@ -12940,6 +12938,7 @@ while (i < SizeOf(input_list))
     SelectMore(0ue0d4)
     Move(0, -${y_pos_nerd}) # 元の位置に戻す
     Move(0, ${y_pos_em_revice}) # em値変更でのズレ修正
+    Select(0ue0a0, 0ue0a3); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0b0, 0ue0b1); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b2, 0ue0b3); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b4);         Scale(80,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
