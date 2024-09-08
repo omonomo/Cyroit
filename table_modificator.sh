@@ -231,8 +231,8 @@ if [ "${other_flag}" = "true" ]; then
   find . -not -name "*.*.ttf" -maxdepth 1 | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
-    ttx -t head -t OS/2 -t post -t hmtx "$P"
-#    ttx -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
+    ttx -t name -t head -t OS/2 -t post -t hmtx "$P" # フォントスタイル判定のため、name テーブルも取得
+#    ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
 
     # head, OS/2 (フォントスタイルを修正)
     if [ "$(grep -m 1 "Bold Oblique" "${P%%.ttf}.ttx")" ]; then
