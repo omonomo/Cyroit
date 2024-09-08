@@ -126,6 +126,10 @@ hhea_linegap1000="0"
 typo_ascent1024="837" # em値1024用
 typo_descent1024="187"
 typo_linegap1024="224"
+ #win_ascent1024="959"
+ #win_descent1024="289"
+ #win_ascent1024="949"
+ #win_descent1024="299"
 win_ascent1024="939"
 win_descent1024="309"
 hhea_ascent1024="${win_ascent1024}"
@@ -143,12 +147,22 @@ height_scale_pl="120.7" # PowerlineY座標拡大比率
 height_scale_block="88" # ボックス要素Y座標拡大比率
 y_pos_plbox="6" # ボックス要素切り取り時  Y座標オフセット量
 height_center_pl=$((277 + y_pos_nerd + y_pos_em_revice)) # PowerlineリサイズY座標中心
+ #y_pos_pl="38" # PowerlineY座標移動量
+ #y_pos_pl="28" # PowerlineY座標移動量
 y_pos_pl="18" # PowerlineY座標移動量
 y_pos_pl2=$((y_pos_pl + 3)) # PowerlineY座標移動量
 y_pos_pl3=$((y_pos_pl - 48)) # PowerlineY座標移動量
 
 width_scale_triangle="162" # 直角二等辺三角形のX座標拡大比率
 height_scale_triangle="67.7" # 直角二等辺三角形のY座標拡大比率
+ #height_upper_triangle="959" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
+ #height_lower_triangle="-289" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
+ #y_pos_upper_triangle="-214" # 直角二等辺三角形のY座標移動量 (上側)
+ #y_pos_lower_triangle="189" # 直角二等辺三角形のY座標移動量 (下側)
+ #height_upper_triangle="949" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
+ #height_lower_triangle="-299" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
+ #y_pos_upper_triangle="-204" # 直角二等辺三角形のY座標移動量 (上側)
+ #y_pos_lower_triangle="199" # 直角二等辺三角形のY座標移動量 (下側)
 height_upper_triangle="939" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
 height_lower_triangle="-309" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
 y_pos_upper_triangle="-194" # 直角二等辺三角形のY座標移動量 (上側)
@@ -12939,8 +12953,10 @@ while (i < SizeOf(input_list))
     Move(0, -${y_pos_nerd}) # 元の位置に戻す
     Move(0, ${y_pos_em_revice}) # em値変更でのズレ修正
     Select(0ue0a0, 0ue0a3); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0b0, 0ue0b1); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b2, 0ue0b3); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b0); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(5, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b1); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b2); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 5, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b3); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b4);         Scale(80,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b5);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b6);         Scale(80,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
@@ -12982,6 +12998,40 @@ while (i < SizeOf(input_list))
         SelectMore(0ue0be, 0ue0bf)
         Move(${x_pos_hankaku_Loose}, 0)
         SetWidth(512)
+    endif
+
+# ◢◣◤◥
+    Select(0ue0b8); Copy() # 
+    Select(0u25e3); Paste() # ◣
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, -10, ${height_lower_triangle})
+    Move(5, ${y_pos_lower_triangle})
+    SetWidth(1024)
+    Select(0ue0ba); Copy() # 
+    Select(0u25e2); Paste() # ◢
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, 522, ${height_lower_triangle})
+    Move(507, ${y_pos_lower_triangle})
+    SetWidth(1024)
+    Select(0ue0bc); Copy() # 
+    Select(0u25e4); Paste() # ◤
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, -10, ${height_upper_triangle})
+    Move(5, ${y_pos_upper_triangle})
+    SetWidth(1024)
+    Select(0ue0be); Copy() # 
+    Select(0u25e5); Paste() # ◥
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, 522, ${height_upper_triangle})
+    Move(507, ${y_pos_upper_triangle})
+    SetWidth(1024)
+
+    # Loose 版対応 (Powerline グリフが移動するため補正する)
+    if ("${loose_flag}" == "true")
+        Select(0u25e3, 0u25e4) # ◣◤
+        Move(${x_pos_hankaku_Loose} + 20, 0)
+        SetWidth(1024)
+
+        Select(0u25e2) #◢
+        SelectMore(0u25e5)# ◥
+        Move(-${x_pos_hankaku_Loose} - 20, 0)
+        SetWidth(1024)
     endif
 
 # Font Awesome Extension
@@ -13069,40 +13119,6 @@ while (i < SizeOf(input_list))
     Select(0u2630); Scale(${scale_nerd}); SetWidth(1024)
     Select(0u276c, 0u2771) #; Scale(${scale_nerd}) # 縮小しない
     SetWidth(1024)
-
-# ◢◣◤◥
-    Select(0ue0b8); Copy() # 
-    Select(0u25e3); Paste() # ◣
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, -10, ${height_lower_triangle})
-    Move(5, ${y_pos_lower_triangle})
-    SetWidth(1024)
-    Select(0ue0ba); Copy() # 
-    Select(0u25e2); Paste() # ◢
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 522, ${height_lower_triangle})
-    Move(507, ${y_pos_lower_triangle})
-    SetWidth(1024)
-    Select(0ue0bc); Copy() # 
-    Select(0u25e4); Paste() # ◤
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, -10, ${height_upper_triangle})
-    Move(5, ${y_pos_upper_triangle})
-    SetWidth(1024)
-    Select(0ue0be); Copy() # 
-    Select(0u25e5); Paste() # ◥
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 522, ${height_upper_triangle})
-    Move(507, ${y_pos_upper_triangle})
-    SetWidth(1024)
-
-    # Loose 版対応 (Powerline グリフが移動するため補正する)
-    if ("${loose_flag}" == "true")
-        Select(0u25e3, 0u25e4) # ◣◤
-        Move(${x_pos_hankaku_Loose} + 20, 0)
-        SetWidth(1024)
-
-        Select(0u25e2) #◢
-        SelectMore(0u25e5)# ◥
-        Move(-${x_pos_hankaku_Loose} - 20, 0)
-        SetWidth(1024)
-    endif
 
 #  (Mac用)
     Select(0ue711); Copy() # 
