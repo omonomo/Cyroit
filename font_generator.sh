@@ -114,22 +114,23 @@ copyright1="[Ricty Generator (Script)]\nCopyright (c) 2011-2017 Yasunori Yusa\n\
 copyright0="SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)"
 
 # Set ascent and descent (line width parameters)
-typo_ascent1000="860" # em値1000用
-typo_descent1000="140"
+em_ascent1000="860" # em値1000用
+em_descent1000="140"
+typo_ascent1000="${em_ascent1000}"
+typo_descent1000="${em_descent1000}"
 typo_linegap1000="0"
 win_ascent1000="835"
 win_descent1000="215"
-hhea_ascent1000="860"
-hhea_descent1000="140"
-hhea_linegap1000="0"
+hhea_ascent1000="${typo_ascent1000}"
+hhea_descent1000="${typo_descent1000}"
+hhea_linegap1000="${typo_linegap1000}"
 
-typo_ascent1024="837" # em値1024用
-typo_descent1024="187"
-typo_linegap1024="224"
- #win_ascent1024="959"
- #win_descent1024="289"
- #win_ascent1024="949"
- #win_descent1024="299"
+em_ascent1024="827" # em値1024用
+em_descent1024="197"
+typo_ascent1024="${em_ascent1024}" # typo_ascent + typo_descent = em値にしないと縦書きで文字間隔が崩れる
+typo_descent1024="${em_descent1024}" # 縦書きに対応させない場合、linegap = 0で typo、win、hhea 全てを同じにするのが無難
+ #typo_linegap1024="224" # 本来設定したい lineGap
+typo_linegap1024="150" # typo_lineGap を拡げすぎると Excel で文字コード 80h 以上 (おそらく) の文字がずれる
 win_ascent1024="939"
 win_descent1024="309"
 hhea_ascent1024="${win_ascent1024}"
@@ -137,7 +138,7 @@ hhea_descent1024="${win_descent1024}"
 hhea_linegap1024="0"
 
 # em値変更でのY座標のズレ修正用
-y_pos_em_revice="-10" # Y座標移動量
+y_pos_em_revise="-10" # Y座標移動量
 
 # NerdFonts 用
 y_pos_nerd="30" # 全体Y座標移動量
@@ -145,28 +146,20 @@ scale_pomicons="91" # Pomicons の拡大比率
 
 height_scale_pl="120.7" # PowerlineY座標拡大比率
 height_scale_block="88" # ボックス要素Y座標拡大比率
+height_center_pl=$((277 + y_pos_nerd + y_pos_em_revise)) # PowerlineリサイズY座標中心
+y_pos_pl="18" # PowerlineY座標移動量 (上端から ascent までと 下端から descent までの距離が同じになる移動量)
+y_pos_pl_revise="-10" # 表示のずれを修正する移動量
+y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
+y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
+y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
 y_pos_plbox="6" # ボックス要素切り取り時  Y座標オフセット量
-height_center_pl=$((277 + y_pos_nerd + y_pos_em_revice)) # PowerlineリサイズY座標中心
- #y_pos_pl="38" # PowerlineY座標移動量
- #y_pos_pl="28" # PowerlineY座標移動量
-y_pos_pl="18" # PowerlineY座標移動量
-y_pos_pl2=$((y_pos_pl + 3)) # PowerlineY座標移動量
-y_pos_pl3=$((y_pos_pl - 48)) # PowerlineY座標移動量
 
-width_scale_triangle="162" # 直角二等辺三角形のX座標拡大比率
-height_scale_triangle="67.7" # 直角二等辺三角形のY座標拡大比率
- #height_upper_triangle="959" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
- #height_lower_triangle="-289" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
- #y_pos_upper_triangle="-214" # 直角二等辺三角形のY座標移動量 (上側)
- #y_pos_lower_triangle="189" # 直角二等辺三角形のY座標移動量 (下側)
- #height_upper_triangle="949" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
- #height_lower_triangle="-299" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
- #y_pos_upper_triangle="-204" # 直角二等辺三角形のY座標移動量 (上側)
- #y_pos_lower_triangle="199" # 直角二等辺三角形のY座標移動量 (下側)
-height_upper_triangle="939" # 直角二等辺三角形のY座標拡大中心 (上側、win_ascent1024)
-height_lower_triangle="-309" # 直角二等辺三角形のY座標拡大中心 (下側、-win_descent1024)
-y_pos_upper_triangle="-194" # 直角二等辺三角形のY座標移動量 (上側)
-y_pos_lower_triangle="209" # 直角二等辺三角形のY座標移動量 (下側)
+width_scale_triangle="80.9" # 直角二等辺三角形のX座標拡大比率
+height_scale_triangle="81.7" # 直角二等辺三角形のY座標拡大比率
+height_upper_triangle="854" # 直角二等辺三角形のY座標拡大中心 (上側)
+height_lower_triangle="-180" # 直角二等辺三角形のY座標拡大中心 (下側)
+y_pos_upper_triangle="-109" # 直角二等辺三角形のY座標移動量 (上側)
+y_pos_lower_triangle="80" # 直角二等辺三角形のY座標移動量 (下側)
 
 scale_nerd="89" # Pomicons Powerline 以外の拡大比率
 
@@ -728,7 +721,7 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${typo_ascent1000}, ${typo_descent1000})
+    ScaleToEm(${em_ascent1000}, ${em_descent1000})
     SetOS2Value("WinAscent",             ${win_ascent1000}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1000})
     SetOS2Value("TypoAscent",            ${typo_ascent1000}) # 組版・DirectWrite用(em値と合わせる)
@@ -3974,7 +3967,7 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${typo_ascent1000}, ${typo_descent1000})
+    ScaleToEm(${em_ascent1000}, ${em_descent1000})
     SetOS2Value("WinAscent",             ${win_ascent1000}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1000})
     SetOS2Value("TypoAscent",            ${typo_ascent1000}) # 組版・DirectWrite用(em値と合わせる)
@@ -9630,7 +9623,7 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${typo_ascent1024}, ${typo_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
+    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
     SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
     SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
@@ -11427,7 +11420,7 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${typo_ascent1024}, ${typo_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
+    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
     SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
     SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
@@ -11526,7 +11519,7 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${typo_ascent1024}, ${typo_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
+    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
     SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
     SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
@@ -12652,7 +12645,7 @@ while (i < SizeOf(latin_sfd_list))
 
 # em値を1024に変更
     Print("Edit em value")
-    ScaleToEm(${typo_ascent1024}, ${typo_descent1024})
+    ScaleToEm(${em_ascent1024}, ${em_descent1024})
     SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
     SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
@@ -12665,7 +12658,7 @@ while (i < SizeOf(latin_sfd_list))
 # 罫線、ブロックを少し移動 (em値変更でのズレ修正)
     Print("Move box drawing and block")
     Select(0u2500, 0u259f)
-    Move(0, ${y_pos_em_revice})
+    Move(0, ${y_pos_em_revise})
     Scale(102, 100, 256, 0) # 横幅を少し拡大
 
 # Move all glyphs
@@ -12762,7 +12755,7 @@ while (i < SizeOf(fontstyle_list))
  #    endif
     SetTTFName(0x409, 2, fontstyle_list[i])
     SetTTFName(0x409, 3, "FontForge ${fontforge_version} : " + "FontTools ${ttx_version} : " + \$fullname + " : " + Strftime("%d-%m-%Y", 0))
-    ScaleToEm(${typo_ascent1024}, ${typo_descent1024})
+    ScaleToEm(${em_ascent1024}, ${em_descent1024})
     SetOS2Value("Weight", fontweight_list[i]) # Book or Bold
     SetOS2Value("Width",                   5) # Medium
     SetOS2Value("FSType",                  0)
@@ -12877,7 +12870,7 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${typo_ascent1024}, ${typo_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
+    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
     SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
     SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
@@ -12943,6 +12936,29 @@ while (i < SizeOf(input_list))
     Scale(${scale_pomicons})
     SetWidth(1024)
 
+# ◢◣◤◥
+    Print("Edit black triangles")
+    Select(0ue0b8); Copy() # 
+    Select(0u25e3); Paste() # ◣
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, -20, ${height_lower_triangle})
+    Move(15, ${y_pos_lower_triangle})
+    SetWidth(1024)
+    Select(0ue0ba); Copy() # 
+    Select(0u25e2); Paste() # ◢
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, 1044, ${height_lower_triangle})
+    Move(-15, ${y_pos_lower_triangle})
+    SetWidth(1024)
+    Select(0ue0bc); Copy() # 
+    Select(0u25e4); Paste() # ◤
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, -20, ${height_upper_triangle})
+    Move(15, ${y_pos_upper_triangle})
+    SetWidth(1024)
+    Select(0ue0be); Copy() # 
+    Select(0u25e5); Paste() # ◥
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, 1044, ${height_upper_triangle})
+    Move(-15, ${y_pos_upper_triangle})
+    SetWidth(1024)
+
 # Powerline Glyphs (Win(HHead)Ascent と Win(HHead)Descent の長さより少し大きくして位置を合わす)
     Print("Edit Powerline Extra Symbols")
     Select(0ue0a0, 0ue0a3)
@@ -12951,20 +12967,22 @@ while (i < SizeOf(input_list))
     SelectMore(0ue0cc, 0ue0d2)
     SelectMore(0ue0d4)
     Move(0, -${y_pos_nerd}) # 元の位置に戻す
-    Move(0, ${y_pos_em_revice}) # em値変更でのズレ修正
+    Move(0, ${y_pos_em_revise}) # em値変更でのズレ修正
     Select(0ue0a0, 0ue0a3); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0b0); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(5, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b1); Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b2); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 5, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b3); Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b4);         Scale(80,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b5);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b6);         Scale(80,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b7);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b8, 0ue0b9); Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0ba, 0ue0bb); Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bc, 0ue0bd); Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0be, 0ue0bf); Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b0);         Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(9,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b1);         Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b2);         Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 9,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b3);         Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b4);         Scale(80,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(18, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b5);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b6);         Scale(80,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 18, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b7);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b8);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(9,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b9);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0ba);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 9,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0bb);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
+    Select(0ue0bc, 0ue0bd); Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0be, 0ue0bf); Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
     Select(0ue0c0, 0ue0c1); Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl2}); SetWidth(1024)
     Select(0ue0c2, 0ue0c3); Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl2}); SetWidth(1024)
     Select(0ue0c4);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
@@ -12998,40 +13016,6 @@ while (i < SizeOf(input_list))
         SelectMore(0ue0be, 0ue0bf)
         Move(${x_pos_hankaku_Loose}, 0)
         SetWidth(512)
-    endif
-
-# ◢◣◤◥
-    Select(0ue0b8); Copy() # 
-    Select(0u25e3); Paste() # ◣
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, -10, ${height_lower_triangle})
-    Move(5, ${y_pos_lower_triangle})
-    SetWidth(1024)
-    Select(0ue0ba); Copy() # 
-    Select(0u25e2); Paste() # ◢
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 522, ${height_lower_triangle})
-    Move(507, ${y_pos_lower_triangle})
-    SetWidth(1024)
-    Select(0ue0bc); Copy() # 
-    Select(0u25e4); Paste() # ◤
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, -10, ${height_upper_triangle})
-    Move(5, ${y_pos_upper_triangle})
-    SetWidth(1024)
-    Select(0ue0be); Copy() # 
-    Select(0u25e5); Paste() # ◥
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 522, ${height_upper_triangle})
-    Move(507, ${y_pos_upper_triangle})
-    SetWidth(1024)
-
-    # Loose 版対応 (Powerline グリフが移動するため補正する)
-    if ("${loose_flag}" == "true")
-        Select(0u25e3, 0u25e4) # ◣◤
-        Move(${x_pos_hankaku_Loose} + 20, 0)
-        SetWidth(1024)
-
-        Select(0u25e2) #◢
-        SelectMore(0u25e5)# ◥
-        Move(-${x_pos_hankaku_Loose} - 20, 0)
-        SetWidth(1024)
     endif
 
 # Font Awesome Extension
@@ -13242,7 +13226,7 @@ while (i < \$argc)
     Select(65552); Clear() # Temporary glyph
 
 # 八卦
-    Print("Edit Bagua trigrams")
+    Print("Edit bagua trigrams")
     Select(0u2630); Copy() # ☰
     Select(0u2631, 0u2637); Paste() # ☱-☷
     # 線を分割するスクリーン
