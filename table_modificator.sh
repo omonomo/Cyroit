@@ -234,19 +234,19 @@ if [ "${other_flag}" = "true" ]; then
     ttx -t name -t head -t OS/2 -t post -t hmtx "$P" # フォントスタイル判定のため、name テーブルも取得
 #    ttx -t name -t head -t OS/2 -t post -t vhea -t hmtx "$P" # 縦書き情報の取り扱いは中止
 
-    # head, OS/2 (フォントスタイルを修正)
+    # head, OS/2 (フォントスタイルを修正、Oblique の場合 Italic のフラグも立てた方がよい)
     if [ "$(grep -m 1 "Bold Oblique" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000011",' "${P%%.ttf}.ttx"
-      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000010 10100001",' "${P%%.ttf}.ttx"
+      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000011 10100001",' "${P%%.ttf}.ttx"
     elif [ "$(grep -m 1 "Oblique" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000010",' "${P%%.ttf}.ttx"
-      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000010 10000001",' "${P%%.ttf}.ttx"
+      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000011 10000001",' "${P%%.ttf}.ttx"
     elif [ "$(grep -m 1 "Bold" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000001",' "${P%%.ttf}.ttx"
-      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000000 10100000",' "${P%%.ttf}.ttx"
+      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000001 10100000",' "${P%%.ttf}.ttx"
     elif [ "$(grep -m 1 "Regular" "${P%%.ttf}.ttx")" ]; then
       sed -i.bak -e 's,macStyle value="........ ........",macStyle value="00000000 00000000",' "${P%%.ttf}.ttx"
-      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000000 11000000",' "${P%%.ttf}.ttx"
+      sed -i.bak -e 's,fsSelection value="........ ........",fsSelection value="00000001 11000000",' "${P%%.ttf}.ttx"
     fi
 
     # head (フォントの情報を修正)
