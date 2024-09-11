@@ -125,12 +125,12 @@ hhea_ascent1000="${typo_ascent1000}"
 hhea_descent1000="${typo_descent1000}"
 hhea_linegap1000="${typo_linegap1000}"
 
-em_ascent1024="827" # em値1024用
-em_descent1024="197"
+em_ascent1024="827" # em値1024用 ※ win_ascent - (設定したい typo_linegap) / 2 が適正っぽい
+em_descent1024="197" # win_descent - (設定したい typo_linegap) / 2 が適正っぽい
 typo_ascent1024="${em_ascent1024}" # typo_ascent + typo_descent = em値にしないと縦書きで文字間隔が崩れる
 typo_descent1024="${em_descent1024}" # 縦書きに対応させない場合、linegap = 0で typo、win、hhea 全てを同じにするのが無難
- #typo_linegap1024="224" # 本来設定したい lineGap
-typo_linegap1024="150" # typo_lineGap を拡げすぎると Excel で文字コード 80h 以上 (おそらく) の文字がずれる
+ #typo_linegap1024="224" # 本来設定したい値 (win_ascent + win_descent = typo_ascent + typo_descent + typo_linegap)
+typo_linegap1024="150" # 数値が大きすぎると Excel (Windows版、Mac版については不明) で文字コード 80h 以上 (おそらく) の文字がずれる
 win_ascent1024="939"
 win_descent1024="309"
 hhea_ascent1024="${win_ascent1024}"
@@ -142,25 +142,25 @@ y_pos_em_revise="-10" # Y座標移動量
 
 # NerdFonts 用
 y_pos_nerd="30" # 全体Y座標移動量
-scale_pomicons="91" # Pomicons の拡大比率
 
 height_scale_pl="120.7" # PowerlineY座標拡大比率
 height_scale_block="88" # ボックス要素Y座標拡大比率
 height_center_pl=$((277 + y_pos_nerd + y_pos_em_revise)) # PowerlineリサイズY座標中心
 y_pos_pl="18" # PowerlineY座標移動量 (上端から ascent までと 下端から descent までの距離が同じになる移動量)
-y_pos_pl_revise="-10" # 表示のずれを修正する移動量
+y_pos_pl_revise="-10" # 画面表示のずれを修正するための移動量
 y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
 y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
 y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
 y_pos_plbox="6" # ボックス要素切り取り時  Y座標オフセット量
 
-width_scale_triangle="80.9" # 直角二等辺三角形のX座標拡大比率
+width_scale_triangle="80.9" # 直角二等辺三角形のX座標拡大比率 ※ Powerline のグリフを利用
 height_scale_triangle="81.7" # 直角二等辺三角形のY座標拡大比率
 height_upper_triangle="854" # 直角二等辺三角形のY座標拡大中心 (上側)
 height_lower_triangle="-180" # 直角二等辺三角形のY座標拡大中心 (下側)
 y_pos_upper_triangle="-109" # 直角二等辺三角形のY座標移動量 (上側)
 y_pos_lower_triangle="80" # 直角二等辺三角形のY座標移動量 (下側)
 
+scale_pomicons="91" # Pomicons の拡大比率
 scale_nerd="89" # Pomicons Powerline 以外の拡大比率
 
 # 可視化したスペース等、下線のY座標移動量
@@ -9624,9 +9624,9 @@ while (i < SizeOf(input_list))
     SelectWorthOutputting()
     UnlinkReference()
     ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
-    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
+    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用 (この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
-    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
+    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用 (Mac も使っているっぽい)
     SetOS2Value("TypoDescent",          -${typo_descent1024})
     SetOS2Value("TypoLineGap",           ${typo_linegap1024})
     SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
@@ -11420,13 +11420,13 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
-    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
+    ScaleToEm(${em_ascent1024}, ${em_descent1024})
+    SetOS2Value("WinAscent",             ${win_ascent1024})
     SetOS2Value("WinDescent",            ${win_descent1024})
-    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
+    SetOS2Value("TypoAscent",            ${typo_ascent1024})
     SetOS2Value("TypoDescent",          -${typo_descent1024})
     SetOS2Value("TypoLineGap",           ${typo_linegap1024})
-    SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
+    SetOS2Value("HHeadAscent",           ${hhea_ascent1024})
     SetOS2Value("HHeadDescent",         -${hhea_descent1024})
     SetOS2Value("HHeadLineGap",          ${hhea_linegap1024})
 
@@ -11519,13 +11519,13 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
-    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
+    ScaleToEm(${em_ascent1024}, ${em_descent1024})
+    SetOS2Value("WinAscent",             ${win_ascent1024})
     SetOS2Value("WinDescent",            ${win_descent1024})
-    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
+    SetOS2Value("TypoAscent",            ${typo_ascent1024})
     SetOS2Value("TypoDescent",          -${typo_descent1024})
     SetOS2Value("TypoLineGap",           ${typo_linegap1024})
-    SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
+    SetOS2Value("HHeadAscent",           ${hhea_ascent1024})
     SetOS2Value("HHeadDescent",         -${hhea_descent1024})
     SetOS2Value("HHeadLineGap",          ${hhea_linegap1024})
 
@@ -12646,12 +12646,12 @@ while (i < SizeOf(latin_sfd_list))
 # em値を1024に変更
     Print("Edit em value")
     ScaleToEm(${em_ascent1024}, ${em_descent1024})
-    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
+    SetOS2Value("WinAscent",             ${win_ascent1024})
     SetOS2Value("WinDescent",            ${win_descent1024})
-    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
+    SetOS2Value("TypoAscent",            ${typo_ascent1024})
     SetOS2Value("TypoDescent",          -${typo_descent1024})
     SetOS2Value("TypoLineGap",           ${typo_linegap1024})
-    SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
+    SetOS2Value("HHeadAscent",           ${hhea_ascent1024})
     SetOS2Value("HHeadDescent",         -${hhea_descent1024})
     SetOS2Value("HHeadLineGap",          ${hhea_linegap1024})
 
@@ -12767,12 +12767,12 @@ while (i < SizeOf(fontstyle_list))
     SetOS2Value("TypoDescentIsOffset",     0)
     SetOS2Value("HHeadAscentIsOffset",     0)
     SetOS2Value("HHeadDescentIsOffset",    0)
-    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
+    SetOS2Value("WinAscent",             ${win_ascent1024})
     SetOS2Value("WinDescent",            ${win_descent1024})
-    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
+    SetOS2Value("TypoAscent",            ${typo_ascent1024})
     SetOS2Value("TypoDescent",          -${typo_descent1024})
     SetOS2Value("TypoLineGap",           ${typo_linegap1024})
-    SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
+    SetOS2Value("HHeadAscent",           ${hhea_ascent1024})
     SetOS2Value("HHeadDescent",         -${hhea_descent1024})
     SetOS2Value("HHeadLineGap",          ${hhea_linegap1024})
     SetPanose([2, 11, panoseweight_list[i], 9, 2, 2, 3, 2, 2, 7])
@@ -12870,13 +12870,13 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
-    ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
-    SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用(この範囲外は描画されない)
+    ScaleToEm(${em_ascent1024}, ${em_descent1024})
+    SetOS2Value("WinAscent",             ${win_ascent1024})
     SetOS2Value("WinDescent",            ${win_descent1024})
-    SetOS2Value("TypoAscent",            ${typo_ascent1024}) # 組版・DirectWrite用(em値と合わせる)
+    SetOS2Value("TypoAscent",            ${typo_ascent1024})
     SetOS2Value("TypoDescent",          -${typo_descent1024})
     SetOS2Value("TypoLineGap",           ${typo_linegap1024})
-    SetOS2Value("HHeadAscent",           ${hhea_ascent1024}) # Mac用
+    SetOS2Value("HHeadAscent",           ${hhea_ascent1024})
     SetOS2Value("HHeadDescent",         -${hhea_descent1024})
     SetOS2Value("HHeadLineGap",          ${hhea_linegap1024})
 
