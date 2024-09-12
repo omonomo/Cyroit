@@ -144,14 +144,14 @@ y_pos_em_revise="-10" # Y座標移動量
 y_pos_nerd="30" # 全体Y座標移動量
 
 height_scale_pl="120.7" # PowerlineY座標拡大比率
-height_scale_block="88" # ボックス要素Y座標拡大比率
+height_scale_pl2="121.9" # PowerlineY座標拡大比率 2
+height_scale_block="89" # ボックス要素Y座標拡大比率
 height_center_pl=$((277 + y_pos_nerd + y_pos_em_revise)) # PowerlineリサイズY座標中心
 y_pos_pl="18" # PowerlineY座標移動量 (上端から ascent までと 下端から descent までの距離が同じになる移動量)
 y_pos_pl_revise="-10" # 画面表示のずれを修正するための移動量
 y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
 y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
 y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
-y_pos_plbox="6" # ボックス要素切り取り時  Y座標オフセット量
 
 width_scale_triangle="80.9" # 直角二等辺三角形のX座標拡大比率 ※ Powerline のグリフを利用
 height_scale_triangle="81.7" # 直角二等辺三角形のY座標拡大比率
@@ -12959,7 +12959,7 @@ while (i < SizeOf(input_list))
     Move(-15, ${y_pos_upper_triangle})
     SetWidth(1024)
 
-# Powerline Glyphs (Win(HHead)Ascent と Win(HHead)Descent の長さより少し大きくして位置を合わす)
+# Powerline Glyphs (Win(HHead)Ascent から Win(HHead)Descent までの長さを基準として大きさと位置を合わせる)
     Print("Edit Powerline Extra Symbols")
     Select(0ue0a0, 0ue0a3)
     SelectMore(0ue0b0, 0ue0c8)
@@ -12968,7 +12968,8 @@ while (i < SizeOf(input_list))
     SelectMore(0ue0d4)
     Move(0, -${y_pos_nerd}) # 元の位置に戻す
     Move(0, ${y_pos_em_revise}) # em値変更でのズレ修正
-    Select(0ue0a0, 0ue0a3); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0a0);         Move(-226, ${y_pos_pl}); SetWidth(512)
+    Select(0ue0a1, 0ue0a3); Move(-256, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b0);         Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(9,  ${y_pos_pl}); SetWidth(512)
     Select(0ue0b1);         Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
     Select(0ue0b2);         Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 9,  ${y_pos_pl}); SetWidth(512)
@@ -12977,12 +12978,14 @@ while (i < SizeOf(input_list))
     Select(0ue0b5);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
     Select(0ue0b6);         Scale(80,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 18, ${y_pos_pl}); SetWidth(512)
     Select(0ue0b7);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b8);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(9,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0b8);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(4,  ${y_pos_pl}); SetWidth(512)
     Select(0ue0b9);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0ba);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 9,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0ba);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 4,  ${y_pos_pl}); SetWidth(512)
     Select(0ue0bb);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bc, 0ue0bd); Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0be, 0ue0bf); Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
+    Select(0ue0bc);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(4,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0bd);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0be);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 4,  ${y_pos_pl}); SetWidth(512)
+    Select(0ue0bf);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
     Select(0ue0c0, 0ue0c1); Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl2}); SetWidth(1024)
     Select(0ue0c2, 0ue0c3); Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl2}); SetWidth(1024)
     Select(0ue0c4);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
@@ -12991,13 +12994,14 @@ while (i < SizeOf(input_list))
     Select(0ue0c7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0c8);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0ca);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0cc, 0ue0cd); Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0cc);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0cd);         Scale(105, ${height_scale_pl2}, 0,   ${height_center_pl}); Move(-21, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0ce, 0ue0d0); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d1);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
+    Select(0ue0d1);         Scale(105, ${height_scale_pl2}, 0,   ${height_center_pl}); Move(-21, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0d2);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
     Select(0ue0d4);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
-    Select(0ue0d6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl3}); SetWidth(1024)
-    Select(0ue0d7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl3});SetWidth(1024)
+    Select(0ue0d6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move( 33, ${y_pos_pl3}); SetWidth(1024)
+    Select(0ue0d7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(-33, ${y_pos_pl3});SetWidth(1024)
 
     # Loose 版対応 (とりあえず移動させておく)
     if ("${loose_flag}" == "true")
@@ -13206,12 +13210,6 @@ while (i < \$argc)
     Move(0, ${y_pos_pl})
 
     Select(0ue0d1); RemoveOverlap(); Copy() # 
-    Select(65552);  Paste()
-    Move(0, -${y_pos_plbox})
-    PasteWithOffset(-20, -${y_pos_plbox})
-    PasteWithOffset(  0,  ${y_pos_plbox})
-    PasteWithOffset(-20,  ${y_pos_plbox})
-    RemoveOverlap()
     Copy()
     j = 0
     while (j < 32)
@@ -13222,8 +13220,6 @@ while (i < \$argc)
         SetWidth(512)
         j += 1
     endloop
-
-    Select(65552); Clear() # Temporary glyph
 
 # 八卦
     Print("Edit bagua trigrams")
@@ -13333,7 +13329,7 @@ while (i < \$argc)
 
 # 記号のグリフを加工
     Print("Edit symbols")
-# 🄯 (追加)
+# 🄯 (追加、latin フォントや latin-kana フォントで実行するとエラーが出る)
     Select(0u00a9); Copy() # ©
     Select(0u1f12f); Paste() # 🄯
     HFlip()
