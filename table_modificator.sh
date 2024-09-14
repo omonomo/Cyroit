@@ -7,7 +7,7 @@
 # 各種テーブルの修正・追加プログラム
 
 
-# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+# ログをファイル出力させる場合は有効にする (<< "#LOG" をコメントアウトさせる)
 << "#LOG"
 LOG_OUT=/tmp/table_modificator.log
 LOG_ERR=/tmp/table_modificator_err.log

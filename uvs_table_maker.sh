@@ -11,7 +11,7 @@
 # 新しいcmapテーブル(format_14)を作成する
 
 
-# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+# ログをファイル出力させる場合は有効にする (<< "#LOG" をコメントアウトさせる)
 << "#LOG"
 LOG_OUT=/tmp/uvs_table_maker.log
 LOG_ERR=/tmp/uvs_table_maker_err.log

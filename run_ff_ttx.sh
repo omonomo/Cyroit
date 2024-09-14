@@ -8,7 +8,7 @@ set -e
 # 一連の操作を自動化するプログラム
 
 
-# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+# ログをファイル出力させる場合は有効にする (<< "#LOG" をコメントアウトさせる)
 << "#LOG"
 LOG_OUT=/tmp/run_ff_ttx.log
 LOG_ERR=/tmp/run_ff_ttx_err.log
@@ -19,10 +19,10 @@ exec 2> >(tee -a $LOG_ERR)
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-font_familyname_suffix_def=(BS SP FX HB DG) # バージョン違いの名称 (デフォルト設定)
-font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp) # 各バージョンのオプション (デフォルト設定)
 #font_familyname_suffix_def=(BS SP FX HB DG DS TM TS)
 #font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp tp zp p)
+font_familyname_suffix_def=(BS SP FX HB DG) # バージョン違いの名称 (デフォルト設定)
+font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp) # 各バージョンのオプション (デフォルト設定)
 build_fonts_dir="build" # 完成品を保管するフォルダ
 illegal_opt_fg="hVxfNn" # font_generator に指定できないオプション
 

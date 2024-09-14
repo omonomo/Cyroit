@@ -10,7 +10,7 @@
 # また uvs_table_maker にて GSUB のリストファイルが生成済みであること
 
 
-# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+# ログをファイル出力させる場合は有効にする (<< "#LOG" をコメントアウトさせる)
 << "#LOG"
 LOG_OUT=/tmp/calt_table_maker.log
 LOG_ERR=/tmp/calt_table_maker_err.log
@@ -18,7 +18,9 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
+ #glyphNo="14367" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし、絵文字削減)
 glyphNo="14416" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
+ #glyphNo="24462" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり、絵文字削減)
  #glyphNo="24511" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
