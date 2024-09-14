@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Custom font generator
 #
@@ -11,7 +11,7 @@
 # All rights reserved.
 
 
-# ログをファイル出力させる場合は有効にする (コメントアウトさせる)
+# ログをファイル出力させる場合は有効にする (<< "#LOG" をコメントアウトさせる)
 << "#LOG"
 LOG_OUT=/tmp/font_generator.log
 LOG_ERR=/tmp/font_generator_err.log
@@ -312,6 +312,7 @@ nerd_flag="true" # Nerd fonts 追加
 separator_flag="true" # 桁区切りあり
 slashed_zero_flag="true" # 0にスラッシュあり
 oblique_flag="true" # オブリーク作成
+emoji_flag="true" # 絵文字を減らさない
 draft_flag="false" # 下書きモード
 patch_flag="true" # パッチを当てる
 patch_only_flag="false" # パッチモード
@@ -406,7 +407,8 @@ font_generator_help()
     echo "  -s                     Disable thousands separator"
     echo "  -c                     Disable calt feature"
     echo "  -e                     Disable add Nerd fonts"
-    echo "  -o                     Disable generate oblique style"
+    echo "  -o                     Disable generate oblique style fonts"
+    echo "  -j                     Reduce the number of emoji glyphs"
     echo "  -S                     Enable ss feature"
     echo "  -d                     Enable draft mode (skip time-consuming processes)"
     echo "  -P                     End just before patching"
@@ -414,7 +416,7 @@ font_generator_help()
 }
 
 # Get options
-while getopts hVxf:vlN:n:wZzubtOsceoSdPp OPT
+while getopts hVxf:vlN:n:wZzubtOsceojSdPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -508,8 +510,12 @@ do
             nerd_flag="false"
             ;;
         "o" )
-            echo "Option: Disable generate oblique style"
+            echo "Option: Disable generate oblique style fonts"
             oblique_flag="false"
+            ;;
+        "j" )
+            echo "Option: Reduce the number of emoji glyphs"
+            emoji_flag="false"
             ;;
         "S" )
             echo "Option: Enable ss feature"
@@ -15245,6 +15251,72 @@ while (i < \$argc)
             Select(${address_calt_figure} + j); Paste()
             j += 1
         endloop
+    endif
+
+# 一部の記号文字を削除 (カラー絵文字フォントとの組み合わせ用)
+    if ("${emoji_flag}" == "false")
+        Print("Option: Reduce the number of emoji glyphs")
+
+        # Emoji
+ #        Select(0u0023)             # #
+ #        SelectMore(0u002a)         # *
+ #        SelectMore(0u0030, 0u0039) # 0 - 9
+        Select(0u00a9)             # ©
+        SelectMore(0u00ae)         # ®
+        SelectMore(0u203c)         # ‼
+        SelectMore(0u2049)         # ⁉
+        SelectMore(0u2122)         # ™
+        SelectMore(0u2194, 0u2199) # ↔↕↖↗↘↙
+        SelectMore(0u21a9, 0u21aa) # ↩↪
+        SelectMore(0u2328)         # ⌨
+        SelectMore(0u23cf)         # ⏏
+        SelectMore(0u24c2)         # Ⓜ
+        SelectMore(0u25b6)         # ▶
+        SelectMore(0u25c0)         # ◀
+        SelectMore(0u2600, 0u2601) # ☀☁
+        SelectMore(0u2602, 0u2603) # ☂☃
+        SelectMore(0u260e)         # ☎
+        SelectMore(0u2611)         # ☑
+        SelectMore(0u261d)         # ☝
+        SelectMore(0u2639)         # ☹
+        SelectMore(0u263a)         # ☺
+        SelectMore(0u2640)         # ♀
+        SelectMore(0u2642)         # ♂
+        SelectMore(0u2660)         # ♠
+        SelectMore(0u2663)         # ♣
+        SelectMore(0u2665, 0u2666) # ♥♦
+        SelectMore(0u2668)         # ♨
+        SelectMore(0u2702)         # ✂
+        SelectMore(0u2714)         # ✔
+        SelectMore(0u2716)         # ✖
+        SelectMore(0u271d)         # ✝
+        SelectMore(0u27a1)         # ➡
+        SelectMore(0u2934, 0u2935) # ⤴⤵
+        SelectMore(0u2b05, 0u2b07) # ⬅⬆⬇
+        SelectMore(0u3030)         # 〰
+        SelectMore(0u303d)         # 〽
+        SelectMore(0u3299)         # ㊙
+        SelectMore(0u1f310)        # 🌐
+        SelectMore(0u1f3a4)        # 🎤
+        Clear(); DetachAndRemoveGlyphs()
+
+        # Extended Pictographic
+ #        Select(0u2388)             # ⎈
+ #        SelectMore(0u2605)         # ★
+ #        SelectMore(0u2610)         # ☐
+ #        SelectMore(0u2612)         # ☒
+ #        SelectMore(0u2616, 0u2617) # ☖☗
+ #        Select(0u261c)             # ☜
+ #        SelectMore(0u261e, 0u261f) # ☞☟
+ #        SelectMore(0u2630, 0u2637) # ☰☱☲☳☴☵☶☷
+ #        SelectMore(0u263b, 0u263c) # ☻☼
+ #        SelectMore(0u2661, 0u2662) # ♡♢
+ #        SelectMore(0u2664)         # ♤
+ #        SelectMore(0u2667)         # ♧
+ #        SelectMore(0u2669, 0u266f) # ♩♪♫♬♭♮♯
+ #        SelectMore(0u26a1)         # ⚡
+ #        SelectMore(0u26b9)         # ⚹
+ #        Clear(); DetachAndRemoveGlyphs()
     endif
 
 # calt用異体字上書き
