@@ -15364,7 +15364,7 @@ while (i < \$argc)
         SelectMore(0u27b0)         # ➰
         SelectMore(0u27bf)         # ➿
         SelectMore(0u2934, 0u2935) # ⤴⤵
-        SelectMore(0u2b05, 0u2b07) # ⬅️, ⬇️
+        SelectMore(0u2b05, 0u2b07) # ⬅⬆⬇
         SelectMore(0u2b1b, 0u2b1c) # ⬛⬜
         SelectMore(0u2b50)         # ⭐
         SelectMore(0u2b55)         # ⭕
