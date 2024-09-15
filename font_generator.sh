@@ -15266,36 +15266,113 @@ while (i < \$argc)
         SelectMore(0u203c)         # ‼
         SelectMore(0u2049)         # ⁉
         SelectMore(0u2122)         # ™
+        SelectMore(0u2139)         # ℹ
         SelectMore(0u2194, 0u2199) # ↔↕↖↗↘↙
         SelectMore(0u21a9, 0u21aa) # ↩↪
+        SelectMore(0u231a, 0u231b) # ⌚⌛
         SelectMore(0u2328)         # ⌨
         SelectMore(0u23cf)         # ⏏
+        SelectMore(0u23e9, 0u23ec) # ⏩⏪⏫⏫⏬
+        SelectMore(0u23ed, 0u23ee) # ⏭⏮
+        SelectMore(0u23ef)         # ⏯
+        SelectMore(0u23f0)         # ⏰
+        SelectMore(0u23f1, 0u23f2) # ⏱⏲
+        SelectMore(0u23f3)         # ⏳
+        SelectMore(0u23f8, 0u23fa) # ⏸⏹⏺
         SelectMore(0u24c2)         # Ⓜ
+        SelectMore(0u25aa, 0u25ab) # ▪▫
         SelectMore(0u25b6)         # ▶
         SelectMore(0u25c0)         # ◀
+        SelectMore(0u25fb, 0u25fe) # ◻◾
         SelectMore(0u2600, 0u2601) # ☀☁
         SelectMore(0u2602, 0u2603) # ☂☃
+        SelectMore(0u2604)         # ☄
         SelectMore(0u260e)         # ☎
         SelectMore(0u2611)         # ☑
+        SelectMore(0u2614, 0u2615) # ☔☕
+        SelectMore(0u2618)         # ☘
         SelectMore(0u261d)         # ☝
-        SelectMore(0u2639)         # ☹
+        SelectMore(0u2620)         # ☠
+        SelectMore(0u2622, 0u2623) # ☢☣
+        SelectMore(0u2626)         # ☦
+        SelectMore(0u262a)         # ☪
+        SelectMore(0u262e)         # ☮
+        SelectMore(0u262f)         # ☯
+        SelectMore(0u2638, 0u2639) # ☸☹
         SelectMore(0u263a)         # ☺
         SelectMore(0u2640)         # ♀
         SelectMore(0u2642)         # ♂
+        SelectMore(0u2648, 0u2653) # ♈♉♊♋♌♍♎♏♐♑♒♓
+        SelectMore(0u265f)         # ♟
         SelectMore(0u2660)         # ♠
         SelectMore(0u2663)         # ♣
         SelectMore(0u2665, 0u2666) # ♥♦
         SelectMore(0u2668)         # ♨
+        SelectMore(0u267b)         # ♻
+        SelectMore(0u267e)         # ♾
+        SelectMore(0u267f)         # ♿
+        SelectMore(0u2692)         # ⚒
+        SelectMore(0u2693)         # ⚓
+        SelectMore(0u2694)         # ⚔
+        SelectMore(0u2695)         # ⚕
+        SelectMore(0u2696, 0u2697) # ⚖⚗
+        SelectMore(0u2699)         # ⚙
+        SelectMore(0u269b, 0u269c) # ⚛⚜
+        SelectMore(0u26a0, 0u26a1) # ⚠⚡
+        SelectMore(0u26a7)         # ⚧
+        SelectMore(0u26aa, 0u26ab) # ⚪⚫
+        SelectMore(0u26b0, 0u26b1) # ⚰⚱
+        SelectMore(0u26bd, 0u26be) # ⚽⚾
+        SelectMore(0u26c4, 0u26c5) # ⛄⛅
+        SelectMore(0u26c8)         # ⛈
+        SelectMore(0u26ce)         # ⛎
+        SelectMore(0u26cf)         # ⛏
+        SelectMore(0u26d1)         # ⛑
+        SelectMore(0u26d3)         # ⛓
+        SelectMore(0u26d4)         # ⛔
+        SelectMore(0u26e9)         # ⛩
+        SelectMore(0u26ea)         # ⛪
+        SelectMore(0u26f0, 0u26f1) # ⛰⛱
+        SelectMore(0u26f2, 0u26f3) # ⛲⛳
+        SelectMore(0u26f4)         # ⛴
+        SelectMore(0u26f5)         # ⛵
+        SelectMore(0u26f7, 0u26f9) # ⛷⛸⛹
+        SelectMore(0u26fa)         # ⛺
+        SelectMore(0u26fd)         # ⛽
         SelectMore(0u2702)         # ✂
+        SelectMore(0u2705)         # ✅
+        SelectMore(0u2708, 0u270c) # ✈✉✊✋✌
+        SelectMore(0u270d)         # ✍
+        SelectMore(0u270f)         # ✏
+        SelectMore(0u2712)         # ✒
         SelectMore(0u2714)         # ✔
         SelectMore(0u2716)         # ✖
         SelectMore(0u271d)         # ✝
+        SelectMore(0u2721)         # ✡
+        SelectMore(0u2728)         # ✨
+        SelectMore(0u2733, 0u2734) # ✳✴
+        SelectMore(0u2744)         # ❄
+        SelectMore(0u2747)         # ❇
+        SelectMore(0u274c)         # ❌
+        SelectMore(0u274e)         # ❎
+        SelectMore(0u2753, 0u2755) # ❓❔❕
+        SelectMore(0u2757)         # ❗
+        SelectMore(0u2763)         # ❣
+        SelectMore(0u2764)         # ❤
+        SelectMore(0u2795, 0u2797) # ➕➖➗
         SelectMore(0u27a1)         # ➡
+        SelectMore(0u27b0)         # ➰
+        SelectMore(0u27bf)         # ➿
         SelectMore(0u2934, 0u2935) # ⤴⤵
-        SelectMore(0u2b05, 0u2b07) # ⬅⬆⬇
+        SelectMore(0u2b05, 0u2b07) # ⬅️, ⬇️
+        SelectMore(0u2b1b, 0u2b1c) # ⬛⬜
+        SelectMore(0u2b50)         # ⭐
+        SelectMore(0u2b55)         # ⭕
         SelectMore(0u3030)         # 〰
         SelectMore(0u303d)         # 〽
+        SelectMore(0u3297)         # ㊗
         SelectMore(0u3299)         # ㊙
+
         SelectMore(0u1f310)        # 🌐
         SelectMore(0u1f3a4)        # 🎤
         Clear(); DetachAndRemoveGlyphs()
@@ -15306,7 +15383,7 @@ while (i < \$argc)
  #        SelectMore(0u2610)         # ☐
  #        SelectMore(0u2612)         # ☒
  #        SelectMore(0u2616, 0u2617) # ☖☗
- #        Select(0u261c)             # ☜
+ #        SelectMore(0u261c)         # ☜
  #        SelectMore(0u261e, 0u261f) # ☞☟
  #        SelectMore(0u2630, 0u2637) # ☰☱☲☳☴☵☶☷
  #        SelectMore(0u263b, 0u263c) # ☻☼
@@ -15314,7 +15391,6 @@ while (i < \$argc)
  #        SelectMore(0u2664)         # ♤
  #        SelectMore(0u2667)         # ♧
  #        SelectMore(0u2669, 0u266f) # ♩♪♫♬♭♮♯
- #        SelectMore(0u26a1)         # ⚡
  #        SelectMore(0u26b9)         # ⚹
  #        Clear(); DetachAndRemoveGlyphs()
     endif
