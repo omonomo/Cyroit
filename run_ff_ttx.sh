@@ -106,8 +106,8 @@ option_check() {
 
 remove_temp() {
   echo "Remove temporary files"
-  sh font_generator.sh -x
-  sh table_modificator.sh -x -N "${font_familyname}"
+  ./font_generator.sh -x
+  ./table_modificator.sh -x -N "${font_familyname}"
   rm -f *.nopatch.ttf
 }
 
@@ -270,9 +270,9 @@ esac
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
   option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}"
   if [ -n "${opt_fg}" ]; then
-    sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
+    ./font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   else
-    sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}" auto
+    ./font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   fi
 fi
 
@@ -287,9 +287,9 @@ if [ "${mode}" = "-F" ]; then
       opt_fg=${font_familyname_suffix_def_opt[${i}]}
       option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}"
       if [ -n "${opt_fg}" ]; then
-        sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
+        ./font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       else
-        sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
+        ./font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       fi
     done
   fi
@@ -297,9 +297,9 @@ if [ "${mode}" = "-F" ]; then
     opt_fg="Sp"
     option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}"
     if [ -n "${opt_fg}" ]; then
-      sh font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
+      ./font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
     else
-      sh font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}"
+      ./font_generator.sh -N "${font_familyname}" -n "${font_familyname_suffix}"
     fi
   fi
 fi
@@ -313,9 +313,9 @@ case ${mode} in
 esac
 option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${loose_flag}" "${symbol_only_flag}" "${reuse_list_flag}"
 if [ -n "${opt_tm}" ]; then
-  sh table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
+  ./table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else
-  sh table_modificator.sh -N "${font_familyname}${font_familyname_suffix}"
+  ./table_modificator.sh -N "${font_familyname}${font_familyname_suffix}"
 fi
 
 # -F が有効で、-l が無効、引数にも l が無い場合、一時ファイルを削除

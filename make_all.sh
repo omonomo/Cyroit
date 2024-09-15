@@ -20,21 +20,21 @@ font_familyname_suffix_opt="Sjp"
 
 build_fonts_dir="build" # 完成品を保管するフォルダ
 
-sh run_ff_ttx.sh -Fl -N "${font_familyname0}"
-sh font_generator.sh -${font_familyname_suffix_opt} -N "${font_familyname0}" -n "${font_familyname_suffix}"
+./run_ff_ttx.sh -Fl -N "${font_familyname0}"
+./font_generator.sh -${font_familyname_suffix_opt} -N "${font_familyname0}" -n "${font_familyname_suffix}"
 
-sh run_ff_ttx.sh -Fwlr -N "${font_familyname1}"
-sh font_generator.sh -${font_familyname_suffix_opt} -N "${font_familyname1}" -n "${font_familyname_suffix}"
+./run_ff_ttx.sh -Fwlr -N "${font_familyname1}"
+./font_generator.sh -${font_familyname_suffix_opt} -N "${font_familyname1}" -n "${font_familyname_suffix}"
 
-sh table_modificator.sh -ol -N "${font_familyname0}${font_familyname_suffix}"
+./table_modificator.sh -ol -N "${font_familyname0}${font_familyname_suffix}"
 mkdir -p "${build_fonts_dir}/${font_familyname0}/${font_familyname_suffix}"
 mv -f ${font_familyname0}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname0}/${font_familyname_suffix}/."
 
-sh table_modificator.sh -owr -N "${font_familyname1}${font_familyname_suffix}"
+./table_modificator.sh -owr -N "${font_familyname1}${font_familyname_suffix}"
 mkdir -p "${build_fonts_dir}/${font_familyname1}/${font_familyname_suffix}"
 mv -f ${font_familyname1}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname1}/${font_familyname_suffix}/."
 
-sh run_ff_ttx.sh -x
+./run_ff_ttx.sh -x
 
 echo
 echo "Succeeded in generating all custom fonts!"

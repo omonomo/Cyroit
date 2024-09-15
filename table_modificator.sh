@@ -137,8 +137,8 @@ do
         "x" )
             echo "Option: Cleaning temporary files"
             remove_temp
-            sh uvs_table_maker.sh -x -N "${font_familyname}"
-            sh calt_table_maker.sh -x
+            ./uvs_table_maker.sh -x -N "${font_familyname}"
+            ./calt_table_maker.sh -x
             exit 0
             ;;
         "l" )
@@ -298,9 +298,9 @@ if [ "${cmap_flag}" = "true" ]; then
   cmaplist_txt=$(find . -name "${cmapList}.txt" -maxdepth 1 | head -n 1)
   if [ -z "${cmaplist_txt}" ]; then # cmapListが無ければ作成
     if [ "${leaving_tmp_flag}" = "true" ]; then
-      sh uvs_table_maker.sh -l -N "${font_familyname}"
+      ./uvs_table_maker.sh -l -N "${font_familyname}"
     else
-      sh uvs_table_maker.sh -N "${font_familyname}"
+      ./uvs_table_maker.sh -N "${font_familyname}"
     fi
   fi
 
@@ -350,15 +350,15 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         gsublist_txt=$(find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1)
         if [ -z "${gsublist_txt}" ]; then # gsubListが無ければ作成(calt_table_maker で使用するため)
           if [ "${leaving_tmp_flag}" = "true" ]; then
-            sh uvs_table_maker.sh -l -N "${font_familyname}"
+            ./uvs_table_maker.sh -l -N "${font_familyname}"
           else
-            sh uvs_table_maker.sh -N "${font_familyname}"
+            ./uvs_table_maker.sh -N "${font_familyname}"
           fi
         fi
         caltlist_txt=$(find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1)
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
           option_format_cm opt_fg "" "${leaving_tmp_flag}" "${symbol_only_flag}" "${basic_only_flag}" "${optimize_flag}"
-          sh calt_table_maker.sh -"${opt_fg}"
+          ./calt_table_maker.sh -"${opt_fg}"
         fi
         # フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更

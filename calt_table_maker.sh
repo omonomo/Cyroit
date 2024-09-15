@@ -20,7 +20,7 @@ exec 2> >(tee -a $LOG_ERR)
 
  #glyphNo="14367" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし、絵文字削減)
 glyphNo="14416" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
- #glyphNo="24462" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり、絵文字削減)
+ #glyphNo="24461" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり、絵文字削減)
  #glyphNo="24511" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
