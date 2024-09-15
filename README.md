@@ -11,6 +11,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 - 変体仮名と小書き仮名拡張の表示に対応しました (v2.1.0以降)。
 - 点字の表示に対応しました (v2.4.0以降)。
 - 半角と全角の横幅の比率を9:16にしたバージョンを追加しました (v3.0.0以降)。
+- カラー絵文字フォントとの併用を前提に、絵文字のグリフを減らしたバージョンを追加しました (v3.2.0以降)。
 
 ## フォントサンプル
 
@@ -35,13 +36,13 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v3.1.0)  
+最新版 (v3.2.0)  
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.1.0/Cyroit_v3.1.0.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.1.0/CyroitLoose_v3.1.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.1.0.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.2.0/Cyroit_v3.2.0.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.2.0/CyroitLoose_v3.2.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.2.0.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -112,13 +113,14 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 | 名称     | サンプル                                                 | 説明                                                                                          |
 | -------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | Cyroit   | <img alt="Normal" src="./images/Normal.png" width="260"> | 通常版。スタイルセット対応。<br> 内容については後述。                                         |
+| CyroitEH | <img alt="Normal" src="./images/EH.png" width="260">     | 絵文字減らした版。スタイルセット対応。別の絵文字フォントとの併用推奨。<br>(サンプルの地球儀マークは Apple Color Emoji のものです)                   |
 | CyroitBS | <img alt="BS" src="./images/BS.png" width="260">         | 基本版。Ver.1.x.x までの通常版。<br> 全角スペースを可視化しています。                         |
 | CyroitSP | <img alt="SP" src="./images/SP.png" width="260">         | スペシャルスペース版。<br> 半角スペース、ノーブレークスペースも可視化したバージョン。         |
 | CyroitDG | <img alt="DG" src="./images/DG.png" width="260">         | 桁区切り表示版。<br> たくさん並んだ数字とにらめっこする時間を短縮できます。                   |
 | CyroitFX | <img alt="TS" src="./images/FX.png" width="260">         | 文字間隔固定版。calt と相性が悪いソフト用。<br> また他のバージョンよりも軽快に動作します。    |
 | CyroitHB | <img alt="HB" src="./images/HB.png" width="260">         | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。<br> プリントアウト用にどうぞ。 |
 
-### 通常版のスタイルセットについて
+### 通常版、絵文字減らした版のスタイルセットについて
 
 設定方法については、[Fira Code](https://github.com/tonsky/FiraCode) の[説明](https://github.com/tonsky/FiraCode/wiki/How-to-enable-stylistic-sets)が分かりやすいと思います。  
 
@@ -130,7 +132,7 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 | ss04   | <img alt="ss04" src="./images/ss04.png" width="260"> | 4桁区切りマーク表示                                                           |
 | ss05   | <img alt="ss05" src="./images/ss05.png" width="260"> | 小数小文字化                                                                  |
 | ss06   | <img alt="ss06" src="./images/ss06.png" width="260"> | 全角・半角形の下線、点字の外枠消去                                            |
-| ss07   | <img alt="ss07" src="./images/ss07.png" width="260"> | 識別性向上グリフ無効化                                                        |
+| ss07   | <img alt="ss07" src="./images/ss07.png" width="260"> | 識別性向上グリフ無効                                                          |
 | ss08   | <img alt="ss08" src="./images/ss08.png" width="260"> | DQVZ のグリフ変更                                                             |
 | ss09   | <img alt="ss09" src="./images/ss09.png" width="260"> | JIS に含まれる罫線を全角に置換<br> (環境によって全角にならないことがあります) |
 | ss10   | <img alt="ss10" src="./images/ss10.png" width="260"> | 0のスラッシュ消去                                                             |
@@ -197,7 +199,7 @@ Cyroit の生成には主に5つの Shell スクリプトを使用します。
 　　カーニング設定はラテン文字拡張 A までになります。  
 　　・パラメータ有りの場合、パラメータに応じたフォントのみ生成します。  
 　　・パラメータ無し、`-n` 有りの場合、スタイルセットに対応した (`S` を有効にした) フォントのみ生成します。  
-　　・パラメータ無し、`-n` 無しの場合、デフォルトの全バージョンを生成します。  
+　　・パラメータ無し、`-n` 無しの場合、デフォルトの全てのバージョンから、絵文字減らした版以外を生成します。  
 `オプション無し`  
 　　カーニング設定は基本ラテン文字限定になります。パラメータ無しの場合 `lo` を有効にしたフォントを生成します。  
 
@@ -234,6 +236,7 @@ FontForge のスクリプト機能を利用してフォントの合成と改変�
 `-c` calt に対応させません。文字間隔を調整しないフォントになります。`-s` も有効にしたことになります。  
 `-e` Nerd Fonts を追加しません。また Nerd Fonts を利用して作成・改変されたグリフも追加されません。  
 `-o` オブリーク体を生成しません。  
+`-j` 絵文字のグリフを減らします。  
 `-S` ss 対応のフォントにします。自動的に `-Zzts` が有効、`-ubOc` が無効になります。  
 `-d` 下書きモードで合成します。時間のかかる処理を飛ばしますが、完成品と見た目が少し異なる文字があります。  
 　　`-o` も有効になります。改変したグリフの確認用です。  
