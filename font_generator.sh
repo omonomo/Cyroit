@@ -9207,7 +9207,7 @@ while (i < SizeOf(input_list))
     Select(65552);  PasteInto() # Temporary glyph
     OverlapIntersect()
     Rotate(-10, 500, 600)
-    Move(-20, 10)
+    Move(-40, 10)
 
     # その他
     Select(0u25a0); Copy() # Black square
@@ -9441,7 +9441,7 @@ while (i < SizeOf(input_list))
         SetWidth(1000)
 
         Select(0u1b000) # 𛀀
-        Move(10, 0)
+        Move(20, 0)
         SetWidth(1000)
     endif
 
