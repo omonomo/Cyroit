@@ -9013,7 +9013,320 @@ while (i < SizeOf(input_list))
     endloop
     Select(65552); Clear() # Temporary glyph
 
-# 演算子を下に移動
+# 漢字構成記述文字 (追加)
+    # 下準備 (ドットで埋め尽くす)
+    Select(0u25a0); Copy() # Black square
+    Select(0u2ff0); Paste() # ⿰
+    Scale(5.5, 5.5)
+    Move(-398, -392)
+    Copy()
+    j = 0
+    while (j < 13)
+        k = 0
+        while (k < 13)
+            if (!(j == 0 && k == 0))
+                PasteWithOffset(k * 70, j * 70)
+            endif
+            k += 1
+        endloop
+        j += 1
+    endloop
+    SetWidth(1000)
+    Copy()
+    Select(0u2ff1, 0u2ffb); Paste() # ⿱-⿻
+
+# 2等分
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(52, 52)
+    Move(-189, -182); Copy()
+    PasteWithOffset(420,   0)
+    PasteWithOffset(  0, 420)
+    PasteWithOffset(420, 420)
+    PasteWithOffset(  0, 210) # 中間
+    PasteWithOffset(420, 210) # 中間
+    RemoveOverlap()
+    HFlip()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(150, 150)
+    Select(65552); Copy() # Temporary glyph
+    Select(65553); PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2ff0); PasteInto() # ⿰
+    OverlapIntersect()
+    SetWidth(1000)
+    Copy()
+    Select(0u2ff1); Paste() # ⿱
+    Rotate(90)
+    SetWidth(1000)
+
+# 3等分
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(32, 32)
+    Move(-258,-252); Copy()
+    PasteWithOffset(280,   0)
+    PasteWithOffset(560,   0)
+    PasteWithOffset(  0, 280)
+    PasteWithOffset(280, 280)
+    PasteWithOffset(560, 280)
+    PasteWithOffset(  0, 560)
+    PasteWithOffset(280, 560)
+    PasteWithOffset(560, 560)
+    PasteWithOffset(  0, 140) # 中間
+    PasteWithOffset(280, 140) # 中間
+    PasteWithOffset(560, 140) # 中間
+    PasteWithOffset(  0, 420) # 中間
+    PasteWithOffset(280, 420) # 中間
+    PasteWithOffset(560, 420) # 中間
+    RemoveOverlap()
+    HFlip()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(150, 150)
+    Select(65552); Copy() # Temporary glyph
+    Select(65553); PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2ff2); PasteInto() # ⿲
+    OverlapIntersect()
+    SetWidth(1000)
+    Copy()
+    Select(0u2ff3); Paste() # ⿳
+    Rotate(90)
+    SetWidth(1000)
+
+# 囗
+    # 中心
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(52, 52)
+    Move(-189 + 210, -182 + 210)
+    HFlip()
+
+    # 周辺
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(21, 21)
+    Move(-293,-287); Copy()
+    PasteWithOffset(210,   0)
+    PasteWithOffset(420,   0)
+    PasteWithOffset(630,   0)
+    PasteWithOffset(  0, 210)
+    PasteWithOffset(630, 210)
+    PasteWithOffset(  0, 420)
+    PasteWithOffset(630, 420)
+    PasteWithOffset(  0, 630)
+    PasteWithOffset(210, 630)
+    PasteWithOffset(420, 630)
+    PasteWithOffset(630, 630)
+    PasteWithOffset(105,   0) # 中間
+    PasteWithOffset(315,   0) # 中間
+    PasteWithOffset(525,   0) # 中間
+    PasteWithOffset(105, 630) # 中間
+    PasteWithOffset(315, 630) # 中間
+    PasteWithOffset(525, 630) # 中間
+    PasteWithOffset(  0, 105) # 中間
+    PasteWithOffset(  0, 315) # 中間
+    PasteWithOffset(  0, 525) # 中間
+    PasteWithOffset(630, 105) # 中間
+    PasteWithOffset(630, 315) # 中間
+    PasteWithOffset(630, 525) # 中間
+    RemoveOverlap()
+    HFlip()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65554);  Paste() # Temporary glyph
+    Scale(150, 150)
+    Select(65552); Copy() # Temporary glyph
+    Select(65554); PasteInto() # Temporary glyph
+    Select(65553); Copy() # Temporary glyph
+    Select(65554); PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2ff4); PasteInto() # ⿴
+    OverlapIntersect()
+    SetWidth(1000)
+
+# 冂
+    # 中下
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(52, 52)
+    Move(-189, -182); Copy()
+    Move(210, 210)
+    PasteWithOffset(210,   0)
+    RemoveOverlap()
+    HFlip()
+
+    # 周辺
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(21, 21)
+    Move(-293,-287); Copy()
+    PasteWithOffset(210,   0)
+    PasteWithOffset(420,   0)
+    PasteWithOffset(630,   0)
+    PasteWithOffset(  0, 630)
+    PasteWithOffset(210, 630)
+    PasteWithOffset(420, 630)
+    PasteWithOffset(630, 630)
+    PasteWithOffset(  0, 210)
+    PasteWithOffset(  0, 420)
+    PasteWithOffset(630, 210)
+    PasteWithOffset(630, 420)
+    PasteWithOffset(105, 630) # 中間
+    PasteWithOffset(315, 630) # 中間
+    PasteWithOffset(525, 630) # 中間
+    PasteWithOffset(  0, 105) # 中間
+    PasteWithOffset(  0, 315) # 中間
+    PasteWithOffset(  0, 525) # 中間
+    PasteWithOffset(630, 105) # 中間
+    PasteWithOffset(630, 315) # 中間
+    PasteWithOffset(630, 525) # 中間
+    RemoveOverlap()
+    HFlip()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65554);  Paste() # Temporary glyph
+    Scale(150, 150)
+    Select(65552); Copy() # Temporary glyph
+    Select(65554); PasteInto() # Temporary glyph
+    Select(65553); Copy() # Temporary glyph
+    Select(65554); PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2ff5); PasteInto() # ⿵
+    OverlapIntersect()
+    SetWidth(1000)
+    Copy()
+    Select(0u2ff6); Paste() # ⿶
+    Rotate(180)
+    SetWidth(1000)
+    Select(0u2ff7); Paste() # ⿷
+    Rotate(90)
+    SetWidth(1000)
+
+# 厂
+    # 右下
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(52, 52)
+    Move(-189, -182); Copy()
+    Move(210, 210)
+    PasteWithOffset(210,   0)
+    PasteWithOffset(420,   0)
+    PasteWithOffset(420, 210)
+    RemoveOverlap()
+    HFlip()
+
+    # 左上 (ひっくり返すので座標注意)
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(21, 21)
+    Move(-293,-287); Copy()
+    Move(  0, 630)
+    PasteWithOffset(210, 630)
+    PasteWithOffset(420, 630)
+    PasteWithOffset(630, 630)
+    PasteWithOffset(630,   0)
+    PasteWithOffset(630, 210)
+    PasteWithOffset(630, 420)
+    PasteWithOffset(630, 630)
+    PasteWithOffset(105, 630) # 中間
+    PasteWithOffset(315, 630) # 中間
+    PasteWithOffset(525, 630) # 中間
+    PasteWithOffset(630, 105) # 中間
+    PasteWithOffset(630, 315) # 中間
+    PasteWithOffset(630, 525) # 中間
+    RemoveOverlap()
+    HFlip()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65554);  Paste() # Temporary glyph
+    Scale(150, 150)
+    Select(65552); Copy() # Temporary glyph
+    Select(65554); PasteInto() # Temporary glyph
+    Select(65553); Copy() # Temporary glyph
+    Select(65554); PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2ff8); PasteInto() # ⿸
+    OverlapIntersect()
+    SetWidth(1000)
+    Copy()
+    Select(0u2ff9); Paste() # ⿹
+    Rotate(-90)
+    SetWidth(1000)
+    Select(0u2ffa); Paste() # ⿺
+    Rotate(90)
+    SetWidth(1000)
+
+# 「」
+    # 中心
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Scale(52, 52)
+    Move(-189 + 210, -182 + 210)
+    HFlip()
+
+    # 周辺 (ひっくり返すので座標注意)
+    Select(0u25a0); Copy() # Black square
+    Select(65553);  Paste() # Temporary glyph
+    Scale(21, 21)
+    Move(-293,-287); Copy()
+    PasteWithOffset(210,   0)
+    PasteWithOffset(420,   0)
+    PasteWithOffset(  0, 210)
+    PasteWithOffset(630, 210)
+    PasteWithOffset(  0, 420)
+    PasteWithOffset(630, 420)
+    PasteWithOffset(210, 630)
+    PasteWithOffset(420, 630)
+    PasteWithOffset(630, 630)
+    PasteWithOffset(105,   0) # 中間
+    PasteWithOffset(315,   0) # 中間
+    PasteWithOffset(315, 630) # 中間
+    PasteWithOffset(525, 630) # 中間
+    PasteWithOffset(  0, 105) # 中間
+    PasteWithOffset(  0, 315) # 中間
+    PasteWithOffset(630, 315) # 中間
+    PasteWithOffset(630, 525) # 中間
+    RemoveOverlap()
+    HFlip()
+
+    # 右上と左下のカット部分 (ひっくり返すので座標注意)
+    Select(0u25a0); Copy() # Black square
+    Select(65554);  Paste() # Temporary glyph
+    Scale(32, 32)
+    Move(-258,-252); Copy()
+    Move(630, -70)
+    PasteWithOffset(-70, 630)
+    HFlip()
+
+    Select(0u25a0); Copy() # Black square
+    Select(65555);  Paste() # Temporary glyph
+    Scale(150, 150)
+    Select(65552); Copy() # Temporary glyph
+    Select(65555); PasteInto() # Temporary glyph
+    Select(65553); Copy() # Temporary glyph
+    Select(65555); PasteInto() # Temporary glyph
+    Select(65554); Copy() # Temporary glyph
+    Select(65555); PasteInto() # Temporary glyph
+    Copy()
+    Select(0u2ffb); PasteInto() # ⿻
+    OverlapIntersect()
+    SetWidth(1000)
+
+    Select(0u2ff0, 0u2ffb) # ⿰-⿻
+    Move(-${x_pos_zenkaku_kana}, -52)
+    SetWidth(1000)
+
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+    Select(65554); Clear() # Temporary glyph
+    Select(65555); Clear() # Temporary glyph
+
+    # 演算子を下に移動
     math = [0u223c] # ∼
     j = 0
     while (j < SizeOf(math))
@@ -9024,7 +9337,7 @@ while (i < SizeOf(input_list))
     endloop
 
 # 仮名拡張 A (追加)
-    Print("Edit hentaigana glyphs")
+    Print("Edit hentaigana")
 # 𛄠
     # 縦棒
     Select(0u30a4); Copy() # イ
@@ -11839,7 +12152,7 @@ while (i < SizeOf(input_list))
 # --------------------------------------------------
 
 # Edit hentai kana
-    Print("Edit hentai kana")
+    Print("Edit hentaigana")
     SelectWorthOutputting()
     Move(0, -40)
     SetWidth(1024)
