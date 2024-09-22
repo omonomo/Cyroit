@@ -15063,7 +15063,7 @@ while (i < \$argc)
     Select(0u342e) # 㐮
     lookups = GetPosSub("*") # フィーチャを取り出す
 
- #    Select(0u1b001) # 𛀁 (あ行のえとや行の𛀁は違う音を表すため、無効化)
+ #    Select(0u1b001) # 𛀁
  #    glyphName = GlyphInfo("Name")
  #    Select(0u3048) # え
  #    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
@@ -15204,19 +15204,28 @@ while (i < \$argc)
     Select(0u7b87) # 箇
     AddPosSub(lookups[0][0],glyphName)
 
-    Select(0u32d3) # ㋓
-    glyphName = GlyphInfo("Name")
-    Select(0u30a8) # エ
-    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
-    Select(0u1b000) # 𛀀 (元々ア行のエは𛀀だったため、無効化しない)
-    glyphName = GlyphInfo("Name")
-    Select(0u30a8) # エ
-    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+ #    Select(0u32d3) # ㋓
+ #    glyphName = GlyphInfo("Name")
+ #    Select(0u30a8) # エ
+ #    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+ #    Select(0u1b000) # 𛀀
+ #    glyphName = GlyphInfo("Name")
+ #    Select(0u30a8) # エ
+ #    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+ #    Select(0u1b121) # 𛄡
+ #    glyphName = GlyphInfo("Name")
+ #    Select(0u30a8) # エ
+ #    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
 
-    Select(0u30a8) # エ (元々ヤ行の𛀀はエだったため、無効化しない)
-    glyphName = GlyphInfo("Name")
-    Select(0u1b000) # 𛀀
-    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+ #    Select(0u30a8) # エ
+ #    glyphName = GlyphInfo("Name")
+ #    Select(0u1b000) # 𛀀
+ #    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
+
+ #    Select(0u30a8) # エ
+ #    glyphName = GlyphInfo("Name")
+ #    Select(0u1b121) # 𛄡
+ #    AddPosSub(lookups[0][0],glyphName) # aaltフィーチャを追加
 
     orig = [0u0030, 0u0031, 0u0032, 0u0033,\
             0u0034, 0u0035, 0u0036, 0u0037,\
@@ -15350,9 +15359,9 @@ while (i < \$argc)
         glyphName = GlyphInfo("Name")
         Select(orig[j])
         AddPosSub(lookups[0][0],glyphName)
-        if (j != 3) # エは𛀀があるため複数、前のルーチンで処理済
+ #        if (j != 3) # エは𛀀𛄡があるため複数、前のルーチンで処理済 (無効化)
             AddPosSub(lookups[1][0],glyphName)
-        endif
+ #        endif
         j += 1
     endloop
 
