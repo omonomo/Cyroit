@@ -36,13 +36,13 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 
 ## ダウンロード
 
-最新版 (v3.2.0)  
+最新版 (v3.2.1)  
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.2.0/Cyroit_v3.2.0.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.2.0/CyroitLoose_v3.2.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.2.0.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.2.1/Cyroit_v3.2.1.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.2.1/CyroitLoose_v3.2.1.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.2.1.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -52,8 +52,8 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 - 主にラテン文字のグリフは [Inconsolata](https://levien.com/type/myfonts/inconsolata.html) を使用しています。
 - 主に仮名文字、ギリシア文字、キリル文字のグリフは [Circle M+ 1m](https://itouhiro.github.io/mixfont-mplus-ipa/) を使用しています。
 - 主に漢字のグリフは [BIZ UDゴシック](https://github.com/googlefonts/morisawa-biz-ud-gothic) を使用しています。
-- 変体仮名のグリフは [NINJAL 変体仮名フォント](https://cid.ninjal.ac.jp/kana/font/) を使用しています。
-- [Nerd Fonts](https://www.nerdfonts.com) Ver.3 を追加しています。
+- 主に変体仮名のグリフは [NINJAL 変体仮名フォント](https://cid.ninjal.ac.jp/kana/font/) を使用しています。
+- [Nerd Fonts](https://www.nerdfonts.com) を追加しています。
 - [ricty_generator](https://rictyfonts.github.io) を Fork したスクリプトで自動生成させています。
 - フォント生成時にグリフの改変や調整、追加を行っています。追加分も含め、全てのグリフは素材フォントの組み合わせだけで作られています。
 
@@ -93,7 +93,7 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 - calt を利用して、等幅のままでラテン文字 (一部除く) の文字間隔を調整するようにしています。
 - 同じく calt を利用して整数に桁区切りマークを表示させています。また桁区切り表示版は小数が少し小さく表示されます。
 - 桁区切りマークは、上の表示が4桁区切り (36桁まで)、下の表示が3桁区切り (39桁まで) です。4桁区切りは0と1が続いた時のみ表示されます。
-- 通常版に限りますが、各 ss を有効にすることで機能や見た目をカスタマイズすることができます。
+- 一部のバージョンに限りますが、各 ss を有効にすることで機能や見た目をカスタマイズすることができます。
 - 記号を置き換えるタイプのリガチャには対応していません。
 - 素材元のフォントにあった GSUB、GPOS のフィーチャは大幅に削ってあります。
 
@@ -110,15 +110,15 @@ Cyroit (しろいと) はプログラミングにもお使いいただける日�
 それぞれにレギュラー、オブリーク、ボールド、ボールドオブリークの書体が含まれています。  
 Loose 版は名称が 「CyroitLoose...」 になります。  
 
-| 名称     | サンプル                                                 | 説明                                                                                          |
-| -------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
-| Cyroit   | <img alt="Normal" src="./images/Normal.png" width="260"> | 通常版。スタイルセット対応。<br> 内容については後述。                                         |
-| CyroitEH | <img alt="Normal" src="./images/EH.png" width="260">     | 絵文字減らした版。スタイルセット対応。別の絵文字フォントとの併用推奨。<br>(サンプルの地球儀マークは Apple Color Emoji のものです)                   |
-| CyroitBS | <img alt="BS" src="./images/BS.png" width="260">         | 基本版。Ver.1.x.x までの通常版。<br> 全角スペースを可視化しています。                         |
-| CyroitSP | <img alt="SP" src="./images/SP.png" width="260">         | スペシャルスペース版。<br> 半角スペース、ノーブレークスペースも可視化したバージョン。         |
-| CyroitDG | <img alt="DG" src="./images/DG.png" width="260">         | 桁区切り表示版。<br> たくさん並んだ数字とにらめっこする時間を短縮できます。                   |
-| CyroitFX | <img alt="TS" src="./images/FX.png" width="260">         | 文字間隔固定版。calt と相性が悪いソフト用。<br> また他のバージョンよりも軽快に動作します。    |
-| CyroitHB | <img alt="HB" src="./images/HB.png" width="260">         | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。<br> プリントアウト用にどうぞ。 |
+| 名称      | サンプル                                                 | 説明                                                                                          |
+| --------- | -------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Cyroit    | <img alt="Normal" src="./images/Normal.png" width="260"> | 通常版。スタイルセット対応。<br> 内容については後述。                                         |
+| Cyroit EH | <img alt="Normal" src="./images/EH.png" width="260">     | 絵文字減らした版。スタイルセット対応。別の絵文字フォントとの併用推奨。<br>(サンプルの地球儀マークは Apple Color Emoji のものです) |
+| Cyroit BS | <img alt="BS" src="./images/BS.png" width="260">         | 基本版。Ver.1.x.x までの通常版。<br> 全角スペースを可視化しています。                         |
+| Cyroit SP | <img alt="SP" src="./images/SP.png" width="260">         | スペシャルスペース版。<br> 半角スペース、ノーブレークスペースも可視化したバージョン。         |
+| Cyroit DG | <img alt="DG" src="./images/DG.png" width="260">         | 桁区切り表示版。<br> たくさん並んだ数字とにらめっこする時間を短縮できます。                   |
+| Cyroit FX | <img alt="TS" src="./images/FX.png" width="260">         | 文字間隔固定版。calt と相性が悪いソフト用。<br> また他のバージョンよりも軽快に動作します。    |
+| Cyroit HB | <img alt="HB" src="./images/HB.png" width="260">         | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。<br> プリントアウト用にどうぞ。 |
 
 ### 通常版、絵文字減らした版のスタイルセットについて
 
@@ -150,7 +150,7 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 Cyroit は以下の環境でビルドできることを確認しています。  
 
-- OS: macOS Sonoma (version 14.6.1)
+- OS: macOS Sonoma (version 14.7)
 - Shell: GNU bash, version 5.2.32(1)-release (aarch64-apple-darwin23.4.0)
 - FontForge: 20230101
 - FontTools: 4.53.1
