@@ -6151,7 +6151,7 @@ while (i < SizeOf(input_list))
     PasteWithOffset(-100, -100)
     RemoveOverlap()
     Copy()
-    Select(0u30cc); PasteWithOffset(10, 0) # ヌ
+    Select(0u30cc); PasteInto() # ヌ
     OverlapIntersect()
     SetWidth(1000)
 
