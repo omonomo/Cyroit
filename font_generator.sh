@@ -154,13 +154,6 @@ y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
 y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
 y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
 
-width_scale_triangle="80.9" # 直角二等辺三角形のX座標拡大比率 ※ Powerline のグリフを利用
-height_scale_triangle="81.7" # 直角二等辺三角形のY座標拡大比率
-height_upper_triangle="854" # 直角二等辺三角形のY座標拡大中心 (上側)
-height_lower_triangle="-180" # 直角二等辺三角形のY座標拡大中心 (下側)
-y_pos_upper_triangle="-109" # 直角二等辺三角形のY座標移動量 (上側)
-y_pos_lower_triangle="80" # 直角二等辺三角形のY座標移動量 (下側)
-
 scale_pomicons="91" # Pomicons の拡大比率
 scale_nerd="89" # Pomicons Powerline 以外の拡大比率
 
@@ -183,6 +176,12 @@ weight_kana_others_bold="-12" # 仮名フォントのその他ボールド
 
 weight_small_kana_regular="10" # 小仮名拡張レギュラー
 weight_small_kana_bold="4" # 小仮名拡張ボールド(weight_kana_boldは適用しない)
+
+# 直角二等辺三角形用
+width_scale_triangle="94.8" # 直角二等辺三角形のX座標拡大比率
+height_scale_triangle="94.8" # 直角二等辺三角形のY座標拡大比率
+y_pos_upper_triangle="-39" # 直角二等辺三角形のY座標移動量 (上側)
+y_pos_lower_triangle="10" # 直角二等辺三角形のY座標移動量 (下側)
 
 # 上付き、下付き、ルート、分数用
 scale_super_sub="75" # 拡大比率
@@ -248,8 +247,8 @@ hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
 x_pos_center_Loose=$((hankaku_width_Loose / 2)) # 半角文字X座標中心 (Loose 版)
 y_pos_center_Loose="373" # 半角文字Y座標中心
 x_pos_hankaku_Loose=$(((hankaku_width_Loose - ${hankaku_width}) / 2)) # 半角文字移動量 (Loose 版)
-x_pos_calt_Loose="15" # ラテン文字のX座標移動量 (Loose 版)
-x_pos_calt_symbol_Loose="30" # 記号のX座標移動量 (Loose 版)
+x_pos_calt_Loose="18" # ラテン文字のX座標移動量 (Loose 版)
+x_pos_calt_symbol_Loose="36" # 記号のX座標移動量 (Loose 版)
 x_pos_calt_separate_Loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
 
 # デバッグ用
@@ -1404,7 +1403,7 @@ while (i < SizeOf(input_list))
     Select(65552);  Paste() # Temporary glyph
     if (input_list[i] == "${input_latin_regular}")
         Scale(22, 300); Copy()
-        Select(0u0051); PasteWithOffset(6, -190) # Q
+        Select(0u0051); PasteWithOffset(6, -200) # Q
     else
         Scale(36, 230); Copy()
         Select(0u0051); PasteWithOffset(3, -170) # Q
@@ -1460,7 +1459,8 @@ while (i < SizeOf(input_list))
  #    Select(0u1e7e) # Ṿ
  #    Select(0ua75e) # Ꝟ
 
-# W (右の線を少し太く)
+# W (右の線を少し太くして真ん中を少しへこます)
+    # 右の線を少し太くする
     if (input_list[i] == "${input_latin_regular}")
         Select(0u2588); Copy() # Full block
         Select(65552);  Paste() # Temporary glyph
@@ -1473,26 +1473,37 @@ while (i < SizeOf(input_list))
 
         Select(0u0057) # W
         PasteWithOffset(-4, 0)
-        SetWidth(500)
         RemoveOverlap()
         Simplify()
-
-        Select(65552);  Clear() # Temporary glyph
-
-        Select(0u2588); Copy() # Full block
-        Select(0u0174); PasteWithOffset(0,  1035); OverlapIntersect() # Ŵ
-        Select(0u1e80); PasteWithOffset(0,  1035); OverlapIntersect() # Ẁ
-        Select(0u1e82); PasteWithOffset(0,  1035); OverlapIntersect() # Ẃ
-        Select(0u1e84); PasteWithOffset(0,  1035); OverlapIntersect() # Ẅ
-        Select(0u0057); Copy() # W
-        Select(0u0174); PasteInto(); SetWidth(500) # Ŵ
-        Select(0u1e80); PasteInto(); SetWidth(500) # Ẁ
-        Select(0u1e82); PasteInto(); SetWidth(500) # Ẃ
-        Select(0u1e84); PasteInto(); SetWidth(500) # Ẅ
- #        Select(0u1e86) # Ẇ
- #        Select(0u1e88) # Ẉ
- #        Select(0u2c72) # Ⱳ
     endif
+
+    # 真ん中を少しへこます
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    Move(-350, 0)
+    PasteWithOffset(   0, -440)
+    PasteWithOffset( 350, 0)
+    RemoveOverlap()
+    Copy()
+    Select(0u0057); PasteInto() # W
+    OverlapIntersect()
+    SetWidth(500)
+
+    Select(65552);  Clear() # Temporary glyph
+
+    Select(0u2588); Copy() # Full block
+    Select(0u0174); PasteWithOffset(0,  1035); OverlapIntersect() # Ŵ
+    Select(0u1e80); PasteWithOffset(0,  1035); OverlapIntersect() # Ẁ
+    Select(0u1e82); PasteWithOffset(0,  1035); OverlapIntersect() # Ẃ
+    Select(0u1e84); PasteWithOffset(0,  1035); OverlapIntersect() # Ẅ
+    Select(0u0057); Copy() # W
+    Select(0u0174); PasteInto(); SetWidth(500) # Ŵ
+    Select(0u1e80); PasteInto(); SetWidth(500) # Ẁ
+    Select(0u1e82); PasteInto(); SetWidth(500) # Ẃ
+    Select(0u1e84); PasteInto(); SetWidth(500) # Ẅ
+ #    Select(0u1e86) # Ẇ
+ #    Select(0u1e88) # Ẉ
+ #    Select(0u2c72) # Ⱳ
 
 # Ẕẕ (kana フォントを上書き)
     Select(0u1e5f); Copy()# ṟ
@@ -2039,44 +2050,102 @@ while (i < SizeOf(input_list))
  #    Select(0uab47) # ꭇ
  #    Select(0uab49) # ꭉ
 
-# t (ちょんまげを少し延ばす)
+# t (全体を少し起こして、ちょんまげを少し延ばす)
+    # 横棒とその他を分ける
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(100, 4.2)
+        Move(0, 128)
+    else
+        Scale(100, 6.3)
+        Move(0, 121)
+    endif
     Copy()
+    Select(65553);  Paste() # Temporary glyph
+    Scale(95, 103)
+    Move(0, -1)
+    VFlip()
+    Select(0u2588); Copy() # Full block
+    Select(65553);  PasteInto() # その他を取り出すスクリーン
+
+    # 横棒
+    Select(0u0074); Copy() # t
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+
+    # その他
+    Select(65553); Copy() # Temporary glyph
+    Select(0u0074); PasteInto() # t
+    OverlapIntersect()
+    if (input_list[i] == "${input_latin_regular}")
+        Rotate(1, 299, -7)
+    else
+        Rotate(1, 299, -10)
+    endif
+
+    # ちょんまげ
+    Select(0u2588); Copy() # Full block
+    Select(65553);  Paste() # Temporary glyph
     if (input_list[i] == "${input_latin_regular}")
         Move(0, 857)
     else
         Move(0, 865)
     endif
     Select(0u0074); Copy() # t
-    Select(65552);  PasteInto() # Temporary glyph
+    Select(65553);  PasteInto() # Temporary glyph
     OverlapIntersect()
     if (input_list[i] == "${input_latin_regular}")
-        Scale(100, 106, 0, 457)
+        Scale(101, 106, 100, 457)
     else
-        Scale(100, 106, 0, 465)
+        Scale(101, 106, 100, 465)
     endif
 
+    # 下部
     Select(0u2588); Copy() # Full block
     Select(0u0074) # t
-    SelectMore(0u00163) # ţ
-    SelectMore(0u00167) # ŧ
-    if (input_list[i] == "${input_latin_regular}")
-        PasteWithOffset(0, -543)
-    else
-        PasteWithOffset(0, -535)
-    endif
+    PasteWithOffset(0, -560)
     OverlapIntersect()
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(100, 102, 0, -7)
+    else
+        Scale(100, 102, 0, -10)
+    endif
 
+    # ちょんまげを貼り付け
+    Select(65553);  Copy() # Temporary glyph
+    Select(0u0074); PasteInto() # t
+    Copy()
+    Select(0u0167); Paste() # ŧ
+
+    # 横棒を貼り付け
     Select(65552);  Copy() # Temporary glyph
+    Select(0u0074); PasteWithOffset(-10, 0) # t
+    Select(0u0167); PasteWithOffset(-10, 0) # ŧ
+    if (input_list[i] == "${input_latin_regular}")
+        PasteWithOffset(-10, -180)
+    else
+        PasteWithOffset(-10, -170)
+    endif
+
+    # 仕上げ
     Select(0u0074) # t
-    SelectMore(0u0163) # ţ
     SelectMore(0u0167) # ŧ
-    PasteInto()
     RemoveOverlap()
+    Simplify()
+    RoundToInt()
+    Move(5, 0)
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
+    Select(0u0074); Copy() # t
+    Select(0u00163); Paste() # ţ
+    Select(0u00b8); Copy() # ¸
+    Select(0u00163); PasteInto() # ţ
+    RemoveOverlap()
+    SetWidth(500)
 
     Select(0u2588); Copy() # Full block
     Select(0u0165); PasteWithOffset(320, 870); OverlapIntersect() # ť
@@ -2668,10 +2737,36 @@ while (i < SizeOf(input_list))
     Scale(68)
     SetWidth(1000)
 
+# ₤ (横線を2本にする)
+    # 横棒を取り出す
+    Select(0u2588); Copy() # Full block
+    Select(65552);  Paste() # Temporary glyph
+    if (input_list[i] == "${input_latin_regular}")
+        Scale(100, 4)
+        Move(0, 50)
+    else
+        Scale(100, 6.3)
+        Move(0, 51)
+    endif
+    Select(0u20a4); Copy() # ₤
+    Select(65552);  PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    Select(0u20a4) # ₤
+    if (input_list[i] == "${input_latin_regular}")
+        PasteWithOffset(0, -110)
+        RemoveOverlap()
+        PasteWithOffset(0, -111)
+    else
+        PasteWithOffset(0, -140)
+    endif
+    RemoveOverlap()
+    SetWidth(500)
+
 # ℊ (追加)
     Select(0u0067); Copy() # g
     Select(0u210a); Paste() # ℊ
-    Scale(${width_scale_latin}, ${height_scale_latin}, 250, 0); SetWidth(500)
+    SetWidth(500)
 
 # ℗ (追加)
     # R を P にするスクリーン
@@ -10225,7 +10320,9 @@ while (i < SizeOf(input_list))
     SelectMore(1114841, 1115183)
     SelectMore(1115493, 1115732)
  #    SelectMore(1115733, 1115734) # ∭印
-    SelectMore(1115735, 1115760)
+    SelectMore(1115735, 1115737)
+ #    SelectMore(1115738, 1115741) # ◢◣◥◤
+    SelectMore(1115742, 1115760)
     SelectMore(1115764, 1115765)
     SelectMore(1115768, 1115769)
     SelectMore(1115772, 1115773)
@@ -10894,7 +10991,7 @@ while (i < SizeOf(input_list))
     Move(-222, 0)
     SetWidth(512)
 
-# ∭ (全角にする)
+# ∭ (追加)
     Select(1115733); Copy()
     Select(0u222d); Paste() # ∭
     SetWidth(1024)
@@ -11282,6 +11379,30 @@ while (i < SizeOf(input_list))
         SetWidth(1024)
         j += 1
     endloop
+
+# ◢◣◤◥ (追加)
+    Select(1115738); Copy()
+    Select(0u25e2); Paste() # ◢
+    Scale(${width_scale_triangle}, ${height_scale_triangle} + 0.1, 924, -170)
+    Move(105 -${x_pos_zenkaku_kanzi}, ${y_pos_lower_triangle})
+    SetWidth(1024)
+    Select(1115739); Copy()
+    Select(0u25e3); Paste() # ◣
+    Scale(${width_scale_triangle}, ${height_scale_triangle} + 0.1, 33, -170)
+    Move(-38 -${x_pos_zenkaku_kanzi}, ${y_pos_lower_triangle})
+    SetWidth(1024)
+    Select(1115741); Copy()
+    Select(0u25e4); Paste() # ◤
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, 33, 784)
+    Move(-38 -${x_pos_zenkaku_kanzi}, ${y_pos_upper_triangle})
+    SetWidth(1024)
+    Select(1115740); Copy()
+    Select(0u25e5); Paste() # ◥
+    Scale(${width_scale_triangle}, ${height_scale_triangle}, 924, 784)
+    Move(105 -${x_pos_zenkaku_kanzi}, ${y_pos_upper_triangle})
+    SetWidth(1024)
+    Select(1115738, 1115741)
+    Clear(); DetachAndRemoveGlyphs()
 
 # ☜-☟ (拡大)
     Select(0u261c, 0u261f); Scale(116) # ☜-☟
@@ -12349,12 +12470,45 @@ while (i < SizeOf(latin_sfd_list))
         CorrectDirection()
     endif
 
-# latin フォントの縦横比調整
+# ₿ (追加)
+    Print("Edit bitcoin sign")
+    # 小さくした B
+    Select(0u0042); Copy() # B
+    Select(0u20bf); Paste() # ₿
+    Scale(95)
+    # 縦棒
+    Select(0u25a0); Copy() # Black square
+    Select(65552);  Paste() # Temporary glyph
+    Move(-200, 560)
+    PasteWithOffset(-200, -600)
+    Select(0u01c1); Copy() # ǁ
+    Select(65553);  Paste() # Temporary glyph
+    Scale(90, 82)
+    if (latin_sfd_list[i] == "${tmpdir}/${modified_latin_regular}")
+        Move(-15, 43)
+    else
+        Move(-9, 43)
+    endif
+    Copy()
+    Select(65552); PasteInto() # Temporary glyph
+    OverlapIntersect()
+    Copy()
+    # 合成
+    Select(0u20bf); PasteInto() # ₿
+    RemoveOverlap()
+    SetWidth(500)
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
+# latin フォントの縦横比調整 (kana フォントの欧文グリフは調整しない)
     if ("${draft_flag}" == "false")
         Print("Edit latin aspect ratio")
+ #      Select(0u0024) # $ 通貨記号
         Select(0u0030, 0u0039) # 0 - 9
         SelectMore(0u0041, 0u005a) # A - Z
         SelectMore(0u0061, 0u007a) # a - z
+ #      SelectMore(0u00a2, 0u00a3) # ¢£ 通貨記号
+ #      SelectMore(0u00a5) # ¥ 通貨記号
         SelectMore(0u00c0, 0u00d6) # À - Ö
         SelectMore(0u00d8, 0u00f6) # Ø - ö
         SelectMore(0u00f8, 0u0131) # ø - ı
@@ -12412,10 +12566,21 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u1e80, 0u1e85) # Ẁ - ẅ
         SelectMore(0u1e8e, 0u1e8f) # Ẏ - ẏ
         SelectMore(0u1e92, 0u1e93) # Ẓ - ẓ
-        SelectMore(0u1e94, 0u1e95) # Ẕ - ẕ kana フォントのウェイトを調整すると形が崩れるため latin フォントに追加したグリフ
+        SelectMore(0u1e94, 0u1e95) # Ẕ - ẕ kana フォントを使用するとウェイト調整時に形が崩れるため latin フォントに追加したグリフ
         SelectMore(0u1e97) # ẗ
         SelectMore(0u1e9e) # ẞ
         SelectMore(0u1ea0, 0u1ef9) # Ạ - ỹ
+ #        SelectMore(0u20a1) # ₡ 通貨記号
+ #        SelectMore(0u20a3, 0u20a4) # ₣₤ 通貨記号
+ #        SelectMore(0u20a6, 0u20a7) # ₦₧ 通貨記号
+ #        SelectMore(0u20a9) # ₩ 通貨記号
+ #        SelectMore(0u20ab, 0u20ad) # ₫€₭ 通貨記号
+ #        SelectMore(0u20b1, 0u20b2) # ₱₲ 通貨記号
+ #        SelectMore(0u20b5) # ₵ 通貨記号
+ #        SelectMore(0u20b9, 0u20ba) # ₹₺ 通貨記号
+ #        SelectMore(0u20bc, 0u20bd) # ₼₽ 通貨記号
+        SelectMore(0u2124) # ℤ
+        SelectMore(0u210a) # ℊ
         SelectMore(${address_mod_latin}, ${address_mod_latin} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
         SelectMore(${address_zero_latinkana}) # 避難したスラッシュ無し0
         SelectMore(${address_zero_latinkana} + 3, ${address_zero_latinkana} + 5) # 避難したスラッシュ無し全角0
@@ -13532,29 +13697,6 @@ while (i < SizeOf(input_list))
     Print("Edit Pomicons")
     Select(0ue000, 0ue00a)
     Scale(${scale_pomicons})
-    SetWidth(1024)
-
-# ◢◣◤◥
-    Print("Edit black triangles")
-    Select(0ue0b8); Copy() # 
-    Select(0u25e3); Paste() # ◣
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, -20, ${height_lower_triangle})
-    Move(15, ${y_pos_lower_triangle})
-    SetWidth(1024)
-    Select(0ue0ba); Copy() # 
-    Select(0u25e2); Paste() # ◢
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 1044, ${height_lower_triangle})
-    Move(-15, ${y_pos_lower_triangle})
-    SetWidth(1024)
-    Select(0ue0bc); Copy() # 
-    Select(0u25e4); Paste() # ◤
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, -20, ${height_upper_triangle})
-    Move(15, ${y_pos_upper_triangle})
-    SetWidth(1024)
-    Select(0ue0be); Copy() # 
-    Select(0u25e5); Paste() # ◥
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 1044, ${height_upper_triangle})
-    Move(-15, ${y_pos_upper_triangle})
     SetWidth(1024)
 
 # Powerline Glyphs (Win(HHead)Ascent から Win(HHead)Descent までの長さを基準として大きさと位置を合わせる)
