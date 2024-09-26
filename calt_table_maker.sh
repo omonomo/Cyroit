@@ -18,10 +18,10 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
- #glyphNo="14382" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし、絵文字削減)
-glyphNo="14431" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
- #glyphNo="24476" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり、絵文字削減)
- #glyphNo="24526" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
+ #glyphNo="14387" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし、絵文字削減)
+glyphNo="14436" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsなし)
+ #glyphNo="24477" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり、絵文字削減)
+ #glyphNo="24527" # デフォルトのcalt用異体字の先頭glyphナンバー (Nerd Fontsあり)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
 caltListName="caltList" # caltテーブルリストの名称
