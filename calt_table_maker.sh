@@ -4291,7 +4291,7 @@ fi
 
 # |: に関する処理 ----------------------------------------
 
-# ○左が上下対称な演算子、|~: の場合 | 下に : 上に移動
+# ○左が上下対称な演算子、<>|~: の場合 | 下に : 上に移動
 backtrack=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]} \
 ${operatorHN[@]} ${_lessN[@]} ${_greaterN[@]})
 input=(${_barN[@]} ${_colonN[@]})
@@ -5148,6 +5148,23 @@ input=(${_barN[@]} ${_tildeN[@]} ${_colonN[@]})
 lookAhead=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
 
+# < に関する処理 ----------------------------------------
+
+# △右が - の場合 < 右に移動
+backtrack=("")
+input=(${_lessN[@]})
+lookAhead=(${_hyphenN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# > に関する処理 ----------------------------------------
+
+# △左が -> の場合 > 左に移動
+backtrack=(${_greaterL[@]} \
+${_hyphenN[@]})
+input=(${_greaterN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
 # 括弧に関する処理の続き ----------------------------------------
 
 class=(_parenright _bracketright _braceright)
@@ -5717,6 +5734,14 @@ input=(${_barN[@]} ${_tildeN[@]} ${_colonN[@]})
 lookAhead=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
 
+# < に関する処理 2回目----------------------------------------
+
+# □右が < の場合 < 右に移動
+backtrack=("")
+input=(${_lessN[@]})
+lookAhead=(${_lessR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
 #CALT2
 #<< "#CALT3" # アルファベット・記号 ||||||||||||||||||||||||||||||||||||||||
 
@@ -5772,22 +5797,13 @@ input=(${_barN[@]} ${_tildeN[@]} ${_colonN[@]})
 lookAhead=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
 
-# < に関する処理 ----------------------------------------
+# < に関する処理 3回目----------------------------------------
 
-# ☆右が - の場合 < 右に移動
+# ☆右が < の場合 < 右に移動
 backtrack=("")
 input=(${_lessN[@]})
-lookAhead=(${_hyphenN[@]})
+lookAhead=(${_lessR[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
-
-# > に関する処理 ----------------------------------------
-
-# ☆左が - の場合 > 左に移動
-backtrack=(${_hyphenR[@]} \
-${_hyphenN[@]})
-input=(${_greaterN[@]})
-lookAhead=("")
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
 # *+-:= に関する処理 ----------------------------------------
 
@@ -5800,21 +5816,19 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # - に関する処理の始め ----------------------------------------
 
 # ☆左が < で 右が > の場合 - 移動しない
-backtrack=(${_lessR[@]} \
-${_lessN[@]})
+backtrack=(${_lessR[@]})
 input=(${_hyphenN[@]})
-lookAhead=(${_greaterN[@]})
+lookAhead=(${_greaterL[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ☆右が > の場合 - 右に移動
 backtrack=("")
 input=(${_hyphenN[@]})
-lookAhead=(${_greaterN[@]})
+lookAhead=(${_greaterL[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
 # ☆左が、右が開いている文字、< の場合 - 左に移動
 backtrack=(${_lessR[@]} \
-${_lessN[@]} \
 ${midSpaceRL[@]} ${midSpaceCL[@]} \
 ${midSpaceRN[@]} ${midSpaceCN[@]})
 input=(${_hyphenN[@]})
@@ -5843,11 +5857,16 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # reverse solidus に関する処理の始め ----------------------------------------
 
+# ☆右が、reverse solidus の場合 reverse solidus 右に移動
+backtrack=("")
+input=(${_rSolidusN[@]})
+lookAhead=(${_rSolidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
 # ☆左が、右上が開いている文字、狭い文字、A、reverse solidus の場合 reverse solidus 左に移動
 backtrack=(${highSpaceRL[@]} ${highSpaceCL[@]} ${gravityCL[@]} ${_AL[@]} \
 ${highSpaceRN[@]} ${highSpaceCN[@]} ${gravityCN[@]} ${_AN[@]} \
-${_rSolidusL[@]} \
-${_rSolidusN[@]})
+${_rSolidusR[@]})
 input=(${_rSolidusN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
@@ -5860,11 +5879,16 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # solidus に関する処理の始め ----------------------------------------
 
+# ☆右が、solidus の場合 solidus 右に移動
+backtrack=("")
+input=(${_solidusN[@]})
+lookAhead=(${_solidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
 # ☆左が、右下が開いている文字か W、solidus の場合 solidus 左に移動
 backtrack=(${lowSpaceRL[@]} ${lowSpaceCL[@]} ${_WL[@]} \
 ${lowSpaceRN[@]} ${lowSpaceCN[@]} ${_WN[@]} \
-${_solidusL[@]} \
-${_solidusN[@]})
+${_solidusR[@]})
 input=(${_solidusN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
@@ -5891,14 +5915,34 @@ pre_add_lookup
 
 # 記号類 ++++++++++++++++++++++++++++++++++++++++
 
+# < に関する処理 4回目----------------------------------------
+
+# ▼右が < の場合 < 右に移動
+backtrack=("")
+input=(${_lessN[@]})
+lookAhead=(${_lessR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
 # - に関する処理の続き ----------------------------------------
 
-# ▼右が、左が開いている文字の場合 - 右に移動
+# ▽左が数字の場合 - 右に移動しない
+backtrack=(${figureN[@]})
+input=(${_hyphenN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ▽右が、左が開いている文字の場合 - 右に移動
 backtrack=("")
 input=(${_hyphenN[@]})
 lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} \
 ${midSpaceLN[@]} ${midSpaceCN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# ▽左が、< の場合 - 元に戻らない
+backtrack=(${_lessR[@]})
+input=(${_hyphenL[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ▽右が、左が開いている文字、数字の場合 - 元に戻る
 backtrack=("")
@@ -5968,22 +6012,34 @@ input=(${_rSolidusL[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
 
-# ▽右が reverse solidus で その右が reverse solidus で その右が reverse solidus の場合 reverse solidus 右に移動しない
+# ▽左が reverse solidus の場合 reverse solidus 元に戻らない
+backtrack=(${_rSolidusR[@]} \
+${_rSolidusN[@]})
+input=(${_rSolidusL[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ▽右が reverse solidus で その右が reverse solidus の場合 reverse solidus 元に戻る
 backtrack1=("")
 backtrack=("")
-input=(${_rSolidusN[@]})
-lookAhead=(${_rSolidusL[@]})
-lookAhead1=(${_rSolidusL[@]})
-lookAheadX=(${_rSolidusL[@]}); aheadMax="2"
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+input=(${_rSolidusR[@]})
+lookAhead=(${_rSolidusR[@]})
+lookAhead1=(${_rSolidusR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
-# ▽右が、左下が開いている文字か W、reverse solidus の場合 reverse solidus 右に移動
+# ▽左が reverse solidus で 右が reverse solidus の場合 reverse solidus 元に戻る
+backtrack=(${_rSolidusR[@]} \
+${_rSolidusN[@]})
+input=(${_rSolidusR[@]})
+lookAhead=(${_rSolidusL[@]} \
+${_rSolidusR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽右が、左下が開いている文字か W の場合 reverse solidus 右に移動
 backtrack=("")
 input=(${_rSolidusN[@]})
 lookAhead=(${lowSpaceLR[@]} ${lowSpaceCR[@]} ${_WR[@]} \
-${lowSpaceLN[@]} ${lowSpaceCN[@]} ${_WN[@]} \
-${_rSolidusL[@]} \
-${_rSolidusN[@]})
+${lowSpaceLN[@]} ${lowSpaceCN[@]} ${_WN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
 # ▽右が、左下が開いている文字か W の場合 reverse solidus 右に移動しない
@@ -5992,13 +6048,11 @@ input=(${_rSolidusN[@]})
 lookAhead=(${lowSpaceLL[@]} ${lowSpaceCL[@]} ${_WL[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ▽右が、左下が開いている文字か W、reverse solidus の場合 reverse solidus 元に戻る
+# ▽右が、左下が開いている文字か W の場合 reverse solidus 元に戻る
 backtrack=("")
 input=(${_rSolidusL[@]})
 lookAhead=(${lowSpaceLR[@]} ${lowSpaceCR[@]} ${_WR[@]} \
-${lowSpaceLN[@]} ${lowSpaceCN[@]} ${_WN[@]} \
-${_rSolidusL[@]} \
-${_rSolidusN[@]})
+${lowSpaceLN[@]} ${lowSpaceCN[@]} ${_WN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # solidus に関する処理の続き ----------------------------------------
@@ -6010,22 +6064,34 @@ input=(${_solidusL[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
 
-# ▽右が solidus で その右が solidus で その右が solidus の場合 solidus 右に移動しない
+# ▽左が solidus の場合 solidus 元に戻らない
+backtrack=(${_solidusR[@]} \
+${_solidusN[@]})
+input=(${_solidusL[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ▽右が solidus で その右が solidus の場合 solidus 元に戻る
 backtrack1=("")
 backtrack=("")
-input=(${_solidusN[@]})
-lookAhead=(${_solidusL[@]})
-lookAhead1=(${_solidusL[@]})
-lookAheadX=(${_solidusL[@]}); aheadMax="2"
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "" "${backtrack1[*]}" "${lookAhead1[*]}" "${lookAheadX[*]}" "${aheadMax}"
+input=(${_solidusR[@]})
+lookAhead=(${_solidusR[@]})
+lookAhead1=(${_solidusR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
-# ▽右が、左上が開いている文字、狭い文字、A、solidus の場合 solidus 右に移動
+# ▽左が solidus で 右が solidus の場合 solidus 元に戻る
+backtrack=(${_solidusR[@]} \
+${_solidusN[@]})
+input=(${_solidusR[@]})
+lookAhead=(${_solidusL[@]} \
+${_solidusR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽右が、左上が開いている文字、狭い文字、A の場合 solidus 右に移動
 backtrack=("")
 input=(${_solidusN[@]})
 lookAhead=(${highSpaceLR[@]} ${highSpaceCR[@]} ${gravityCR[@]} ${_AR[@]} \
-${highSpaceLN[@]} ${highSpaceCN[@]} ${gravityCN[@]} ${_AN[@]} \
-${_solidusL[@]} \
-${_solidusN[@]})
+${highSpaceLN[@]} ${highSpaceCN[@]} ${gravityCN[@]} ${_AN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
 # ▽右が、左上が開いている文字、狭い文字、A の場合 solidus 右に移動しない
@@ -6034,13 +6100,11 @@ input=(${_solidusN[@]})
 lookAhead=(${highSpaceLL[@]} ${highSpaceCL[@]} ${gravityCL[@]} ${_AL[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ▽右が、左上が開いている文字、狭い文字、A、solidus の場合 solidus 元に戻る
+# ▽右が、左上が開いている文字、狭い文字、A の場合 solidus 元に戻る
 backtrack=("")
 input=(${_solidusL[@]})
 lookAhead=(${highSpaceLR[@]} ${highSpaceCR[@]} ${gravityCR[@]} ${_AR[@]} \
-${highSpaceLN[@]} ${highSpaceCN[@]} ${gravityCN[@]} ${_AN[@]} \
-${_solidusL[@]} \
-${_solidusN[@]})
+${highSpaceLN[@]} ${highSpaceCN[@]} ${gravityCN[@]} ${_AN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # <> reverse solidus solidus に関する処理の続き ----------------------------------------
