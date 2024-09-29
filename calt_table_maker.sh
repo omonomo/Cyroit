@@ -35,10 +35,10 @@ tmpdir_name="calt_table_maker_tmpdir" # 一時保管フォルダ名
 lookupIndex_calt="18" # caltテーブルのlookupナンバー
 num_calt_lookups="20" # calt のルックアップ数
 lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlookupナンバー
-lookupIndexUD=${lookupIndex_replace} # 変換先(上下に移動させた記号のグリフ)
-lookupIndexRR=$((lookupIndexUD + 1)) # 変換先(右に移動させた記号のグリフ)
+lookupIndexRR=${lookupIndex_replace} # 変換先(右に移動させた記号のグリフ)
 lookupIndexLL=$((lookupIndexRR + 1)) # 変換先(左に移動させた記号のグリフ)
-lookupIndex0=$((lookupIndexLL + 1)) # 変換先(小数のグリフ)
+lookupIndexUD=$((lookupIndexLL + 1)) # 変換先(上下に移動させた記号のグリフ)
+lookupIndex0=$((lookupIndexUD + 1)) # 変換先(小数のグリフ)
 lookupIndex2=$((lookupIndex0 + 1)) # 変換先(12桁マークを付けたグリフ)
 lookupIndex4=$((lookupIndex2 + 1)) # 変換先(4桁マークを付けたグリフ)
 lookupIndex3=$((lookupIndex4 + 1)) # 変換先(3桁マークを付けたグリフ)
@@ -666,31 +666,36 @@ tmpdir=$(mktemp -d ./"${tmpdir_name}".XXXXXX) || exit 2
 
 # 略号と名前 ----------------------------------------
 
-quotedbl=("QTD") # 直接扱えない記号
+exclam=("EXC") # 直接扱えない記号があるため略号を使用
+quotedbl=("QTD")
 number=("NUM")
 dollar=("DOL")
 percent=("PCT")
 and=("AND")
+quote=("QTE")
 asterisk=("AST")
 plus=("PLS")
+comma=("COM")
 hyphen=("HYP")
 fullStop=("DOT")
 solidus=("SLH")
 parenLeft=("LPN")
 parenRight=("RPN")
-symbol2x=("!" "${quotedbl}" "${number}" "${dollar}" "${percent}" "${and}" "'" \
-"${parenLeft}" "${parenRight}" "${asterisk}" "${plus}" "," "${hyphen}" "${fullStop}" "${solidus}")
+symbol2x=("${exclam}" "${quotedbl}" "${number}" "${dollar}" "${percent}" "${and}" "${quote}" \
+"${parenLeft}" "${parenRight}" "${asterisk}" "${plus}" "${comma}" "${hyphen}" "${fullStop}" "${solidus}")
 symbol2x_name=("exclam" "quotedbl" "numbersign" "dollar" "percent" "ampersand" "quotesingle" \
 "parenleft" "parenright" "asterisk" "plus" "comma" "hyphen" "period" "slash")
 
 figure=(0 1 2 3 4 5 6 7 8 9)
 figure_name=("zero" "one" "two" "three" "four" "five" "six" "seven" "eight" "nine")
 
-colon=("CLN") # 単独で変数を使用するため他と分けて代入
+colon=("CLN")
+semicolon=("SCL")
 less=("LES")
 equal=("EQL")
 greater=("GRT")
-symbol3x=("${colon}" ";" "${less}" "${equal}" "${greater}" "?")
+question=("QET")
+symbol3x=("${colon}" "${semicolon}" "${less}" "${equal}" "${greater}" "${question}")
 symbol3x_name=("colon" "semicolon" "less" "equal" "greater" "question")
 
 at=("ATT")
@@ -702,18 +707,19 @@ symbol4x_name=("at")
 latin45=(A B C D E F G H I J K L M N O P Q R S T U V W X Y Z) # 略号の始めの文字
 latin45_name=(${latin45[@]})
 
-bracketLeft=("LBK") # 単独で変数を使用するため他と分けて代入
+bracketLeft=("LBK")
 rSolidus=("BSH")
 bracketRight=("RBK")
+circum=("CRC")
 underscore=("USC")
 grave=("GRV")
-symbol5x=("${bracketLeft}" "${rSolidus}" "${bracketRight}" "^" "${underscore}" "${grave}")
+symbol5x=("${bracketLeft}" "${rSolidus}" "${bracketRight}" "${circum}" "${underscore}" "${grave}")
 symbol5x_name=("bracketleft" "backslash" "bracketright" "asciicircum" "underscore" "grave")
 
 latin67=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字
 latin67_name=(${latin67[@]})
 
-braceLeft=("LBC") # 単独で変数を使用するため他と分けて代入
+braceLeft=("LBC")
 bar=("BAR")
 braceRight=("RBC")
 tilde=("TLD")
@@ -938,10 +944,36 @@ for S in ${word[@]}; do
   i=$((i + 1))
 done
 
+# 下に移動した記号 ----------------------------------------
+
+word=(${bar} ${tilde}) # |~
+
+for S in ${word[@]}; do
+  echo "$i ${S}D glyph${i}" >> "${tmpdir}/${dict}.txt"
+  if [ "${S}" == "${bar}" ]; then # | は左右にも動くため、左右移動設定時のノーマル状態として追加
+    echo "$i ${S}DN glyph${i}" >> "${tmpdir}/${dict}.txt"
+  fi
+  i=$((i + 1))
+done
+
+# 上に移動した記号 ----------------------------------------
+
+word=(${colon} ${asterisk} ${plus} ${hyphen} ${equal}) # :*+-=
+
+for S in ${word[@]}; do
+  echo "$i ${S}U glyph${i}" >> "${tmpdir}/${dict}.txt"
+  if [ "${S}" == "${colon}" ]; then # : は左右にも動くため追加
+    echo "$i ${S}UN glyph${i}" >> "${tmpdir}/${dict}.txt"
+  fi
+  i=$((i + 1))
+done
+
 # 左に移動した記号 ----------------------------------------
 
-word=(${hyphen} ${underscore} ${solidus} ${rSolidus} ${less} ${greater} \
-${parenLeft} ${parenRight} ${bracketLeft} ${bracketRight} ${braceLeft} ${braceRight})
+word=(${hyphen} ${equal} ${underscore} ${solidus} ${rSolidus} ${less} ${greater} \
+${parenLeft} ${parenRight} ${bracketLeft} ${bracketRight} ${braceLeft} ${braceRight} \
+${exclam} ${quotedbl} ${quote} ${comma} ${fullStop} ${colon} ${semicolon} ${grave} ${bar} \
+"${bar}D" "${colon}U") # 上下に動いた後、左右にも動く |: を追加
 
 for S in ${word[@]}; do
   echo "$i ${S}L glyph${i}" >> "${tmpdir}/${dict}.txt"
@@ -952,24 +984,6 @@ done
 
 for S in ${word[@]}; do
   echo "$i ${S}R glyph${i}" >> "${tmpdir}/${dict}.txt"
-  i=$((i + 1))
-done
-
-# 下に移動した記号 ----------------------------------------
-
-word=(${bar} ${tilde}) # | ~
-
-for S in ${word[@]}; do
-  echo "$i ${S}D glyph${i}" >> "${tmpdir}/${dict}.txt"
-  i=$((i + 1))
-done
-
-# 上に移動した記号 ----------------------------------------
-
-word=(${colon} ${asterisk} "+" ${hyphen} "=") # :
-
-for S in ${word[@]}; do
-  echo "$i ${S}U glyph${i}" >> "${tmpdir}/${dict}.txt"
   i=$((i + 1))
 done
 
@@ -1101,7 +1115,7 @@ else
   S="__kg"; class+=("${S}"); eval ${S}=\(ĸ\) # ĸ
 fi
 
-# ラテン文字単独 ====================
+# ラテン文字単独 (ここで定義した変数を使う) ====================
 
 S="_A"; class+=("${S}"); eval ${S}=\(_A_\) # A
 S="_B"; class+=("${S}"); eval ${S}=\(_B_\) # B
@@ -1163,7 +1177,7 @@ S="_th"; class+=("${S}"); eval ${S}=\(__th\) # þ
  #S="_ss"; class+=("${S}"); eval ${S}=\(__ss\) # ß
 S="_kg"; class+=("${S}"); eval ${S}=\(__kg\) # ĸ
 
-# ラテン文字グループ ====================
+# ラテン文字グループ (ここで定義した変数を使う) ====================
 
 # 基本 --------------------
 
@@ -1363,7 +1377,7 @@ S="_7_"; class+=("${S}"); eval ${S}=\(7\) # 7
 S="_8_"; class+=("${S}"); eval ${S}=\(8\) # 8
 S="_9_"; class+=("${S}"); eval ${S}=\(9\) # 9
 
-# 数字単独 ====================
+# 数字単独 (ここで定義した変数を使う) ====================
 
 S="_0"; class+=("${S}"); eval ${S}=\(_0_\) # 0
 S="_1"; class+=("${S}"); eval ${S}=\(_1_\) # 1
@@ -1376,7 +1390,7 @@ S="_7"; class+=("${S}"); eval ${S}=\(_7_\) # 7
 S="_8"; class+=("${S}"); eval ${S}=\(_8_\) # 8
 S="_9"; class+=("${S}"); eval ${S}=\(_9_\) # 9
 
-# 数字グループ ====================
+# 数字グループ (ここで定義した変数を使う) ====================
 
 S="figure"; class+=("${S}"); eval ${S}=\(_0_ _1_ _2_ _3_ _4_ _5_ _6_ _7_ _8_ _9_\) # 数字
 S="figureB"; class+=("${S}"); eval ${S}=\(_0_ _1_\) # 数字 (2進数)
@@ -1394,14 +1408,39 @@ for S in ${class[@]}; do
   done
 done
 
-# 記号 (上左右移動、ここで定義した変数は直接使用しないこと) ====================
+# 記号 (下左右移動あり、ここで定義した変数は直接使用しないこと) ====================
 class=("")
 
-S="_hyphen_";   class+=("${S}"); eval ${S}=\("${hyphen}"\) # -
+S="_bar_"; class+=("${S}"); eval ${S}=\("${bar}"\) # |
 
-# 記号 (上左右移動) 単独 ====================
+# 記号単独 (下左右移動あり、ここで定義した変数を使う) ====================
 
-S="_hyphen";   class+=("${S}"); eval ${S}=\(_hyphen_\) # -
+S="_bar"; class+=("${S}"); eval ${S}=\(_bar_\) # |
+
+# 略号生成 (N: 通常、D: 下移動後、L: 左移動後、R: 右移動後)
+
+for S in ${class[@]}; do
+  eval member=(\${${S}[@]})
+  for T in ${member[@]}; do
+    eval ${S}N+=\("${T}N"\)
+    eval ${S}D+=\("${T}D"\)
+    eval ${S}L+=\("${T}L"\)
+    eval ${S}R+=\("${T}R"\)
+  done
+done
+
+# 記号 (上左右移動あり、ここで定義した変数は直接使用しないこと) ====================
+class=("")
+
+S="_hyphen_"; class+=("${S}"); eval ${S}=\("${hyphen}"\) # -
+S="_equal_";    class+=("${S}"); eval ${S}=\("${equal}"\) # =
+S="_colon_";  class+=("${S}"); eval ${S}=\("${colon}"\) # :
+
+# 記号単独 (上左右移動あり、ここで定義した変数を使う) ====================
+
+S="_hyphen"; class+=("${S}"); eval ${S}=\(_hyphen_\) # -
+S="_equal";    class+=("${S}"); eval ${S}=\(_equal_\) # =
+S="_colon";  class+=("${S}"); eval ${S}=\(_colon_\) # :
 
 # 略号生成 (N: 通常、U: 上移動後、L: 左移動後、R: 右移動後)
 
@@ -1415,60 +1454,13 @@ for S in ${class[@]}; do
   done
 done
 
-# 記号 (左右移動、ここで定義した変数は直接使用しないこと) ====================
+# 記号 (下移動あり、ここで定義した変数は直接使用しないこと) ====================
 class=("")
 
-S="_solidus_";    class+=("${S}"); eval ${S}=\("${solidus}"\) # solidus
-S="_less_";       class+=("${S}"); eval ${S}=\("${less}"\) # <
-S="_greater_";    class+=("${S}"); eval ${S}=\("${greater}"\) # >
-S="_rSolidus_";   class+=("${S}"); eval ${S}=\("${rSolidus}"\) # reverse solidus
-S="_underscore_"; class+=("${S}"); eval ${S}=\("${underscore}"\) # _
-S="_parenleft_";    class+=("${S}"); eval ${S}=\("${parenLeft}"\) # (
-S="_parenright_";   class+=("${S}"); eval ${S}=\("${parenRight}"\) # )
-S="_bracketleft_";  class+=("${S}"); eval ${S}=\("${bracketLeft}"\) # [
-S="_bracketright_"; class+=("${S}"); eval ${S}=\("${bracketRight}"\) # ]
-S="_braceleft_";    class+=("${S}"); eval ${S}=\("${braceLeft}"\) # {
-S="_braceright_";   class+=("${S}"); eval ${S}=\("${braceRight}"\) # }
-
-# 記号 (左右移動) 単独 ====================
-
-S="_solidus";    class+=("${S}"); eval ${S}=\(_solidus_\) # solidus
-S="_less";       class+=("${S}"); eval ${S}=\(_less_\) # <
-S="_greater";    class+=("${S}"); eval ${S}=\(_greater_\) # >
-S="_rSolidus";   class+=("${S}"); eval ${S}=\(_rSolidus_\) # reverse solidus
-S="_underscore"; class+=("${S}"); eval ${S}=\(_underscore_\) # _
-S="_parenleft";    class+=("${S}"); eval ${S}=\(_parenleft_\) # (
-S="_parenright";   class+=("${S}"); eval ${S}=\(_parenright_\) # )
-S="_bracketleft";  class+=("${S}"); eval ${S}=\(_bracketleft_\) # [
-S="_bracketright"; class+=("${S}"); eval ${S}=\(_bracketright_\) # ]
-S="_braceleft";    class+=("${S}"); eval ${S}=\(_braceleft_\) # {
-S="_braceright";   class+=("${S}"); eval ${S}=\(_braceright_\) # }
-
-# 記号 (左右移動) グループ ====================
-
-S="bracketL";   class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
-S="bracketR";   class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
-
-# 略号生成 (N: 通常、L: 左移動後、R: 右移動後)
-
-for S in ${class[@]}; do
-  eval member=(\${${S}[@]})
-  for T in ${member[@]}; do
-    eval ${S}N+=\("${T}N"\)
-    eval ${S}L+=\("${T}L"\)
-    eval ${S}R+=\("${T}R"\)
-  done
-done
-
-# 記号 (下移動、ここで定義した変数は直接使用しないこと) ====================
-class=("")
-
-S="_bar_";   class+=("${S}"); eval ${S}=\("${bar}"\) # |
 S="_tilde_"; class+=("${S}"); eval ${S}=\("${tilde}"\) # ~
 
-# 記号 (下移動) 単独 ====================
+# 記号単独 (下移動あり、ここで定義した変数を使う) ====================
 
-S="_bar";   class+=("${S}"); eval ${S}=\(_bar_\) # |
 S="_tilde"; class+=("${S}"); eval ${S}=\(_tilde_\) # ~
 
 # 略号生成 (N: 通常、D: 下移動後)
@@ -1481,20 +1473,16 @@ for S in ${class[@]}; do
   done
 done
 
-# 記号 (上移動、ここで定義した変数は直接使用しないこと) ====================
+# 記号 (上移動あり、ここで定義した変数は直接使用しないこと) ====================
 class=("")
 
-S="_colon_";     class+=("${S}"); eval ${S}=\("${colon}"\) # :
-S="_asterisk_";  class+=("${S}"); eval ${S}=\("${asterisk}"\) # *
-S="_plus_";      class+=("${S}"); eval ${S}=\("${plus}"\) # +
-S="_equal_";     class+=("${S}"); eval ${S}=\("${equal}"\) # =
+S="_asterisk_"; class+=("${S}"); eval ${S}=\("${asterisk}"\) # *
+S="_plus_";     class+=("${S}"); eval ${S}=\("${plus}"\) # +
 
-# 記号 (上移動) 単独 ====================
+# 記号単独 (上移動あり、ここで定義した変数を使う) ====================
 
-S="_colon";     class+=("${S}"); eval ${S}=\(_colon_\) # :
-S="_asterisk";  class+=("${S}"); eval ${S}=\(_asterisk_\) # *
-S="_plus";      class+=("${S}"); eval ${S}=\(_plus_\) # +
-S="_equal";     class+=("${S}"); eval ${S}=\(_equal_\) # =
+S="_asterisk"; class+=("${S}"); eval ${S}=\(_asterisk_\) # *
+S="_plus";     class+=("${S}"); eval ${S}=\(_plus_\) # +
 
 # 略号生成 (N: 通常、U: 上移動後)
 
@@ -1506,32 +1494,99 @@ for S in ${class[@]}; do
   done
 done
 
+# 記号 (左右移動あり、ここで定義した変数は直接使用しないこと) ====================
+class=("")
+
+S="_solidus_";      class+=("${S}"); eval ${S}=\("${solidus}"\) # solidus
+S="_less_";         class+=("${S}"); eval ${S}=\("${less}"\) # <
+S="_greater_";      class+=("${S}"); eval ${S}=\("${greater}"\) # >
+S="_rSolidus_";     class+=("${S}"); eval ${S}=\("${rSolidus}"\) # reverse solidus
+S="_underscore_";   class+=("${S}"); eval ${S}=\("${underscore}"\) # _
+S="_parenleft_";    class+=("${S}"); eval ${S}=\("${parenLeft}"\) # (
+S="_parenright_";   class+=("${S}"); eval ${S}=\("${parenRight}"\) # )
+S="_bracketleft_";  class+=("${S}"); eval ${S}=\("${bracketLeft}"\) # [
+S="_bracketright_"; class+=("${S}"); eval ${S}=\("${bracketRight}"\) # ]
+S="_braceleft_";    class+=("${S}"); eval ${S}=\("${braceLeft}"\) # {
+S="_braceright_";   class+=("${S}"); eval ${S}=\("${braceRight}"\) # }
+S="_exclam_";       class+=("${S}"); eval ${S}=\("${exclam}"\) # !
+S="_quotedbl_";     class+=("${S}"); eval ${S}=\("${quotedbl}"\) # "
+S="_quote_";        class+=("${S}"); eval ${S}=\("${quote}"\) # '
+S="_comma_";        class+=("${S}"); eval ${S}=\("${comma}"\) # ,
+S="_fullStop_";     class+=("${S}"); eval ${S}=\("${fullStop}"\) # .
+S="_semicolon_";    class+=("${S}"); eval ${S}=\("${semicolon}"\) # ;
+S="_grave_";        class+=("${S}"); eval ${S}=\("${grave}"\) # `
+S="_barD_";         class+=("${S}"); eval ${S}=\("${bar}D"\) # 下に移動した |
+S="_colonU_";       class+=("${S}"); eval ${S}=\("${colon}U"\) # 上に移動した :
+
+# 記号単独 (左右移動あり、ここで定義した変数を使う) ====================
+
+S="_solidus";      class+=("${S}"); eval ${S}=\(_solidus_\) # solidus
+S="_less";         class+=("${S}"); eval ${S}=\(_less_\) # <
+S="_greater";      class+=("${S}"); eval ${S}=\(_greater_\) # >
+S="_rSolidus";     class+=("${S}"); eval ${S}=\(_rSolidus_\) # reverse solidus
+S="_underscore";   class+=("${S}"); eval ${S}=\(_underscore_\) # _
+S="_parenleft";    class+=("${S}"); eval ${S}=\(_parenleft_\) # (
+S="_parenright";   class+=("${S}"); eval ${S}=\(_parenright_\) # )
+S="_bracketleft";  class+=("${S}"); eval ${S}=\(_bracketleft_\) # [
+S="_bracketright"; class+=("${S}"); eval ${S}=\(_bracketright_\) # ]
+S="_braceleft";    class+=("${S}"); eval ${S}=\(_braceleft_\) # {
+S="_braceright";   class+=("${S}"); eval ${S}=\(_braceright_\) # }
+S="_exclam";       class+=("${S}"); eval ${S}=\(_exclam_\) # !
+S="_quotedbl";     class+=("${S}"); eval ${S}=\(_quotedbl_\) # "
+S="_quote";        class+=("${S}"); eval ${S}=\(_quote_\) # '
+S="_comma";        class+=("${S}"); eval ${S}=\(_comma_\) # ,
+S="_fullStop";     class+=("${S}"); eval ${S}=\(_fullStop_\) # .
+S="_semicolon";    class+=("${S}"); eval ${S}=\(_semicolon_\) # ;
+S="_grave";        class+=("${S}"); eval ${S}=\(_grave_\) # `
+S="_barD";         class+=("${S}"); eval ${S}=\(_barD_\) # 下に移動した |
+S="_colonU";       class+=("${S}"); eval ${S}=\(_colonU_\) # 上に移動した :
+
+# 記号グループ (左右移動あり、ここで定義した変数を使う) ====================
+
+S="bracketL"; class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
+S="bracketR"; class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
+
+# 略号生成 (N: 通常、L: 左移動後、R: 右移動後)
+
+for S in ${class[@]}; do
+  eval member=(\${${S}[@]})
+  for T in ${member[@]}; do
+    eval ${S}N+=\("${T}N"\)
+    eval ${S}L+=\("${T}L"\)
+    eval ${S}R+=\("${T}R"\)
+  done
+done
+
 # 記号 (通常のみ、ここで定義した変数は直接使用しないこと) ====================
 class=("")
 
-S="_number_";       class+=("${S}"); eval ${S}=\("${number}"\) # #
-S="_dollar_";       class+=("${S}"); eval ${S}=\("${dollar}"\) # $
-S="_percent_";      class+=("${S}"); eval ${S}=\("${percent}"\) # %
-S="_ampersand_";    class+=("${S}"); eval ${S}=\("${and}"\) # &
-S="_fullStop_";     class+=("${S}"); eval ${S}=\("${fullStop}"\) # .
-S="_at_";           class+=("${S}"); eval ${S}=\("${at}"\) # @
+S="_number_";     class+=("${S}"); eval ${S}=\("${number}"\) # #
+S="_dollar_";     class+=("${S}"); eval ${S}=\("${dollar}"\) # $
+S="_percent_";    class+=("${S}"); eval ${S}=\("${percent}"\) # %
+S="_ampersand_";  class+=("${S}"); eval ${S}=\("${and}"\) # &
+S="_question_";   class+=("${S}"); eval ${S}=\("${question}"\) # ?
+S="_at_";         class+=("${S}"); eval ${S}=\("${at}"\) # @
+S="_circum_";     class+=("${S}"); eval ${S}=\("${circum}"\) # ^
+S="_underscore_"; class+=("${S}"); eval ${S}=\("${underscore}"\) # _
 
-# 記号 (通常のみ) 単独 ====================
+# 記号単独 (通常のみ、ここで定義した変数を使う) ====================
 
-S="_number";       class+=("${S}"); eval ${S}=\(_number_\) # #
-S="_dollar";       class+=("${S}"); eval ${S}=\(_dollar_\) # $
-S="_percent";      class+=("${S}"); eval ${S}=\(_percent_\) # %
-S="_ampersand";    class+=("${S}"); eval ${S}=\(_ampersand_\) # &
-S="_fullStop";     class+=("${S}"); eval ${S}=\(_fullStop_\) # .
-S="_at";           class+=("${S}"); eval ${S}=\(_at_\) # @
+S="_number";     class+=("${S}"); eval ${S}=\(_number_\) # #
+S="_dollar";     class+=("${S}"); eval ${S}=\(_dollar_\) # $
+S="_percent";    class+=("${S}"); eval ${S}=\(_percent_\) # %
+S="_ampersand";  class+=("${S}"); eval ${S}=\(_ampersand_\) # &
+S="_question";   class+=("${S}"); eval ${S}=\(_question_\) # ?
+S="_at";         class+=("${S}"); eval ${S}=\(_at_\) # @
+S="_circum";     class+=("${S}"); eval ${S}=\(_circum_\) # ^
+S="_underscore"; class+=("${S}"); eval ${S}=\(_underscore_\) # _
 
-# 数字・記号 (通常のみ) グループ ====================
+# 数字・記号グループ (通常のみ、ここで定義した変数を使う) ====================
 
-S="symbolE";    class+=("${S}"); eval ${S}=\(_number_ _dollar_ _percent_ _ampersand_ \
-_asterisk_ _less_ _equal_ _greater_ _at_\) # 幅のある記号
-S="figureE";    class+=("${S}"); eval ${S}=\(_0_ _2_ _3_ _4_ _5_ _6_ _7_ _8_ _9_\) # 幅のある数字
-S="figureC";    class+=("${S}"); eval ${S}=\(_1_\) # 幅の狭い数字
-S="operatorH";  class+=("${S}"); eval ${S}=\(_asterisk_ _plus_ _hyphen_ _equal_\) # 前後の記号が上下に移動する記号
+S="figureE";   class+=("${S}"); eval ${S}=\(_0_ _2_ _3_ _4_ _5_ _6_ _7_ _8_ _9_\) # 幅のある数字
+S="figureC";   class+=("${S}"); eval ${S}=\(_1_\) # 幅の狭い数字
+S="operatorH"; class+=("${S}"); eval ${S}=\(_asterisk_ _plus_ _hyphen_ _equal_\) # 前後の記号が上下に移動する記号
+S="symbolE";   class+=("${S}"); eval ${S}=\(_number_ _dollar_ _percent_ _ampersand_ \
+                                            _asterisk_ _less_ _equal_ _greater_ _at_\) # 幅のある記号
 
 # 略号生成 (N: 通常)
 
@@ -5150,16 +5205,18 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # < に関する処理 ----------------------------------------
 
-# △右が - の場合 < 右に移動
+# △右が -| の場合 < 右に移動
 backtrack=("")
 input=(${_lessN[@]})
-lookAhead=(${_hyphenN[@]})
+lookAhead=(${_barD[@]} \
+${_hyphenN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
 # > に関する処理 ----------------------------------------
 
-# △左が -> の場合 > 左に移動
+# △左が ->| の場合 > 左に移動
 backtrack=(${_greaterL[@]} \
+${_barD[@]} \
 ${_hyphenN[@]})
 input=(${_greaterN[@]})
 lookAhead=("")
@@ -5170,7 +5227,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 class=(_parenright _bracketright _braceright)
 for S in ${class[@]}; do
   # △△△元に戻る
-  eval backtrack1=("")
+  backtrack1=("")
   eval backtrack=(\${${S}N[@]})
   eval input=(\${${S}L[@]})
   eval lookAhead=(\${${S}L[@]})
@@ -5181,15 +5238,15 @@ for S in ${class[@]}; do
   eval backtrack1=(\${${S}N[@]})
   eval backtrack=(\${${S}N[@]})
   eval input=(\${${S}L[@]})
-  eval lookAhead=("")
+  lookAhead=("")
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
 done
 
 class=(_parenleft _bracketleft _braceleft)
 for S in ${class[@]}; do
   # △△△元に戻る
-  eval backtrack1=("")
-  eval backtrack=("")
+  backtrack1=("")
+  backtrack=("")
   eval input=(\${${S}R[@]})
   eval lookAhead=(\${${S}R[@]})
   eval lookAhead1=(\${${S}R[@]})
@@ -5857,7 +5914,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # reverse solidus に関する処理の始め ----------------------------------------
 
-# ☆右が、reverse solidus の場合 reverse solidus 右に移動
+# ☆右が reverse solidus の場合 reverse solidus 右に移動
 backtrack=("")
 input=(${_rSolidusN[@]})
 lookAhead=(${_rSolidusN[@]})
@@ -5879,7 +5936,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # solidus に関する処理の始め ----------------------------------------
 
-# ☆右が、solidus の場合 solidus 右に移動
+# ☆右が solidus の場合 solidus 右に移動
 backtrack=("")
 input=(${_solidusN[@]})
 lookAhead=(${_solidusN[@]})
@@ -5907,6 +5964,104 @@ ${gravityWN[@]})
 input=(${_lessN[@]} ${_greaterN[@]} ${_rSolidusN[@]} ${_solidusN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# !"',.:;`| に関する処理の始め ----------------------------------------
+
+class=(_comma _semicolon)
+for S in ${class[@]}; do
+  # ☆☆左が演算子、!?,.:; の場合 狭い記号 移動しない
+  backtrack=(${_exclamN[@]} ${_questionN[@]} ${_fullStopN[@]} ${_colonN[@]})
+  if [ "${S}" == "_comma" ]; then
+    backtrack+=(${_semicolonN[@]})
+  else
+    backtrack+=(${_commaN[@]})
+  fi
+  eval input=(\${${S}N[@]})
+  lookAhead=("")
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+  # ☆☆右が演算子、!?,.:; の場合 狭い記号 移動しない
+  backtrack=("")
+  eval input=(\${${S}N[@]})
+  lookAhead=(${_exclamN[@]} ${_questionN[@]} ${_fullStopN[@]} ${_colonN[@]})
+  if [ "${S}" == "_comma" ]; then
+    lookAhead+=(${_semicolonN[@]})
+  else
+    lookAhead+=(${_commaN[@]})
+  fi
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+done
+
+class=(_exclam _fullStop _colon)
+for S in ${class[@]}; do
+  # ☆☆☆左が演算子、<!?,.:; の場合 狭い記号 移動しない
+  backtrack=(${_lessR[@]} \
+  ${_lessN[@]} ${_questionN[@]} ${_commaN[@]} ${_semicolonN[@]} ${operatorHN[@]})
+  if [ "${S}" == "_exclam" ]; then
+    backtrack+=(${_fullStopN[@]} ${_colonN[@]})
+  elif [ "${S}" == "_fullStop" ]; then
+    backtrack+=(${_exclamN[@]} ${_colonN[@]})
+  else
+    backtrack+=(${_exclamN[@]} ${_fullStopN[@]})
+  fi
+  eval input=(\${${S}N[@]})
+  lookAhead=("")
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+  # ☆☆☆右が演算子、>!?,.:; の場合 狭い記号 移動しない
+  backtrack=("")
+  eval input=(\${${S}N[@]})
+  lookAhead=(${_greaterL[@]} \
+  ${_greaterN[@]} ${_questionN[@]} ${_commaN[@]} ${_semicolonN[@]} ${operatorHN[@]})
+  if [ "${S}" == "_exclam" ]; then
+    lookAhead+=(${_fullStopN[@]} ${_colonN[@]})
+  elif [ "${S}" == "_fullStop" ]; then
+    lookAhead+=(${_exclamN[@]} ${_colonN[@]})
+  else
+    lookAhead+=(${_exclamN[@]} ${_fullStopN[@]})
+  fi
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+done
+
+class=(_barD _colonU)
+for S in ${class[@]}; do
+  # ☆☆左が演算子、< の場合 狭い記号 移動しない
+  backtrack=(${_lessR[@]} \
+  ${_lessN[@]} ${operatorHN[@]})
+  eval input=(\${${S}N[@]})
+  lookAhead=("")
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+  # ☆☆右が演算子、> の場合 狭い記号 移動しない
+  backtrack=("")
+  eval input=(\${${S}N[@]})
+  lookAhead=(${_greaterL[@]} \
+  ${_greaterN[@]} ${operatorHN[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+done
+
+class=(_exclam _quotedbl _quote _comma _fullStop _colon _semicolon _grave _bar _barD _colonU)
+for S in ${class[@]}; do
+  # ☆☆☆☆ ☆☆☆☆ ☆☆☆左が狭い記号で、右が狭い記号の場合 狭い記号 右に移動
+  eval backtrack=(\${${S}R[@]})
+  eval input=(\${${S}N[@]})
+  eval lookAhead=(\${${S}N[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+  # ☆☆☆☆ ☆☆☆☆ ☆☆☆左が狭い記号の場合 狭い記号 左に移動
+  eval backtrack=(\${${S}L[@]} \
+  \${${S}R[@]} \
+  \${${S}N[@]})
+  eval input=(\${${S}N[@]})
+  lookAhead=("")
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
+  # ☆☆☆☆ ☆☆☆☆ ☆☆☆右が狭い記号の場合 狭い記号 右に移動
+  backtrack=("")
+  eval input=(\${${S}N[@]})
+  eval lookAhead=(\${${S}N[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+done
 
 #CALT3
 #<< "#CALT4"  # 記号 ||||||||||||||||||||||||||||||||||||||||
@@ -6122,6 +6277,70 @@ input=(${_lessR[@]} ${_greaterR[@]} ${_rSolidusR[@]} ${_solidusR[@]})
 lookAhead=(${gravityLL[@]} ${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} ${gravityML[@]} \
 ${gravityWN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# = に関する処理 ----------------------------------------
+
+# ▽左が !.:| で 右が !.:| の場合 = 移動しない
+backtrack=(${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
+input=(${_equalN[@]})
+lookAhead=(${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ▽右が !.:| の場合 = 右に移動
+backtrack=("")
+input=(${_equalN[@]})
+lookAhead=(${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# ▽左が !.:| の場合 = 左に移動
+backtrack=(${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
+input=(${_equalN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
+# !"',.:;`| に関する処理の続き ----------------------------------------
+
+class=(_exclam _quotedbl _quote _comma _fullStop _colon _semicolon _grave _bar _barD _colonU)
+for S in ${class[@]}; do
+# ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で 右が狭い記号の場合 狭い記号 元に戻る
+  eval backtrack=(\${${S}N[@]})
+  eval input=(\${${S}L[@]} \
+  \${${S}R[@]})
+  eval lookAhead=(\${${S}R[@]} \
+  \${${S}N[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+  # ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で その左が狭い記号の場合 狭い記号 元に戻る
+  eval backtrack1=(\${${S}N[@]})
+  eval backtrack=(\${${S}N[@]})
+  eval input=(\${${S}L[@]} \
+  \${${S}R[@]})
+  lookAhead=("")
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
+
+  # ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で 右が狭い記号で その右が狭い記号の場合 狭い記号 元に戻る
+  backtrack1=("")
+  eval backtrack=(\${${S}N[@]})
+  eval input=(\${${S}L[@]})
+  eval lookAhead=(\${${S}L[@]})
+  eval lookAhead1=(\${${S}L[@]} \
+  \${${S}N[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
+
+  # ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で 右が狭い記号の場合 狭い記号 元に戻る
+  eval backtrack=(\${${S}R[@]})
+  eval input=(\${${S}R[@]})
+  eval lookAhead=(\${${S}L[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+  # ▽▽▽▽ ▽▽▽▽ ▽▽▽右が狭い記号で その右が狭い記号の場合 狭い記号 元に戻る
+  backtrack1=("")
+  backtrack=("")
+  eval input=(\${${S}R[@]})
+  eval lookAhead=(\${${S}R[@]})
+  eval lookAhead1=(\${${S}R[@]})
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
+done
 
 #CALT4
 # 桁区切り設定作成 ||||||||||||||||||||||||||||||||||||||||
