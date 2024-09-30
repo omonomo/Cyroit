@@ -6285,7 +6285,7 @@ lookAhead=(${gravityLL[@]} ${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} ${gra
 ${gravityWN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-# ☆左が左寄り、右寄り、幅広、均等、中間の文字の場合 < 元に戻る
+# ▽左が左寄り、右寄り、幅広、均等、中間の文字の場合 < 元に戻る
 backtrack=(${gravityLR[@]} ${gravityRR[@]} ${gravityWR[@]} ${gravityER[@]} ${gravityMR[@]} \
 ${gravityWN[@]})
 input=(${_LessL[@]})
