@@ -38,11 +38,14 @@ tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 
 # グリフ保管アドレス
 num_mod_glyphs="4" # -t オプションで改変するグリフ数
-address_mod_latin="64336" # 0ufb50 latinフォントの避難したDQVZアドレス
+address_store_start_latin="64336" # 0ufb50 latinフォントの避難したグリフの最初のアドレス
+address_g_latin=${address_store_start_latin} # latinフォントの避難したgアドレス (リザーブ)
+address_mod_latin=$((address_g_latin + 1)) # latinフォントの避難したDQVZアドレス
 address_braille_latin=$((address_mod_latin + num_mod_glyphs * 6)) # latinフォントの避難した点字アドレス
 address_zero_latin=$((address_braille_latin + 256)) # latinフォントの避難したスラッシュ無し0アドレス
 address_visi_latin=$((address_zero_latin + 6)) # latinフォントの避難した識別性向上アドレス ⁄|
 
+address_g_kana=${address_g_latin} # 仮名フォントの避難したgアドレス
 address_visi_kana=$((address_visi_latin + 2)) # 仮名フォントの避難した識別性向上アドレス ゠-➓
 address_vert_kana="1114129" # 仮名フォントのvert置換アドレス
 
@@ -52,9 +55,10 @@ address_calt_kanzi="1114841" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi2="1115493" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi3="1115623" # 漢字フォントのcalt置換アドレス
 address_calt_kanzi4="1115776" # 漢字フォントのcalt置換アドレス
-address_ss_kanzi=$((address_calt_kanzi4 + 50)) # 漢字フォントのss置換アドレス
+address_ss_kanzi=$((address_calt_kanzi4 + 60)) # 漢字フォントのss置換アドレス
 address_ss_dummy="1114336" # ダミーフォントのss置換アドレス (変体仮名の最終アドレス + 1)
 
+address_g_latinkana=${address_g_latin} # latin仮名フォントの避難したgアドレス
 address_mod_latinkana=${address_mod_latin} # latin仮名フォントの避難したDQVZアドレス
 address_zero_latinkana=${address_zero_latin} # latin仮名フォントの避難したスラッシュ無し0アドレス
 address_visi_latinkana=${address_visi_latin} # latin仮名フォントの避難した識別性向上アドレス ⁄|
@@ -62,6 +66,7 @@ address_zenhan_latinkana=$((address_line_kanzi + 32)) # latin仮名フォント�
 #address_vert_latinkana="65682" # latin仮名フォントのvert置換アドレス (𛀁を残した場合)
 address_vert_latinkana="65681" # latin仮名フォントのvert置換アドレス (𛀁を削除した場合)
 
+address_store_start=${address_store_start_latin} # 避難したグリフの最初のアドレス(D)
 address_mod=${address_mod_latin} # 避難したDQVZアドレス
 address_braille=${address_braille_latin} # 避難した点字アドレス
 address_zero=${address_zero_latin} # 避難したスラッシュ無し0アドレス
@@ -81,9 +86,9 @@ address_calt_AR=$((address_calt + 239)) # calt置換の中間アドレス(右に
 address_calt_figure=$((address_calt_AR + 239)) # calt置換アドレス(桁区切り付きの数字)
 address_calt_barD=$((address_calt_figure + 40)) # calt置換アドレス(下に移動した |)
 address_calt_hyphenL=$((address_calt_barD + 7)) # calt置換アドレス(左に移動した -)
-address_calt_hyphenR=$((address_calt_hyphenL + 24)) # calt置換アドレス(右に移動した -)
-address_calt_end=$((address_calt_hyphenR + 24 - 1)) # calt置換の最終アドレス (右上に移動した :)
-address_calt_barDLR="21" # calt置換アドレス(- から、左右下に移動した | までの増分)
+address_calt_hyphenR=$((address_calt_hyphenL + 25)) # calt置換アドレス(右に移動した -)
+address_calt_end=$((address_calt_hyphenR + 25 - 1)) # calt置換の最終アドレス (右上に移動した :)
+address_calt_barDLR="22" # calt置換アドレス(- から、左右下に移動した | までの増分)
 lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
 num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
 
@@ -3780,7 +3785,7 @@ while (i < SizeOf(input_list))
 # 演算子を下に移動
     math = [0u002a, 0u002b, 0u002d, 0u003c,\
             0u003d, 0u003e, 0u00d7, 0u00f7,\
-            0u2212, 0u2217, 0u2260] # *+-<=>×÷−∗≠
+            0u2212, 0u2217, 0u2260] # *+-< =>×÷ −∗≠
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
@@ -3790,7 +3795,7 @@ while (i < SizeOf(input_list))
     endloop
 
     math = [0u207a, 0u207b, 0u207c,\
-            0u208a, 0u208b, 0u208c] # ⁺⁻⁼₊₋₌
+            0u208a, 0u208b, 0u208c] # ⁺⁻⁼ ₊₋₌
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
@@ -4153,6 +4158,11 @@ while (i < SizeOf(input_list))
  #    RemoveOverlap()
 
 # --------------------------------------------------
+
+# g をオープンテイルに改変するため、一旦避難
+    Print("Store g")
+    Select(0u0067); Copy() # g
+    Select(${address_g_kana}); Paste() # 避難所
 
 # ひらがなのグリフ変更
     Print("Edit hiragana and katakana")
@@ -9912,8 +9922,7 @@ while (i < SizeOf(input_list))
         SelectMore(0u01cd, 0u01ee)
         SelectMore(0u01f0) # ǰ
  #        SelectMore(0u01f1, 0u01f3) # リガチャ
-        SelectMore(0u01f4) # Ǵ
- #        SelectMore(0u01f5) # g オープンテイル製作用、modified_latin_kana_generatorで調整
+        SelectMore(0u01f4, 0u01f5) # Ǵǵ
         SelectMore(0u01f7, 0u026d)
  #        SelectMore(0u026e) # リガチャ
         SelectMore(0u026f, 0u028c)
@@ -12041,7 +12050,7 @@ while (i < SizeOf(input_list))
 
     symb = [0u007c, 0u007e,\
             0u003a, 0u002a, 0u002b, 0u002d,\
-            0u003d] # |~:*+-=
+            0u003d] # |~ :*+- =
     j = 0
     while (j < SizeOf(symb))
         Select(symb[j]); Copy()
@@ -12055,8 +12064,8 @@ while (i < SizeOf(input_list))
             0u0028, 0u0029, 0u005b, 0u005d,\
             0u007b, 0u007d,\
             0u0021, 0u0022, 0u0027, 0u002c,\
-            0u002e, 0u003a, 0u003b, 0u0060,\
-            0u007c, 0u007c, 0u003a] # -=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;grave|、移動した|:
+            0u002e, 0u003a, 0u003b, 0u003f,\
+            0u0060, 0u007c, 0u007c, 0u003a] # -=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;?grave|、移動した|:
     k = ${address_calt_kanzi4}
     j = 0
     while (j < SizeOf(symb) * 2)
@@ -12385,7 +12394,7 @@ while (i < SizeOf(latin_sfd_list))
     PasteWithOffset(167, -601)
     RemoveOverlap()
     if ("${draft_flag}" == "false"); Move(-${x_pos_zenkaku_kana}, 0); endif
-    Select(0u01f5); Copy() # Latin small letter g with acute
+    Select(${address_g_latinkana}); Copy() # 避難したg
     Select(65552);  PasteInto()
     OverlapIntersect()
     Scale(107, 100)
@@ -12462,19 +12471,6 @@ while (i < SizeOf(latin_sfd_list))
     CorrectDirection()
     Move(0, ${y_pos_super})
     SetWidth(500)
-
-    # modified_kana_generatorで実行しなかったウェイト調整を実行
-    if ("${draft_flag}" == "false")
-        Print("Edit some weight of glyphs")
-        Select(0u01f5) # ǵ
-        if (latin_sfd_list[i] == "${tmpdir}/${modified_latin_regular}")
-            ChangeWeight(${weight_kana_others_regular})
-        else
-            ChangeWeight(${weight_kana_others_bold})
-            Move(0, -9)
-        endif
-        CorrectDirection()
-    endif
 
 # ₿ (追加)
     Print("Edit bitcoin sign")
@@ -12587,7 +12583,7 @@ while (i < SizeOf(latin_sfd_list))
  #        SelectMore(0u20bc, 0u20bd) # ₼₽ 通貨記号
         SelectMore(0u2124) # ℤ
         SelectMore(0u210a) # ℊ
-        SelectMore(${address_mod_latin}, ${address_mod_latin} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
+        SelectMore(${address_mod_latinkana}, ${address_mod_latinkana} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
         SelectMore(${address_zero_latinkana}) # 避難したスラッシュ無し0
         SelectMore(${address_zero_latinkana} + 3, ${address_zero_latinkana} + 5) # 避難したスラッシュ無し全角0
         Scale(${width_scale_latin}, ${height_scale_latin}, 250, 0); SetWidth(500)
@@ -12999,7 +12995,7 @@ while (i < SizeOf(latin_sfd_list))
     while (j < 93)
         if (j != 62) # ＿
           if (j == 91)
-            Select(${address_visi_latin} + 1) # ｜ (全角縦棒を実線にする)
+            Select(${address_visi_latinkana} + 1) # ｜ (全角縦棒を実線にする)
           else
             Select(0u0021 + j)
           endif
@@ -13106,7 +13102,7 @@ while (i < SizeOf(latin_sfd_list))
     hori = [0uff08, 0uff09, 0uff5b, 0uff5d,\
             0u3014, 0u3015, 0u3010, 0u3011,\
             0u300a, 0u300b, 0u3008, 0u3009,\
-            0u300c, 0u300d, 0u300e, 0u300f] # （）｛｝, 〔〕【】, 《》〈〉, 「」『』
+            0u300c, 0u300d, 0u300e, 0u300f] # （）｛｝ 〔〕【】 《》〈〉 「」『』
     vert = 0ufe35 # ︵
     j = 0
     while (j < SizeOf(hori))
@@ -13134,7 +13130,7 @@ while (i < SizeOf(latin_sfd_list))
     hori = [0uff08, 0uff09, 0uff0c, 0uff0e,\
             0uff1a, 0uff1d, 0uff3b, 0uff3d,\
             0uff3f, 0uff5b, 0uff5c, 0uff5d,\
-            0uff5e, 0uffe3] # （），．, ：＝［］, ＿｛｜｝, ～￣
+            0uff5e, 0uffe3] # （），． ：＝［］ ＿｛｜｝, ～￣
     vert = ${address_vert_latinkana}
     j = 0
     while (j < SizeOf(hori))
@@ -13152,18 +13148,14 @@ while (i < SizeOf(latin_sfd_list))
         j += 1
     endloop
 
-    hori = [0uff1b, 0uff0d,\
-            0uff1c, 0uff1e, 0uff5f, 0uff60] # －；, ＜＞｟｠
+    hori = [0uff0d, 0uff1b,\
+            0uff1c, 0uff1e, 0uff5f, 0uff60] # －； ＜＞｟｠
     vert = vert + j + 3 # 追加変体カナを避ける
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j]); Copy()
         Select(vert + j); Paste()
-        if (j == 2 || j == 3) # ， ．
-            Move(580, 533)
-        else
-            Rotate(-90, 487, 318)
-        endif
+        Rotate(-90, 487, 318)
         Copy(); Select(${address_zenhan_latinkana} + k); Paste(); SetWidth(1000); k += 1 # 避難所にコピー
         Select(65553);  Copy() # 縦線追加
         Select(vert + j); PasteInto()
@@ -13363,7 +13355,7 @@ while (i < SizeOf(latin_sfd_list))
     endloop
 
     hori = [0u309b, 0u309c, 0u203c, 0u2047,\
-            0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+            0u2048, 0u2049] # ゛゜‼⁇ ⁈⁉
     j = 0
     while (j < SizeOf(hori))
         Select(hori[j])
@@ -14553,8 +14545,8 @@ while (i < \$argc)
             0u0028, 0u0029, 0u005b, 0u005d,\
             0u007b, 0u007d,\
             0u0021, 0u0022, 0u0027, 0u002c,\
-            0u002e, 0u003a, 0u003b, 0u0060,\
-            0u007c, 0u0000, 0u0001] # -=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;grave|、移動した|:
+            0u002e, 0u003a, 0u003b, 0u003f,\
+            0u0060, 0u007c, 0u0000, 0u0001] # -=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;?grave|、移動した|:
     j = 0
     while (j < SizeOf(symb))
         if (symb[j] == 0u0000) # 移動した |
@@ -14812,7 +14804,7 @@ while (i < \$argc)
     endloop
 
     orig = [0u309b, 0u309c, 0u203c, 0u2047,\
-            0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+            0u2048, 0u2049] # ゛゜‼⁇ ⁈⁉
     j = 0
     while (j < SizeOf(orig))
         Select(${address_zenhan} + l); Copy()
@@ -14901,7 +14893,7 @@ while (i < \$argc)
  #    endloop
  #
  #    orig = [0u309b, 0u309c, 0u203c, 0u2047,\
- #            0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+ #            0u2048, 0u2049] # ゛゜‼⁇ ⁈⁉
  #    j = 0
  #    while (j < SizeOf(orig))
  #        Select(orig[j]); Copy()
@@ -14932,7 +14924,7 @@ while (i < \$argc)
     lookupSub = lookupName + "サブテーブル"
 
     orig = [0u2044, 0u007c,\
-            0u30a0, 0u2f23, 0u2013, 0ufe32, 0u2014, 0ufe31] # ⁄|゠⼣–︲—︱
+            0u30a0, 0u2f23, 0u2013, 0ufe32, 0u2014, 0ufe31] # ⁄| ゠⼣–︲—︱
     j = 0
     l = 0
     while (j < SizeOf(orig))
@@ -14966,7 +14958,7 @@ while (i < \$argc)
 
     orig = [0u3007, 0u4e00, 0u4e8c, 0u4e09,\
             0u5de5, 0u529b, 0u5915, 0u535c,\
-            0u53e3] # 〇一二三工力夕卜口
+            0u53e3] # 〇一二三 工力夕卜 口
     j = 0
     while (j < SizeOf(orig))
         Select(${address_visi} + l); Copy()
@@ -15277,12 +15269,12 @@ while (i < \$argc)
             0u0047, 0u0048, 0u0049, 0u004a,\
             0u004b, 0u004c, 0u004d, 0u004e,\
             0u004f, 0u0050, 0u0052, 0u0054,\
-            0u0055, 0u0056, 0u0057] # ABDEGHIJKLMNOPRTUVW
+            0u0055, 0u0056, 0u0057] # ABDE GHIJ KLMN OPRT UVW
     supb = [0u1d2c, 0u1d2e, 0u1d30, 0u1d31,\
             0u1d33, 0u1d34, 0u1d35, 0u1d36,\
             0u1d37, 0u1d38, 0u1d39, 0u1d3a,\
             0u1d3c, 0u1d3e, 0u1d3f, 0u1d40,\
-            0u1d41, 0u2c7d, 0u1d42] # ᴬᴮᴰᴱᴳᴴᴵᴶᴷᴸᴹᴺᴼᴾᴿᵀᵁⱽᵂ
+            0u1d41, 0u2c7d, 0u1d42] # ᴬᴮᴰᴱ ᴳᴴᴵᴶ ᴷᴸᴹᴺ ᴼᴾᴿᵀ ᵁⱽᵂ
     j = 0
     while (j < SizeOf(orig))
         Select(supb[j])
@@ -15293,9 +15285,9 @@ while (i < \$argc)
     endloop
 
     orig = [0u0062, 0u0063, 0u0064, 0u0066,\
-            0u0067, 0u0077, 0u0079, 0u007a] # bcdfgwyz
+            0u0067, 0u0077, 0u0079, 0u007a] # bcdf gwyz
     supb = [0u1d47, 0u1d9c, 0u1d48, 0u1da0,\
-            0u1d4d, 0u02b7, 0u02b8, 0u1dbb] # ᵇᶜᵈᶠᵍʷʸᶻ
+            0u1d4d, 0u02b7, 0u02b8, 0u1dbb] # ᵇᶜᵈᶠ ᵍʷʸᶻ
     j = 0
     while (j < SizeOf(orig))
         Select(supb[j])
@@ -15306,9 +15298,9 @@ while (i < \$argc)
     endloop
 
     orig = [0u00c6, 0u00f0, 0u018e, 0u014b,\
-            0u03b4, 0u03b8, 0u03c1] # ÆðƎŋδθρ
+            0u03b4, 0u03b8, 0u03c1] # ÆðƎŋ δθρ
     supb = [0u1d2d, 0u1d9e, 0u1d32, 0u1d51,\
-            0u1d5f, 0u1dbf, 0u1d68] # ᴭᶞᴲᵑᵟᶿᵨ
+            0u1d5f, 0u1dbf, 0u1d68] # ᴭᶞᴲᵑ ᵟᶿᵨ
 
     j = 0
     while (j < SizeOf(orig))
@@ -15458,17 +15450,17 @@ while (i < \$argc)
             0u006a, 0u006b, 0u006c, 0u006d,\
             0u006e, 0u006f, 0u0070, 0u0072,\
             0u0073, 0u0074, 0u0075, 0u0076,\
-            0u0078] # aehijklmnoprstuvx
+            0u0078] # aehi jklm nopr stuv x
     sups = [0u1d43, 0u1d49, 0u02b0, 0u2071,\
             0u02b2, 0u1d4f, 0u02e1, 0u1d50,\
             0u207f, 0u1d52, 0u1d56, 0u02b3,\
             0u02e2, 0u1d57, 0u1d58, 0u1d5b,\
-            0u02e3] # ᵃᵉʰⁱʲᵏˡᵐⁿᵒᵖʳˢᵗᵘᵛˣ
+            0u02e3] # ᵃᵉʰⁱ ʲᵏˡᵐ ⁿᵒᵖʳ ˢᵗᵘᵛ ˣ
     subs = [0u2090, 0u2091, 0u2095, 0u1d62,\
             0u2c7c, 0u2096, 0u2097, 0u2098,\
             0u2099, 0u2092, 0u209a, 0u1d63,\
             0u209b, 0u209c, 0u1d64, 0u1d65,\
-            0u2093] # ₐₑₕᵢⱼₖₗₘₙₒₚᵣₛₜᵤᵥₓ
+            0u2093] # ₐₑₕᵢ ⱼₖₗₘ ₙₒₚᵣ ₛₜᵤᵥ ₓ
     j = 0
     while (j < SizeOf(orig))
         Select(sups[j])
@@ -16039,7 +16031,7 @@ while (i < \$argc)
             k += 1
         endloop
         orig = [0u309b, 0u309c, 0u203c, 0u2047,\
-                0u2048, 0u2049] # ゛゜‼⁇⁈⁉
+                0u2048, 0u2049] # ゛゜‼⁇ ⁈⁉
         j = 0
         while (j < SizeOf(orig))
             Select(${address_zenhan} + k); Copy()
@@ -16066,7 +16058,7 @@ while (i < \$argc)
         # 破線・ウロコ等
         k = 0
         orig = [0u2044, 0u007c,\
-                0u30a0, 0u2f23, 0u2013, 0ufe32, 0u2014, 0ufe31] # ⁄|゠⼣–︲—︱
+                0u30a0, 0u2f23, 0u2013, 0ufe32, 0u2014, 0ufe31] # ⁄| ゠⼣–︲—︱
         j = 0
         while (j < SizeOf(orig))
             Select(${address_visi} + k); Copy()
@@ -16089,7 +16081,7 @@ while (i < \$argc)
         endloop
         orig = [0u3007, 0u4e00, 0u4e8c, 0u4e09,\
                 0u5de5, 0u529b, 0u5915, 0u535c,\
-                0u53e3] # 〇一二三工力夕卜口
+                0u53e3] # 〇一二三 工力夕卜 口
         j = 0
         while (j < SizeOf(orig))
             Select(${address_visi} + k); Copy()
@@ -16406,7 +16398,7 @@ while (i < \$argc)
 
 # 保管したグリフ消去
     Print("Remove stored glyphs")
-    Select(${address_mod}, ${address_store_end}); Clear() # 保管したグリフを消去
+    Select(${address_store_start}, ${address_store_end}); Clear() # 保管したグリフを消去
 
 # ss 用異体字消去
     if ("${ss_flag}" == "false")
