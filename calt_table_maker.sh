@@ -970,9 +970,9 @@ done
 
 # 左に移動した記号 ----------------------------------------
 
-word=(${hyphen} ${equal} ${underscore} ${solidus} ${rSolidus} ${less} ${greater} \
-${parenLeft} ${parenRight} ${bracketLeft} ${bracketRight} ${braceLeft} ${braceRight} \
-${exclam} ${quotedbl} ${quote} ${comma} ${fullStop} ${colon} ${semicolon} ${grave} ${bar} \
+word=(${hyphen} ${equal} ${underscore} ${solidus} ${rSolidus} ${less} ${greater} ${parenLeft} \
+${parenRight} ${bracketLeft} ${bracketRight} ${braceLeft} ${braceRight} ${exclam} ${quotedbl} \
+${quote} ${comma} ${fullStop} ${colon} ${semicolon} ${question} ${grave} ${bar} \
 "${bar}D" "${colon}U") # 上下に動いた後、左右にも動く |: を追加
 
 for S in ${word[@]}; do
@@ -1514,6 +1514,7 @@ S="_quote_";        class+=("${S}"); eval ${S}=\("${quote}"\) # '
 S="_comma_";        class+=("${S}"); eval ${S}=\("${comma}"\) # ,
 S="_fullStop_";     class+=("${S}"); eval ${S}=\("${fullStop}"\) # .
 S="_semicolon_";    class+=("${S}"); eval ${S}=\("${semicolon}"\) # ;
+S="_question_";     class+=("${S}"); eval ${S}=\("${question}"\) # ?
 S="_grave_";        class+=("${S}"); eval ${S}=\("${grave}"\) # `
 S="_barD_";         class+=("${S}"); eval ${S}=\("${bar}D"\) # 下に移動した |
 S="_colonU_";       class+=("${S}"); eval ${S}=\("${colon}U"\) # 上に移動した :
@@ -1537,14 +1538,17 @@ S="_quote";        class+=("${S}"); eval ${S}=\(_quote_\) # '
 S="_comma";        class+=("${S}"); eval ${S}=\(_comma_\) # ,
 S="_fullStop";     class+=("${S}"); eval ${S}=\(_fullStop_\) # .
 S="_semicolon";    class+=("${S}"); eval ${S}=\(_semicolon_\) # ;
+S="_question";     class+=("${S}"); eval ${S}=\(_question_\) # ?
 S="_grave";        class+=("${S}"); eval ${S}=\(_grave_\) # `
 S="_barD";         class+=("${S}"); eval ${S}=\(_barD_\) # 下に移動した |
 S="_colonU";       class+=("${S}"); eval ${S}=\(_colonU_\) # 上に移動した :
 
 # 記号グループ (左右移動あり、ここで定義した変数を使う) ====================
 
-S="bracketL"; class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
-S="bracketR"; class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
+S="bracketL";    class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
+S="bracketR";    class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
+S="barDotComma"; class+=("${S}"); eval ${S}=\(_question_ _exclam_ _fullStop_ _colon_ \
+                                              _comma_ _semicolon_ _bar_ _barD_ _colonU_\) # ?!.:,;|
 
 # 略号生成 (N: 通常、L: 左移動後、R: 右移動後)
 
@@ -1564,7 +1568,6 @@ S="_number_";     class+=("${S}"); eval ${S}=\("${number}"\) # #
 S="_dollar_";     class+=("${S}"); eval ${S}=\("${dollar}"\) # $
 S="_percent_";    class+=("${S}"); eval ${S}=\("${percent}"\) # %
 S="_ampersand_";  class+=("${S}"); eval ${S}=\("${and}"\) # &
-S="_question_";   class+=("${S}"); eval ${S}=\("${question}"\) # ?
 S="_at_";         class+=("${S}"); eval ${S}=\("${at}"\) # @
 S="_circum_";     class+=("${S}"); eval ${S}=\("${circum}"\) # ^
 S="_underscore_"; class+=("${S}"); eval ${S}=\("${underscore}"\) # _
@@ -1575,7 +1578,6 @@ S="_number";     class+=("${S}"); eval ${S}=\(_number_\) # #
 S="_dollar";     class+=("${S}"); eval ${S}=\(_dollar_\) # $
 S="_percent";    class+=("${S}"); eval ${S}=\(_percent_\) # %
 S="_ampersand";  class+=("${S}"); eval ${S}=\(_ampersand_\) # &
-S="_question";   class+=("${S}"); eval ${S}=\(_question_\) # ?
 S="_at";         class+=("${S}"); eval ${S}=\(_at_\) # @
 S="_circum";     class+=("${S}"); eval ${S}=\(_circum_\) # ^
 S="_underscore"; class+=("${S}"); eval ${S}=\(_underscore_\) # _
@@ -5972,90 +5974,33 @@ lookAhead=(${gravityLL[@]} ${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} ${gra
 ${gravityWN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
-# !"',.:;`| に関する処理の始め ----------------------------------------
+# ., に関する処理の始め ----------------------------------------
 
-class=(_comma _semicolon)
+# ☆左が / の場合 ., 移動しない
+backtrack=(${_solidusL[@]} \
+${_solidusN[@]})
+input=(${_fullStopN[@]} ${_commaN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ☆右が \ の場合 ., 移動しない
+backtrack=("")
+input=(${_fullStopN[@]} ${_commaN[@]})
+lookAhead=(${_rSolidusR[@]} \
+${_rSolidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ?!.:,;|"'` に関する処理の始め ----------------------------------------
+
+class=(_quotedbl _quote _grave)
 for S in ${class[@]}; do
-  # ☆☆左が演算子、!?,.:; の場合 狭い記号 移動しない
-  backtrack=(${_exclamN[@]} ${_questionN[@]} ${_fullStopN[@]} ${_colonN[@]})
-  if [ "${S}" == "_comma" ]; then
-    backtrack+=(${_semicolonN[@]})
-  else
-    backtrack+=(${_commaN[@]})
-  fi
-  eval input=(\${${S}N[@]})
-  lookAhead=("")
-  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
-
-  # ☆☆右が演算子、!?,.:; の場合 狭い記号 移動しない
-  backtrack=("")
-  eval input=(\${${S}N[@]})
-  lookAhead=(${_exclamN[@]} ${_questionN[@]} ${_fullStopN[@]} ${_colonN[@]})
-  if [ "${S}" == "_comma" ]; then
-    lookAhead+=(${_semicolonN[@]})
-  else
-    lookAhead+=(${_commaN[@]})
-  fi
-  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
-done
-
-class=(_exclam _fullStop _colon)
-for S in ${class[@]}; do
-  # ☆☆☆左が演算子、<!?,.:; の場合 狭い記号 移動しない
-  backtrack=(${_lessR[@]} \
-  ${_lessN[@]} ${_questionN[@]} ${_commaN[@]} ${_semicolonN[@]} ${operatorHN[@]})
-  if [ "${S}" == "_exclam" ]; then
-    backtrack+=(${_fullStopN[@]} ${_colonN[@]})
-  elif [ "${S}" == "_fullStop" ]; then
-    backtrack+=(${_exclamN[@]} ${_colonN[@]})
-  else
-    backtrack+=(${_exclamN[@]} ${_fullStopN[@]})
-  fi
-  eval input=(\${${S}N[@]})
-  lookAhead=("")
-  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
-
-  # ☆☆☆右が演算子、>!?,.:; の場合 狭い記号 移動しない
-  backtrack=("")
-  eval input=(\${${S}N[@]})
-  lookAhead=(${_greaterL[@]} \
-  ${_greaterN[@]} ${_questionN[@]} ${_commaN[@]} ${_semicolonN[@]} ${operatorHN[@]})
-  if [ "${S}" == "_exclam" ]; then
-    lookAhead+=(${_fullStopN[@]} ${_colonN[@]})
-  elif [ "${S}" == "_fullStop" ]; then
-    lookAhead+=(${_exclamN[@]} ${_colonN[@]})
-  else
-    lookAhead+=(${_exclamN[@]} ${_fullStopN[@]})
-  fi
-  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
-done
-
-class=(_barD _colonU)
-for S in ${class[@]}; do
-  # ☆☆左が演算子、< の場合 狭い記号 移動しない
-  backtrack=(${_lessR[@]} \
-  ${_lessN[@]} ${operatorHN[@]})
-  eval input=(\${${S}N[@]})
-  lookAhead=("")
-  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
-
-  # ☆☆右が演算子、> の場合 狭い記号 移動しない
-  backtrack=("")
-  eval input=(\${${S}N[@]})
-  lookAhead=(${_greaterL[@]} \
-  ${_greaterN[@]} ${operatorHN[@]})
-  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
-done
-
-class=(_exclam _quotedbl _quote _comma _fullStop _colon _semicolon _grave _bar _barD _colonU)
-for S in ${class[@]}; do
-  # ☆☆☆☆ ☆☆☆☆ ☆☆☆左が狭い記号で、右が狭い記号の場合 狭い記号 右に移動
+  # ☆☆☆左が "'` で、右が "'` の場合 "'` 右に移動
   eval backtrack=(\${${S}R[@]})
   eval input=(\${${S}N[@]})
   eval lookAhead=(\${${S}N[@]})
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
-  # ☆☆☆☆ ☆☆☆☆ ☆☆☆左が狭い記号の場合 狭い記号 左に移動
+  # ☆☆☆左が "'` の場合 "'` 左に移動
   eval backtrack=(\${${S}L[@]} \
   \${${S}R[@]} \
   \${${S}N[@]})
@@ -6063,15 +6008,49 @@ for S in ${class[@]}; do
   lookAhead=("")
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
-  # ☆☆☆☆ ☆☆☆☆ ☆☆☆右が狭い記号の場合 狭い記号 右に移動
+  # ☆☆☆右が "'` の場合 "'` 右に移動
   backtrack=("")
   eval input=(\${${S}N[@]})
   eval lookAhead=(\${${S}N[@]})
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 done
 
+# ☆左が演算子、< の場合 ?!.:,;| 移動しない
+backtrack=(${_lessR[@]} \
+${_lessN[@]} ${operatorHN[@]})
+input=(${barDotCommaN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ☆右が演算子、> の場合 ?!.:,;| 移動しない
+backtrack=("")
+input=(${barDotCommaN[@]})
+lookAhead=(${_greaterL[@]} \
+${_greaterN[@]} ${operatorHN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ☆左が ?!.:,;| で、右が ?!.:,;| の場合 ?!.:,;| 右に移動
+backtrack=(${barDotCommaR[@]})
+input=(${barDotCommaN[@]})
+lookAhead=(${barDotCommaN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# ☆左が ?!.:,;| の場合 ?!.:,;| 左に移動
+backtrack=(${barDotCommaL[@]} \
+${barDotCommaR[@]} \
+${barDotCommaN[@]})
+input=(${barDotCommaN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
+# ☆右が ?!.:,;| の場合 ?!.:,;| 右に移動
+backtrack=("")
+input=(${barDotCommaN[@]})
+lookAhead=(${barDotCommaN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
 #CALT3
-#<< "#CALT4"  # 記号 ||||||||||||||||||||||||||||||||||||||||
+#<< "#CALT4" # 記号 ||||||||||||||||||||||||||||||||||||||||
 
 pre_add_lookup
 
@@ -6288,7 +6267,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ▽左が左寄り、右寄り、幅広、均等、中間の文字の場合 < 元に戻る
 backtrack=(${gravityLR[@]} ${gravityRR[@]} ${gravityWR[@]} ${gravityER[@]} ${gravityMR[@]} \
 ${gravityWN[@]})
-input=(${_LessL[@]})
+input=(${_lessL[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
@@ -6316,11 +6295,11 @@ input=(${_equalN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
-# !"',.:;`| に関する処理の続き ----------------------------------------
+# ?!.:,;|"'` に関する処理の続き ----------------------------------------
 
-class=(_exclam _quotedbl _quote _comma _fullStop _colon _semicolon _grave _bar _barD _colonU)
+class=(_quotedbl _quote _grave)
 for S in ${class[@]}; do
-# ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で 右が狭い記号の場合 狭い記号 元に戻る
+# ▽▽▽左が "'` で 右が "'` の場合 "'` 元に戻る
   eval backtrack=(\${${S}N[@]})
   eval input=(\${${S}L[@]} \
   \${${S}R[@]})
@@ -6328,7 +6307,7 @@ for S in ${class[@]}; do
   \${${S}N[@]})
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-  # ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で その左が狭い記号の場合 狭い記号 元に戻る
+  # ▽▽▽左が "'` で その左が "'` の場合 "'` 元に戻る
   eval backtrack1=(\${${S}N[@]})
   eval backtrack=(\${${S}N[@]})
   eval input=(\${${S}L[@]} \
@@ -6336,7 +6315,7 @@ for S in ${class[@]}; do
   lookAhead=("")
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
 
-  # ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で 右が狭い記号で その右が狭い記号の場合 狭い記号 元に戻る
+  # ▽▽▽左が "'` で 右が "'` で その右が "'` の場合 "'` 元に戻る
   backtrack1=("")
   eval backtrack=(\${${S}N[@]})
   eval input=(\${${S}L[@]})
@@ -6345,13 +6324,13 @@ for S in ${class[@]}; do
   \${${S}N[@]})
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 
-  # ▽▽▽▽ ▽▽▽▽ ▽▽▽左が狭い記号で 右が狭い記号の場合 狭い記号 元に戻る
+  # ▽▽▽左が "'` で 右が "'` の場合 "'` 元に戻る
   eval backtrack=(\${${S}R[@]})
   eval input=(\${${S}R[@]})
   eval lookAhead=(\${${S}L[@]})
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
-  # ▽▽▽▽ ▽▽▽▽ ▽▽▽右が狭い記号で その右が狭い記号の場合 狭い記号 元に戻る
+  # ▽▽▽右が "'` で その右が "'` の場合 "'` 元に戻る
   backtrack1=("")
   backtrack=("")
   eval input=(\${${S}R[@]})
@@ -6360,7 +6339,77 @@ for S in ${class[@]}; do
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 done
 
+# ▽左が ?!.:,;| で 右が ?!.:,;| の場合 ?!.:,;| 元に戻る
+backtrack=(${barDotCommaN[@]})
+input=(${barDotCommaL[@]} \
+${barDotCommaR[@]})
+lookAhead=(${barDotCommaR[@]} \
+${barDotCommaN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽左が ?!.:,;| で その左が ?!.:,;| の場合 ?!.:,;| 元に戻る
+backtrack1=(${barDotCommaN[@]})
+backtrack=(${barDotCommaN[@]})
+input=(${barDotCommaL[@]} \
+${barDotCommaR[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}"
+
+# ▽左が ?!.:,;| で 右が ?!.:,;| で その右が ?!.:,;| の場合 ?!.:,;| 元に戻る
+backtrack1=("")
+backtrack=(${barDotCommaN[@]})
+input=(${barDotCommaL[@]})
+lookAhead=(${barDotCommaL[@]})
+lookAhead1=(${barDotCommaL[@]} \
+${barDotCommaN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
+
+# ▽左が ?!.:,;| で 右が ?!.:,;| の場合 ?!.:,;| 元に戻る
+backtrack=(${barDotCommaR[@]})
+input=(${barDotCommaR[@]})
+lookAhead=(${barDotCommaL[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ▽右が ?!.:,;| で その右が ?!.:,;| の場合 ?!.:,;| 元に戻る
+backtrack1=("")
+backtrack=("")
+input=(${barDotCommaR[@]})
+lookAhead=(${barDotCommaR[@]})
+lookAhead1=(${barDotCommaR[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
+
 #CALT4
+#<< "#CALT5" # 記号 ||||||||||||||||||||||||||||||||||||||||
+
+pre_add_lookup
+
+# 記号類 ++++++++++++++++++++++++++++++++++++++++
+
+# ., に関する処理の続き ----------------------------------------
+
+# ◆左が / で 右が \ の場合 ., 移動しない
+backtrack=(${_solidusL[@]} \
+${_solidusN[@]})
+input=(${_fullStopN[@]} ${_commaN[@]})
+lookAhead=(${_rSolidusR[@]} \
+${_rSolidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ◇左が / の場合 ., 左に移動
+backtrack=(${_solidusL[@]} \
+${_solidusN[@]})
+input=(${_fullStopN[@]} ${_commaN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
+# ◇右が \ の場合 ., 右に移動
+backtrack=("")
+input=(${_fullStopN[@]} ${_commaN[@]})
+lookAhead=(${_rSolidusR[@]} \
+${_rSolidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+#CALT5
 # 桁区切り設定作成 ||||||||||||||||||||||||||||||||||||||||
 
 # 小数の処理 ----------------------------------------
@@ -6371,8 +6420,6 @@ backtrack=(${_fullStopN[@]})
 input=(${figureN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex0}"
-
-pre_add_lookup
 
 backtrack=(${figure0[@]})
 input=(${figureN[@]})
