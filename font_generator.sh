@@ -85,10 +85,10 @@ address_calt=$((address_vert_kabu + 7)) # calt置換の先頭アドレス(左に
 address_calt_AR=$((address_calt + 239)) # calt置換の中間アドレス(右に移動した A)
 address_calt_figure=$((address_calt_AR + 239)) # calt置換アドレス(桁区切り付きの数字)
 address_calt_barD=$((address_calt_figure + 40)) # calt置換アドレス(下に移動した |)
-address_calt_hyphenL=$((address_calt_barD + 7)) # calt置換アドレス(左に移動した -)
-address_calt_hyphenR=$((address_calt_hyphenL + 25)) # calt置換アドレス(右に移動した -)
-address_calt_end=$((address_calt_hyphenR + 25 - 1)) # calt置換の最終アドレス (右上に移動した :)
-address_calt_barDLR="22" # calt置換アドレス(- から、左右下に移動した | までの増分)
+address_calt_hyphenL=$((address_calt_barD + 7)) # calt置換アドレス(左に移動した *)
+address_calt_hyphenR=$((address_calt_hyphenL + 27)) # calt置換アドレス(右に移動した *)
+address_calt_end=$((address_calt_hyphenR + 27 - 1)) # calt置換の最終アドレス (右上に移動した :)
+address_calt_barDLR="24" # calt置換アドレス(左右に移動した* から、左右下に移動した | までの増分)
 lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
 num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
 
@@ -12059,13 +12059,13 @@ while (i < SizeOf(input_list))
         k += 1
     endloop
 
-    symb = [0u002d, 0u003d, 0u005f,\
+    symb = [0u002a, 0u002b, 0u002d, 0u003d, 0u005f,\
             0u002f, 0u005c, 0u003c, 0u003e,\
             0u0028, 0u0029, 0u005b, 0u005d,\
             0u007b, 0u007d,\
             0u0021, 0u0022, 0u0027, 0u002c,\
             0u002e, 0u003a, 0u003b, 0u003f,\
-            0u0060, 0u007c, 0u007c, 0u003a] # -=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;?grave|、移動した|:
+            0u0060, 0u007c, 0u007c, 0u003a] #+-=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;?grave|、移動した|:
     k = ${address_calt_kanzi4}
     j = 0
     while (j < SizeOf(symb) * 2)
@@ -13130,7 +13130,7 @@ while (i < SizeOf(latin_sfd_list))
     hori = [0uff08, 0uff09, 0uff0c, 0uff0e,\
             0uff1a, 0uff1d, 0uff3b, 0uff3d,\
             0uff3f, 0uff5b, 0uff5c, 0uff5d,\
-            0uff5e, 0uffe3] # （），． ：＝［］ ＿｛｜｝, ～￣
+            0uff5e, 0uffe3] # （），． ：＝［］ ＿｛｜｝ ～￣
     vert = ${address_vert_latinkana}
     j = 0
     while (j < SizeOf(hori))
@@ -14540,13 +14540,13 @@ while (i < \$argc)
     lookupSub1 = lookupName + "サブテーブル"
     AddLookupSubtable(lookupName, lookupSub1)
 
-    symb = [0u002d, 0u003d, 0u005f,\
+    symb = [0u002a, 0u002b, 0u002d, 0u003d, 0u005f,\
             0u002f, 0u005c, 0u003c, 0u003e,\
             0u0028, 0u0029, 0u005b, 0u005d,\
             0u007b, 0u007d,\
             0u0021, 0u0022, 0u0027, 0u002c,\
             0u002e, 0u003a, 0u003b, 0u003f,\
-            0u0060, 0u007c, 0u0000, 0u0001] # -=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;?grave|、移動した|:
+            0u0060, 0u007c, 0u0000, 0u0001] # *+-=_solidus reverse solidus<>()[]{}!quote apostrophe,.:;?grave|、移動した|:
     j = 0
     while (j < SizeOf(symb))
         if (symb[j] == 0u0000) # 移動した |
