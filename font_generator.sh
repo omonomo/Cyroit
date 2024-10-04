@@ -1344,7 +1344,13 @@ while (i < SizeOf(input_list))
  #    Select(0u01cf) # Ǐ
  #    Select(0u1e2c) # Ḭ
 
-# K (ほんの少し右へ移動)
+# K (縦線をほんの少し細くして少し右へ移動)
+    if (input_list[i] == "${input_latin_regular}")
+        Select(0u2588); Copy() # Full block
+        Select(0u004b); PasteWithOffset(44, 0) # K
+        OverlapIntersect()
+    endif
+
     Select(0u004b) # K
     SelectMore(0u0136) # Ķ
     SelectMore(0u0198) # Ƙ
@@ -2551,8 +2557,41 @@ while (i < SizeOf(input_list))
 # ; -> magnified ;
     Select(0u003b); Scale(115, 115, 250, 0); SetWidth(500)
 
-# \` (拡大して少し下に下げる)
-    Select(0u0060); Scale(135, 135, 250, 600); Move(0, -20); SetWidth(500)
+# \`´ (拡大して少し下に下げる)
+    Select(0u0060) # \`
+    SelectMore(0u00b4) # ´
+    Scale(135, 135, 250, 600); Move(0, -20); SetWidth(500)
+
+# ¨¯°‘’“”′″ (拡大)
+    Select(0u00a8) # ¨
+    SelectMore(0u00af) # ¯ (英数文字より後に加工すること)
+    SelectMore(0u00b0) # °
+    SelectMore(0u2018, 0u2019) # ‘’
+    SelectMore(0u201c, 0u201d) # “”
+    SelectMore(0u2032, 0u2033) # ′″
+    Scale(110, 110, 250, 600); SetWidth(500)
+
+# ¸͵‚„⸒ (拡大)
+    Select(0u00b8) # ¸
+    SelectMore(0u0375) # ͵
+    SelectMore(0u201a) # ‚
+    SelectMore(0u201e) # „
+    SelectMore(0u2e12) # ⸒
+    Scale(115, 115, 250, 0); SetWidth(500)
+
+# ‛ (カナフォントを置換)
+    Select(0u2019); Copy() # ’
+    Select(0u201b); Paste() # ‛
+    HFlip()
+    CorrectDirection()
+    SetWidth(500)
+
+# ‟ (カナフォントを置換)
+    Select(0u201d); Copy() # ”
+    Select(0u201f); Paste() # ‟
+    HFlip()
+    CorrectDirection()
+    SetWidth(500)
 
 # % (斜線を少し太く)
     if (input_list[i] == "${input_latin_regular}")
@@ -2695,20 +2734,6 @@ while (i < SizeOf(input_list))
 # Ǝ (追加、後でグリフ上書き)
     Select(0u0045); Copy() # E
     Select(0u018e); Paste() # Ǝ
-    HFlip()
-    CorrectDirection()
-    SetWidth(500)
-
-# ‛ (カナフォントを置換)
-    Select(0u2019); Copy() # ’
-    Select(0u201b); Paste() # ‛
-    HFlip()
-    CorrectDirection()
-    SetWidth(500)
-
-# ‟ (カナフォントを置換)
-    Select(0u201d); Copy() # ”
-    Select(0u201f); Paste() # ‟
     HFlip()
     CorrectDirection()
     SetWidth(500)
