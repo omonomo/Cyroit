@@ -6005,6 +6005,8 @@ for S in ${class[@]}; do
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 done
 
+# ---
+
 # ☆左が *+-=< の場合 ?!.:,;| 移動しない
 backtrack=(${_lessR[@]} \
 ${_lessN[@]} ${operatorHN[@]})
@@ -6018,6 +6020,8 @@ input=(${barDotCommaN[@]})
 lookAhead=(${_greaterL[@]} \
 ${_greaterN[@]} ${operatorHN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ---
 
 # ☆左が ?!.:,;| で、右が ?!.:,;| の場合 ?!.:,;| 右に移動
 backtrack=(${barDotCommaR[@]})
@@ -6304,6 +6308,8 @@ for S in ${class[@]}; do
   eval lookAhead1=(\${${S}R[@]})
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}" "${backtrack1[*]}" "${lookAhead1[*]}"
 done
+
+# ---
 
 # ▽左が ?!.:,;| で 右が ?!.:,;| の場合 ?!.:,;| 元に戻る
 backtrack=(${barDotCommaN[@]})
