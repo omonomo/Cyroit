@@ -9812,11 +9812,11 @@ while (i < SizeOf(input_list))
     Copy()
     Select(${address_store_arrow} + 1) # 避難した ↑
     if (input_list[i] == "${input_kana_regular}")
-        PasteWithOffset(0, -301)
+        PasteWithOffset(0, -311)
         RemoveOverlap()
         ChangeWeight(-29); CorrectDirection()
     else
-        PasteWithOffset(0, -274)
+        PasteWithOffset(0, -284)
         RemoveOverlap()
     endif
     SetWidth(1000)
@@ -9852,11 +9852,11 @@ while (i < SizeOf(input_list))
     Copy()
     Select(${address_store_arrow} + 3) # 避難した ↓
     if (input_list[i] == "${input_kana_regular}")
-        PasteWithOffset(0, 301)
+        PasteWithOffset(0, 311)
         RemoveOverlap()
         ChangeWeight(-29); CorrectDirection()
     else
-        PasteWithOffset(0, 274)
+        PasteWithOffset(0, 284)
         RemoveOverlap()
         Move(1, 0)
     endif
