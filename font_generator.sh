@@ -1223,9 +1223,9 @@ while (i < SizeOf(input_list))
 
     Select(0u0048) # H
     Scale(96, 100); Copy()
-    Select(65552);  PasteWithOffset(-13, 0) # Temporary glyph
+    Select(65552);  PasteWithOffset(-11, 0) # Temporary glyph
     OverlapIntersect()
-    Select(65553);  PasteWithOffset(13, 0) # Temporary glyph
+    Select(65553);  PasteWithOffset(11, 0) # Temporary glyph
     OverlapIntersect()
     Copy()
     # 合成
@@ -1238,7 +1238,7 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_latin_regular}")
         PasteWithOffset(0, 52)
         PasteWithOffset(0, 2)
-        Move(5, 0)
+        Move(4, 0)
     else
         PasteWithOffset(0, 65)
         PasteWithOffset(0, -15)
@@ -1259,9 +1259,9 @@ while (i < SizeOf(input_list))
 
     Select(0u0126) # Ħ
     Scale(96, 100); Copy()
-    Select(65552);  PasteWithOffset(-13, 0) # Temporary glyph
+    Select(65552);  PasteWithOffset(-11, 0) # Temporary glyph
     OverlapIntersect()
-    Select(65553);  PasteWithOffset(13, 0) # Temporary glyph
+    Select(65553);  PasteWithOffset(11, 0) # Temporary glyph
     OverlapIntersect()
     Copy()
     # 合成
@@ -1274,7 +1274,7 @@ while (i < SizeOf(input_list))
     if (input_list[i] == "${input_latin_regular}")
         PasteWithOffset(0, 52)
         PasteWithOffset(0, 2)
-        Move(5, 0)
+        Move(4, 0)
     else
         PasteWithOffset(0, 65)
         PasteWithOffset(0, -15)
@@ -1449,7 +1449,7 @@ while (i < SizeOf(input_list))
         Copy()
         Select(0u004e); PasteWithOffset(1, 0)
         RemoveOverlap()
-        Move(2, 0)
+        Move(1, 0)
         SetWidth(500)
 
         Select(65552); Clear() # Temporary glyph
