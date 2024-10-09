@@ -40,7 +40,7 @@ symbol_only_flag="false" # カーニング設定を記号、桁区切りのみ�
 font_version="0.1.0"
 
 version="version"
-version_txt=$(find . -name "${version}.txt" -maxdepth 1 | head -n 1)
+version_txt=$(find . -maxdepth 1 -name "${version}.txt" | head -n 1)
 if [ -n "${version_txt}" ]; then
   font_v=$(head -n 1 < ${version_txt})
   if [ -n "${font_v}" ]; then
@@ -338,7 +338,7 @@ if [ "${mode}" = "-F" ]; then
     mv -f ${font_familyname}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname}/${font_familyname_suffix}/."
   fi
   # パッチ未適用のフォントを除外して移動
-  find . -not -name "*.nopatch.ttf" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.nopatch.ttf" | \
   grep -e "${font_familyname}.*\.ttf$" | while read line
   do
     mv -f "${line}" "${build_fonts_dir}/${font_familyname}/."

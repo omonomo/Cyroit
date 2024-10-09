@@ -98,7 +98,7 @@ if [ -z "${fromFontName_ttf}" ]; then
   echo "Error: ${fromFontName} not found" >&2
   exit 1
 fi
-toFontName_ttf=$(find . -name "${toFontName}.ttf" -maxdepth 1 | head -n 1)
+toFontName_ttf=$(find . -maxdepth 1 -name "${toFontName}.ttf" | head -n 1)
 if [ -z "${toFontName_ttf}" ]; then
   echo "Error: ${toFontName} not found" >&2
   exit 1

@@ -26,7 +26,7 @@ font_version="0.1.0"
 vendor_id="PfEd"
 
 version="version"
-version_txt=$(find . -name "${version}.txt" -maxdepth 1 | head -n 1)
+version_txt=$(find . -maxdepth 1 -name "${version}.txt" | head -n 1)
 if [ -n "${version_txt}" ]; then
     font_v=$(head -n 1 < "${version_txt}")
     if [ -n "${font_v}" ]; then
@@ -16920,7 +16920,7 @@ if [ "${patch_only_flag}" = "false" ]; then
     fi
 
     # ファイル名を変更
-    find . -not -name "*.*.ttf" -maxdepth 1 | \
+    find . -maxdepth 1 -not -name "*.*.ttf" | \
     grep -e "${font_familyname}${font_familyname_suffix}-.*\.ttf$" | while read line
     do
         style_ttf=${line#*-}; style=${style_ttf%%.ttf}
@@ -16932,7 +16932,7 @@ fi
 
 # パッチ適用
 if [ "${patch_flag}" = "true" ]; then
-    find . -name "${font_familyname}-*.nopatch.ttf" -maxdepth 1 | while read line
+    find . -maxdepth 1 -name "${font_familyname}-*.nopatch.ttf" | while read line
     do
         font_ttf=$(basename ${line})
         $fontforge_command -script ${tmpdir}/${font_patcher} \

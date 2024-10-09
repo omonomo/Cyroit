@@ -636,7 +636,7 @@ done
 echo
 
 if [ "${glyphNo_flag}" = "false" ]; then
-  gsubList_txt=$(find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1)
+  gsubList_txt=$(find . -maxdepth 1 -name "${gsubList}.txt" | head -n 1)
   if [ -n "${gsubList_txt}" ]; then # gsubListがあり、
     echo "Found GSUB List"
     caltNo=$(grep -m 1 'Substitution in="A"' "${gsubList}.txt")

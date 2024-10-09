@@ -213,14 +213,14 @@ echo
 # ttxファイルを削除、パッチのみの場合フォントをリネームして再利用
 rm -f ${font_familyname}*.ttx ${font_familyname}*.ttx.bak
 if [ "${patch_only_flag}" = "true" ]; then
-  find . -name "${font_familyname}*.orig.ttf" -maxdepth 1 | while read P
+  find . -maxdepth 1 -name "${font_familyname}*.orig.ttf" | while read P
   do
     mv -f "$P" "${P%%.orig.ttf}.ttf"
   done
 fi
 
 # フォントがあるかチェック
-fontName_ttf=$(find . -name "${font_familyname}*.ttf" -maxdepth 1 | head -n 1)
+fontName_ttf=$(find . -maxdepth 1 -name "${font_familyname}*.ttf" | head -n 1)
 if [ -z "${fontName_ttf}" ]; then
   echo "Error: ${font_familyname} not found" >&2
   exit 1
@@ -228,7 +228,7 @@ fi
 
 # cmap GSUB 以外のテーブル更新 ----------
 if [ "${other_flag}" = "true" ]; then
-  find . -not -name "*.*.ttf" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.*.ttf" | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
     ttx -t name -t head -t OS/2 -t post -t hmtx "$P" # フォントスタイル判定のため、name テーブルも取得
@@ -283,7 +283,7 @@ if [ "${other_flag}" = "true" ]; then
   rm -f ${font_familyname}*.orig.ttf
   rm -f ${font_familyname}*.ttx.bak
 
-  find . -not -name "*.*.ttx" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.*.ttx" | \
   grep -e "${font_familyname}.*\.ttx$" | while read P
   do
     mv "$P" "${P%%.ttx}.others.ttx"
@@ -295,7 +295,7 @@ if [ "${cmap_flag}" = "true" ]; then
   if [ "${reuse_list_flag}" = "false" ]; then
     rm -f ${cmapList}.txt
   fi
-  cmaplist_txt=$(find . -name "${cmapList}.txt" -maxdepth 1 | head -n 1)
+  cmaplist_txt=$(find . -maxdepth 1 -name "${cmapList}.txt" | head -n 1)
   if [ -z "${cmaplist_txt}" ]; then # cmapListが無ければ作成
     if [ "${leaving_tmp_flag}" = "true" ]; then
       ./uvs_table_maker.sh -l -N "${font_familyname}"
@@ -304,7 +304,7 @@ if [ "${cmap_flag}" = "true" ]; then
     fi
   fi
 
-  find . -not -name "*.*.ttf" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.*.ttf" | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
     ttx -t cmap "$P"
@@ -321,7 +321,7 @@ if [ "${cmap_flag}" = "true" ]; then
   rm -f ${font_familyname}*.orig.ttf
   rm -f ${font_familyname}*.ttx.bak
 
-  find . -not -name "*.*.ttx" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.*.ttx" | \
   grep -e "${font_familyname}.*\.ttx$" | while read P
   do
     mv "$P" "${P%%.ttx}.cmap.ttx"
@@ -334,7 +334,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     rm -f ${caltListName}*.txt
   fi
 
-  find . -not -name "*.*.ttf" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.*.ttf" | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
     calt_ok_flag="true" # calt不対応の場合は後でfalse
@@ -347,7 +347,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       echo "Compatible with calt feature." # フォントがcaltフィーチャに対応していた場合
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
-        gsublist_txt=$(find . -name "${gsubList}.txt" -maxdepth 1 | head -n 1)
+        gsublist_txt=$(find . -maxdepth 1 -name "${gsubList}.txt" | head -n 1)
         if [ -z "${gsublist_txt}" ]; then # gsubListが無ければ作成(calt_table_maker で使用するため)
           if [ "${leaving_tmp_flag}" = "true" ]; then
             ./uvs_table_maker.sh -l -N "${font_familyname}"
@@ -355,14 +355,14 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
             ./uvs_table_maker.sh -N "${font_familyname}"
           fi
         fi
-        caltlist_txt=$(find . -name "${caltListName}*.txt" -maxdepth 1 | head -n 1)
+        caltlist_txt=$(find . -maxdepth 1 -name "${caltListName}*.txt" | head -n 1)
         if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
           option_format_cm opt_fg "" "${leaving_tmp_flag}" "${symbol_only_flag}" "${basic_only_flag}" "${optimize_flag}"
           ./calt_table_maker.sh -"${opt_fg}"
         fi
         # フィーチャリストを変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
-        find . -name "${caltListName}*.txt" -maxdepth 1 | while read line # caltList(caltルックアップ)の数だけループ
+        find . -maxdepth 1 -name "${caltListName}*.txt" | while read line # caltList(caltルックアップ)の数だけループ
         do
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の中を削除
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
@@ -447,7 +447,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
   fi
   rm -f ${font_familyname}*.ttx.bak
 
-  find . -not -name "*.*.ttx" -maxdepth 1 | \
+  find . -maxdepth 1 -not -name "*.*.ttx" | \
   grep -e "${font_familyname}.*\.ttx$" | while read P
   do
     mv "$P" "${P%%.ttx}.GSUB.ttx"
