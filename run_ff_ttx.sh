@@ -39,15 +39,6 @@ symbol_only_flag="false" # カーニング設定を記号、桁区切りのみ�
 
 font_version="0.1.0"
 
-version="version"
-version_txt=$(find . -maxdepth 1 -name "${version}.txt" | head -n 1)
-if [ -n "${version_txt}" ]; then
-  font_v=$(head -n 1 < ${version_txt})
-  if [ -n "${font_v}" ]; then
-    font_version=${font_v}
-  fi
-fi
-
 option_format_fg() { # font_generator 用のオプションを整形 (戻り値: 整形したオプション)
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
@@ -129,6 +120,20 @@ forge_ttx_help()
     echo "  -p         Run calt patch only" # -C の続きを実行
     echo "  -F         Complete Mode (generate finished fonts)" # 完成品作成
 }
+
+# 設定読み込み
+settings="settings" # 設定ファイル名
+settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
+if [ -n "${settings_txt}" ]; then
+    S=$(grep -m 1 "^version=" "${settings_txt}") # フォントバージョン
+    if [ -n "${S}" ]; then font_version="${S#version=}"; fi
+
+    S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
+
+    S=$(grep -m 1 "font_familyname_suffix=" "${settings_txt}") # フォントファミリー名接尾語
+    if [ -n "${S}" ]; then font_familyname_suffix="${S#font_familyname_suffix=}"; fi
+fi
 
 echo
 echo "*** FontForge and TTX runner ***"

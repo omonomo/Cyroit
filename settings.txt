@@ -1,6 +1,13 @@
 # フォントのバージョン
 version=3.2.4b
 
+# フォント名
+font_familyname=Cyroit
+font_familyname_suffix=
+
+# メーカー ID
+vendor_id=PfEd
+
 # 著作権
 copyright=Copyright (c) 2023 omonomo
 copyright=[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)

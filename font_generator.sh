@@ -359,22 +359,37 @@ settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
     S=$(grep -m 1 "^version=" "${settings_txt}") # フォントバージョン
     if [ -n "${S}" ]; then font_version="${S#version=}"; fi
-    S=$(grep -m 1 "^moveY_powerline=" "${settings_txt}") # Powerline Y座標補正値
-    if [ -n "${S}" ]; then y_pos_pl_revise="${S#moveY_powerline=}"; fi
-    S=$(grep -m 1 "^scaleY_powerline=" "${settings_txt}") # Powerline Y座標拡大率
-    if [ -n "${S}" ]; then height_scale_pl_revise="${S#scaleY_powerline=}"; fi
-    S=$(grep -m 1 "^scale_decimal=" "${settings_txt}") # 小数拡大率
-    if [ -n "${S}" ]; then scale_calt_decimal="${S#scale_decimal=}"; fi
+
+    S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
+
+    S=$(grep -m 1 "font_familyname_suffix=" "${settings_txt}") # フォントファミリー名接尾語
+    if [ -n "${S}" ]; then font_familyname_suffix="${S#font_familyname_suffix=}"; fi
+
+    S=$(grep -m 1 "vendor_id=" "${settings_txt}") # メーカー ID
+    if [ -n "${S}" ]; then vendor_id="${S#vendor_id=}"; fi
+
     S=$(grep "^copyright=" "${settings_txt}") # 著作権
     if [ -n "${S}" ]; then
         copyright="${S//copyright=/}";
         copyright="${copyright//
 /\\n\\n\" + \"}\n\n";
     fi
+
     S=$(grep -m 1 "^copyright_nerd_fonts=" "${settings_txt}") # 著作権 (Nerd fonts)
     if [ -n "${S}" ]; then copyright_nerd_fonts="${S#copyright_nerd_fonts=}\n\n"; fi
+
     S=$(grep -m 1 "^copyright_license=" "${settings_txt}") # ライセンス
     if [ -n "${S}" ]; then copyright_license="${S#copyright_license=}"; fi
+
+    S=$(grep -m 1 "^moveY_powerline=" "${settings_txt}") # Powerline Y座標補正値
+    if [ -n "${S}" ]; then y_pos_pl_revise="${S#moveY_powerline=}"; fi
+
+    S=$(grep -m 1 "^scaleY_powerline=" "${settings_txt}") # Powerline Y座標拡大率
+    if [ -n "${S}" ]; then height_scale_pl_revise="${S#scaleY_powerline=}"; fi
+
+    S=$(grep -m 1 "^scale_decimal=" "${settings_txt}") # 小数拡大率
+    if [ -n "${S}" ]; then scale_calt_decimal="${S#scale_decimal=}"; fi
 fi
 
 # Powerline の Y座標移動量

@@ -122,6 +122,14 @@ table_modificator_help()
     echo "  -p         Run calt patch only"
 }
 
+# 設定読み込み
+settings="settings" # 設定ファイル名
+settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
+if [ -n "${settings_txt}" ]; then
+    S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
+fi
+
 echo
 echo "= Font tables Modificator ="
 echo

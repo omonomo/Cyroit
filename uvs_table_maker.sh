@@ -51,6 +51,14 @@ uvs_table_maker_help()
     echo "  -N string  Set fontfamily (\"string\")"
 }
 
+# 設定読み込み
+settings="settings" # 設定ファイル名
+settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
+if [ -n "${settings_txt}" ]; then
+    S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
+fi
+
 echo
 echo "- UVS table [cmap, format 14] maker -"
 echo
