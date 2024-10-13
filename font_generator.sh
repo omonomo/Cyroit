@@ -25,15 +25,6 @@ font_familyname_suffix=""
 font_version="0.1.0"
 vendor_id="PfEd"
 
-version="version"
-version_txt=$(find . -maxdepth 1 -name "${version}.txt" | head -n 1)
-if [ -n "${version_txt}" ]; then
-    font_v=$(head -n 1 < "${version_txt}")
-    if [ -n "${font_v}" ]; then
-        font_version=${font_v}
-    fi
-fi
-
 tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 
 # グリフ保管アドレス
@@ -105,14 +96,13 @@ lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブル�
 num_ss_lookups="10" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 
 # 著作権
-copyright9="Copyright (c) 2023 omonomo\n\n"
-copyright6="[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre\n\n"
-copyright5="[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 2018.\n\n"
-copyright4="[BIZ UDGothic]\nCopyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-gothic)\n\n"
-copyright3="[Circle M+]\nCopyright(c) 2020 M+ FONTS PROJECT, itouhiro\n\n"
-copyright2="[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)\n\n"
-copyright1="[Ricty Generator (Script)]\nCopyright (c) 2011-2017 Yasunori Yusa\n\n"
-copyright0="SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)"
+copyright="Copyright (c) 2023 omonomo\n\n"
+copyright="${copyright}\" + \"[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)\n\n"
+copyright="${copyright}\" + \"[Circle M+]\nCopyright(c) 2020 M+ FONTS PROJECT, itouhiro\n\n"
+copyright="${copyright}\" + \"[BIZ UDGothic]\nCopyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-gothic)\n\n"
+copyright="${copyright}\" + \"[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 2018.\n\n"
+copyright_nerd_fonts="[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre\n\n"
+copyright_license="SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)"
 
 # Set ascent and descent (line width parameters)
 em_ascent1000="860" # em値1000用
@@ -147,12 +137,10 @@ y_pos_nerd="30" # 全体Y座標移動量
 height_scale_pl="120.7" # PowerlineY座標拡大比率
 height_scale_pl2="121.9" # PowerlineY座標拡大比率 2
 height_scale_block="89" # ボックス要素Y座標拡大比率
+height_scale_pl_revise="100" # 画面表示のずれを修正するための拡大率
 height_center_pl=$((277 + y_pos_nerd + y_pos_em_revise)) # PowerlineリサイズY座標中心
 y_pos_pl="18" # PowerlineY座標移動量 (上端から ascent までと 下端から descent までの距離が同じになる移動量)
 y_pos_pl_revise="-10" # 画面表示のずれを修正するための移動量
-y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
-y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
-y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
 
 scale_pomicons="91" # Pomicons の拡大比率
 scale_nerd="89" # Pomicons Powerline 以外の拡大比率
@@ -364,6 +352,40 @@ font_patcher="font_patcher.pe"
 ################################################################################
 # Pre-process
 ################################################################################
+
+# 設定読み込み
+settings="settings" # 設定ファイル名
+settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
+if [ -n "${settings_txt}" ]; then
+    S=$(grep -m 1 "^version=" "${settings_txt}") # フォントバージョン
+    if [ -n "${S}" ]; then font_version="${S#version=}"; fi
+    S=$(grep -m 1 "^moveY_powerline=" "${settings_txt}") # Powerline Y座標補正値
+    if [ -n "${S}" ]; then y_pos_pl_revise="${S#moveY_powerline=}"; fi
+    S=$(grep -m 1 "^scaleY_powerline=" "${settings_txt}") # Powerline Y座標拡大率
+    if [ -n "${S}" ]; then height_scale_pl_revise="${S#scaleY_powerline=}"; fi
+    S=$(grep -m 1 "^scale_decimal=" "${settings_txt}") # 小数拡大率
+    if [ -n "${S}" ]; then scale_calt_decimal="${S#scale_decimal=}"; fi
+    S=$(grep "^copyright=" "${settings_txt}") # 著作権
+    if [ -n "${S}" ]; then
+        copyright="${S//copyright=/}";
+        copyright="${copyright//
+/\\n\\n\" + \"}\n\n";
+    fi
+    S=$(grep -m 1 "^copyright_nerd_fonts=" "${settings_txt}") # 著作権 (Nerd fonts)
+    if [ -n "${S}" ]; then copyright_nerd_fonts="${S#copyright_nerd_fonts=}\n\n"; fi
+    S=$(grep -m 1 "^copyright_license=" "${settings_txt}") # ライセンス
+    if [ -n "${S}" ]; then copyright_license="${S#copyright_license=}"; fi
+fi
+
+# Powerline の Y座標移動量
+y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
+y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
+y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
+
+# Powerline、ボックス要素の Y座標拡大率
+height_scale_pl=$(bc <<< "scale=1; ${height_scale_pl} * ${height_scale_pl_revise} / 100") # PowerlineY座標拡大比率
+height_scale_pl2=$(bc <<< "scale=1; ${height_scale_pl2} * ${height_scale_pl_revise} / 100") # PowerlineY座標拡大比率 2
+height_scale_block=$(bc <<< "scale=1; ${height_scale_block} * ${height_scale_pl_revise} / 100") # ボックス要素Y座標拡大比率
 
 # Print information message
 cat << _EOT_
@@ -703,7 +725,7 @@ echo
 # フォントバージョンにビルドNo追加
 buildNo=$(date "+%s")
 buildNo=$((buildNo % 315360000 / 60))
-buildNo=$(echo "obase=16; ibase=10; ${buildNo}" | bc)
+buildNo=$(bc <<< "obase=16; ibase=10; ${buildNo}")
 font_version="${font_version} (${buildNo})"
 
 ################################################################################
@@ -13904,12 +13926,8 @@ fontfamilysuffix  = "${font_familyname_suffix}"
 fontstyle_list    = ["Regular", "Bold"]
 fontweight_list   = [400,       700]
 panoseweight_list = [5,         8]
-copyright         = "${copyright9}" \\
-                  + "${copyright2}" \\
-                  + "${copyright3}" \\
-                  + "${copyright4}" \\
-                  + "${copyright5}" \\
-                  + "${copyright0}"
+copyright         = "${copyright}" \\
+                  + "${copyright_license}"
 version           = "${font_version}"
 
 # Begin loop of regular and bold
@@ -14307,13 +14325,9 @@ cat > ${tmpdir}/${merged_nerd_generator} << _EOT_
 
 # Set parameters
 input_nerd = "${tmpdir}/${modified_nerd}"
-copyright     = "${copyright9}" \\
-              + "${copyright2}" \\
-              + "${copyright3}" \\
-              + "${copyright4}" \\
-              + "${copyright5}" \\
-              + "${copyright6}" \\
-              + "${copyright0}"
+copyright     = "${copyright}" \\
+              + "${copyright_nerd_fonts}" \\
+              + "${copyright_license}"
 
 usage = "Usage: ${merged_nerd_generator} fontfamily-fontstyle.ttf ..."
 
