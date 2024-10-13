@@ -1,5 +1,5 @@
-# 生成フォントのバージョン
-version=3.2.4
+# フォントのバージョン
+version=3.2.4b
 
 # 著作権
 copyright=Copyright (c) 2023 omonomo
@@ -7,14 +7,15 @@ copyright=[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https:/
 copyright=[Circle M+]\nCopyright(c) 2020 M+ FONTS PROJECT, itouhiro
 copyright=[BIZ UDGothic]\nCopyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-gothic)
 copyright=[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 2018.
+
 copyright_nerd_fonts=[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre
 copyright_license=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
 
-# Powerline の Y座標移動量
+# Powerline の Y座標移動量 (表示調整用)
 moveY_powerline=-10
 
-# Powerline の Y座標拡大・縮小率 (%)
+# Powerline の Y座標拡大・縮小率 (%・表示調整用)
 scaleY_powerline=100
 
-# 小数の拡大・縮小率 (%)
+# calt・ss 変換時の小数の拡大・縮小率 (%)
 scale_decimal=93
