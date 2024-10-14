@@ -1,11 +1,11 @@
 # フォントのバージョン
-version=3.2.4b
+font_version=3.2.4
 
 # フォント名
 font_familyname=Cyroit
 font_familyname_suffix=
 
-# メーカー ID
+# ベンダー ID
 vendor_id=PfEd
 
 # 著作権
@@ -18,11 +18,30 @@ copyright=[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Lang
 copyright_nerd_fonts=[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre
 copyright_license=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
 
-# Powerline の Y座標移動量 (表示調整用)
-moveY_powerline=-10
+# 通常版の latin フォント半角文字の拡大・縮小率 (%)
+scale_width_latin=98
+scale_height_latin=102
 
-# Powerline の Y座標拡大・縮小率 (%・表示調整用)
-scaleY_powerline=100
+# Loose 版の latin フォント半角文字の拡大・縮小率 (%)
+scale_width_latin_loose=102
+scale_height_latin_loose=102
+
+# Loose 版の 半角ｶﾅを除いた半角文字の拡大・縮小率 (%・latin フォントは scale_□_latin_loose * scale_□_hankaku_loose)
+scale_width_hankaku_loose=104
+scale_height_hankaku_loose=104
+
+# オブリーク体の傾き (tanθ * 100)
+tan_oblique=16
+
+# オブリーク体の X 座標移動量 (em/1024)
+move_x_oblique=-48
+
+# Powerline の Y 座標移動量 (em/1024・表示調整用)
+move_y_powerline=-10
+
+# Powerline の Y 座標拡大・縮小率 (%・表示調整用)
+scale_height_powerline=100
 
 # calt・ss 変換時の小数の拡大・縮小率 (%)
 scale_decimal=93
+

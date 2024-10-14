@@ -129,24 +129,24 @@ hhea_descent1024="${win_descent1024}"
 hhea_linegap1024="0"
 
 # em値変更でのY座標のズレ修正用
-y_pos_em_revise="-10" # Y座標移動量
+move_y_em_revise="-10" # Y座標移動量
 
 # NerdFonts 用
-y_pos_nerd="30" # 全体Y座標移動量
+move_y_nerd="30" # 全体Y座標移動量
 
-height_scale_pl="120.7" # PowerlineY座標拡大比率
-height_scale_pl2="121.9" # PowerlineY座標拡大比率 2
-height_scale_block="89" # ボックス要素Y座標拡大比率
-height_scale_pl_revise="100" # 画面表示のずれを修正するための拡大率
-height_center_pl=$((277 + y_pos_nerd + y_pos_em_revise)) # PowerlineリサイズY座標中心
-y_pos_pl="18" # PowerlineY座標移動量 (上端から ascent までと 下端から descent までの距離が同じになる移動量)
-y_pos_pl_revise="-10" # 画面表示のずれを修正するための移動量
+scale_height_pl="120.7" # PowerlineY座標拡大率
+scale_height_pl2="121.9" # PowerlineY座標拡大率 2
+scale_height_block="89" # ボックス要素Y座標拡大率
+scale_height_pl_revise="100" # 画面表示のずれを修正するための拡大率
+center_height_pl=$((277 + move_y_nerd + move_y_em_revise)) # PowerlineリサイズY座標中心
+move_y_pl="18" # PowerlineY座標移動量 (上端から ascent までと 下端から descent までの距離が同じになる移動量)
+move_y_pl_revise="-10" # 画面表示のずれを修正するための移動量
 
-scale_pomicons="91" # Pomicons の拡大比率
-scale_nerd="89" # Pomicons Powerline 以外の拡大比率
+scale_pomicons="91" # Pomicons の拡大率
+scale_nerd="89" # Pomicons Powerline 以外の拡大率
 
 # 可視化したスペース等、下線のY座標移動量
-y_pos_space="-235"
+move_y_space="-235"
 
 # ウェイト調整用
 weight_kanzi_regular="8" # 主に漢字レギュラー
@@ -166,84 +166,85 @@ weight_small_kana_regular="10" # 小仮名拡張レギュラー
 weight_small_kana_bold="4" # 小仮名拡張ボールド(weight_kana_boldは適用しない)
 
 # 直角二等辺三角形用
-width_scale_triangle="94.8" # 直角二等辺三角形のX座標拡大比率
-height_scale_triangle="94.8" # 直角二等辺三角形のY座標拡大比率
-y_pos_upper_triangle="-39" # 直角二等辺三角形のY座標移動量 (上側)
-y_pos_lower_triangle="10" # 直角二等辺三角形のY座標移動量 (下側)
+scale_width_triangle="94.8" # 直角二等辺三角形のX座標拡大率
+scale_height_triangle="94.8" # 直角二等辺三角形のY座標拡大率
+move_y_upper_triangle="-39" # 直角二等辺三角形のY座標移動量 (上側)
+move_y_lower_triangle="10" # 直角二等辺三角形のY座標移動量 (下側)
 
 # 上付き、下付き、ルート、分数用
-scale_super_sub="75" # 拡大比率
+scale_super_sub="75" # 拡大率
 weight_super_sub="12" # ウェイト調整
 
 # 上付き、下付き数字用
-y_pos_super="273" # 上付きY座標移動量
-y_pos_sub="-166" # 下付きY座標移動量
+move_y_super="273" # 上付きY座標移動量
+move_y_sub="-166" # 下付きY座標移動量
 
 # 分数用
-x_pos_numerator="0" # 分子のX座標移動量
-y_pos_numerator="260" # 分子のY座標移動量
-x_pos_denominator="480" # 分母のX座標移動量
-y_pos_denominator="-30" # 分母のY座標移動量
+move_x_numerator="0" # 分子のX座標移動量
+move_y_numerator="260" # 分子のY座標移動量
+move_x_denominator="480" # 分母のX座標移動量
+move_y_denominator="-30" # 分母のY座標移動量
 
 # 演算子移動量
-y_pos_math="-25" # 通常
-y_pos_s_math="-10" # 上付き、下付き
+move_y_math="-25" # 通常
+move_y_s_math="-10" # 上付き、下付き
 
 # 括弧移動量
-y_pos_paren="0"
+move_y_paren="0"
 
 # 縦書き全角ラテン小文字移動量
-y_pos_vert_1="-10"
-y_pos_vert_2="10"
-y_pos_vert_3="30"
-y_pos_vert_4="80"
-y_pos_vert_5="120"
-y_pos_vert_6="140"
-y_pos_vert_7="160"
+move_y_vert_1="-10"
+move_y_vert_2="10"
+move_y_vert_3="30"
+move_y_vert_4="80"
+move_y_vert_5="120"
+move_y_vert_6="140"
+move_y_vert_7="160"
 
 # 全角移動量
-x_pos_zenkaku_latin="20"
-x_pos_zenkaku_kana="22"
-x_pos_zenkaku_kanzi="34"
+move_x_zenkaku_latin="20"
+move_x_zenkaku_kana="22"
+move_x_zenkaku_kanzi="34"
 
 # オブリーク体用
 tan_oblique="16" # 傾きの係数 * 100
-x_pos_oblique="-4800" # 移動量 * 100
-
-# 英数文字の縦横拡大率
-width_scale_latin="98" # 横拡大比率
-height_scale_latin="102" # 縦拡大比率
+move_x_oblique="-48" # 移動量
 
 # calt用
-x_pos_calt="15" # ラテン文字のX座標移動量
-x_pos_calt_symbol="30" # 記号のX座標移動量
-y_pos_calt_colon="55" # : のY座標移動量
-y_pos_calt_bar="-38" # | のY座標移動量
-y_pos_calt_tilde="-195" # ~ のY座標移動量
-y_pos_calt_math="25" # *+-= のY座標移動量
-x_pos_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
-y_pos_calt_separate3="-510" # 3桁区切り表示のY座標
-y_pos_calt_separate4="452" # 4桁区切り表示のY座標
-scale_calt_decimal="93" # 小数の拡大比率
+move_x_calt="15" # ラテン文字のX座標移動量
+move_x_calt_symbol="30" # 記号のX座標移動量
+move_y_calt_colon="55" # : のY座標移動量
+move_y_calt_bar="-38" # | のY座標移動量
+move_y_calt_tilde="-195" # ~ のY座標移動量
+move_y_calt_math="25" # *+-= のY座標移動量
+move_x_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
+move_y_calt_separate3="-510" # 3桁区切り表示のY座標
+move_y_calt_separate4="452" # 4桁区切り表示のY座標
+scale_calt_decimal="93" # 小数の拡大率
+
+# 通常版用
+scale_width_latin="98" # 半角 Latin フォント英数文字の横拡大率
+scale_height_latin="102" # 半角 Latin フォント英数文字の縦拡大率
+width_hankaku="512" # 半角文字幅
 
 # Loose 版用
-width_scale_latin_Loose="102" # 半角 Latin フォントの横拡大比率 (Loose 版)
-width_scale_hankaku_Loose="104" # 半角すべての横拡大比率 (Loose 版)
-height_scale_hankaku_Loose="104" # 半角すべての縦拡大比率 (Loose 版)
-hankaku_width="512" # 半角文字幅 (通常版)
-hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
-x_pos_center_Loose=$((hankaku_width_Loose / 2)) # 半角文字X座標中心 (Loose 版)
-y_pos_center_Loose="373" # 半角文字Y座標中心
-x_pos_hankaku_Loose=$(((hankaku_width_Loose - ${hankaku_width}) / 2)) # 半角文字移動量 (Loose 版)
-x_pos_calt_Loose="18" # ラテン文字のX座標移動量 (Loose 版)
-x_pos_calt_symbol_Loose="36" # 記号のX座標移動量 (Loose 版)
-x_pos_calt_separate_Loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
+scale_width_latin_loose="102" # 半角 Latin フォント英数文字の横拡大率 (Loose 版)
+scale_height_latin_loose="102" # 半角 Latin フォント英数文字の縦拡大率 (Loose 版)
+scale_width_hankaku_loose="104" # 半角英数文字の横拡大率 (Loose 版)
+scale_height_hankaku_loose="104" # 半角英数文字の縦拡大率 (Loose 版)
+width_hankaku_loose="576" # 半角文字幅 (Loose 版)
+center_width_loose=$((width_hankaku_loose / 2)) # 半角文字X座標中心 (Loose 版)
+center_height_loose="373" # 半角文字Y座標中心
+move_x_hankaku_loose=$(((width_hankaku_loose - ${width_hankaku}) / 2)) # 半角文字移動量 (Loose 版)
+move_x_calt_loose="18" # ラテン文字のX座標移動量 (Loose 版)
+move_x_calt_symbol_loose="36" # 記号のX座標移動量 (Loose 版)
+move_x_calt_separate_loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
 
 # デバッグ用
 
  # NerdFonts
- #scale_pomicons="150" # Pomicons の拡大比率
- #scale_nerd="150" # その他の拡大比率
+ #scale_pomicons="150" # Pomicons の拡大率
+ #scale_nerd="150" # その他の拡大率
 
  # ウェイト調整
  #weight_kanzi_regular="50" # 主に漢字レギュラー
@@ -262,14 +263,14 @@ x_pos_calt_separate_Loose="-512" # 桁区切り表示のX座標移動量 (Loose 
  #weight_small_kana_regular="50" # 小仮名拡張レギュラー
  #weight_small_kana_bold="50" # 小仮名拡張ボールド(weight_kana_boldは適用しない)
 
- # 英数文字の縦横拡大率
- #width_scale_latin="150" # 横拡大比率
- #height_scale_latin="50" # 縦拡大比率
+ # 通常版用
+ #scale_width_latin="150" # 半角 Latin フォント英数文字の横拡大率
+ #scale_height_latin="50" # 半角 Latin フォント英数文字の縦拡大率
 
  # Loose 版
- #width_scale_hankaku_Loose="150" # 半角すべての横拡大比率 (Loose 版)
- #height_scale_hankaku_Loose="50" # 半角すべての縦拡大比率 (Loose 版)
-
+ #scale_width_hankaku_loose="150" # 半角英数文字の横拡大率 (Loose 版)
+ #scale_height_hankaku_loose="150" # 半角英数文字の縦拡大率 (Loose 版)
+ 
 # デバッグ用ここまで
 
 # Set path to command
@@ -357,8 +358,8 @@ font_patcher="font_patcher.pe"
 settings="settings" # 設定ファイル名
 settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
-    S=$(grep -m 1 "^version=" "${settings_txt}") # フォントバージョン
-    if [ -n "${S}" ]; then font_version="${S#version=}"; fi
+    S=$(grep -m 1 "^font_version=" "${settings_txt}") # フォントバージョン
+    if [ -n "${S}" ]; then font_version="${S#font_version=}"; fi
 
     S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
     if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
@@ -382,25 +383,52 @@ if [ -n "${settings_txt}" ]; then
     S=$(grep -m 1 "^copyright_license=" "${settings_txt}") # ライセンス
     if [ -n "${S}" ]; then copyright_license="${S#copyright_license=}"; fi
 
-    S=$(grep -m 1 "^moveY_powerline=" "${settings_txt}") # Powerline Y座標補正値
-    if [ -n "${S}" ]; then y_pos_pl_revise="${S#moveY_powerline=}"; fi
+    S=$(grep -m 1 "^scale_width_latin=" "${settings_txt}") # 通常版の latin フォント X座標拡大率
+    if [ -n "${S}" ]; then scale_width_latin="${S#scale_width_latin=}"; fi
 
-    S=$(grep -m 1 "^scaleY_powerline=" "${settings_txt}") # Powerline Y座標拡大率
-    if [ -n "${S}" ]; then height_scale_pl_revise="${S#scaleY_powerline=}"; fi
+    S=$(grep -m 1 "^scale_height_latin=" "${settings_txt}") # 通常版の latin フォント Y座標拡大率
+    if [ -n "${S}" ]; then scale_height_latin="${S#scale_height_latin=}"; fi
+
+    S=$(grep -m 1 "^scale_width_latin_loose=" "${settings_txt}") # Loose版の latin フォント X座標拡大率
+    if [ -n "${S}" ]; then scale_width_latin_loose="${S#scale_width_latin_loose=}"; fi
+
+    S=$(grep -m 1 "^scale_height_latin_loose=" "${settings_txt}") # Loose版の latin フォント Y座標拡大率
+    if [ -n "${S}" ]; then scale_height_latin_loose="${S#scale_height_latin_loose=}"; fi
+
+    S=$(grep -m 1 "^scale_width_hankaku_loose=" "${settings_txt}") # Loose版の半角文字 X座標拡大率
+    if [ -n "${S}" ]; then scale_width_hankaku_loose="${S#scale_width_hankaku_loose=}"; fi
+
+    S=$(grep -m 1 "^scale_height_hankaku_loose=" "${settings_txt}") # Loose版の半角文字 Y座標拡大率
+    if [ -n "${S}" ]; then scale_height_hankaku_loose="${S#scale_height_hankaku_loose=}"; fi
+
+    S=$(grep -m 1 "^tan_oblique=" "${settings_txt}") # オブリーク体の傾き
+    if [ -n "${S}" ]; then tan_oblique="${S#tan_oblique=}"; fi
+
+    S=$(grep -m 1 "^move_x_oblique=" "${settings_txt}") # オブリーク体 X座標移動量
+    if [ -n "${S}" ]; then move_x_oblique="${S#move_x_oblique=}"; fi
+
+    S=$(grep -m 1 "^move_y_powerline=" "${settings_txt}") # Powerline Y座標補正値
+    if [ -n "${S}" ]; then move_y_pl_revise="${S#move_y_powerline=}"; fi
+
+    S=$(grep -m 1 "^scale_height_powerline=" "${settings_txt}") # Powerline Y座標拡大率
+    if [ -n "${S}" ]; then scale_height_pl_revise="${S#scale_height_powerline=}"; fi
 
     S=$(grep -m 1 "^scale_decimal=" "${settings_txt}") # 小数拡大率
     if [ -n "${S}" ]; then scale_calt_decimal="${S#scale_decimal=}"; fi
 fi
 
 # Powerline の Y座標移動量
-y_pos_pl=$((y_pos_pl + y_pos_pl_revise)) # 実際の移動量
-y_pos_pl2=$((y_pos_pl + 3)) # 実際の移動量 2
-y_pos_pl3=$((y_pos_pl - 48)) # 実際の移動量 3
+move_y_pl=$((move_y_pl + move_y_pl_revise)) # 実際の移動量
+move_y_pl2=$((move_y_pl + 3)) # 実際の移動量 2
+move_y_pl3=$((move_y_pl - 48)) # 実際の移動量 3
 
 # Powerline、ボックス要素の Y座標拡大率
-height_scale_pl=$(bc <<< "scale=1; ${height_scale_pl} * ${height_scale_pl_revise} / 100") # PowerlineY座標拡大比率
-height_scale_pl2=$(bc <<< "scale=1; ${height_scale_pl2} * ${height_scale_pl_revise} / 100") # PowerlineY座標拡大比率 2
-height_scale_block=$(bc <<< "scale=1; ${height_scale_block} * ${height_scale_pl_revise} / 100") # ボックス要素Y座標拡大比率
+scale_height_pl=$(bc <<< "scale=1; ${scale_height_pl} * ${scale_height_pl_revise} / 100") # PowerlineY座標拡大率
+scale_height_pl2=$(bc <<< "scale=1; ${scale_height_pl2} * ${scale_height_pl_revise} / 100") # PowerlineY座標拡大率 2
+scale_height_block=$(bc <<< "scale=1; ${scale_height_block} * ${scale_height_pl_revise} / 100") # ボックス要素Y座標拡大率
+
+# オブリーク体用
+move_x_oblique=$((move_x_oblique * 100)) # Transform用 (移動量 * 100)
 
 # Print information message
 cat << _EOT_
@@ -492,11 +520,12 @@ do
         "w" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
             loose_flag="true"
-            width_scale_latin=${width_scale_latin_Loose} # 半角 Latin フォントの横拡大比率
-            hankaku_width=${hankaku_width_Loose} # 半角文字幅
-            x_pos_calt=${x_pos_calt_Loose} # ラテン文字のX座標移動量
-            x_pos_calt_symbol=${x_pos_calt_symbol_Loose} # 記号のX座標移動量
-            x_pos_calt_separate=${x_pos_calt_separate_Loose} # 桁区切り表示のX座標移動量
+            scale_width_latin=${scale_width_latin_loose} # 半角 Latin フォントの横拡大率
+            scale_height_latin=${scale_height_latin_loose} # 半角 Latin フォントの縦拡大率
+            width_hankaku=${width_hankaku_loose} # 半角文字幅
+            move_x_calt=${move_x_calt_loose} # ラテン文字のX座標移動量
+            move_x_calt_symbol=${move_x_calt_symbol_loose} # 記号のX座標移動量
+            move_x_calt_separate=${move_x_calt_separate_loose} # 桁区切り表示のX座標移動量
             ;;
         "Z" )
             echo "Option: Disable visible zenkaku space"
@@ -2859,8 +2888,8 @@ while (i < SizeOf(input_list))
     SetWidth(500)
 
 # () ※ ⟌ より後で加工すること
-    Select(0u0028); Move(0, ${y_pos_paren}); SetWidth(500) # (
-    Select(0u0029); Move(-28, ${y_pos_paren}); SetWidth(500) # )
+    Select(0u0028); Move(0, ${move_y_paren}); SetWidth(500) # (
+    Select(0u0029); Move(-28, ${move_y_paren}); SetWidth(500) # )
 
 # * (スポーク6つに変更)
     Select(0u2588); Copy() # Full block
@@ -2890,8 +2919,8 @@ while (i < SizeOf(input_list))
     Select(65552); Clear()
 
 # [] (少し上げる)
-    Select(0u005b); Move(0, ${y_pos_paren} + 15); SetWidth(500) # [
-    Select(0u005d); Move(-49, ${y_pos_paren} + 15); SetWidth(500) # ]
+    Select(0u005b); Move(0, ${move_y_paren} + 15); SetWidth(500) # [
+    Select(0u005d); Move(-49, ${move_y_paren} + 15); SetWidth(500) # ]
 
 # _ (少し短くする) ※ ⟌ より後で加工すること
     Select(0u005f) # _
@@ -2917,7 +2946,7 @@ while (i < SizeOf(input_list))
  #        Select(0u007b); PasteWithOffset(-87, 0) # {
     endif
     OverlapIntersect()
-    Move(22, ${y_pos_paren} + 1); SetWidth(500)
+    Move(22, ${move_y_paren} + 1); SetWidth(500)
     Simplify()
     # }
     Select(65552);  Copy() # Temporary glyph
@@ -2935,7 +2964,7 @@ while (i < SizeOf(input_list))
  #        Select(0u007d); PasteWithOffset(49, 0) # }
     endif
     OverlapIntersect()
-    Move(16, ${y_pos_paren} + 1); SetWidth(500)
+    Move(16, ${move_y_paren} + 1); SetWidth(500)
     Simplify()
 
     Select(65552); Clear() # Temporary glyph
@@ -3390,7 +3419,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     Select(65541); Copy() # スラッシュ無し0
@@ -3398,7 +3427,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_sub})
+    Move(0, ${move_y_sub})
     SetWidth(500)
 
 # 分数 (追加、全角化)
@@ -3422,16 +3451,16 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
+    Move(${move_x_numerator}, ${move_y_numerator}); Copy()
     Select(0u2152); Paste()
-    Move(-(${x_pos_numerator}) + ${x_pos_denominator} + 150, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅒
+    Move(-(${move_x_numerator}) + ${move_x_denominator} + 150, -(${move_y_numerator}) + ${move_y_denominator}) # ⅒
 
     Select(0u0031); Copy() # 1
     Select(0u00bc); Paste() # ¼
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator} + 30, ${y_pos_numerator}); Copy()
+    Move(${move_x_numerator} + 30, ${move_y_numerator}); Copy()
     Select(0u00bd); Paste() # ½
     Select(0u2150); Paste() # ⅐
     Select(0u2151); Paste() # ⅑
@@ -3440,7 +3469,7 @@ while (i < SizeOf(input_list))
     Select(0u2159); Paste() # ⅙
     Select(0u215b); Paste() # ⅛
     Select(0u215f); Paste() # ⅟
-    Select(0u2152); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 130, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅒
+    Select(0u2152); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} - 130, -(${move_y_numerator}) + ${move_y_denominator}) # ⅒
     Scale(75, 100)
     Select(0u2152); PasteInto() # ⅒
 
@@ -3449,7 +3478,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
+    Move(${move_x_numerator}, ${move_y_numerator}); Copy()
     Select(0u2156); Paste() # ⅖
 
     Select(0u0032); Copy() # 2
@@ -3457,49 +3486,49 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
+    Move(${move_x_numerator}, ${move_y_numerator}); Copy()
     Select(0u2156); Paste() # ⅖
-    Select(0u00bd); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator}, -(${y_pos_numerator}) + ${y_pos_denominator}) # ½
+    Select(0u00bd); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator}, -(${move_y_numerator}) + ${move_y_denominator}) # ½
 
     Select(0u0033); Copy() # 3
     Select(0u00be); Paste() # ¾
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator}, ${y_pos_numerator}); Copy()
+    Move(${move_x_numerator}, ${move_y_numerator}); Copy()
     Select(0u2157); Paste() # ⅗
     Select(0u215c); Paste() # ⅜
-    Select(0u2153); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator}, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅓
-    Select(0u2154); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator}, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅔
-    Select(0u2189); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator}, -(${y_pos_numerator}) + ${y_pos_denominator}) # ↉
+    Select(0u2153); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator}, -(${move_y_numerator}) + ${move_y_denominator}) # ⅓
+    Select(0u2154); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator}, -(${move_y_numerator}) + ${move_y_denominator}) # ⅔
+    Select(0u2189); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator}, -(${move_y_numerator}) + ${move_y_denominator}) # ↉
 
     Select(0u0034); Copy() # 4
     Select(0u2158); Paste() # ⅘
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator} -10, ${y_pos_numerator}); Copy()
-    Select(0u00bc); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 50, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¼
-    Select(0u00be); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 50, -(${y_pos_numerator}) + ${y_pos_denominator}) # ¾
+    Move(${move_x_numerator} -10, ${move_y_numerator}); Copy()
+    Select(0u00bc); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} - 50, -(${move_y_numerator}) + ${move_y_denominator}) # ¼
+    Select(0u00be); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} - 50, -(${move_y_numerator}) + ${move_y_denominator}) # ¾
 
     Select(0u0035); Copy() # 5
     Select(0u215a); Paste() # ⅚
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator} - 20, ${y_pos_numerator}); Copy()
+    Move(${move_x_numerator} - 20, ${move_y_numerator}); Copy()
     Select(0u215d); Paste() # ⅝
-    Select(0u2155); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} + 20, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅕
-    Select(0u2156); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} + 20, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅖
-    Select(0u2157); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} + 20, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅗
-    Select(0u2158); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} + 20, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅘
+    Select(0u2155); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} + 20, -(${move_y_numerator}) + ${move_y_denominator}) # ⅕
+    Select(0u2156); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} + 20, -(${move_y_numerator}) + ${move_y_denominator}) # ⅖
+    Select(0u2157); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} + 20, -(${move_y_numerator}) + ${move_y_denominator}) # ⅗
+    Select(0u2158); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} + 20, -(${move_y_numerator}) + ${move_y_denominator}) # ⅘
 
     Select(0u0036); Copy() # 6
     Select(65552);  Paste() # Temporary glyph
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_denominator}, ${y_pos_denominator}); Copy()
+    Move(${move_x_denominator}, ${move_y_denominator}); Copy()
     Select(0u2159); PasteInto() # ⅙
     Select(0u215a); PasteInto() # ⅚
 
@@ -3508,15 +3537,15 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_numerator} + 40, ${y_pos_numerator}); Copy()
-    Select(0u2150); PasteWithOffset(-(${x_pos_numerator}) + ${x_pos_denominator} - 20, -(${y_pos_numerator}) + ${y_pos_denominator}) # ⅐
+    Move(${move_x_numerator} + 40, ${move_y_numerator}); Copy()
+    Select(0u2150); PasteWithOffset(-(${move_x_numerator}) + ${move_x_denominator} - 20, -(${move_y_numerator}) + ${move_y_denominator}) # ⅐
 
     Select(0u0038); Copy() # 8
     Select(65552);  Paste() # Temporary glyph
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_denominator}, ${y_pos_denominator}); Copy()
+    Move(${move_x_denominator}, ${move_y_denominator}); Copy()
     Select(0u215b); PasteInto() # ⅛
     Select(0u215c); PasteInto() # ⅜
     Select(0u215d); PasteInto() # ⅝
@@ -3527,7 +3556,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(${x_pos_denominator}, ${y_pos_denominator}); Copy()
+    Move(${move_x_denominator}, ${move_y_denominator}); Copy()
     Select(0u2151); PasteInto() # ⅑
 
     # 斜線
@@ -3708,7 +3737,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ²
@@ -3717,7 +3746,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ³
@@ -3726,7 +3755,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ʰ-ʸ
@@ -3741,7 +3770,7 @@ while (i < SizeOf(input_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # sups フィーチャ追加
             Select(orig[j])
@@ -3759,7 +3788,7 @@ while (i < SizeOf(input_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_super})
+        Move(0, ${move_y_super})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # sups フィーチャ追加
         Select(orig[j])
@@ -3792,7 +3821,7 @@ while (i < SizeOf(input_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # sups フィーチャ追加
             Select(orig[j])
@@ -3808,7 +3837,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ᵆ
@@ -3818,7 +3847,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ᵎ
@@ -3833,7 +3862,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ᵙ
@@ -3843,7 +3872,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ᶜ-ᶞ
@@ -3856,7 +3885,7 @@ while (i < SizeOf(input_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # sups フィーチャ追加
             Select(orig[j])
@@ -3871,7 +3900,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0066) # f
@@ -3883,7 +3912,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u007a) # z
@@ -3895,7 +3924,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0069) # i
@@ -3910,7 +3939,7 @@ while (i < SizeOf(input_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
         endif
         j += 1
@@ -3925,7 +3954,7 @@ while (i < SizeOf(input_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_super})
+        Move(0, ${move_y_super})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # sups フィーチャ追加
         Select(orig[j])
@@ -3945,7 +3974,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0056) # V
@@ -3960,7 +3989,7 @@ while (i < SizeOf(input_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_sub})
+        Move(0, ${move_y_sub})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # subs フィーチャ追加
         Select(orig[j])
@@ -3976,7 +4005,7 @@ while (i < SizeOf(input_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_sub})
+        Move(0, ${move_y_sub})
         SetWidth(500)
         j += 1
     endloop
@@ -3994,7 +4023,7 @@ while (i < SizeOf(input_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_sub})
+            Move(0, ${move_y_sub})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # subs フィーチャ追加
             Select(orig[j])
@@ -4015,7 +4044,7 @@ while (i < SizeOf(input_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_sub})
+    Move(0, ${move_y_sub})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # subs フィーチャ追加
     Select(0u006a) # j
@@ -4028,7 +4057,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0, ${y_pos_math})
+        Move(0, ${move_y_math})
         SetWidth(500)
         j += 1
     endloop
@@ -4038,7 +4067,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0, ${y_pos_s_math})
+        Move(0, ${move_y_s_math})
         SetWidth(500)
         j += 1
     endloop
@@ -4260,8 +4289,8 @@ while (i < SizeOf(input_list))
         SelectWorthOutputting()
         foreach
             if (800 <= GlyphInfo("Width"))
-                Move(${x_pos_zenkaku_latin}, 0)
-                SetWidth(-${x_pos_zenkaku_latin}, 1)
+                Move(${move_x_zenkaku_latin}, 0)
+                SetWidth(-${move_x_zenkaku_latin}, 1)
             endif
         endloop
     endif
@@ -9061,7 +9090,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u27e9) # ⟩
     SelectMore(0u2e28) # ⸨
     SelectMore(0u2e29) # ⸩
-    Move(0, ${y_pos_paren} + 35)
+    Move(0, ${move_y_paren} + 35)
     SetWidth(500)
 
 # ⌒⌓ (漢字フォントを置換・追加)
@@ -9678,7 +9707,7 @@ while (i < SizeOf(input_list))
     SetWidth(1000)
 
     Select(0u2ff0, 0u2ffb) # ⿰-⿻
-    Move(-${x_pos_zenkaku_kana}, -52)
+    Move(-${move_x_zenkaku_kana}, -52)
     SetWidth(1000)
 
 # 分割無し(⌒加工後に加工すること)
@@ -9803,7 +9832,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0,${y_pos_math})
+        Move(0,${move_y_math})
         SetWidth(500)
         j += 1
     endloop
@@ -10713,8 +10742,8 @@ while (i < SizeOf(input_list))
         SelectWorthOutputting()
         foreach
             if (800 <= GlyphInfo("Width"))
-                Move(${x_pos_zenkaku_kana}, 0)
-                SetWidth(-${x_pos_zenkaku_kana}, 1)
+                Move(${move_x_zenkaku_kana}, 0)
+                SetWidth(-${move_x_zenkaku_kana}, 1)
             endif
         endloop
     endif
@@ -11853,23 +11882,23 @@ while (i < SizeOf(input_list))
 # ◢◣◤◥ (追加)
     Select(1115738); Copy()
     Select(0u25e2); Paste() # ◢
-    Scale(${width_scale_triangle}, ${height_scale_triangle} + 0.1, 924, -170)
-    Move(105 -${x_pos_zenkaku_kanzi}, ${y_pos_lower_triangle})
+    Scale(${scale_width_triangle}, ${scale_height_triangle} + 0.1, 924, -170)
+    Move(105 -${move_x_zenkaku_kanzi}, ${move_y_lower_triangle})
     SetWidth(1024)
     Select(1115739); Copy()
     Select(0u25e3); Paste() # ◣
-    Scale(${width_scale_triangle}, ${height_scale_triangle} + 0.1, 33, -170)
-    Move(-38 -${x_pos_zenkaku_kanzi}, ${y_pos_lower_triangle})
+    Scale(${scale_width_triangle}, ${scale_height_triangle} + 0.1, 33, -170)
+    Move(-38 -${move_x_zenkaku_kanzi}, ${move_y_lower_triangle})
     SetWidth(1024)
     Select(1115741); Copy()
     Select(0u25e4); Paste() # ◤
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 33, 784)
-    Move(-38 -${x_pos_zenkaku_kanzi}, ${y_pos_upper_triangle})
+    Scale(${scale_width_triangle}, ${scale_height_triangle}, 33, 784)
+    Move(-38 -${move_x_zenkaku_kanzi}, ${move_y_upper_triangle})
     SetWidth(1024)
     Select(1115740); Copy()
     Select(0u25e5); Paste() # ◥
-    Scale(${width_scale_triangle}, ${height_scale_triangle}, 924, 784)
-    Move(105 -${x_pos_zenkaku_kanzi}, ${y_pos_upper_triangle})
+    Scale(${scale_width_triangle}, ${scale_height_triangle}, 924, 784)
+    Move(105 -${move_x_zenkaku_kanzi}, ${move_y_upper_triangle})
     SetWidth(1024)
     Select(1115738, 1115741)
     Clear(); DetachAndRemoveGlyphs()
@@ -12113,7 +12142,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0,${y_pos_math})
+        Move(0,${move_y_math})
         SetWidth(512)
         j += 1
     endloop
@@ -12122,7 +12151,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0,${y_pos_math})
+        Move(0,${move_y_math})
         SetWidth(1024)
         j += 1
     endloop
@@ -12413,7 +12442,7 @@ while (i < SizeOf(input_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${width_scale_hankaku_Loose}, ${height_scale_hankaku_Loose}, 256, 0)
+                    Scale(${scale_width_hankaku_loose}, ${scale_height_hankaku_loose}, 256, 0)
                     SetWidth(512)
                 endif
             endif
@@ -12428,8 +12457,8 @@ while (i < SizeOf(input_list))
         SelectWorthOutputting()
         foreach
             if (800 <= GlyphInfo("Width"))
-                Move(${x_pos_zenkaku_kanzi}, 0)
-                SetWidth(-${x_pos_zenkaku_kanzi}, 1)
+                Move(${move_x_zenkaku_kanzi}, 0)
+                SetWidth(-${move_x_zenkaku_kanzi}, 1)
             endif
         endloop
     endif
@@ -12819,7 +12848,7 @@ while (i < SizeOf(latin_sfd_list))
     Print("Edit ~")
     Select(0uff5e); Copy() # Fullwidth tilde
     Select(0u007e); Paste()
-    if ("${draft_flag}" == "false"); Move(-${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(-${move_x_zenkaku_kana}, 0); endif
     Scale(50)
     Rotate(10)
     if (latin_sfd_list[i] == "${tmpdir}/${modified_latin_regular}")
@@ -12840,7 +12869,7 @@ while (i < SizeOf(latin_sfd_list))
     Move(-400, -12)
     PasteWithOffset(-315, 33)
     RemoveOverlap()
-    if ("${draft_flag}" == "false"); Move(-${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(-${move_x_zenkaku_kana}, 0); endif
     Select(0u0071); Copy() # q
     Select(65552);  PasteInto()
     OverlapIntersect()
@@ -12852,7 +12881,7 @@ while (i < SizeOf(latin_sfd_list))
     Move(-150, -686)
     PasteWithOffset(167, -601)
     RemoveOverlap()
-    if ("${draft_flag}" == "false"); Move(-${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(-${move_x_zenkaku_kana}, 0); endif
     Select(${address_store_g}); Copy() # 避難したg
     Select(65552);  PasteInto()
     OverlapIntersect()
@@ -12874,7 +12903,7 @@ while (i < SizeOf(latin_sfd_list))
     # 先っぽ追加 ※ y を加工するとずれる可能性があるので注意
     Select(0u25a0); Copy() # Black square
     Select(65552); Paste()
-    if ("${draft_flag}" == "false"); Move(-${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(-${move_x_zenkaku_kana}, 0); endif
     Scale(15, 25)
     Move(-445, -470)
     Select(0u0079); Copy() # y
@@ -12928,7 +12957,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
 # ₿ (追加)
@@ -13045,7 +13074,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(${address_store_mod}, ${address_store_mod} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
         SelectMore(${address_store_zero}) # 避難したスラッシュ無し0
         SelectMore(${address_store_zero} + 3, ${address_store_zero} + 5) # 避難したスラッシュ無し全角0
-        Scale(${width_scale_latin}, ${height_scale_latin}, 250, 0); SetWidth(500)
+        Scale(${scale_width_latin}, ${scale_height_latin}, 250, 0); SetWidth(500)
     endif
 
 # 記号のグリフを加工
@@ -13098,7 +13127,7 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u0043); Copy() # C
     Select(0u2103) # ℃
     PasteWithOffset(330, 0)
-    if ("${draft_flag}" == "false"); Move(${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(${move_x_zenkaku_kana}, 0); endif
     SetWidth(1000)
 
 # ℉ (追加) ※ ° より後に加工すること
@@ -13108,7 +13137,7 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u0046); Copy() # F
     Select(0u2109) # ℉
     PasteWithOffset(340, 0)
-    if ("${draft_flag}" == "false"); Move(${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(${move_x_zenkaku_kana}, 0); endif
     SetWidth(1000)
 
 # ∀ (漢字フォントを置換)
@@ -13141,7 +13170,7 @@ while (i < SizeOf(latin_sfd_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # sups フィーチャ追加
             Select(orig[j])
@@ -13157,7 +13186,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ˀ
@@ -13166,7 +13195,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0294) # ʔ
@@ -13178,7 +13207,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0263) # ɣ
@@ -13193,7 +13222,7 @@ while (i < SizeOf(latin_sfd_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_super})
+        Move(0, ${move_y_super})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # sups フィーチャ追加
         Select(orig[j])
@@ -13207,7 +13236,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u025b) # ɛ
@@ -13220,7 +13249,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
 
     # ᵓ
@@ -13229,7 +13258,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0254) # ɔ
@@ -13241,7 +13270,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u026f) # ɯ
@@ -13257,7 +13286,7 @@ while (i < SizeOf(latin_sfd_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_super})
+        Move(0, ${move_y_super})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # sups フィーチャ追加
         Select(orig[j])
@@ -13271,7 +13300,7 @@ while (i < SizeOf(latin_sfd_list))
     Scale(${scale_super_sub}, 250, 0)
     ChangeWeight(${weight_super_sub})
     CorrectDirection()
-    Move(0, ${y_pos_super})
+    Move(0, ${move_y_super})
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u043d) # н
@@ -13288,7 +13317,7 @@ while (i < SizeOf(latin_sfd_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # sups フィーチャ追加
             Select(orig[j])
@@ -13314,7 +13343,7 @@ while (i < SizeOf(latin_sfd_list))
             Scale(${scale_super_sub}, 250, 0)
             ChangeWeight(${weight_super_sub})
             CorrectDirection()
-            Move(0, ${y_pos_super})
+            Move(0, ${move_y_super})
             SetWidth(500)
             glyphName = GlyphInfo("Name") # sups フィーチャ追加
             Select(orig[j])
@@ -13332,7 +13361,7 @@ while (i < SizeOf(latin_sfd_list))
         Scale(${scale_super_sub}, 250, 0)
         ChangeWeight(${weight_super_sub})
         CorrectDirection()
-        Move(0, ${y_pos_sub})
+        Move(0, ${move_y_sub})
         SetWidth(500)
         glyphName = GlyphInfo("Name") # subs フィーチャ追加
         Select(orig[j])
@@ -13357,7 +13386,7 @@ while (i < SizeOf(latin_sfd_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${width_scale_hankaku_Loose}, ${height_scale_hankaku_Loose}, 250, 0)
+                    Scale(${scale_width_hankaku_loose}, ${scale_height_hankaku_loose}, 250, 0)
                     SetWidth(500)
                 endif
             endif
@@ -13367,7 +13396,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(${address_store_zero}, ${address_store_zero} + 5) # 避難したスラッシュ無し0
         SelectMore(${address_store_visi_latin}, ${address_store_visi_latin} + 1) # 避難した ⁄|
         SelectMore(${address_store_visi_latin} + 4) # 避難した –
-        Scale(${width_scale_hankaku_Loose}, ${height_scale_hankaku_Loose}, 250, 0)
+        Scale(${scale_width_hankaku_loose}, ${scale_height_hankaku_loose}, 250, 0)
         SetWidth(500)
     endif
 
@@ -13405,12 +13434,12 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u25a1); Copy() # White square
     Select(0u0020); PasteInto() # Space
     OverlapIntersect()
-    if ("${draft_flag}" == "false"); Move(-${x_pos_zenkaku_kana}, 0); endif
+    if ("${draft_flag}" == "false"); Move(-${move_x_zenkaku_kana}, 0); endif
     Scale(34, 100); Move(-228, 0)
 
     Select(0u25a0); Copy() # Black square
     Select(0u0020); PasteWithOffset(-150, -510) # Space
-    Move(0, ${y_pos_space})
+    Move(0, ${move_y_space})
     SetWidth(500)
     OverlapIntersect()
 
@@ -13439,7 +13468,7 @@ while (i < SizeOf(latin_sfd_list))
     Select(65552); PasteWithOffset(0, -510)
     Scale(120, 100)
     OverlapIntersect()
-    Move(0, ${y_pos_space})
+    Move(0, ${move_y_space})
     SetWidth(1000)
 
     # 縦線作成
@@ -13460,14 +13489,14 @@ while (i < SizeOf(latin_sfd_list))
           endif
             Copy()
             Select(0uff01 + j); Paste()
-            Move(230 + ${x_pos_zenkaku_kana}, 0)
+            Move(230 + ${move_x_zenkaku_kana}, 0)
         endif
         if (j == 7 || j == 58 || j == 90) # （ ［ ｛
-            Move(62 + ${x_pos_zenkaku_kana}, 13 - ${y_pos_paren})
+            Move(62 + ${move_x_zenkaku_kana}, 13 - ${move_y_paren})
         elseif (j == 8 || j == 60 || j == 92) # ） ］ ｝
-            Move(-138 + ${x_pos_zenkaku_kana}, 13 - ${y_pos_paren})
+            Move(-138 + ${move_x_zenkaku_kana}, 13 - ${move_y_paren})
         elseif (j == 11 || j == 13) # ， ．
-            Move(-250 + ${x_pos_zenkaku_kana}, 0)
+            Move(-250 + ${move_x_zenkaku_kana}, 0)
         endif
         j += 1
     endloop
@@ -13478,39 +13507,39 @@ while (i < SizeOf(latin_sfd_list))
     # ￠ - ￦
     Select(0u00a2);  Copy() # ¢
     Select(0uffe0); Paste() # ￠
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
     Select(0u00a3);  Copy() # £
     Select(0uffe1); Paste() # ￡
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
     Select(0u00ac);  Copy() # ¬
     Select(0uffe2); Paste() # ￢
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
  #    Select(0u00af);  Copy() # ¯
  #    Select(0uffe3); Paste() # ￣
- #    Move(230 + ${x_pos_zenkaku_kana}, 0)
+ #    Move(230 + ${move_x_zenkaku_kana}, 0)
     Select(0u00a6);  Copy() # ¦
     Select(0uffe4); Paste() # ￤
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
     Select(0u00a5);  Copy() # ¥
     Select(0uffe5); Paste() # ￥
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
     Select(0u20a9);  Copy() # ₩
     Select(0uffe6); Paste() # ￦
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
 
     # ‼
     Select(0u0021); Copy() # !
     Select(0u203c); Paste() # ‼
     Move(30, 0)
     Select(0u203c); PasteWithOffset(450, 0) # ‼
-    Move(${x_pos_zenkaku_kana}, 0)
+    Move(${move_x_zenkaku_kana}, 0)
 
     # ⁇
     Select(0u003F); Copy() # ?
     Select(0u2047); Paste() # ⁇
     Move(10, 0)
     Select(0u2047); PasteWithOffset(430, 0) # ⁇
-    Move(${x_pos_zenkaku_kana}, 0)
+    Move(${move_x_zenkaku_kana}, 0)
 
     # ⁈
     Select(0u003F); Copy() # ?
@@ -13518,7 +13547,7 @@ while (i < SizeOf(latin_sfd_list))
     Move(10, 0)
     Select(0u0021); Copy() # !
     Select(0u2048); PasteWithOffset(450, 0) # ⁈
-    Move(${x_pos_zenkaku_kana}, 0)
+    Move(${move_x_zenkaku_kana}, 0)
 
     # ⁉
     Select(0u0021); Copy() # !
@@ -13526,7 +13555,7 @@ while (i < SizeOf(latin_sfd_list))
     Move(30, 0)
     Select(0u003F); Copy() # ?
     Select(0u2049); PasteWithOffset(430, 0) # ⁉
-    Move(${x_pos_zenkaku_kana}, 0)
+    Move(${move_x_zenkaku_kana}, 0)
 
 # 縦書き形句読点
     hori = [0uff0c, 0u3001, 0u3002] # ，、。
@@ -13659,15 +13688,15 @@ while (i < SizeOf(latin_sfd_list))
             CorrectDirection()
         elseif (hori[j] == 0uff46\
              || hori[j] == 0uff4c) # ｆｌ
-            Move(0, ${y_pos_vert_1})
+            Move(0, ${move_y_vert_1})
         elseif (hori[j] == 0uff42\
              || hori[j] == 0uff44\
              || hori[j] == 0uff48\
              || hori[j] == 0uff4b) # ｂｄｈｋ
-            Move(0, ${y_pos_vert_2})
+            Move(0, ${move_y_vert_2})
         elseif (hori[j] == 0uff49\
              || hori[j] == 0uff54) # ｉｔ
-            Move(0, ${y_pos_vert_3})
+            Move(0, ${move_y_vert_3})
         elseif (hori[j] == 0uff41\
              || hori[j] == 0uff43\
              || hori[j] == 0uff45\
@@ -13682,15 +13711,15 @@ while (i < SizeOf(latin_sfd_list))
              || hori[j] == 0uff58\
              || hori[j] == 0uff5a\
              || hori[j] == 0uffe0) # ａｃｅｍｎｏｒｓｕｖｗｘｚ￠
-            Move(0, ${y_pos_vert_4})
+            Move(0, ${move_y_vert_4})
         elseif (hori[j] == 0uff4a) # ｊ
-            Move(0, ${y_pos_vert_5})
+            Move(0, ${move_y_vert_5})
         elseif (hori[j] == 0uff50\
              || hori[j] == 0uff51\
              || hori[j] == 0uff59) # ｐｑｙ
-            Move(0, ${y_pos_vert_6})
+            Move(0, ${move_y_vert_6})
         elseif (hori[j] == 0uff47) # ｇ
-            Move(0, ${y_pos_vert_7})
+            Move(0, ${move_y_vert_7})
         endif
         Copy(); Select(${address_store_zenhan} + k); Paste(); SetWidth(1000); k += 1 # 避難所にコピー
         Select(65553);  Copy() # 縦線追加
@@ -13719,7 +13748,7 @@ while (i < SizeOf(latin_sfd_list))
     SelectMore(0u3016, 0u3017) # 〖〗
     SelectMore(0u3018, 0u3019) # 〘〙
     SelectMore(0u301a, 0u301b) # 〚〛
-    Move(0, -13 + ${y_pos_paren})
+    Move(0, -13 + ${move_y_paren})
     SetWidth(1000)
 
 # 横書き全角形に下線追加
@@ -13742,7 +13771,7 @@ while (i < SizeOf(latin_sfd_list))
         Select(${address_store_mod} + ${num_mod_glyphs} * 3 + j); Paste() # 下線付き時の半角
         SetWidth(500)
         Select(${address_store_mod} + ${num_mod_glyphs} + j); Paste() # 下線無し全角横書き
-        Move(230 + ${x_pos_zenkaku_kana}, 0)
+        Move(230 + ${move_x_zenkaku_kana}, 0)
         SetWidth(1000)
         Copy()
         Select(${address_store_mod} + ${num_mod_glyphs} * 2 + j); Paste() # 下線無し全角縦書き
@@ -13761,7 +13790,7 @@ while (i < SizeOf(latin_sfd_list))
 # 保管しているスラッシュ無し0に下線追加
     Select(${address_store_zero}); Copy() # 下線無し時の半角
     Select(${address_store_zero} + 3); Paste() # 下線無し全角
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
     SetWidth(1000)
     Copy()
     Select(${address_store_zero} + 4); Paste() # 下線付き全角横書き
@@ -13783,12 +13812,12 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u25a1); Copy() # White square
     Select(65553);  PasteInto()
     OverlapIntersect()
-    Move(-${x_pos_zenkaku_kana}, 0)
+    Move(-${move_x_zenkaku_kana}, 0)
     Scale(34, 100); Move(-228, 0)
 
     Select(0u25a0); Copy() # Black square
     Select(65553); PasteWithOffset(-150, -510)
-    Move(0, ${y_pos_space})
+    Move(0, ${move_y_space})
     OverlapIntersect()
 
     j = 0
@@ -13831,12 +13860,12 @@ while (i < SizeOf(latin_sfd_list))
 # 保管している、改変されたグリフの縦書きを追加
     Select(${address_store_visi_latin} + 1); Copy() # |
     Select(${address_store_zenhan} + 10); Paste() # 縦書き
-    Move(230 + ${x_pos_zenkaku_kana}, 0)
+    Move(230 + ${move_x_zenkaku_kana}, 0)
     Rotate(-90, 487, 318)
     SetWidth(1000)
 
  #    Select(${address_store_zenhan} + 200); Paste() # 全角縦棒を破線にする場合有効にする
- #    Move(230+${x_pos_zenkaku_kana}, 0) # ただし ss06 に対応する処理の追加が必要
+ #    Move(230+${move_x_zenkaku_kana}, 0) # ただし ss06 に対応する処理の追加が必要
  #    SetWidth(1000)
 
     Select(${address_store_visi_kana}); Copy() # ゠
@@ -13878,7 +13907,7 @@ while (i < SizeOf(latin_sfd_list))
 # 罫線、ブロックを少し移動 (em値変更でのズレ修正)
     Print("Move box drawing and block")
     Select(0u2500, 0u259f)
-    Move(0, ${y_pos_em_revise})
+    Move(0, ${move_y_em_revise})
     Scale(102, 100, 256, 0) # 横幅を少し拡大
 
 # Move all glyphs
@@ -14137,7 +14166,7 @@ while (i < SizeOf(input_list))
 
 # 全て少し移動
     Print("Move all glyphs")
-    SelectWorthOutputting(); Move(0, ${y_pos_nerd})
+    SelectWorthOutputting(); Move(0, ${move_y_nerd})
 
 # IEC Power Symbols
     Print("Edit IEC Power Symbols")
@@ -14159,42 +14188,42 @@ while (i < SizeOf(input_list))
     SelectMore(0ue0ca)
     SelectMore(0ue0cc, 0ue0d2)
     SelectMore(0ue0d4)
-    Move(0, -${y_pos_nerd}) # 元の位置に戻す
-    Move(0, ${y_pos_em_revise}) # em値変更でのズレ修正
-    Select(0ue0a0);         Move(-226, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0a1, 0ue0a3); Move(-256, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b0);         Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(9,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b1);         Scale(70,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b2);         Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 9,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b3);         Scale(70,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b4);         Scale(80,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(18, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b5);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b6);         Scale(80,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 18, ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b7);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b8);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(4,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0b9);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0ba);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 4,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bb);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bc);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(4,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bd);         Scale(50,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0be);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512 - 4,  ${y_pos_pl}); SetWidth(512)
-    Select(0ue0bf);         Scale(50,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(-512,      ${y_pos_pl}); SetWidth(512)
-    Select(0ue0c0, 0ue0c1); Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl2}); SetWidth(1024)
-    Select(0ue0c2, 0ue0c3); Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl2}); SetWidth(1024)
-    Select(0ue0c4);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c5);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0c8);         Scale(95,  ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0ca);         Scale(95,  ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0cc);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0cd);         Scale(105, ${height_scale_pl2}, 0,   ${height_center_pl}); Move(-21, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0ce, 0ue0d0); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d1);         Scale(105, ${height_scale_pl2}, 0,   ${height_center_pl}); Move(-21, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d2);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move(0, ${y_pos_pl}); SetWidth(1024)
-    Select(0ue0d4);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(0, ${y_pos_pl});SetWidth(1024)
-    Select(0ue0d6);         Scale(105, ${height_scale_pl}, 0,    ${height_center_pl}); Move( 33, ${y_pos_pl3}); SetWidth(1024)
-    Select(0ue0d7);         Scale(105, ${height_scale_pl}, 1024, ${height_center_pl}); Move(-33, ${y_pos_pl3});SetWidth(1024)
+    Move(0, -${move_y_nerd}) # 元の位置に戻す
+    Move(0, ${move_y_em_revise}) # em値変更でのズレ修正
+    Select(0ue0a0);         Move(-226, ${move_y_pl}); SetWidth(512)
+    Select(0ue0a1, 0ue0a3); Move(-256, ${move_y_pl}); SetWidth(512)
+    Select(0ue0b0);         Scale(70,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(9,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0b1);         Scale(70,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0b2);         Scale(70,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 9,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0b3);         Scale(70,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
+    Select(0ue0b4);         Scale(80,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(18, ${move_y_pl}); SetWidth(512)
+    Select(0ue0b5);         Scale(95,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0b6);         Scale(80,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 18, ${move_y_pl}); SetWidth(512)
+    Select(0ue0b7);         Scale(95,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
+    Select(0ue0b8);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0b9);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0ba);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0bb);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
+    Select(0ue0bc);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0bd);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0be);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0bf);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
+    Select(0ue0c0, 0ue0c1); Scale(95,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl2}); SetWidth(1024)
+    Select(0ue0c2, 0ue0c3); Scale(95,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(0, ${move_y_pl2}); SetWidth(1024)
+    Select(0ue0c4);         Scale(105, ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0c5);         Scale(105, ${scale_height_pl}, 1024, ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0c6);         Scale(105, ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0c7);         Scale(105, ${scale_height_pl}, 1024, ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0c8);         Scale(95,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0ca);         Scale(95,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0cc);         Scale(105, ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0cd);         Scale(105, ${scale_height_pl2}, 0,   ${center_height_pl}); Move(-21, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0ce, 0ue0d0); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0d1);         Scale(105, ${scale_height_pl2}, 0,   ${center_height_pl}); Move(-21, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0d2);         Scale(105, ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl}); SetWidth(1024)
+    Select(0ue0d4);         Scale(105, ${scale_height_pl}, 1024, ${center_height_pl}); Move(0, ${move_y_pl});SetWidth(1024)
+    Select(0ue0d6);         Scale(105, ${scale_height_pl}, 0,    ${center_height_pl}); Move( 33, ${move_y_pl3}); SetWidth(1024)
+    Select(0ue0d7);         Scale(105, ${scale_height_pl}, 1024, ${center_height_pl}); Move(-33, ${move_y_pl3});SetWidth(1024)
 
     # Loose 版対応 (とりあえず移動させておく)
     if ("${loose_flag}" == "true")
@@ -14203,7 +14232,7 @@ while (i < SizeOf(input_list))
         SelectMore(0ue0b5)
         SelectMore(0ue0b8, 0ue0b9)
         SelectMore(0ue0bc, 0ue0bd)
-        Move(-${x_pos_hankaku_Loose}, 0)
+        Move(-${move_x_hankaku_loose}, 0)
         SetWidth(512)
 
         Select(0ue0b2, 0ue0b3)
@@ -14211,7 +14240,7 @@ while (i < SizeOf(input_list))
         SelectMore(0ue0b7)
         SelectMore(0ue0ba, 0ue0bb)
         SelectMore(0ue0be, 0ue0bf)
-        Move(${x_pos_hankaku_Loose}, 0)
+        Move(${move_x_hankaku_loose}, 0)
         SetWidth(512)
     endif
 
@@ -14395,8 +14424,8 @@ while (i < \$argc)
 # ブロック要素を加工 (Powerline対応)
     Print("Edit box drawing and block")
     Select(0u2580, 0u259f)
-    Scale(100, ${height_scale_block}, 0, ${height_center_pl}) # Powerlineに合わせて縦を縮小
-    Move(0, ${y_pos_pl})
+    Scale(100, ${scale_height_block}, 0, ${center_height_pl}) # Powerlineに合わせて縦を縮小
+    Move(0, ${move_y_pl})
 
     Select(0ue0d1); RemoveOverlap(); Copy() # 
     Copy()
@@ -14533,15 +14562,15 @@ while (i < \$argc)
 
         # ブロック要素 (Nerd fonts での改変があるため、ここで調整)
         Select(0u2580, 0u259f)
-        Scale(113, 100, 256, ${y_pos_center_Loose})
+        Scale(113, 100, 256, ${center_height_loose})
         SetWidth(512)
 
         # 全ての半角
         SelectWorthOutputting()
         foreach
             if (300 <= GlyphInfo("Width") && GlyphInfo("Width") <= 700)
-                Move(${x_pos_hankaku_Loose}, 0)
-                SetWidth(${hankaku_width_Loose})
+                Move(${move_x_hankaku_loose}, 0)
+                SetWidth(${width_hankaku_loose})
             endif
         endloop
     endif
@@ -14606,8 +14635,8 @@ while (i < \$argc)
         Select(0u0041 + j); Copy() # A
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
         Select(0u0041 + j) # A
@@ -14620,8 +14649,8 @@ while (i < \$argc)
         Select(0u0061 + j); Copy() # a
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
         Select(0u0061 + j) # a
@@ -14640,8 +14669,8 @@ while (i < \$argc)
             Select(l); Copy() # À
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(-${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(-${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 左→中
             glyphName = GlyphInfo("Name")
             Select(l) # À
@@ -14663,8 +14692,8 @@ while (i < \$argc)
             Select(l); Copy() # Ā
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(-${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(-${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 左→中
             glyphName = GlyphInfo("Name")
             Select(l) # Ā
@@ -14680,8 +14709,8 @@ while (i < \$argc)
         Select(l); Copy() # Ș
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
         Select(l) # Ș
@@ -14693,8 +14722,8 @@ while (i < \$argc)
     Select(0u1e9e); Copy() # ẞ
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(-${x_pos_calt}, 0)
-    SetWidth(${hankaku_width})
+    Move(-${move_x_calt}, 0)
+    SetWidth(${width_hankaku})
     AddPosSub(lookupSub0, glyphName) # 左←中
     glyphName = GlyphInfo("Name")
     Select(0u1e9e) # ẞ
@@ -14710,8 +14739,8 @@ while (i < \$argc)
         Select(0u0041 + j); Copy() # A
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
         Select(0u0041 + j) # A
@@ -14724,8 +14753,8 @@ while (i < \$argc)
         Select(0u0061 + j); Copy() # a
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
         Select(0u0061 + j) # a
@@ -14744,8 +14773,8 @@ while (i < \$argc)
             Select(l); Copy() # À
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 中←右
             glyphName = GlyphInfo("Name")
             Select(l) # À
@@ -14767,8 +14796,8 @@ while (i < \$argc)
             Select(l); Copy() # Ā
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 中←右
             glyphName = GlyphInfo("Name")
             Select(l) # Ā
@@ -14784,8 +14813,8 @@ while (i < \$argc)
         Select(l); Copy() # Ș
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
         Select(l) # Ș
@@ -14797,8 +14826,8 @@ while (i < \$argc)
     Select(0u1e9e); Copy() # ẞ
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(${x_pos_calt}, 0)
-    SetWidth(${hankaku_width})
+    Move(${move_x_calt}, 0)
+    SetWidth(${width_hankaku})
     AddPosSub(lookupSub0, glyphName) # 中←右
     glyphName = GlyphInfo("Name")
     Select(0u1e9e) # ẞ
@@ -14815,12 +14844,12 @@ while (i < \$argc)
         Select(0u25b2); Copy() # ▲
         Select(k); Paste()
         Scale(15, 27)
-        Move(${x_pos_calt_separate}, ${y_pos_calt_separate3})
+        Move(${move_x_calt_separate}, ${move_y_calt_separate3})
         Copy(); Select(k + 20); Paste() # 12桁用
         Select(0u0030 + j); Copy() # 0
         glyphName = GlyphInfo("Name")
         Select(k); PasteInto()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # ノーマル←3桁マーク付加
         glyphName = GlyphInfo("Name")
         Select(0u0030 + j) # 0
@@ -14843,12 +14872,12 @@ while (i < \$argc)
         Select(0u25bc); Copy() # ▼
         Select(k); Paste()
         Scale(15, 27)
-        Move(${x_pos_calt_separate}, ${y_pos_calt_separate4})
+        Move(${move_x_calt_separate}, ${move_y_calt_separate4})
         Copy(); Select(k + 10); PasteInto() # 12桁用
         Select(0u0030 + j); Copy() # 0
         glyphName = GlyphInfo("Name")
         Select(k); PasteInto()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # ノーマル←4桁マーク付加
         glyphName = GlyphInfo("Name")
         Select(0u0030 + j) # 0
@@ -14871,7 +14900,7 @@ while (i < \$argc)
         Select(0u0030 + j); Copy() # 0
         glyphName = GlyphInfo("Name")
         Select(k); PasteInto()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # ノーマル←12桁マーク付加
         glyphName = GlyphInfo("Name")
         Select(0u0030 + j) # 0
@@ -14895,7 +14924,7 @@ while (i < \$argc)
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
         Scale(${scale_calt_decimal}, ${scale_calt_decimal}, 256, 0)
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
  #        AddPosSub(lookupSub0, glyphName) # ノーマル←小数
         glyphName = GlyphInfo("Name")
         Select(0u0030 + j) # 0
@@ -14912,8 +14941,8 @@ while (i < \$argc)
     Select(0u007c); Copy() # |
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(0, ${y_pos_calt_bar})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_bar})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u007c) # |
@@ -14923,8 +14952,8 @@ while (i < \$argc)
     Select(0u007e); Copy() # ~
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(0, ${y_pos_calt_tilde})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_tilde})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u007e) # ~
@@ -14934,8 +14963,8 @@ while (i < \$argc)
     Select(0u003a); Copy() # :
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(20, ${y_pos_calt_colon})
-    SetWidth(${hankaku_width})
+    Move(20, ${move_y_calt_colon})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u003a) # :
@@ -14945,8 +14974,8 @@ while (i < \$argc)
     Select(0u002a); Copy() # *
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(0, ${y_pos_calt_math})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_math})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u002a) # *
@@ -14956,8 +14985,8 @@ while (i < \$argc)
     Select(0u002b); Copy() # +
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(0, ${y_pos_calt_math})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_math})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u002b) # +
@@ -14967,8 +14996,8 @@ while (i < \$argc)
     Select(0u002d); Copy() # -
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(0, ${y_pos_calt_math})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_math})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u002d) # -
@@ -14978,8 +15007,8 @@ while (i < \$argc)
     Select(0u003d); Copy() # =
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(0, ${y_pos_calt_math})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_math})
+    SetWidth(${width_hankaku})
  #    AddPosSub(lookupSub0, glyphName) # 移動前←後
     glyphName = GlyphInfo("Name")
     Select(0u003d) # =
@@ -15010,8 +15039,8 @@ while (i < \$argc)
         Copy()
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${x_pos_calt_symbol}, 0)
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt_symbol}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
         if (symb[j] == 0u0000)
@@ -15043,8 +15072,8 @@ while (i < \$argc)
         Copy()
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${x_pos_calt_symbol}, 0)
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt_symbol}, 0)
+        SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
         if (symb[j] == 0u0000)
@@ -15119,7 +15148,7 @@ while (i < \$argc)
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
         Select(k); Paste()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(orig[j])
         AddPosSub(lookupSub, glyphName)
@@ -15133,7 +15162,7 @@ while (i < \$argc)
     while (j < 40)
         Select(${address_calt_figure} + j); Copy() # 桁区切りマーク付き数字
         Select(k); Paste()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(${address_calt_figure} + j);
         if (j < 10) # 3桁 (3桁のみ変換)
@@ -15167,7 +15196,7 @@ while (i < \$argc)
     while (j < 10)
         Select(${address_calt_figure} + j); Copy() # 桁区切りマーク付き数字
         Select(k); Paste() # 3桁 (3桁に偽装した12桁を作成)
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(${address_calt_figure} + 20 + j);
         lookupName = "'ss0" + ToString(ss) + "' スタイルセット" + ToString(ss)
@@ -15231,7 +15260,7 @@ while (i < \$argc)
         if (j < 96)
             SetWidth(1024)
         else
-            SetWidth(${hankaku_width})
+            SetWidth(${width_hankaku})
         endif
         glyphName = GlyphInfo("Name")
         Select(0uff01 + j)
@@ -15273,7 +15302,7 @@ while (i < \$argc)
     while (j < 256) # 点字
         Select(${address_store_braille} + j); Copy()
         Select(k); Paste()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(0u2800 + j)
         AddPosSub(lookupSub, glyphName)
@@ -15322,7 +15351,7 @@ while (i < \$argc)
  #        if (j < 96)
  #            SetWidth(1024)
  #        else
- #            SetWidth(${hankaku_width})
+ #            SetWidth(${width_hankaku})
  #        endif
  #        glyphName = GlyphInfo("Name")
  #        Select(0uff01 + j)
@@ -15361,7 +15390,7 @@ while (i < \$argc)
  #    while (j < 256) # 点字
  #        Select(0u2800 + j); Copy()
  #        Select(k); Paste()
- #        SetWidth(${hankaku_width})
+ #        SetWidth(${width_hankaku})
  #        glyphName = GlyphInfo("Name")
  #        Select(0u2800 + j)
  #        AddPosSub(lookupSub, glyphName)
@@ -15382,7 +15411,7 @@ while (i < \$argc)
         Select(${address_store_visi_latin} + l); Copy()
         Select(k); Paste()
         if (j <= 1 || j == 4)
-            SetWidth(${hankaku_width})
+            SetWidth(${width_hankaku})
         else
             SetWidth(1024)
         endif
@@ -15433,8 +15462,8 @@ while (i < \$argc)
 
     Select(${address_store_visi_latin} + 1); Copy() # 下に移動した |
     Select(k); Paste()
-    Move(0, ${y_pos_calt_bar})
-    SetWidth(${hankaku_width})
+    Move(0, ${move_y_calt_bar})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_calt_barD})
     AddPosSub(lookupSub, glyphName)
@@ -15442,8 +15471,8 @@ while (i < \$argc)
 
     Select(${address_store_visi_latin} + 1); Copy() # 左に移動した |
     Select(k); Paste()
-    Move(-${x_pos_calt_symbol}, 0)
-    SetWidth(${hankaku_width})
+    Move(-${move_x_calt_symbol}, 0)
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_calt_hyphenL} + ${address_calt_barDLR})
     AddPosSub(lookupSub, glyphName)
@@ -15451,8 +15480,8 @@ while (i < \$argc)
 
     Select(${address_store_visi_latin} + 1); Copy() # 左下に移動した |
     Select(k); Paste()
-    Move(-${x_pos_calt_symbol}, ${y_pos_calt_bar})
-    SetWidth(${hankaku_width})
+    Move(-${move_x_calt_symbol}, ${move_y_calt_bar})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_calt_hyphenL} + ${address_calt_barDLR} + 1)
     AddPosSub(lookupSub, glyphName)
@@ -15460,8 +15489,8 @@ while (i < \$argc)
 
     Select(${address_store_visi_latin} + 1); Copy() # 右に移動した |
     Select(k); Paste()
-    Move(${x_pos_calt_symbol}, 0)
-    SetWidth(${hankaku_width})
+    Move(${move_x_calt_symbol}, 0)
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_calt_hyphenR} + ${address_calt_barDLR})
     AddPosSub(lookupSub, glyphName)
@@ -15469,8 +15498,8 @@ while (i < \$argc)
 
     Select(${address_store_visi_latin} + 1); Copy() # 右下に移動した |
     Select(k); Paste()
-    Move(${x_pos_calt_symbol}, ${y_pos_calt_bar})
-    SetWidth(${hankaku_width})
+    Move(${move_x_calt_symbol}, ${move_y_calt_bar})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_calt_hyphenR} + ${address_calt_barDLR} + 1)
     AddPosSub(lookupSub, glyphName)
@@ -15487,7 +15516,7 @@ while (i < \$argc)
     while (j < SizeOf(orig))
         Select(orig[j]); Copy()
         Select(k); Paste()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(orig[j])
         AddPosSub(lookupSub, glyphName)
@@ -15499,8 +15528,8 @@ while (i < \$argc)
     while (j < SizeOf(orig)) # 左に移動したDQVZ
         Select(orig[j]); Copy()
         Select(k); Paste()
-        Move(-${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(${address_calt_AL} + num[j])
         AddPosSub(lookupSub, glyphName)
@@ -15512,8 +15541,8 @@ while (i < \$argc)
     while (j < SizeOf(orig)) # 右に移動したDQVZ
         Select(orig[j]); Copy()
         Select(k); Paste()
-        Move(${x_pos_calt}, 0)
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt}, 0)
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(${address_calt_AR} + num[j])
         AddPosSub(lookupSub, glyphName)
@@ -15613,7 +15642,7 @@ while (i < \$argc)
     while (j < SizeOf(zero))
         Select(${address_store_zero} + j); Copy()
         Select(k); Paste()
-        SetWidth(${hankaku_width})
+        SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(zero[j])
         AddPosSub(lookupSub, glyphName)
@@ -15635,11 +15664,11 @@ while (i < \$argc)
     Select(0u25b2); Copy() # ▲
     Select(k); Paste()
     Scale(15, 27)
-    Move(${x_pos_calt_separate}, ${y_pos_calt_separate3})
+    Move(${move_x_calt_separate}, ${move_y_calt_separate3})
     Copy(); Select(k + 2); Paste() # 12桁用
     Select(${address_store_zero}); Copy()
     Select(k); PasteInto()
-    SetWidth(${hankaku_width})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_ss_figure}) # ssで変換したグリフからの変換
     AddPosSub(lookupSub, glyphName)
@@ -15651,11 +15680,11 @@ while (i < \$argc)
     Select(0u25bc); Copy() # ▼
     Select(k); Paste()
     Scale(15, 27)
-    Move(${x_pos_calt_separate}, ${y_pos_calt_separate4})
+    Move(${move_x_calt_separate}, ${move_y_calt_separate4})
     Copy(); Select(k + 1); PasteInto() # 12桁用
     Select(${address_store_zero}); Copy()
     Select(k); PasteInto()
-    SetWidth(${hankaku_width})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_ss_figure} + 10) # ssで変換したグリフからの変換
     AddPosSub(lookupSub, glyphName)
@@ -15664,7 +15693,7 @@ while (i < \$argc)
     # 12桁区切り
     Select(${address_store_zero}); Copy()
     Select(k); PasteInto()
-    SetWidth(${hankaku_width})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_ss_figure} + 20) # ssで変換したグリフからの変換
     AddPosSub(lookupSub, glyphName)
@@ -15674,7 +15703,7 @@ while (i < \$argc)
     Select(${address_store_zero}); Copy() # スラッシュ無し0
     Select(k); Paste()
     Scale(${scale_calt_decimal}, ${scale_calt_decimal}, 256, 0)
-    SetWidth(${hankaku_width})
+    SetWidth(${width_hankaku})
     glyphName = GlyphInfo("Name")
     Select(${address_ss_figure} + 30) # ssで変換したグリフからの変換
     AddPosSub(lookupSub, glyphName)
@@ -16124,7 +16153,7 @@ while (i < \$argc)
     Print("Edit .notdef")
     Select(1114112)
     Move(86, 0)
-    SetWidth(${hankaku_width})
+    SetWidth(${width_hankaku})
 
 # 縦書きメトリクス追加 (問題が多いので中止)
  #    Print("Set vertical metrics")
@@ -16343,7 +16372,7 @@ while (i < \$argc)
 # Transform
     Print("Transform all glyphs (it may take a few minutes)")
     SelectWorthOutputting()
-    Transform(100, 0, ${tan_oblique}, 100, ${x_pos_oblique}, 0)
+    Transform(100, 0, ${tan_oblique}, 100, ${move_x_oblique}, 0)
     RemoveOverlap()
     RoundToInt()
 
@@ -16447,8 +16476,8 @@ while (i < \$argc)
 # 半角スペース消去
     if ("${visible_hankaku_space_flag}" == "false")
         Print("Option: Disable visible hankaku space")
-        Select(0u0020); Clear(); SetWidth(${hankaku_width}) # 半角スペース
-        Select(0u00a0); Clear(); SetWidth(${hankaku_width}) # ノーブレークスペース
+        Select(0u0020); Clear(); SetWidth(${width_hankaku}) # 半角スペース
+        Select(0u00a0); Clear(); SetWidth(${width_hankaku}) # ノーブレークスペース
     endif
 
 # 下線付きの全角・半角形を元に戻す
@@ -16480,7 +16509,7 @@ while (i < \$argc)
         while (j < 63)
             Select(${address_store_zenhan} + k); Copy();
             Select(0uff61 + j); Paste()
-            SetWidth(${hankaku_width})
+            SetWidth(${width_hankaku})
             j += 1
             k += 1
         endloop
@@ -16510,7 +16539,7 @@ while (i < \$argc)
         while (j < 256)
             Select(${address_store_braille} + j); Copy()
             Select(0u2800 + j); Paste()
-            SetWidth(${hankaku_width})
+            SetWidth(${width_hankaku})
             j += 1
         endloop
 
@@ -16528,7 +16557,7 @@ while (i < \$argc)
             Select(${address_store_visi_latin} + k); Copy()
             Select(orig[j]); Paste()
             if (j <= 1 || j == 4)
-                SetWidth(${hankaku_width})
+                SetWidth(${width_hankaku})
             else
                 SetWidth(1024)
             endif
@@ -16576,7 +16605,7 @@ while (i < \$argc)
             Select(${address_store_mod} + j + k); Copy()
             Select(orig[j]); Paste()
             if (j <= ${num_mod_glyphs} - 1)
-                SetWidth(${hankaku_width})
+                SetWidth(${width_hankaku})
             else
                 SetWidth(1024)
             endif
@@ -16596,7 +16625,7 @@ while (i < \$argc)
                 Select(${address_store_zero} + j); Copy()
                 Select(zero[j]); Paste()
                 if (j < 3)
-                    SetWidth(${hankaku_width})
+                    SetWidth(${width_hankaku})
                 else
                     SetWidth(1024)
                 endif
@@ -16618,7 +16647,7 @@ while (i < \$argc)
         while (j < 4)
             Select(${address_ss_zero} + 3 + j); Copy()
             Select(${address_calt_figure} + j * 10); Paste()
-            SetWidth(${hankaku_width})
+            SetWidth(${width_hankaku})
             j += 1
         endloop
 
@@ -16785,8 +16814,8 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0041 + j); Copy() # A
             Select(k); Paste()
-            Move(-${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(-${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             j += 1
             k += 1
         endloop
@@ -16794,8 +16823,8 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0061 + j); Copy() # a
             Select(k); Paste()
-            Move(-${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(-${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             j += 1
             k += 1
         endloop
@@ -16805,8 +16834,8 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0041 + j); Copy() # A
             Select(k); Paste()
-            Move(${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             j += 1
             k += 1
         endloop
@@ -16814,36 +16843,36 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0061 + j); Copy() # a
             Select(k); Paste()
-            Move(${x_pos_calt}, 0)
-            SetWidth(${hankaku_width})
+            Move(${move_x_calt}, 0)
+            SetWidth(${width_hankaku})
             j += 1
             k += 1
         endloop
 
         Select(0u007c); Copy() # |
         Select(${address_calt_barD}); Paste() # 下に移動した |
-        Move(0, ${y_pos_calt_bar})
-        SetWidth(${hankaku_width})
+        Move(0, ${move_y_calt_bar})
+        SetWidth(${width_hankaku})
 
         Select(0u007c); Copy() # |
         Select(${address_calt_hyphenL} + ${address_calt_barDLR}); Paste() # 左に移動した |
-        Move(-${x_pos_calt_symbol}, 0)
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt_symbol}, 0)
+        SetWidth(${width_hankaku})
 
         Select(0u007c); Copy() # |
         Select(${address_calt_hyphenL} + ${address_calt_barDLR} + 1); Paste() # 左下に移動した |
-        Move(-${x_pos_calt_symbol}, ${y_pos_calt_bar})
-        SetWidth(${hankaku_width})
+        Move(-${move_x_calt_symbol}, ${move_y_calt_bar})
+        SetWidth(${width_hankaku})
 
         Select(0u007c); Copy() # |
         Select(${address_calt_hyphenR} + ${address_calt_barDLR}); Paste() # 右に移動した |
-        Move(${x_pos_calt_symbol}, 0)
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt_symbol}, 0)
+        SetWidth(${width_hankaku})
 
         Select(0u007c); Copy() # |
         Select(${address_calt_hyphenR} + ${address_calt_barDLR} + 1); Paste() # 右下に移動した |
-        Move(${x_pos_calt_symbol}, ${y_pos_calt_bar})
-        SetWidth(${hankaku_width})
+        Move(${move_x_calt_symbol}, ${move_y_calt_bar})
+        SetWidth(${width_hankaku})
 
     else # calt非対応の場合、ダミーのフィーチャを削除
         Print("Remove calt lookups and glyphs")

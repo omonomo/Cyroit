@@ -125,8 +125,8 @@ forge_ttx_help()
 settings="settings" # 設定ファイル名
 settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
-    S=$(grep -m 1 "^version=" "${settings_txt}") # フォントバージョン
-    if [ -n "${S}" ]; then font_version="${S#version=}"; fi
+    S=$(grep -m 1 "^font_version=" "${settings_txt}") # フォントバージョン
+    if [ -n "${S}" ]; then font_version="${S#font_version=}"; fi
 
     S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
     if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
