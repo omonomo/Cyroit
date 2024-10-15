@@ -1,5 +1,5 @@
 # フォントのバージョン
-font_version=3.2.4
+font_version=3.2.4b
 
 # フォント名
 font_familyname=Cyroit
@@ -18,30 +18,48 @@ copyright=[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Lang
 copyright_nerd_fonts=[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre
 copyright_license=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
 
-# 通常版の latin フォント半角文字の拡大・縮小率 (%)
-scale_width_latin=98
-scale_height_latin=102
+# 通常版の設定
+# 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
+scale_width_hankaku=100
+scale_height_hankaku=100
+# カーニング横移動量 (em/1024)
+# ラテン文字
+move_x_kern_latin=15
+# 記号
+move_x_kern_symbol=30
 
-# Loose 版の latin フォント半角文字の拡大・縮小率 (%)
-scale_width_latin_loose=102
-scale_height_latin_loose=102
-
-# Loose 版の 半角ｶﾅを除いた半角文字の拡大・縮小率 (%・latin フォントは scale_□_latin_loose * scale_□_hankaku_loose)
+# Loose 版の設定
+# 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
 scale_width_hankaku_loose=104
 scale_height_hankaku_loose=104
+# カーニング横移動量 (em/1024)
+# ラテン文字
+move_x_kern_latin_loose=18
+# 記号
+move_x_kern_symbol_loose=36
 
-# オブリーク体の傾き (tanθ * 100)
+# オブリーク体の設定
+# 傾き (tanθ * 100)
 tan_oblique=16
-
-# オブリーク体の X 座標移動量 (em/1024)
+# 横移動量 (em/1024)
 move_x_oblique=-48
 
-# Powerline の Y 座標移動量 (em/1024・表示調整用)
+# Powerline の設定 (表示調整用)
+# 高さ拡大・縮小率 (%)
+scale_height_powerline=100
+# 縦移動量 (em/1024)
 move_y_powerline=-10
 
-# Powerline の Y 座標拡大・縮小率 (%・表示調整用)
-scale_height_powerline=100
-
-# calt・ss 変換時の小数の拡大・縮小率 (%)
+# calt・ss 変換時の小数の設定
+# 拡大・縮小率 (%)
 scale_decimal=93
 
+# 演算子の設定
+# 通常の縦移動量 (em/1024)
+move_y_math=-25
+# 上付き、下付きの縦移動量 (em/1024)
+move_y_s_math=-10
+
+# 括弧の設定
+# 縦移動量 (em/1024)
+move_y_bracket=0

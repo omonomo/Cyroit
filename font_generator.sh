@@ -46,8 +46,8 @@ address_vert_start_kana="1114129" # 仮名フォントのvert置換の先頭ア�
  #address_vert_start_latinkana="65682" # latin仮名フォントのvert置換の先頭アドレス (𛀁を残した場合)
 address_vert_start_latinkana="65681" # latin仮名フォントのvert置換の先頭アドレス (𛀁を削除した場合)
 address_vert_start="1114179" # 合成後のvert置換の先頭アドレス
-address_vert_paren=${address_vert_start} # vert置換アドレス （
-address_vert_X=$((address_vert_paren + 109)) # vert置換アドレス ✂
+address_vert_bracket=${address_vert_start} # vert置換アドレス （
+address_vert_X=$((address_vert_bracket + 109)) # vert置換アドレス ✂
 address_vert_dh=$((address_vert_X + 3)) # vert置換アドレス ゠
 address_vert_mm=$((address_vert_dh + 27)) # vert置換アドレス ㍉
 address_vert_kabu=$((address_vert_mm + 333)) # vert置換アドレス ㍿
@@ -190,7 +190,7 @@ move_y_math="-25" # 通常
 move_y_s_math="-10" # 上付き、下付き
 
 # 括弧移動量
-move_y_paren="0"
+move_y_bracket="0"
 
 # 縦書き全角ラテン小文字移動量
 move_y_vert_1="-10"
@@ -206,26 +206,31 @@ move_x_zenkaku_latin="20"
 move_x_zenkaku_kana="22"
 move_x_zenkaku_kanzi="34"
 
-# オブリーク体用
-tan_oblique="16" # 傾きの係数 * 100
-move_x_oblique="-48" # 移動量
+# オブリーク体 (Transform()) 用
+tan_oblique="16" # 傾きの係数 (tanθ * 100)
+move_x_oblique="-48" # 移動量 (後の処理で * 100 にする)
 
 # calt用
-move_x_calt="15" # ラテン文字のX座標移動量
-move_x_calt_symbol="30" # 記号のX座標移動量
 move_y_calt_colon="55" # : のY座標移動量
 move_y_calt_bar="-38" # | のY座標移動量
 move_y_calt_tilde="-195" # ~ のY座標移動量
-move_y_calt_math="25" # *+-= のY座標移動量
-move_x_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
 move_y_calt_separate3="-510" # 3桁区切り表示のY座標
 move_y_calt_separate4="452" # 4桁区切り表示のY座標
 scale_calt_decimal="93" # 小数の拡大率
 
+# 通常版・Loose版共通
+center_height_hankaku="373" # 半角文字Y座標中心
+move_x_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
+
 # 通常版用
 scale_width_latin="98" # 半角 Latin フォント英数文字の横拡大率
 scale_height_latin="102" # 半角 Latin フォント英数文字の縦拡大率
+scale_width_hankaku="100" # 半角英数文字の横拡大率
+scale_height_hankaku="100" # 半角英数文字の縦拡大率
 width_hankaku="512" # 半角文字幅
+center_width=$((width_hankaku / 2)) # 半角文字X座標中心
+move_x_calt_latin="15" # ラテン文字のX座標移動量
+move_x_calt_symbol="30" # 記号のX座標移動量
 
 # Loose 版用
 scale_width_latin_loose="102" # 半角 Latin フォント英数文字の横拡大率 (Loose 版)
@@ -234,11 +239,9 @@ scale_width_hankaku_loose="104" # 半角英数文字の横拡大率 (Loose 版)
 scale_height_hankaku_loose="104" # 半角英数文字の縦拡大率 (Loose 版)
 width_hankaku_loose="576" # 半角文字幅 (Loose 版)
 center_width_loose=$((width_hankaku_loose / 2)) # 半角文字X座標中心 (Loose 版)
-center_height_loose="373" # 半角文字Y座標中心
-move_x_hankaku_loose=$(((width_hankaku_loose - ${width_hankaku}) / 2)) # 半角文字移動量 (Loose 版)
-move_x_calt_loose="18" # ラテン文字のX座標移動量 (Loose 版)
+move_x_calt_latin_loose="18" # ラテン文字のX座標移動量 (Loose 版)
 move_x_calt_symbol_loose="36" # 記号のX座標移動量 (Loose 版)
-move_x_calt_separate_loose="-512" # 桁区切り表示のX座標移動量 (Loose 版、下書きモードとその他で位置が変わるので注意)
+move_x_hankaku_loose=$(((width_hankaku_loose - ${width_hankaku}) / 2)) # 半角文字移動量 (Loose 版)
 
 # デバッグ用
 
@@ -267,10 +270,6 @@ move_x_calt_separate_loose="-512" # 桁区切り表示のX座標移動量 (Loose
  #scale_width_latin="150" # 半角 Latin フォント英数文字の横拡大率
  #scale_height_latin="50" # 半角 Latin フォント英数文字の縦拡大率
 
- # Loose 版
- #scale_width_hankaku_loose="150" # 半角英数文字の横拡大率 (Loose 版)
- #scale_height_hankaku_loose="150" # 半角英数文字の縦拡大率 (Loose 版)
- 
 # デバッグ用ここまで
 
 # Set path to command
@@ -360,61 +359,54 @@ settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
     S=$(grep -m 1 "^font_version=" "${settings_txt}") # フォントバージョン
     if [ -n "${S}" ]; then font_version="${S#font_version=}"; fi
-
     S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
     if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
-
     S=$(grep -m 1 "font_familyname_suffix=" "${settings_txt}") # フォントファミリー名接尾語
     if [ -n "${S}" ]; then font_familyname_suffix="${S#font_familyname_suffix=}"; fi
-
-    S=$(grep -m 1 "vendor_id=" "${settings_txt}") # メーカー ID
+    S=$(grep -m 1 "vendor_id=" "${settings_txt}") # ベンダー ID
     if [ -n "${S}" ]; then vendor_id="${S#vendor_id=}"; fi
-
     S=$(grep "^copyright=" "${settings_txt}") # 著作権
     if [ -n "${S}" ]; then
         copyright="${S//copyright=/}";
         copyright="${copyright//
 /\\n\\n\" + \"}\n\n";
     fi
-
     S=$(grep -m 1 "^copyright_nerd_fonts=" "${settings_txt}") # 著作権 (Nerd fonts)
     if [ -n "${S}" ]; then copyright_nerd_fonts="${S#copyright_nerd_fonts=}\n\n"; fi
-
     S=$(grep -m 1 "^copyright_license=" "${settings_txt}") # ライセンス
     if [ -n "${S}" ]; then copyright_license="${S#copyright_license=}"; fi
-
-    S=$(grep -m 1 "^scale_width_latin=" "${settings_txt}") # 通常版の latin フォント X座標拡大率
-    if [ -n "${S}" ]; then scale_width_latin="${S#scale_width_latin=}"; fi
-
-    S=$(grep -m 1 "^scale_height_latin=" "${settings_txt}") # 通常版の latin フォント Y座標拡大率
-    if [ -n "${S}" ]; then scale_height_latin="${S#scale_height_latin=}"; fi
-
-    S=$(grep -m 1 "^scale_width_latin_loose=" "${settings_txt}") # Loose版の latin フォント X座標拡大率
-    if [ -n "${S}" ]; then scale_width_latin_loose="${S#scale_width_latin_loose=}"; fi
-
-    S=$(grep -m 1 "^scale_height_latin_loose=" "${settings_txt}") # Loose版の latin フォント Y座標拡大率
-    if [ -n "${S}" ]; then scale_height_latin_loose="${S#scale_height_latin_loose=}"; fi
-
-    S=$(grep -m 1 "^scale_width_hankaku_loose=" "${settings_txt}") # Loose版の半角文字 X座標拡大率
+    S=$(grep -m 1 "^scale_width_hankaku=" "${settings_txt}") # 通常版の半角文字 横幅拡大率
+    if [ -n "${S}" ]; then scale_width_hankaku="${S#scale_width_hankaku=}"; fi
+    S=$(grep -m 1 "^scale_height_hankaku=" "${settings_txt}") # 通常版の半角文字 高さ拡大率
+    if [ -n "${S}" ]; then scale_height_hankaku="${S#scale_height_hankaku=}"; fi
+    S=$(grep -m 1 "^scale_width_hankaku_loose=" "${settings_txt}") # Loose 版の半角文字 横幅拡大率
     if [ -n "${S}" ]; then scale_width_hankaku_loose="${S#scale_width_hankaku_loose=}"; fi
-
-    S=$(grep -m 1 "^scale_height_hankaku_loose=" "${settings_txt}") # Loose版の半角文字 Y座標拡大率
+    S=$(grep -m 1 "^scale_height_hankaku_loose=" "${settings_txt}") # Loose 版の半角文字 高さ拡大率
     if [ -n "${S}" ]; then scale_height_hankaku_loose="${S#scale_height_hankaku_loose=}"; fi
-
+    S=$(grep -m 1 "^move_x_kern_latin=" "${settings_txt}") # 通常版のラテン文字 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_latin="${S#move_x_kern_latin=}"; fi
+    S=$(grep -m 1 "^move_x_kern_symbol=" "${settings_txt}") # 通常版の記号 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_symbol="${S#move_x_kern_symbol=}"; fi
+    S=$(grep -m 1 "^move_x_kern_latin_loose=" "${settings_txt}") # Loose 版のラテン文字 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_latin_loose="${S#move_x_kern_latin_loose=}"; fi
+    S=$(grep -m 1 "^move_x_kern_symbol_loose=" "${settings_txt}") # Loose 版の記号 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_symbol_loose="${S#move_x_kern_symbol_loose=}"; fi
     S=$(grep -m 1 "^tan_oblique=" "${settings_txt}") # オブリーク体の傾き
     if [ -n "${S}" ]; then tan_oblique="${S#tan_oblique=}"; fi
-
-    S=$(grep -m 1 "^move_x_oblique=" "${settings_txt}") # オブリーク体 X座標移動量
+    S=$(grep -m 1 "^move_x_oblique=" "${settings_txt}") # オブリーク体横移動量
     if [ -n "${S}" ]; then move_x_oblique="${S#move_x_oblique=}"; fi
-
-    S=$(grep -m 1 "^move_y_powerline=" "${settings_txt}") # Powerline Y座標補正値
-    if [ -n "${S}" ]; then move_y_pl_revise="${S#move_y_powerline=}"; fi
-
-    S=$(grep -m 1 "^scale_height_powerline=" "${settings_txt}") # Powerline Y座標拡大率
+    S=$(grep -m 1 "^scale_height_powerline=" "${settings_txt}") # Powerline 高さ拡大率
     if [ -n "${S}" ]; then scale_height_pl_revise="${S#scale_height_powerline=}"; fi
-
+    S=$(grep -m 1 "^move_y_powerline=" "${settings_txt}") # Powerline 縦移動量
+    if [ -n "${S}" ]; then move_y_pl_revise="${S#move_y_powerline=}"; fi
     S=$(grep -m 1 "^scale_decimal=" "${settings_txt}") # 小数拡大率
     if [ -n "${S}" ]; then scale_calt_decimal="${S#scale_decimal=}"; fi
+    S=$(grep -m 1 "^move_y_math=" "${settings_txt}") # 通常の演算子縦移動量
+    if [ -n "${S}" ]; then move_y_math="${S#move_y_math=}"; fi
+    S=$(grep -m 1 "^move_y_s_math=" "${settings_txt}") # 上付き、下付きの演算子縦移動量
+    if [ -n "${S}" ]; then move_y_s_math="${S#move_y_s_math=}"; fi
+    S=$(grep -m 1 "^move_y_bracket=" "${settings_txt}") # 括弧の縦移動量
+    if [ -n "${S}" ]; then move_y_bracket="${S#move_y_bracket=}"; fi
 fi
 
 # Powerline の Y座標移動量
@@ -428,7 +420,10 @@ scale_height_pl2=$(bc <<< "scale=1; ${scale_height_pl2} * ${scale_height_pl_revi
 scale_height_block=$(bc <<< "scale=1; ${scale_height_block} * ${scale_height_pl_revise} / 100") # ボックス要素Y座標拡大率
 
 # オブリーク体用
-move_x_oblique=$((move_x_oblique * 100)) # Transform用 (移動量 * 100)
+move_x_oblique=$((move_x_oblique * 100)) # Transform()用 (移動量 * 100)
+
+# calt用
+move_y_calt_math=$((- move_y_math + move_y_bracket)) # *+-= のY座標移動量
 
 # Print information message
 cat << _EOT_
@@ -522,10 +517,11 @@ do
             loose_flag="true"
             scale_width_latin=${scale_width_latin_loose} # 半角 Latin フォントの横拡大率
             scale_height_latin=${scale_height_latin_loose} # 半角 Latin フォントの縦拡大率
+            scale_width_hankaku=${scale_width_hankaku_loose} # 半角英数文字の横拡大率
+            scale_height_hankaku=${scale_height_hankaku_loose} # 半角英数文字の縦拡大率
             width_hankaku=${width_hankaku_loose} # 半角文字幅
-            move_x_calt=${move_x_calt_loose} # ラテン文字のX座標移動量
+            move_x_calt_latin=${move_x_calt_latin_loose} # ラテン文字のX座標移動量
             move_x_calt_symbol=${move_x_calt_symbol_loose} # 記号のX座標移動量
-            move_x_calt_separate=${move_x_calt_separate_loose} # 桁区切り表示のX座標移動量
             ;;
         "Z" )
             echo "Option: Disable visible zenkaku space"
@@ -2764,7 +2760,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-    # Loose 版 対応 (とりあえず拡大しておく)
+    # Loose 版対応 (とりあえず拡大しておく)
     if ("${loose_flag}" == "true")
         Select(0u2800, 0u28ff)
         SelectMore(${address_store_braille}, ${address_store_braille} + 255) # 避難した点字
@@ -2888,8 +2884,8 @@ while (i < SizeOf(input_list))
     SetWidth(500)
 
 # () ※ ⟌ より後で加工すること
-    Select(0u0028); Move(0, ${move_y_paren}); SetWidth(500) # (
-    Select(0u0029); Move(-28, ${move_y_paren}); SetWidth(500) # )
+    Select(0u0028); Move(0, ${move_y_bracket}); SetWidth(500) # (
+    Select(0u0029); Move(-28, ${move_y_bracket}); SetWidth(500) # )
 
 # * (スポーク6つに変更)
     Select(0u2588); Copy() # Full block
@@ -2919,8 +2915,8 @@ while (i < SizeOf(input_list))
     Select(65552); Clear()
 
 # [] (少し上げる)
-    Select(0u005b); Move(0, ${move_y_paren} + 15); SetWidth(500) # [
-    Select(0u005d); Move(-49, ${move_y_paren} + 15); SetWidth(500) # ]
+    Select(0u005b); Move(0, ${move_y_bracket} + 15); SetWidth(500) # [
+    Select(0u005d); Move(-49, ${move_y_bracket} + 15); SetWidth(500) # ]
 
 # _ (少し短くする) ※ ⟌ より後で加工すること
     Select(0u005f) # _
@@ -2946,7 +2942,7 @@ while (i < SizeOf(input_list))
  #        Select(0u007b); PasteWithOffset(-87, 0) # {
     endif
     OverlapIntersect()
-    Move(22, ${move_y_paren} + 1); SetWidth(500)
+    Move(22, ${move_y_bracket} + 1); SetWidth(500)
     Simplify()
     # }
     Select(65552);  Copy() # Temporary glyph
@@ -2964,7 +2960,7 @@ while (i < SizeOf(input_list))
  #        Select(0u007d); PasteWithOffset(49, 0) # }
     endif
     OverlapIntersect()
-    Move(16, ${move_y_paren} + 1); SetWidth(500)
+    Move(16, ${move_y_bracket} + 1); SetWidth(500)
     Simplify()
 
     Select(65552); Clear() # Temporary glyph
@@ -9090,7 +9086,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u27e9) # ⟩
     SelectMore(0u2e28) # ⸨
     SelectMore(0u2e29) # ⸩
-    Move(0, ${move_y_paren} + 35)
+    Move(0, ${move_y_bracket} + 35)
     SetWidth(500)
 
 # ⌒⌓ (漢字フォントを置換・追加)
@@ -12434,15 +12430,15 @@ while (i < SizeOf(input_list))
 
 # --------------------------------------------------
 
-# 一部を除いた半角文字を拡大 (Loose 版対応)
-    if ("${loose_flag}" == "true")
+# 一部を除いた半角文字を拡大 (主に Loose 版対応)
+    if (${scale_width_hankaku} != 100 || ${scale_height_hankaku} != 100)
         Print("Edit hankaku aspect ratio")
         Select(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
         SelectMore(0u29fa, 0u29fb) # ⧺⧻
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${scale_width_hankaku_loose}, ${scale_height_hankaku_loose}, 256, 0)
+                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 256, 0)
                     SetWidth(512)
                 endif
             endif
@@ -13371,8 +13367,8 @@ while (i < SizeOf(latin_sfd_list))
 
 # --------------------------------------------------
 
-# 一部を除いた半角文字を拡大 (Loose 版対応)
-    if ("${loose_flag}" == "true")
+# 一部を除いた半角文字を拡大 (主に Loose 版対応)
+    if (${scale_width_hankaku} != 100 || ${scale_height_hankaku} != 100)
         Print("Edit hankaku aspect ratio")
         Select(0u0020, 0u04ff) # 基本ラテン - キリル文字
         SelectMore(0u1d00, 0u1fff) # 音声記号拡張 - ギリシャ文字拡張
@@ -13386,7 +13382,7 @@ while (i < SizeOf(latin_sfd_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${scale_width_hankaku_loose}, ${scale_height_hankaku_loose}, 250, 0)
+                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 0)
                     SetWidth(500)
                 endif
             endif
@@ -13396,7 +13392,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(${address_store_zero}, ${address_store_zero} + 5) # 避難したスラッシュ無し0
         SelectMore(${address_store_visi_latin}, ${address_store_visi_latin} + 1) # 避難した ⁄|
         SelectMore(${address_store_visi_latin} + 4) # 避難した –
-        Scale(${scale_width_hankaku_loose}, ${scale_height_hankaku_loose}, 250, 0)
+        Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 0)
         SetWidth(500)
     endif
 
@@ -13492,9 +13488,9 @@ while (i < SizeOf(latin_sfd_list))
             Move(230 + ${move_x_zenkaku_kana}, 0)
         endif
         if (j == 7 || j == 58 || j == 90) # （ ［ ｛
-            Move(62 + ${move_x_zenkaku_kana}, 13 - ${move_y_paren})
+            Move(62 + ${move_x_zenkaku_kana}, 13 - ${move_y_bracket})
         elseif (j == 8 || j == 60 || j == 92) # ） ］ ｝
-            Move(-138 + ${move_x_zenkaku_kana}, 13 - ${move_y_paren})
+            Move(-138 + ${move_x_zenkaku_kana}, 13 - ${move_y_bracket})
         elseif (j == 11 || j == 13) # ， ．
             Move(-250 + ${move_x_zenkaku_kana}, 0)
         endif
@@ -13748,7 +13744,7 @@ while (i < SizeOf(latin_sfd_list))
     SelectMore(0u3016, 0u3017) # 〖〗
     SelectMore(0u3018, 0u3019) # 〘〙
     SelectMore(0u301a, 0u301b) # 〚〛
-    Move(0, -13 + ${move_y_paren})
+    Move(0, -13 + ${move_y_bracket})
     SetWidth(1000)
 
 # 横書き全角形に下線追加
@@ -14556,13 +14552,13 @@ while (i < \$argc)
 
 # --------------------------------------------------
 
-# 半角の文字幅変更 (Loose 版対応)
+# 半角の文字を移動して Width 変更 (Loose 版対応)
     if ("${loose_flag}" == "true")
         Print("Change width of hankaku glyphs (it may take a few minutes)")
 
         # ブロック要素 (Nerd fonts での改変があるため、ここで調整)
         Select(0u2580, 0u259f)
-        Scale(113, 100, 256, ${center_height_loose})
+        Scale(113, 100, 256, ${center_height_hankaku})
         SetWidth(512)
 
         # 全ての半角
@@ -14635,7 +14631,7 @@ while (i < \$argc)
         Select(0u0041 + j); Copy() # A
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${move_x_calt}, 0)
+        Move(-${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
@@ -14649,7 +14645,7 @@ while (i < \$argc)
         Select(0u0061 + j); Copy() # a
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${move_x_calt}, 0)
+        Move(-${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
@@ -14669,7 +14665,7 @@ while (i < \$argc)
             Select(l); Copy() # À
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(-${move_x_calt}, 0)
+            Move(-${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 左→中
             glyphName = GlyphInfo("Name")
@@ -14692,7 +14688,7 @@ while (i < \$argc)
             Select(l); Copy() # Ā
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(-${move_x_calt}, 0)
+            Move(-${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 左→中
             glyphName = GlyphInfo("Name")
@@ -14709,7 +14705,7 @@ while (i < \$argc)
         Select(l); Copy() # Ș
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(-${move_x_calt}, 0)
+        Move(-${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 左→中
         glyphName = GlyphInfo("Name")
@@ -14722,7 +14718,7 @@ while (i < \$argc)
     Select(0u1e9e); Copy() # ẞ
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(-${move_x_calt}, 0)
+    Move(-${move_x_calt_latin}, 0)
     SetWidth(${width_hankaku})
     AddPosSub(lookupSub0, glyphName) # 左←中
     glyphName = GlyphInfo("Name")
@@ -14739,7 +14735,7 @@ while (i < \$argc)
         Select(0u0041 + j); Copy() # A
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${move_x_calt}, 0)
+        Move(${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
@@ -14753,7 +14749,7 @@ while (i < \$argc)
         Select(0u0061 + j); Copy() # a
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${move_x_calt}, 0)
+        Move(${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
@@ -14773,7 +14769,7 @@ while (i < \$argc)
             Select(l); Copy() # À
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(${move_x_calt}, 0)
+            Move(${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 中←右
             glyphName = GlyphInfo("Name")
@@ -14796,7 +14792,7 @@ while (i < \$argc)
             Select(l); Copy() # Ā
             glyphName = GlyphInfo("Name")
             Select(k); Paste()
-            Move(${move_x_calt}, 0)
+            Move(${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             AddPosSub(lookupSub0, glyphName) # 中←右
             glyphName = GlyphInfo("Name")
@@ -14813,7 +14809,7 @@ while (i < \$argc)
         Select(l); Copy() # Ș
         glyphName = GlyphInfo("Name")
         Select(k); Paste()
-        Move(${move_x_calt}, 0)
+        Move(${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         AddPosSub(lookupSub0, glyphName) # 中←右
         glyphName = GlyphInfo("Name")
@@ -14826,7 +14822,7 @@ while (i < \$argc)
     Select(0u1e9e); Copy() # ẞ
     glyphName = GlyphInfo("Name")
     Select(k); Paste()
-    Move(${move_x_calt}, 0)
+    Move(${move_x_calt_latin}, 0)
     SetWidth(${width_hankaku})
     AddPosSub(lookupSub0, glyphName) # 中←右
     glyphName = GlyphInfo("Name")
@@ -15235,7 +15231,7 @@ while (i < \$argc)
         Select(k); Paste()
         SetWidth(1024)
         glyphName = GlyphInfo("Name")
-        Select(${address_vert_paren} + j)
+        Select(${address_vert_bracket} + j)
         AddPosSub(lookupSub, glyphName)
         j += 1
         k += 1
@@ -15321,13 +15317,13 @@ while (i < \$argc)
  #          elseif (j == 70)
  #              Select(${address_store_mod} + ${num_mod_glyphs} * 5 + 3) # 縦書きＺ
  #          else
- #              Select(${address_vert_paren} + j)
+ #              Select(${address_vert_bracket} + j)
  #          endif
  #          Copy()
  #          Select(k); Paste()
  #          SetWidth(1024)
  #          glyphName = GlyphInfo("Name")
- #          Select(${address_vert_paren} + j)
+ #          Select(${address_vert_bracket} + j)
  #          AddPosSub(lookupSub, glyphName)
  #          j += 1
  #          k += 1
@@ -15528,7 +15524,7 @@ while (i < \$argc)
     while (j < SizeOf(orig)) # 左に移動したDQVZ
         Select(orig[j]); Copy()
         Select(k); Paste()
-        Move(-${move_x_calt}, 0)
+        Move(-${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(${address_calt_AL} + num[j])
@@ -15541,7 +15537,7 @@ while (i < \$argc)
     while (j < SizeOf(orig)) # 右に移動したDQVZ
         Select(orig[j]); Copy()
         Select(k); Paste()
-        Move(${move_x_calt}, 0)
+        Move(${move_x_calt_latin}, 0)
         SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
         Select(${address_calt_AR} + num[j])
@@ -15570,11 +15566,11 @@ while (i < \$argc)
 
     j = 0
     while (j < SizeOf(orig))
-        Select(${address_vert_paren} + num1[j]); Copy() # 下線付き縦書き
+        Select(${address_vert_bracket} + num1[j]); Copy() # 下線付き縦書き
         Select(k); Paste()
         SetWidth(1024)
         glyphName = GlyphInfo("Name")
-        Select(${address_vert_paren} + num1[j]) # vert変換後ss変換前縦書き
+        Select(${address_vert_bracket} + num1[j]) # vert変換後ss変換前縦書き
  #        Select(${address_ss_vert} + num1[j]) # ss変換後縦書き
         AddPosSub(lookupSub, glyphName)
         j += 1
@@ -15591,7 +15587,7 @@ while (i < \$argc)
  #        Select(orig[j]) # 変換前横書き
         AddPosSub(lookupSub, glyphName)
         Select(${address_ss_vert} + num1[j]) # ss変換後縦書き
- #        Select(${address_vert_paren} + num1[j]) # vert変換後ss変換前縦書き
+ #        Select(${address_vert_bracket} + num1[j]) # vert変換後ss変換前縦書き
         AddPosSub(lookupSub, glyphName)
         j += 1
         k += 1
@@ -15725,7 +15721,7 @@ while (i < \$argc)
     Select(k); Paste()
     SetWidth(1024)
     glyphName = GlyphInfo("Name")
-    Select(${address_vert_paren} + 33) # vert変換後ss変換前縦書き
+    Select(${address_vert_bracket} + 33) # vert変換後ss変換前縦書き
  #    Select(${address_ss_vert} + 33) # ss変換後縦書き
     AddPosSub(lookupSub, glyphName)
     k += 1
@@ -15738,7 +15734,7 @@ while (i < \$argc)
  #    Select(0uff10) # 変換前横書き
     AddPosSub(lookupSub, glyphName)
     Select(${address_ss_vert} + 33) # ss変換後縦書き
- #    Select(${address_vert_paren} + 33) # vert変換後ss変換前縦書き
+ #    Select(${address_vert_bracket} + 33) # vert変換後ss変換前縦書き
     AddPosSub(lookupSub, glyphName)
     k += 1
 
@@ -16488,7 +16484,7 @@ while (i < \$argc)
         j = 0
         while (j < 109)
             Select(${address_store_zenhan} + k); Copy()
-            Select(${address_vert_paren} + j); Paste()
+            Select(${address_vert_bracket} + j); Paste()
             SetWidth(1024)
             j += 1
             k += 1
@@ -16814,7 +16810,7 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0041 + j); Copy() # A
             Select(k); Paste()
-            Move(-${move_x_calt}, 0)
+            Move(-${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             j += 1
             k += 1
@@ -16823,7 +16819,7 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0061 + j); Copy() # a
             Select(k); Paste()
-            Move(-${move_x_calt}, 0)
+            Move(-${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             j += 1
             k += 1
@@ -16834,7 +16830,7 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0041 + j); Copy() # A
             Select(k); Paste()
-            Move(${move_x_calt}, 0)
+            Move(${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             j += 1
             k += 1
@@ -16843,7 +16839,7 @@ while (i < \$argc)
         while (j < 26)
             Select(0u0061 + j); Copy() # a
             Select(k); Paste()
-            Move(${move_x_calt}, 0)
+            Move(${move_x_calt_latin}, 0)
             SetWidth(${width_hankaku})
             j += 1
             k += 1
