@@ -126,8 +126,8 @@ table_modificator_help()
 settings="settings" # 設定ファイル名
 settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
-    S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
-    if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
+    S=$(grep -m 1 "^FONT_FAMILYNAME=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then font_familyname="${S#FONT_FAMILYNAME=}"; fi
 fi
 
 echo

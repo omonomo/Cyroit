@@ -1,65 +1,71 @@
+# 設定名は必ず行頭に入れてください。設定名の前に文字 (タブやスペース含む) があると読み込みません。
+# また設定値から行末までは何も文字を入れないでください。
+# 単純に行頭から始まる設定名を grep して、行頭から = までを削除したものを設定値として読み込みます。
+# 形式的に # を入れていますが、# から後がコメントというわけではありません。
+# 設定値に''や""は不要です。
+
 # フォントのバージョン
-font_version=3.2.4b
+FONT_VERSION=3.2.4
 
 # フォント名
-font_familyname=Cyroit
-font_familyname_suffix=
+FONT_FAMILYNAME=Cyroit
+FONT_FAMILYNAME_SUFFIX=
 
 # ベンダー ID
-vendor_id=PfEd
+VENDOR_ID=PfEd
 
 # 著作権
-copyright=Copyright (c) 2023 omonomo
-copyright=[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)
-copyright=[Circle M+]\nCopyright(c) 2020 M+ FONTS PROJECT, itouhiro
-copyright=[BIZ UDGothic]\nCopyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-gothic)
-copyright=[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 2018.
+COPYRIGHT=Copyright (c) 2023 omonomo
+COPYRIGHT=[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)
+COPYRIGHT=[Circle M+]\nCopyright(c) 2020 M+ FONTS PROJECT, itouhiro
+COPYRIGHT=[BIZ UDGothic]\nCopyright 2022 The BIZ UDGothic Project Authors (https://github.com/googlefonts/morisawa-biz-ud-gothic)
+COPYRIGHT=[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 2018.
 
-copyright_nerd_fonts=[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre
-copyright_license=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
+COPYRIGHT_NERD_FONTS=[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre
+COPYRIGHT_LICENSE=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
 
 # 通常版の設定
 # 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
-scale_width_hankaku=100
-scale_height_hankaku=100
+SCALE_WIDTH_HANKAKU=100
+SCALE_HEIGHT_HANKAKU=100
 # カーニング横移動量 (em/1024)
 # ラテン文字
-move_x_kern_latin=15
+MOVE_X_KERN_LATIN=15
 # 記号
-move_x_kern_symbol=30
+MOVE_X_KERN_SYMBOL=30
 
 # Loose 版の設定
 # 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
-scale_width_hankaku_loose=104
-scale_height_hankaku_loose=104
+SCALE_WIDTH_HANKAKU_LOOSE=104
+SCALE_HEIGHT_HANKAKU_LOOSE=104
 # カーニング横移動量 (em/1024)
 # ラテン文字
-move_x_kern_latin_loose=18
+MOVE_X_KERN_LATIN_LOOSE=18
 # 記号
-move_x_kern_symbol_loose=36
+MOVE_X_KERN_SYMBOL_LOOSE=36
 
 # オブリーク体の設定
 # 傾き (tanθ * 100)
-tan_oblique=16
+TAN_OBLIQUE=16
 # 横移動量 (em/1024)
-move_x_oblique=-48
+MOVE_X_OBLIQUE=-48
 
 # Powerline の設定 (表示調整用)
 # 高さ拡大・縮小率 (%)
-scale_height_powerline=100
+SCALE_HEIGHT_POWERLINE=100
 # 縦移動量 (em/1024)
-move_y_powerline=-10
+MOVE_Y_POWERLINE=-10
 
 # calt・ss 変換時の小数の設定
 # 拡大・縮小率 (%)
-scale_decimal=93
+SCALE_DECIMAL=93
 
 # 演算子の設定
 # 通常の縦移動量 (em/1024)
-move_y_math=-25
+MOVE_Y_MATH=-25
 # 上付き、下付きの縦移動量 (em/1024)
-move_y_s_math=-10
+MOVE_Y_S_MATH=-10
 
 # 括弧の設定
 # 縦移動量 (em/1024)
-move_y_bracket=0
+MOVE_Y_BRACKET=0
