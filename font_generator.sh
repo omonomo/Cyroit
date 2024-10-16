@@ -357,56 +357,56 @@ font_patcher="font_patcher.pe"
 settings="settings" # 設定ファイル名
 settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
-    S=$(grep -m 1 "^font_version=" "${settings_txt}") # フォントバージョン
-    if [ -n "${S}" ]; then font_version="${S#font_version=}"; fi
-    S=$(grep -m 1 "font_familyname=" "${settings_txt}") # フォントファミリー名
-    if [ -n "${S}" ]; then font_familyname="${S#font_familyname=}"; fi
-    S=$(grep -m 1 "font_familyname_suffix=" "${settings_txt}") # フォントファミリー名接尾語
-    if [ -n "${S}" ]; then font_familyname_suffix="${S#font_familyname_suffix=}"; fi
-    S=$(grep -m 1 "vendor_id=" "${settings_txt}") # ベンダー ID
-    if [ -n "${S}" ]; then vendor_id="${S#vendor_id=}"; fi
-    S=$(grep "^copyright=" "${settings_txt}") # 著作権
+    S=$(grep -m 1 "^FONT_VERSION=" "${settings_txt}") # フォントバージョン
+    if [ -n "${S}" ]; then font_version="${S#FONT_VERSION=}"; fi
+    S=$(grep -m 1 "^FONT_FAMILYNAME=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then font_familyname="${S#FONT_FAMILYNAME=}"; fi
+    S=$(grep -m 1 "^FONT_FAMILYNAME_SUFFIX=" "${settings_txt}") # フォントファミリー名接尾語
+    if [ -n "${S}" ]; then font_familyname_suffix="${S#FONT_FAMILYNAME_SUFFIX=}"; fi
+    S=$(grep -m 1 "^VENDOR_ID=" "${settings_txt}") # ベンダー ID
+    if [ -n "${S}" ]; then vendor_id="${S#VENDOR_ID=}"; fi
+    S=$(grep "^COPYRIGHT=" "${settings_txt}") # 著作権
     if [ -n "${S}" ]; then
-        copyright="${S//copyright=/}";
+        copyright="${S//COPYRIGHT=/}";
         copyright="${copyright//
 /\\n\\n\" + \"}\n\n";
     fi
-    S=$(grep -m 1 "^copyright_nerd_fonts=" "${settings_txt}") # 著作権 (Nerd fonts)
-    if [ -n "${S}" ]; then copyright_nerd_fonts="${S#copyright_nerd_fonts=}\n\n"; fi
-    S=$(grep -m 1 "^copyright_license=" "${settings_txt}") # ライセンス
-    if [ -n "${S}" ]; then copyright_license="${S#copyright_license=}"; fi
-    S=$(grep -m 1 "^scale_width_hankaku=" "${settings_txt}") # 通常版の半角文字 横幅拡大率
-    if [ -n "${S}" ]; then scale_width_hankaku="${S#scale_width_hankaku=}"; fi
-    S=$(grep -m 1 "^scale_height_hankaku=" "${settings_txt}") # 通常版の半角文字 高さ拡大率
-    if [ -n "${S}" ]; then scale_height_hankaku="${S#scale_height_hankaku=}"; fi
-    S=$(grep -m 1 "^scale_width_hankaku_loose=" "${settings_txt}") # Loose 版の半角文字 横幅拡大率
-    if [ -n "${S}" ]; then scale_width_hankaku_loose="${S#scale_width_hankaku_loose=}"; fi
-    S=$(grep -m 1 "^scale_height_hankaku_loose=" "${settings_txt}") # Loose 版の半角文字 高さ拡大率
-    if [ -n "${S}" ]; then scale_height_hankaku_loose="${S#scale_height_hankaku_loose=}"; fi
-    S=$(grep -m 1 "^move_x_kern_latin=" "${settings_txt}") # 通常版のラテン文字 カーニング横移動量
-    if [ -n "${S}" ]; then move_x_calt_latin="${S#move_x_kern_latin=}"; fi
-    S=$(grep -m 1 "^move_x_kern_symbol=" "${settings_txt}") # 通常版の記号 カーニング横移動量
-    if [ -n "${S}" ]; then move_x_calt_symbol="${S#move_x_kern_symbol=}"; fi
-    S=$(grep -m 1 "^move_x_kern_latin_loose=" "${settings_txt}") # Loose 版のラテン文字 カーニング横移動量
-    if [ -n "${S}" ]; then move_x_calt_latin_loose="${S#move_x_kern_latin_loose=}"; fi
-    S=$(grep -m 1 "^move_x_kern_symbol_loose=" "${settings_txt}") # Loose 版の記号 カーニング横移動量
-    if [ -n "${S}" ]; then move_x_calt_symbol_loose="${S#move_x_kern_symbol_loose=}"; fi
-    S=$(grep -m 1 "^tan_oblique=" "${settings_txt}") # オブリーク体の傾き
-    if [ -n "${S}" ]; then tan_oblique="${S#tan_oblique=}"; fi
-    S=$(grep -m 1 "^move_x_oblique=" "${settings_txt}") # オブリーク体横移動量
-    if [ -n "${S}" ]; then move_x_oblique="${S#move_x_oblique=}"; fi
-    S=$(grep -m 1 "^scale_height_powerline=" "${settings_txt}") # Powerline 高さ拡大率
-    if [ -n "${S}" ]; then scale_height_pl_revise="${S#scale_height_powerline=}"; fi
-    S=$(grep -m 1 "^move_y_powerline=" "${settings_txt}") # Powerline 縦移動量
-    if [ -n "${S}" ]; then move_y_pl_revise="${S#move_y_powerline=}"; fi
-    S=$(grep -m 1 "^scale_decimal=" "${settings_txt}") # 小数拡大率
-    if [ -n "${S}" ]; then scale_calt_decimal="${S#scale_decimal=}"; fi
-    S=$(grep -m 1 "^move_y_math=" "${settings_txt}") # 通常の演算子縦移動量
-    if [ -n "${S}" ]; then move_y_math="${S#move_y_math=}"; fi
-    S=$(grep -m 1 "^move_y_s_math=" "${settings_txt}") # 上付き、下付きの演算子縦移動量
-    if [ -n "${S}" ]; then move_y_s_math="${S#move_y_s_math=}"; fi
-    S=$(grep -m 1 "^move_y_bracket=" "${settings_txt}") # 括弧の縦移動量
-    if [ -n "${S}" ]; then move_y_bracket="${S#move_y_bracket=}"; fi
+    S=$(grep -m 1 "^COPYRIGHT_NERD_FONTS=" "${settings_txt}") # 著作権 (Nerd fonts)
+    if [ -n "${S}" ]; then copyright_nerd_fonts="${S#COPYRIGHT_NERD_FONTS=}\n\n"; fi
+    S=$(grep -m 1 "^COPYRIGHT_LICENSE=" "${settings_txt}") # ライセンス
+    if [ -n "${S}" ]; then copyright_license="${S#COPYRIGHT_LICENSE=}"; fi
+    S=$(grep -m 1 "^SCALE_WIDTH_HANKAKU=" "${settings_txt}") # 通常版の半角文字 横幅拡大率
+    if [ -n "${S}" ]; then scale_width_hankaku="${S#SCALE_WIDTH_HANKAKU=}"; fi
+    S=$(grep -m 1 "^SCALE_HEIGHT_HANKAKU=" "${settings_txt}") # 通常版の半角文字 高さ拡大率
+    if [ -n "${S}" ]; then scale_height_hankaku="${S#SCALE_HEIGHT_HANKAKU=}"; fi
+    S=$(grep -m 1 "^SCALE_WIDTH_HANKAKU_LOOSE=" "${settings_txt}") # Loose 版の半角文字 横幅拡大率
+    if [ -n "${S}" ]; then scale_width_hankaku_loose="${S#SCALE_WIDTH_HANKAKU_LOOSE=}"; fi
+    S=$(grep -m 1 "^SCALE_HEIGHT_HANKAKU_LOOSE=" "${settings_txt}") # Loose 版の半角文字 高さ拡大率
+    if [ -n "${S}" ]; then scale_height_hankaku_loose="${S#SCALE_HEIGHT_HANKAKU_LOOSE=}"; fi
+    S=$(grep -m 1 "^MOVE_X_KERN_LATIN=" "${settings_txt}") # 通常版のラテン文字 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_latin="${S#MOVE_X_KERN_LATIN=}"; fi
+    S=$(grep -m 1 "^MOVE_X_KERN_SYMBOL=" "${settings_txt}") # 通常版の記号 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_symbol="${S#MOVE_X_KERN_SYMBOL=}"; fi
+    S=$(grep -m 1 "^MOVE_X_KERN_LATIN_LOOSE=" "${settings_txt}") # Loose 版のラテン文字 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_latin_loose="${S#MOVE_X_KERN_LATIN_LOOSE=}"; fi
+    S=$(grep -m 1 "^MOVE_X_KERN_SYMBOL_LOOSE=" "${settings_txt}") # Loose 版の記号 カーニング横移動量
+    if [ -n "${S}" ]; then move_x_calt_symbol_loose="${S#MOVE_X_KERN_SYMBOL_LOOSE=}"; fi
+    S=$(grep -m 1 "^TAN_OBLIQUE=" "${settings_txt}") # オブリーク体の傾き
+    if [ -n "${S}" ]; then tan_oblique="${S#TAN_OBLIQUE=}"; fi
+    S=$(grep -m 1 "^MOVE_X_OBLIQUE=" "${settings_txt}") # オブリーク体横移動量
+    if [ -n "${S}" ]; then move_x_oblique="${S#MOVE_X_OBLIQUE=}"; fi
+    S=$(grep -m 1 "^SCALE_HEIGHT_POWERLINE=" "${settings_txt}") # Powerline 高さ拡大率
+    if [ -n "${S}" ]; then scale_height_pl_revise="${S#SCALE_HEIGHT_POWERLINE=}"; fi
+    S=$(grep -m 1 "^MOVE_Y_POWERLINE=" "${settings_txt}") # Powerline 縦移動量
+    if [ -n "${S}" ]; then move_y_pl_revise="${S#MOVE_Y_POWERLINE=}"; fi
+    S=$(grep -m 1 "^SCALE_DECIMAL=" "${settings_txt}") # 小数拡大率
+    if [ -n "${S}" ]; then scale_calt_decimal="${S#SCALE_DECIMAL=}"; fi
+    S=$(grep -m 1 "^MOVE_Y_MATH=" "${settings_txt}") # 通常の演算子縦移動量
+    if [ -n "${S}" ]; then move_y_math="${S#MOVE_Y_MATH=}"; fi
+    S=$(grep -m 1 "^MOVE_Y_S_MATH=" "${settings_txt}") # 上付き、下付きの演算子縦移動量
+    if [ -n "${S}" ]; then move_y_s_math="${S#MOVE_Y_S_MATH=}"; fi
+    S=$(grep -m 1 "^MOVE_Y_BRACKET=" "${settings_txt}") # 括弧の縦移動量
+    if [ -n "${S}" ]; then move_y_bracket="${S#MOVE_Y_BRACKET=}"; fi
 fi
 
 # Powerline の Y座標移動量
@@ -3625,7 +3625,7 @@ while (i < SizeOf(input_list))
     SetWidth(500)
     OverlapIntersect()
 
-# プログレスバー
+# プログレスバー (追加)
     # 外枠
     Select(0u2588); Copy() # Full block
     Select(65553); Paste() # Temporary glyph
@@ -3690,7 +3690,7 @@ while (i < SizeOf(input_list))
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
 
-# スピニングホイール
+# スピニングホイール (追加)
     Select(0u25cf); Copy() # ●
     Select(0uee06); Paste() # 
     Scale(115)
@@ -9329,6 +9329,18 @@ while (i < SizeOf(input_list))
     endif
     SetWidth(1000)
 
+# ⏤ (追加) ※ ␥ より後に加工すること
+    Select(0u232f); Copy() # ⌯
+    Select(0u23e4); Paste() # ⏤
+    Select(0u2501); Copy() # ━
+    Select(0u23e4); PasteWithOffset(0, 4) # ⏤
+    OverlapIntersect()
+    Move(-50, 0)
+    Copy()
+    PasteWithOffset(100, 0)
+    RemoveOverlap()
+    SetWidth(1000)
+
 # ▱ (全角にする)
     Select(0u25a1); Copy() # □
     Select(0u25b1); Paste() # ▱
@@ -9339,6 +9351,27 @@ while (i < SizeOf(input_list))
         ChangeWeight(18)
     endif
     CorrectDirection()
+    SetWidth(1000)
+
+# ⏥ (追加) ※ ▱より後に加工すること
+    Select(0u25a1); Copy() # □
+    Select(0u23e5); Paste() # ⏥
+    Scale(101, 80)
+    Transform(80, 0, 40, 70, -4000, 10000)
+    if (input_list[i] == "${input_kana_regular}")
+        ChangeWeight(36)
+        CorrectDirection()
+        Move(-2, 0)
+        Copy()
+        PasteWithOffset(4, 0)
+    else
+        ChangeWeight(46)
+        CorrectDirection()
+        Move(-4, 0)
+        Copy()
+        PasteWithOffset(8, 0)
+    endif
+    OverlapIntersect()
     SetWidth(1000)
 
 # ◯ (拡大)
@@ -10509,6 +10542,7 @@ while (i < SizeOf(input_list))
         SelectMore(0u2329, 0u232a) # 〈〉
  #        SelectMore(0u2330, 0u2333) # ⌰⌱⌲⌳ # グリフ加工でウェイト調整済
  #        SelectMore(0u23cf) # ⏏
+ #        SelectMore(0u23e4, 0u23e5) # ⏤⏥ # グリフ加工でウェイト調整済
  #        SelectMore(0u2425) # ␥ # グリフ加工でウェイト調整済
         SelectMore(0u27e8, 0u27e9) # ⟨⟩
         SelectMore(0u2a2f) # ⨯
