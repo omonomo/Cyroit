@@ -2808,7 +2808,7 @@ while (i < SizeOf(input_list))
     SelectMore(0u00b0) # °
     SelectMore(0u2018, 0u2019) # ‘’
     SelectMore(0u201c, 0u201d) # “”
-    Scale(110, 110, 250, 600); SetWidth(500)
+    Scale(115, 115, 250, 600); SetWidth(500)
 
 # ¸͵ ‚„ ⸒ (拡大)
     Select(0u00b8) # ¸
@@ -13136,7 +13136,7 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u2104); Paste() # ℄
     Select(0u0063); Copy() # c
     Select(0u2104); PasteWithOffset(-160, 120) # ℄
-    Move(80, 0)
+    Move(90, 0)
     RemoveOverlap()
     Scale(98, 100, 250, 0)
     SetWidth(500)
