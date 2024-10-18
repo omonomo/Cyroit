@@ -185,10 +185,6 @@ move_y_numerator="260" # 分子のY座標移動量
 move_x_denominator="480" # 分母のX座標移動量
 move_y_denominator="-30" # 分母のY座標移動量
 
-# 演算子移動量
-move_y_math="-25" # 通常
-move_y_s_math="-10" # 上付き、下付き
-
 # 括弧移動量
 move_y_bracket="0"
 
@@ -210,9 +206,13 @@ move_x_zenkaku_kanzi="34"
 tan_oblique="16" # 傾きの係数 (tanθ * 100)
 move_x_oblique="-48" # 移動量 (後の処理で * 100 にする)
 
+# 演算子移動量
+move_y_math="-25" # 通常
+move_y_s_math="-10" # 上付き、下付き
+
 # calt用
-move_y_calt_colon="55" # : のY座標移動量
-move_y_calt_bar="-38" # | のY座標移動量
+move_y_calt_colon="54" # : のY座標移動量
+move_y_calt_bar="-30" # | のY座標移動量
 move_y_calt_tilde="-195" # ~ のY座標移動量
 move_y_calt_separate3="-510" # 3桁区切り表示のY座標
 move_y_calt_separate4="452" # 4桁区切り表示のY座標
@@ -423,7 +423,11 @@ scale_height_block=$(bc <<< "scale=1; ${scale_height_block} * ${scale_height_pl_
 move_x_oblique=$((move_x_oblique * 100)) # Transform()用 (移動量 * 100)
 
 # calt用
-move_y_calt_math=$((- move_y_math + move_y_bracket)) # *+-= のY座標移動量
+move_y_calt_colon=$(bc <<< "scale=0; ${move_y_calt_colon} * ${scale_height_latin} / 100") # : のY座標移動量
+move_y_calt_bar=$(bc <<< "scale=0; ${move_y_calt_bar} * ${scale_height_latin} / 100") # | のY座標移動量
+move_y_calt_tilde=$(bc <<< "scale=0; ${move_y_calt_tilde} * ${scale_height_latin} / 100") # ~ のY座標移動量
+move_y_calt_math=$((- move_y_math + move_y_bracket + 6)) # *+-= のY座標移動量
+move_y_calt_math=$(bc <<< "scale=0; ${move_y_calt_math} * ${scale_height_latin} / 100") # *+-= のY座標移動量
 
 # Print information message
 cat << _EOT_
@@ -2909,10 +2913,19 @@ while (i < SizeOf(input_list))
     Rotate(60, 253, 327);  PasteInto()
     Rotate(60, 253, 327);  PasteInto()
 
-    Move(0, -13); SetWidth(500)
+    Move(0, -14); SetWidth(500)
     RemoveOverlap()
 
     Select(65552); Clear()
+
+# + (少し下げる)
+    Select(0u002b); Move(0, -7); SetWidth(500) # +
+
+# <> (少し下げる)
+    Select(0u003c, 0u003e); Move(0, -5); SetWidth(500) # <>
+
+# = (少し上げる)
+    Select(0u003d); Move(0, 3); SetWidth(500) # -
 
 # [] (少し上げる)
     Select(0u005b); Move(0, ${move_y_bracket} + 15); SetWidth(500) # [
@@ -2964,6 +2977,9 @@ while (i < SizeOf(input_list))
     Simplify()
 
     Select(65552); Clear() # Temporary glyph
+
+# × (少し下げる)
+    Select(0u00d7); Move(0, -11); SetWidth(500) # ×
 
 # ¿ (上に移動)
     Select(0u00bf) # ¿
@@ -3096,12 +3112,18 @@ while (i < SizeOf(input_list))
     Move(0, 70)
     SetWidth(500)
 
+# − (少し下げる)
+    Select(0u2212); Move(0, -7); SetWidth(500) # −
+
 # ∓ (漢字フォントを置換)
     Select(0u00b1); Copy() # ±
     Select(0u2213); Paste() # ∓
     VFlip()
     CorrectDirection()
     SetWidth(500)
+
+# ∗ (少し下げる)
+    Select(0u2217); Move(0, -30); SetWidth(500) # ∗
 
 # √ (ボールドのウェイト調整)
     Select(0u221a) # √
@@ -3134,6 +3156,9 @@ while (i < SizeOf(input_list))
     Select(0u221a); Copy() # √
     Select(0u221c); PasteInto() # ∜
     SetWidth(500)
+
+# ≠ (少し下げる)
+    Select(0u2260); Move(0, -2); SetWidth(500) # ≠
 
 # ⌀ (追加)
     # 丸
@@ -9861,7 +9886,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0,${move_y_math})
+        Move(0, ${move_y_math} + 42)
         SetWidth(500)
         j += 1
     endloop
@@ -12172,7 +12197,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0,${move_y_math})
+        Move(0, ${move_y_math} - 17)
         SetWidth(512)
         j += 1
     endloop
@@ -12181,7 +12206,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0,${move_y_math})
+        Move(0, ${move_y_math})
         SetWidth(1024)
         j += 1
     endloop
