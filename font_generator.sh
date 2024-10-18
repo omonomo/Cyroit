@@ -211,9 +211,9 @@ move_y_math="-25" # 通常
 move_y_s_math="-10" # 上付き、下付き
 
 # calt用
-move_y_calt_colon="54" # : のY座標移動量
-move_y_calt_bar="-30" # | のY座標移動量
-move_y_calt_tilde="-195" # ~ のY座標移動量
+move_y_calt_colon="79" # : のY座標移動量
+move_y_calt_bar="-5" # | のY座標移動量
+move_y_calt_tilde="-170" # ~ のY座標移動量
 move_y_calt_separate3="-510" # 3桁区切り表示のY座標
 move_y_calt_separate4="452" # 4桁区切り表示のY座標
 scale_calt_decimal="93" # 小数の拡大率
@@ -423,8 +423,11 @@ scale_height_block=$(bc <<< "scale=1; ${scale_height_block} * ${scale_height_pl_
 move_x_oblique=$((move_x_oblique * 100)) # Transform()用 (移動量 * 100)
 
 # calt用
+move_y_calt_colon=$((move_y_calt_colon + move_y_math)) # : のY座標移動量
 move_y_calt_colon=$(bc <<< "scale=0; ${move_y_calt_colon} * ${scale_height_latin} / 100") # : のY座標移動量
+move_y_calt_bar=$((move_y_calt_bar + move_y_math)) # | のY座標移動量
 move_y_calt_bar=$(bc <<< "scale=0; ${move_y_calt_bar} * ${scale_height_latin} / 100") # | のY座標移動量
+move_y_calt_tilde=$((move_y_calt_tilde + move_y_math)) # ~ のY座標移動量
 move_y_calt_tilde=$(bc <<< "scale=0; ${move_y_calt_tilde} * ${scale_height_latin} / 100") # ~ のY座標移動量
 move_y_calt_math=$((- move_y_math + move_y_bracket + 6)) # *+-= のY座標移動量
 move_y_calt_math=$(bc <<< "scale=0; ${move_y_calt_math} * ${scale_height_latin} / 100") # *+-= のY座標移動量
