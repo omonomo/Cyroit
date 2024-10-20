@@ -211,9 +211,6 @@ move_y_math="-25" # 通常
 move_y_s_math="-10" # 上付き、下付き
 
 # calt用
-move_y_calt_colon="79" # : のY座標移動量
-move_y_calt_bar="-5" # | のY座標移動量
-move_y_calt_tilde="-170" # ~ のY座標移動量
 move_y_calt_separate3="-510" # 3桁区切り表示のY座標
 move_y_calt_separate4="452" # 4桁区切り表示のY座標
 scale_calt_decimal="93" # 小数の拡大率
@@ -223,18 +220,22 @@ center_height_hankaku="373" # 半角文字Y座標中心
 move_x_calt_separate="-512" # 桁区切り表示のX座標移動量 (下書きモードとその他で位置が変わるので注意)
 
 # 通常版用
-scale_width_latin="98" # 半角 Latin フォント英数文字の横拡大率
-scale_height_latin="102" # 半角 Latin フォント英数文字の縦拡大率
+scale_width_latin="98" # Latin フォントの半角英数文字の横拡大率
+scale_height_latin="102" # Latin フォントの半角英数文字の縦拡大率
+scale_width_kana="102" # 仮名フォントの半角英数文字の横拡大率
+scale_height_kana="100" # 仮名フォントの半角英数文字の縦拡大率
 scale_width_hankaku="100" # 半角英数文字の横拡大率
 scale_height_hankaku="100" # 半角英数文字の縦拡大率
 width_hankaku="512" # 半角文字幅
 center_width=$((width_hankaku / 2)) # 半角文字X座標中心
-move_x_calt_latin="15" # ラテン文字のX座標移動量
-move_x_calt_symbol="30" # 記号のX座標移動量
+move_x_calt_latin="16" # ラテン文字のX座標移動量
+move_x_calt_symbol="32" # 記号のX座標移動量
 
 # Loose 版用
-scale_width_latin_loose="102" # 半角 Latin フォント英数文字の横拡大率 (Loose 版)
-scale_height_latin_loose="102" # 半角 Latin フォント英数文字の縦拡大率 (Loose 版)
+scale_width_latin_loose="102" # Latin フォントの半角英数文字の横拡大率 (Loose 版)
+scale_height_latin_loose="102" # Latin フォントの半角英数文字の縦拡大率 (Loose 版)
+scale_width_kana_loose="102" # 仮名フォントの半角英数文字の横拡大率 (Loose 版)
+scale_height_kana_loose="100" # 仮名フォントの半角英数文字の縦拡大率 (Loose 版)
 scale_width_hankaku_loose="104" # 半角英数文字の横拡大率 (Loose 版)
 scale_height_hankaku_loose="104" # 半角英数文字の縦拡大率 (Loose 版)
 width_hankaku_loose="576" # 半角文字幅 (Loose 版)
@@ -423,11 +424,11 @@ scale_height_block=$(bc <<< "scale=1; ${scale_height_block} * ${scale_height_pl_
 move_x_oblique=$((move_x_oblique * 100)) # Transform()用 (移動量 * 100)
 
 # calt用
-move_y_calt_colon=$((move_y_calt_colon + move_y_math)) # : のY座標移動量
+move_y_calt_colon=$((move_y_math + 79)) # : のY座標移動量
 move_y_calt_colon=$(bc <<< "scale=0; ${move_y_calt_colon} * ${scale_height_latin} / 100") # : のY座標移動量
-move_y_calt_bar=$((move_y_calt_bar + move_y_math)) # | のY座標移動量
+move_y_calt_bar=$((move_y_math - 5)) # | のY座標移動量
 move_y_calt_bar=$(bc <<< "scale=0; ${move_y_calt_bar} * ${scale_height_latin} / 100") # | のY座標移動量
-move_y_calt_tilde=$((move_y_calt_tilde + move_y_math)) # ~ のY座標移動量
+move_y_calt_tilde=$((move_y_math - 170)) # ~ のY座標移動量
 move_y_calt_tilde=$(bc <<< "scale=0; ${move_y_calt_tilde} * ${scale_height_latin} / 100") # ~ のY座標移動量
 move_y_calt_math=$((- move_y_math + move_y_bracket + 6)) # *+-= のY座標移動量
 move_y_calt_math=$(bc <<< "scale=0; ${move_y_calt_math} * ${scale_height_latin} / 100") # *+-= のY座標移動量
@@ -522,8 +523,10 @@ do
         "w" )
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
             loose_flag="true"
-            scale_width_latin=${scale_width_latin_loose} # 半角 Latin フォントの横拡大率
-            scale_height_latin=${scale_height_latin_loose} # 半角 Latin フォントの縦拡大率
+            scale_width_latin=${scale_width_latin_loose} # Latin フォントの半角英数文字の横拡大率
+            scale_height_latin=${scale_height_latin_loose} # Latin フォントの半角英数文字の縦拡大率
+            scale_width_kana=${scale_width_kana_loose} # 仮名フォントの半角英数文字の横拡大率
+            scale_height_kana=${scale_height_kana_loose} # 仮名フォントの半角英数文字の縦拡大率
             scale_width_hankaku=${scale_width_hankaku_loose} # 半角英数文字の横拡大率
             scale_height_hankaku=${scale_height_hankaku_loose} # 半角英数文字の縦拡大率
             width_hankaku=${width_hankaku_loose} # 半角文字幅
@@ -1497,26 +1500,65 @@ while (i < SizeOf(input_list))
  #    Select(0ua748) # Ꝉ
  #    Select(0ua7ad) # Ɬ
 
+# M (縦棒をほんの少し太く)
+    if (input_list[i] == "${input_latin_regular}")
+        # 左縦棒
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Move(-420, 0)
+        Select(0u004d); Copy() # M
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+        Select(0u004d); PasteWithOffset(-1, 0) # M
+        # 右縦棒
+        Select(0u2588); Copy() # Full block
+        Select(65553);  Paste() # Temporary glyph
+        Move(430, 0)
+        Select(0u004d); Copy() # M
+        Select(65553);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+        Select(0u004d); PasteWithOffset(1, 0) # M
+        RemoveOverlap()
+        Move(-1, 0)
+    else
+        Select(0u004d); Move(-2, 0) # M
+    endif
+    SetWidth(500)
+
+    Select(65552); Clear() # Temporary glyph
+    Select(65553); Clear() # Temporary glyph
+
+    Select(0u2588); Copy() # Full block
+    Select(0u1e42); PasteWithOffset(0, -1020); OverlapIntersect() # Ṃ
+    Select(0u004d); Copy() # M
+    Select(0u1e42); PasteInto(); SetWidth(500) # Ṃ
+
+ #    Select(0u1e3e) # Ḿ
+ #    Select(0u1e40) # Ṁ
+ #    Select(0u2c6e) # Ɱ
+
 # N (縦棒をほんの少し太く)
     if (input_list[i] == "${input_latin_regular}")
         # 左縦棒
         Select(0u2588); Copy() # Full block
         Select(65552);  Paste() # Temporary glyph
         Move(-383, 0)
-        Select(0u004e); Copy()
+        Select(0u004e); Copy() # N
         Select(65552);  PasteInto() # Temporary glyph
         OverlapIntersect()
         Copy()
-        Select(0u004e); PasteWithOffset(-1, 0)
+        Select(0u004e); PasteWithOffset(-1, 0) # N
         # 右縦棒
         Select(0u2588); Copy() # Full block
         Select(65553);  Paste() # Temporary glyph
         Move(392, 0)
-        Select(0u004e); Copy()
+        Select(0u004e); Copy() # N
         Select(65553);  PasteInto() # Temporary glyph
         OverlapIntersect()
         Copy()
-        Select(0u004e); PasteWithOffset(1, 0)
+        Select(0u004e); PasteWithOffset(1, 0) # N
         RemoveOverlap()
         Move(1, 0)
         SetWidth(500)
@@ -1667,10 +1709,21 @@ while (i < SizeOf(input_list))
         Select(65552);  PasteInto() # Temporary glyph
         OverlapIntersect()
         Copy()
-
         Select(0u0057) # W
         PasteWithOffset(-4, 0)
         RemoveOverlap()
+
+        Select(0u2588); Copy() # Full block
+        Select(65552);  Paste() # Temporary glyph
+        Scale(22, 50); Rotate(-8); Move(220, 0)
+        Select(0u0057); Copy() # W
+        Select(65552);  PasteInto() # Temporary glyph
+        OverlapIntersect()
+        Copy()
+        Select(0u0057) # W
+        PasteWithOffset(4, 0)
+        RemoveOverlap()
+
         Simplify()
     endif
 
@@ -1684,6 +1737,11 @@ while (i < SizeOf(input_list))
     Copy()
     Select(0u0057); PasteInto() # W
     OverlapIntersect()
+    if (input_list[i] == "${input_latin_regular}")
+        Move(-5, 0)
+    else
+        Move(-2, 0)
+    endif
     SetWidth(500)
 
     Select(65552);  Clear() # Temporary glyph
@@ -2923,6 +2981,11 @@ while (i < SizeOf(input_list))
 
 # + (少し下げる)
     Select(0u002b); Move(0, -7); SetWidth(500) # +
+
+# - (少し長くする)
+    Select(0u002d) # -
+    Scale(108, 100)
+    SetWidth(500)
 
 # <> (少し下げる)
     Select(0u003c, 0u003e); Move(0, -5); SetWidth(500) # <>
@@ -10793,6 +10856,28 @@ while (i < SizeOf(input_list))
     endloop
 
 # --------------------------------------------------
+
+# 一部を除いた半角文字を拡大
+    if ("${draft_flag}" == "false")
+        Print("Edit hankaku aspect ratio")
+        Select(0u0020, 0u04ff) # 基本ラテン - キリル文字
+        SelectMore(0u1d00, 0u1fff) # 音声記号拡張 - ギリシャ文字拡張
+        SelectMore(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
+        SelectMore(0u2600, 0u27ff) # その他の記号 - 補助矢印 A
+        SelectMore(0u2900, 0u2a2f) # 補助矢印 B - 補助数学記号
+        SelectMore(0u2c71, 0u2c7d) # ラテン文字拡張 C
+        SelectMore(0u2e12, 0u2e29) # 補助句読点
+        SelectMore(0ua78b, 0ua78c) # ラテン文字拡張 D
+        SelectMore(0ufb00, 0ufb04) # アルファベット表示形
+        foreach
+            if (WorthOutputting())
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${scale_width_kana}, ${scale_height_kana}, 250, 0)
+                    SetWidth(500)
+                endif
+            endif
+        endloop
+    endif
 
 # 全角文字を移動
     if ("${draft_flag}" == "false")
