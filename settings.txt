@@ -5,7 +5,7 @@
 # コメントの前に # を入れていますが、形式的に入れているだけで # から後がコメントというわけではありません。
 
 # フォントのバージョン
-FONT_VERSION=3.2.4
+FONT_VERSION=3.2.5
 
 # フォント名
 FONT_FAMILYNAME=Cyroit
@@ -30,9 +30,9 @@ SCALE_WIDTH_HANKAKU=100
 SCALE_HEIGHT_HANKAKU=100
 # カーニング横移動量 (em/1024)
 # ラテン文字
-MOVE_X_KERN_LATIN=15
+MOVE_X_KERN_LATIN=16
 # 記号
-MOVE_X_KERN_SYMBOL=30
+MOVE_X_KERN_SYMBOL=32
 
 # Loose 版の設定
 # 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
