@@ -12,7 +12,7 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-# 個別製作用 (絵文字少ない版は、グリフ数の違いにより calt 設定を作り直す必要があるため)
+# 個別製作用 (絵文字減らした版は、グリフ数の違いにより calt 設定を作り直す必要があるため)
 font_familyname0="Cyroit"
 font_familyname1="CyroitLoose"
 font_familyname_suffix="EH"
