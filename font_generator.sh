@@ -2537,7 +2537,7 @@ while (i < SizeOf(input_list))
     endif
 
 # g をオープンテイルに変更するため、それに合わせてjpqyの尻尾を延ばす
-# j
+# j (ついでに少し左に移動)
     # 下
     Select(0u2588); Copy() # Full block
     Select(65552);  Paste() # Temporary glyph
@@ -2553,9 +2553,10 @@ while (i < SizeOf(input_list))
     Select(65552);  Copy()
     Select(0u006a); PasteWithOffset(0, -23) # j
 
-    SetWidth(500)
     RemoveOverlap()
     Simplify()
+    Move(-20, 0)
+    SetWidth(500)
 
     Select(0u2588); Copy() # Full block
     Select(0u0135); PasteWithOffset(0, 420) # ĵ
@@ -2563,9 +2564,10 @@ while (i < SizeOf(input_list))
     Select(65552);  Copy()
     Select(0u0135); PasteWithOffset(0, -23) # ĵ
 
-    SetWidth(500)
     RemoveOverlap()
     Simplify()
+    Move(-20, 0)
+    SetWidth(500)
 
  #    Select(0u006a); Copy() # j
  #    Select(0u01f0) # ǰ
