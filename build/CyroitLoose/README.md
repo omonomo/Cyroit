@@ -2,6 +2,10 @@
 
 Copyright (c) 2023 omonomo ([https://omonomo.github.io/Cyroit/](https://omonomo.github.io/Cyroit/))
 
+## 簡単な説明
+
+有名なプログラミング用合成フォント [Ricty](https://rictyfonts.github.io) の生成スクリプトを Fork して作りました。
+
 ## 収録フォントの主な違い
 
 |                     | 無印 |  EH  |  BS  |  SP  |  DG  |  FX  |  HB  |
@@ -28,29 +32,40 @@ Copyright (c) 2023 omonomo ([https://omonomo.github.io/Cyroit/](https://omonomo.
 **FX**: 文字間隔固定版  
 **HB**: 平凡版
 
+## 素材にさせていただいたフォントからの変更内容
+
+- em 値やラインギャップの変更
+- サイズや縦横比、ウェイトの変更
+- オブリーク体の新規生成
+- 一部のグリフについて座標や形状、文字幅 (全角・半角) の変更
+- 各グリフを素材とした新規グリフの追加
+- 他の素材フォントと競合するグリフの削除
+- 絵文字減らした版については、基本ラテン文字以外の絵文字の削除
+- OpenType フィーチャの削除、追加
+
 ## 素材にさせていただいたフォント
 
-[Inconsolata]  
+[Inconsolata (Version 3.001)]  
 Copyright 2006 The Inconsolata Project Authors  
 ([https://levien.com/type/myfonts/inconsolata.html](https://levien.com/type/myfonts/inconsolata.html))  
 主にラテン文字で使用しています。Inconsolata のライセンスは [SIL Open Font License v1.1](http://scripts.sil.org/ofl) です。
 
-[Circle M+]  
+[Circle M+ (Version 1.063a)]  
 Copyright(c) 2020 M+ FONTS PROJECT, itouhiro  
 ([https://itouhiro.github.io/mixfont-mplus-ipa/](https://itouhiro.github.io/mixfont-mplus-ipa/))  
 主に仮名文字、ギリシア文字、キリル文字で使用しています。Circle M+ のライセンスは [M+ Font License](https://itouhiro.github.io/mixfont-mplus-ipa/mplus/LICENSE_E.txt) です。
 
-[BIZ UDゴシック]  
+[BIZ UDゴシック (Version 1.051)]  
 Copyright 2022 The BIZ UDGothic Project Authors  
 ([https://github.com/googlefonts/morisawa-biz-ud-gothic](https://github.com/googlefonts/morisawa-biz-ud-gothic))  
 主に漢字で使用しています。BIZ UDゴシック のライセンスは [SIL Open Font License v1.1](http://scripts.sil.org/ofl) です。
 
-[NINJAL 変体仮名フォント]
+[NINJAL 変体仮名フォント (Ver.1.01)]
 Copyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 2018.  
 ([https://cid.ninjal.ac.jp/kana/font/](https://cid.ninjal.ac.jp/kana/font/))  
 変体仮名で使用しています。NINJAL 変体仮名フォントのライセンスは [Apache Lincense v2.0](https://www.apache.org/licenses/LICENSE-2.0) です。
 
-[Symbols Nerd Font]  
+[Symbols Nerd Font (Version 001.000;Nerd Fonts 3.2.1)]  
 Copyright (c) 2016, Ryan McIntyre  
 ([https://www.nerdfonts.com](https://www.nerdfonts.com))  
 サイズを調整して使用しています。Symbols Nerd Font のライセンスは [SIL Open Font License v1.1](http://scripts.sil.org/ofl) です。
