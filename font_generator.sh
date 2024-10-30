@@ -187,9 +187,6 @@ move_y_numerator="260" # 分子のY座標移動量
 move_x_denominator="480" # 分母のX座標移動量
 move_y_denominator="-30" # 分母のY座標移動量
 
-# 括弧移動量
-move_y_bracket="0"
-
 # 縦書き全角ラテン小文字移動量
 move_y_vert_1="-10"
 move_y_vert_2="10"
@@ -211,6 +208,9 @@ move_x_oblique="-48" # 移動量 (後の処理で * 100 にする)
 # 演算子移動量
 move_y_math="-25" # 通常
 move_y_s_math="-10" # 上付き、下付き
+
+# 括弧移動量
+move_y_bracket="0"
 
 # calt用
 move_y_calt_separate3="-510" # 3桁区切り表示のY座標
@@ -426,16 +426,6 @@ scale_height_block=$(bc <<< "scale=1; ${scale_height_block} * ${scale_height_pl_
 
 # オブリーク体用
 move_x_oblique=$((move_x_oblique * 100)) # Transform()用 (移動量 * 100)
-
-# calt用
-move_y_calt_colon=$((move_y_math + 79)) # : のY座標移動量
-move_y_calt_colon=$(bc <<< "scale=0; ${move_y_calt_colon} * ${scale_height_latin} / 100") # : のY座標移動量
-move_y_calt_bar=$((move_y_math - 5)) # | のY座標移動量
-move_y_calt_bar=$(bc <<< "scale=0; ${move_y_calt_bar} * ${scale_height_latin} / 100") # | のY座標移動量
-move_y_calt_tilde=$((move_y_math - 170)) # ~ のY座標移動量
-move_y_calt_tilde=$(bc <<< "scale=0; ${move_y_calt_tilde} * ${scale_height_latin} / 100") # ~ のY座標移動量
-move_y_calt_math=$((- move_y_math + move_y_bracket + 6)) # *+-= のY座標移動量
-move_y_calt_math=$(bc <<< "scale=0; ${move_y_calt_math} * ${scale_height_latin} / 100") # *+-= のY座標移動量
 
 # Print information message
 cat << _EOT_
@@ -775,6 +765,20 @@ else
     trap "echo 'Abnormally terminated'; exit 3" HUP INT QUIT
 fi
 echo
+
+# calt用
+move_y_calt_colon=$((move_y_math + 78)) # : のY座標移動量
+move_y_calt_colon=$(bc <<< "scale=0; ${move_y_calt_colon} * ${scale_height_latin} / 100") # : のY座標移動量
+move_y_calt_colon=$(bc <<< "scale=0; ${move_y_calt_colon} * ${scale_height_hankaku} / 100") # : のY座標移動量
+move_y_calt_bar=$((move_y_math - 5)) # | のY座標移動量
+move_y_calt_bar=$(bc <<< "scale=0; ${move_y_calt_bar} * ${scale_height_latin} / 100") # | のY座標移動量
+move_y_calt_bar=$(bc <<< "scale=0; ${move_y_calt_bar} * ${scale_height_hankaku} / 100") # | のY座標移動量
+move_y_calt_tilde=$((move_y_math - 169)) # ~ のY座標移動量
+move_y_calt_tilde=$(bc <<< "scale=0; ${move_y_calt_tilde} * ${scale_height_latin} / 100") # ~ のY座標移動量
+move_y_calt_tilde=$(bc <<< "scale=0; ${move_y_calt_tilde} * ${scale_height_hankaku} / 100") # ~ のY座標移動量
+move_y_calt_math=$((- move_y_math + move_y_bracket + 6)) # *+-= のY座標移動量
+move_y_calt_math=$(bc <<< "scale=0; ${move_y_calt_math} * ${scale_height_latin} / 100") # *+-= のY座標移動量
+move_y_calt_math=$(bc <<< "scale=0; ${move_y_calt_math} * ${scale_height_hankaku} / 100") # *+-= のY座標移動量
 
 # フォントバージョンにビルドNo追加
 buildNo=$(date "+%s")
