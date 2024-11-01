@@ -822,6 +822,7 @@ while (i < SizeOf(input_list))
 # 使用しないグリフクリア
     Print("Remove not used glyphs")
     Select(0, 31); Clear(); DetachAndRemoveGlyphs()
+    Select(0u018f); Clear(); DetachAndRemoveGlyphs() # Ə (グリフが間違っている)
     Select(65536, 65540); Clear(); DetachAndRemoveGlyphs()
  #    Select(65541); Clear(); DetachAndRemoveGlyphs() # スラッシュ無し0
     Select(65542, 65615); Clear(); DetachAndRemoveGlyphs()
@@ -10901,24 +10902,73 @@ while (i < SizeOf(input_list))
 
 # 一部を除いた半角文字を拡大
     if ("${draft_flag}" == "false")
-        Print("Edit hankaku aspect ratio")
-        Select(0u0020, 0u04ff) # 基本ラテン - キリル文字
-        SelectMore(0u1d00, 0u1fff) # 音声記号拡張 - ギリシャ文字拡張
-        SelectMore(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
-        SelectMore(0u2600, 0u27ff) # その他の記号 - 補助矢印 A
-        SelectMore(0u2900, 0u2a2f) # 補助矢印 B - 補助数学記号
-        SelectMore(0u2c71, 0u2c7d) # ラテン文字拡張 C
-        SelectMore(0u2e12, 0u2e29) # 補助句読点
-        SelectMore(0ua78b, 0ua78c) # ラテン文字拡張 D
-        SelectMore(0ufb00, 0ufb4f) # アルファベット表示形
-        foreach
-            if (WorthOutputting())
-                if (GlyphInfo("Width") <= 700)
-                    Scale(${scale_width_kana}, ${scale_height_kana}, 250, 0)
-                    SetWidth(500)
+        if (${scale_width_kana} != 100 || ${scale_height_kana} != 100)
+            Print("Edit hankaku aspect ratio")
+
+ #            Select(0u0020, 0u04e9) # 基本ラテン - キリル文字
+ #            SelectMore(0u1d05, 0u1ffe) # 音声記号拡張 - ギリシャ文字拡張
+ #            SelectMore(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
+ #            SelectMore(0u2605, 0u27e9) # その他の記号 - 補助矢印 A
+ #            SelectMore(0u2a2f) # 補助矢印 B - 補助数学記号
+ #            SelectMore(0u2c71, 0u2c7d) # ラテン文字拡張 C
+ #            SelectMore(0u2e28, 0u2e29) # 補助句読点
+ #            SelectMore(0ua78b, 0ua78c) # ラテン文字拡張 D
+ #            SelectMore(0ufb00, 0ufb04) # アルファベット表示形
+ #            SelectMore(0ufffd) # 特殊用途文字
+
+            Select(0u0020, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+            SelectMore(0u2010, 0u218f) # 一般句読点 - 数字の形
+            SelectMore(0u2200, 0u22ff) # 数学記号
+            SelectMore(0u27c0, 0u27ef) # その他の数学記号 A
+            SelectMore(0u2980, 0u2aff) # その他の数学記号 B - 補助数学記号
+            SelectMore(0u2c60, 0u2c7f) # ラテン文字拡張 C
+            SelectMore(0u2e00, 0u2e7f) # 補助句読点
+            SelectMore(0ua700, 0ua7ff) # 声調装飾文字 - ラテン文字拡張 D
+            SelectMore(0ufb00, 0ufb4f) # アルファベット表示形
+            foreach
+                if (WorthOutputting())
+                    if (GlyphInfo("Width") <= 700)
+                        Scale(${scale_width_kana}, ${scale_height_kana}, 250, 0)
+                        SetWidth(500)
+                    endif
                 endif
-            endif
-        endloop
+            endloop
+
+            Select(0u2190, 0u21ff) # 矢印
+            SelectMore(0u2300, 0u231f) # その他の技術用記号 1
+            SelectMore(0u2322, 0u239a) # その他の技術用記号 2
+            SelectMore(0u23af) # その他の技術用記号 3
+            SelectMore(0u23b4, 0u23bd) # その他の技術用記号 4
+            SelectMore(0u23cd, 0u23ff) # その他の技術用記号 5
+            SelectMore(0u2400, 0u24ff) # 制御機能用記号 - 囲み英数字
+            SelectMore(0u25a0, 0u25ff) # 幾何学模様
+            SelectMore(0u2600, 0u27bf) # その他の記号 - 装飾記号
+            SelectMore(0u27ff, 0u27ff) # 補助矢印 A
+            SelectMore(0u2900, 0u297f) # 補助矢印 B
+            SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
+            SelectMore(0ufffd) # 特殊用途文字
+            foreach
+                if (WorthOutputting())
+                    if (GlyphInfo("Width") <= 700)
+                        Scale(${scale_width_kana}, ${scale_height_kana}, 250, 332)
+                        SetWidth(500)
+                    endif
+                endif
+            endloop
+
+            Select(0u2320, 0u2321) # インテグラル
+            SelectMore(0u239b, 0u23ae) # 括弧・インテグラル
+            SelectMore(0u23b0, 0u23b3) # 括弧括弧素片・総和記号部分
+            SelectMore(0u23be, 0u23cc) # 歯科表記記号
+            foreach
+                if (WorthOutputting())
+                    if (GlyphInfo("Width") <= 700)
+                        Scale(${scale_width_kana}, 100, 250, 332)
+                        SetWidth(500)
+                    endif
+                endif
+            endloop
+        endif
     endif
 
 # 全角文字を移動
@@ -12672,12 +12722,58 @@ while (i < SizeOf(input_list))
 # 一部を除いた半角文字を拡大 (主に Loose 版対応)
     if (${scale_width_hankaku} != 100 || ${scale_height_hankaku} != 100)
         Print("Edit hankaku aspect ratio")
-        Select(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
-        SelectMore(0u29fa, 0u29fb) # ⧺⧻
+
+ #        Select(0u2010, 0u2306) # 一般句読点 - 囲み英数字
+ #        SelectMore(0u29fa, 0u29fb) # ⧺⧻
+
+        Select(0u0020, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+        SelectMore(0u2010, 0u218f) # 一般句読点 - 数字の形
+        SelectMore(0u2200, 0u22ff) # 数学記号
+        SelectMore(0u27c0, 0u27ef) # その他の数学記号 A
+        SelectMore(0u2980, 0u2aff) # その他の数学記号 B - 補助数学記号
+        SelectMore(0u2c60, 0u2c7f) # ラテン文字拡張 C
+        SelectMore(0u2e00, 0u2e7f) # 補助句読点
+        SelectMore(0ua700, 0ua7ff) # 声調装飾文字 - ラテン文字拡張 D
+        SelectMore(0ufb00, 0ufb4f) # アルファベット表示形
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
                     Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 256, 0)
+                    SetWidth(512)
+                endif
+            endif
+        endloop
+
+        Select(0u2190, 0u21ff) # 矢印
+        SelectMore(0u2300, 0u231f) # その他の技術用記号 1
+        SelectMore(0u2322, 0u239a) # その他の技術用記号 2
+        SelectMore(0u23af) # その他の技術用記号 3
+        SelectMore(0u23b4, 0u23bd) # その他の技術用記号 4
+        SelectMore(0u23cd, 0u23ff) # その他の技術用記号 5
+        SelectMore(0u2400, 0u24ff) # 制御機能用記号 - 囲み英数字
+        SelectMore(0u25a0, 0u25ff) # 幾何学模様
+        SelectMore(0u2600, 0u27bf) # その他の記号 - 装飾記号
+        SelectMore(0u27ff, 0u27ff) # 補助矢印 A
+        SelectMore(0u2900, 0u297f) # 補助矢印 B
+        SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
+        SelectMore(0ufffd) # 特殊用途文字
+        foreach
+            if (WorthOutputting())
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 256, 338)
+                    SetWidth(512)
+                endif
+            endif
+        endloop
+
+        Select(0u2320, 0u2321) # インテグラル
+        SelectMore(0u239b, 0u23ae) # 括弧・インテグラル
+        SelectMore(0u23b0, 0u23b3) # 括弧括弧素片・総和記号部分
+        SelectMore(0u23be, 0u23cc) # 歯科表記記号
+        foreach
+            if (WorthOutputting())
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${scale_width_hankaku}, 100, 256, 338)
                     SetWidth(512)
                 endif
             endif
@@ -13239,7 +13335,8 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u00f8, 0u0131) # ø - ı
         SelectMore(0u0134, 0u0148) # Ĵ - ň
         SelectMore(0u014a, 0u017e) # Ŋ - ž
-        SelectMore(0u018f) # Ə
+        SelectMore(0u018e) # Ǝ
+ #        SelectMore(0u018f) # Ə (グリフが間違っている)
         SelectMore(0u0192) # ƒ
         SelectMore(0u0198) # Ƙ
         SelectMore(0u01a0, 0u01a1) # Ơ - ơ
@@ -13271,7 +13368,6 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u032e) #  ̮
         SelectMore(0u0331) #  ̱
         SelectMore(0u0335, 0u0336) #  ̵ -  ̶
-        SelectMore(0u0375) # ͵
         SelectMore(0u1e08, 0u1e09) # Ḉ - ḉ
         SelectMore(0u1e0c, 0u1e0f) # Ḍ - ḏ
         SelectMore(0u1e14, 0u1e17) # Ḕ - ḗ
@@ -13304,8 +13400,8 @@ while (i < SizeOf(latin_sfd_list))
  #        SelectMore(0u20b5) # ₵ 通貨記号
  #        SelectMore(0u20b9, 0u20ba) # ₹₺ 通貨記号
  #        SelectMore(0u20bc, 0u20bd) # ₼₽ 通貨記号
-        SelectMore(0u2124) # ℤ
         SelectMore(0u210a) # ℊ
+        SelectMore(0u2124) # ℤ
         SelectMore(${address_store_mod}, ${address_store_mod} + ${num_mod_glyphs} * 6 - 1) # 避難したDQVZ
         SelectMore(${address_store_zero}) # 避難したスラッシュ無し0
         SelectMore(${address_store_zero} + 3, ${address_store_zero} + 5) # 避難したスラッシュ無し全角0
@@ -13609,12 +13705,23 @@ while (i < SizeOf(latin_sfd_list))
 # 一部を除いた半角文字を拡大 (主に Loose 版対応)
     if (${scale_width_hankaku} != 100 || ${scale_height_hankaku} != 100)
         Print("Edit hankaku aspect ratio")
-        SelectMore(0u0020, 0u1fff) # 基本ラテン - ギリシャ文字拡張
-        SelectMore(0u2010, 0u24ff) # 一般句読点 - 囲み英数字
-        SelectMore(0u25a0, 0u25ff) # 幾何学模様・その他の記号・装飾記号
-        SelectMore(0u2600, 0u27ff) # その他の記号 - 補助矢印 A
-        SelectMore(0u2900, 0u2aff) # 補助矢印 B - 補助数学記号
-        SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
+
+ #       Select(0u0020, 0u1ffe) # 基本ラテン - ギリシャ文字拡張
+ #       SelectMore(0u2010, 0u2426) # 一般句読点 - 囲み英数字
+ #       SelectMore(0u25ca) # 幾何学模様・その他の記号・装飾記号
+ #       SelectMore(0u2639, 0u27e9) # その他の記号 - 補助矢印 A
+ #       SelectMore(0u2a2f) # 補助矢印 B - 補助数学記号
+ #       SelectMore(0u2c71, 0u2c7d) # ラテン文字拡張 C
+ #       SelectMore(0u2e12, 0u2e29) # 補助句読点
+ #       SelectMore(0ua78b, 0ua78c) # 声調装飾文字 - ラテン文字拡張 D
+ #       SelectMore(0ufb00, 0ufb04) # アルファベット表示形
+ #       SelectMore(0ufffd) # 特殊用途文字
+
+        Select(0u0020, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+        SelectMore(0u2010, 0u218f) # 一般句読点 - 数字の形
+        SelectMore(0u2200, 0u22ff) # 数学記号
+        SelectMore(0u27c0, 0u27ef) # その他の数学記号 A
+        SelectMore(0u2980, 0u2aff) # その他の数学記号 B - 補助数学記号
         SelectMore(0u2c60, 0u2c7f) # ラテン文字拡張 C
         SelectMore(0u2e00, 0u2e7f) # 補助句読点
         SelectMore(0ua700, 0ua7ff) # 声調装飾文字 - ラテン文字拡張 D
@@ -13623,6 +13730,41 @@ while (i < SizeOf(latin_sfd_list))
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
                     Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 0)
+                    SetWidth(500)
+                endif
+            endif
+        endloop
+
+        Select(0u2190, 0u21ff) # 矢印
+        SelectMore(0u2300, 0u231f) # その他の技術用記号 1
+        SelectMore(0u2322, 0u239a) # その他の技術用記号 2
+        SelectMore(0u23af) # その他の技術用記号 3
+        SelectMore(0u23b4, 0u23bd) # その他の技術用記号 4
+        SelectMore(0u23cd, 0u23ff) # その他の技術用記号 5
+        SelectMore(0u2400, 0u24ff) # 制御機能用記号 - 囲み英数字
+        SelectMore(0u25a0, 0u25ff) # 幾何学模様
+        SelectMore(0u2600, 0u27bf) # その他の記号 - 装飾記号
+        SelectMore(0u27ff, 0u27ff) # 補助矢印 A
+        SelectMore(0u2900, 0u297f) # 補助矢印 B
+        SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
+        SelectMore(0ufffd) # 特殊用途文字
+        foreach
+            if (WorthOutputting())
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 332)
+                    SetWidth(500)
+                endif
+            endif
+        endloop
+
+        Select(0u2320, 0u2321) # インテグラル
+        SelectMore(0u239b, 0u23ae) # 括弧・インテグラル
+        SelectMore(0u23b0, 0u23b3) # 括弧括弧素片・総和記号部分
+        SelectMore(0u23be, 0u23cc) # 歯科表記記号
+        foreach
+            if (WorthOutputting())
+                if (GlyphInfo("Width") <= 700)
+                    Scale(${scale_width_hankaku}, 100, 250, 332)
                     SetWidth(500)
                 endif
             endif
@@ -13867,7 +14009,7 @@ while (i < SizeOf(latin_sfd_list))
         Select(hori[j]); Copy()
         Select(vert + j); Paste()
         if (j == 2 || j == 3) # ， ．
-            Move(580, 533)
+            Move(530, 583)
         else
             Rotate(-90, 487, 318)
         endif
