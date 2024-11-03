@@ -3706,11 +3706,11 @@ while (i < SizeOf(input_list))
     Select(0u007c); Copy() # |
     Select(${address_store_visi_latin} + 1); Paste() # 避難所
     if (input_list[i] == "${input_latin_regular}")
-        Move(0, 30)
-        PasteWithOffset(0, 68)
+        Move(0, 40)
+        PasteWithOffset(0, 58)
     else
-        Move(0, 35)
-        PasteWithOffset(0, 68)
+        Move(0, 45)
+        PasteWithOffset(0, 58)
     endif
     Move(0, 13)
     SetWidth(500)
