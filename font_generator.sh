@@ -10943,7 +10943,7 @@ while (i < SizeOf(input_list))
             SelectMore(0u2400, 0u24ff) # 制御機能用記号 - 囲み英数字
             SelectMore(0u25a0, 0u25ff) # 幾何学模様
             SelectMore(0u2600, 0u27bf) # その他の記号 - 装飾記号
-            SelectMore(0u27ff, 0u27ff) # 補助矢印 A
+            SelectMore(0u27f0, 0u27ff) # 補助矢印 A
             SelectMore(0u2900, 0u297f) # 補助矢印 B
             SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
             SelectMore(0ufffd) # 特殊用途文字
@@ -12753,7 +12753,7 @@ while (i < SizeOf(input_list))
         SelectMore(0u2400, 0u24ff) # 制御機能用記号 - 囲み英数字
         SelectMore(0u25a0, 0u25ff) # 幾何学模様
         SelectMore(0u2600, 0u27bf) # その他の記号 - 装飾記号
-        SelectMore(0u27ff, 0u27ff) # 補助矢印 A
+        SelectMore(0u27f0, 0u27ff) # 補助矢印 A
         SelectMore(0u2900, 0u297f) # 補助矢印 B
         SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
         SelectMore(0ufffd) # 特殊用途文字
@@ -13744,7 +13744,7 @@ while (i < SizeOf(latin_sfd_list))
         SelectMore(0u2400, 0u24ff) # 制御機能用記号 - 囲み英数字
         SelectMore(0u25a0, 0u25ff) # 幾何学模様
         SelectMore(0u2600, 0u27bf) # その他の記号 - 装飾記号
-        SelectMore(0u27ff, 0u27ff) # 補助矢印 A
+        SelectMore(0u27f0, 0u27ff) # 補助矢印 A
         SelectMore(0u2900, 0u297f) # 補助矢印 B
         SelectMore(0u2b00, 0u2bff) # その他の記号および矢印
         SelectMore(0ufffd) # 特殊用途文字
