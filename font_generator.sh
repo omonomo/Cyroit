@@ -3846,6 +3846,86 @@ while (i < SizeOf(input_list))
 # 上付き、下付き文字を置き換え
     Print("Edit superscrips and subscripts")
 
+    # 下付き
+    lookups = GetLookups("GSUB"); numlookups = SizeOf(lookups)
+    lookupName = "'subs' 下つき文字"
+    AddLookup(lookupName, "gsub_single", 0, [["subs",[["DFLT",["dflt"]]]]])
+    lookupSub = lookupName + "サブテーブル"
+    AddLookupSubtable(lookupName, lookupSub)
+
+    # ᵢ-ᵥ
+    orig = [0u0069, 0u0072, 0u0075, 0u0076]
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
+        Select(0u1d62 + j); Paste()
+        Scale(${scale_super_sub}, 250, 0)
+        ChangeWeight(${weight_super_sub})
+        CorrectDirection()
+        Move(0, ${move_y_sub})
+        SetWidth(500)
+        glyphName = GlyphInfo("Name") # subs フィーチャ追加
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+    endloop
+
+    # ₀-₉
+    j = 0
+    while (j < 10)
+        Select(0u0030 + j); Copy()
+        Select(0u2080 + j); Paste()
+        Scale(${scale_super_sub}, 250, 0)
+        ChangeWeight(${weight_super_sub})
+        CorrectDirection()
+        Move(0, ${move_y_sub})
+        SetWidth(500)
+        glyphName = GlyphInfo("Name") # subs フィーチャ追加
+        Select(0u0030 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+    endloop
+
+    # ₊-ₜ
+    orig = [0u002b, 0u2212, 0u003d, 0u0028, 0u0029, 0u0000,\
+            0u0061, 0u0065, 0u006f, 0u0078, 0u0259,\
+            0u0068, 0u006b, 0u006c, 0u006d,\
+            0u006e, 0u0070, 0u0073, 0u0074] # 0u0000はダミー
+    j = 0
+    while (j < SizeOf(orig))
+        if (orig[j] != 0u0000)
+            Select(orig[j]); Copy()
+            Select(0u208a + j); Paste()
+            Scale(${scale_super_sub}, 250, 0)
+            ChangeWeight(${weight_super_sub})
+            CorrectDirection()
+            Move(0, ${move_y_sub})
+            SetWidth(500)
+            glyphName = GlyphInfo("Name") # subs フィーチャ追加
+            Select(orig[j])
+            AddPosSub(lookupSub, glyphName)
+        endif
+        j += 1
+    endloop
+
+    # ₋
+    Select(0u208b) # ₋
+    glyphName = GlyphInfo("Name") # subs フィーチャ追加
+    Select(0u002d) # -
+    AddPosSub(lookupSub, glyphName)
+
+    # ⱼ
+    Select(0u006a); Copy() # j
+    Select(0u2c7c); Paste() # ⱼ
+    Scale(${scale_super_sub}, 250, 0)
+    ChangeWeight(${weight_super_sub})
+    CorrectDirection()
+    Move(0, ${move_y_sub})
+    SetWidth(500)
+    glyphName = GlyphInfo("Name") # subs フィーチャ追加
+    Select(0u006a) # j
+    AddPosSub(lookupSub, glyphName)
+
     # 上付き
     lookups = GetLookups("GSUB"); numlookups = SizeOf(lookups)
     lookupName = "'sups' 上つき文字"
@@ -4112,86 +4192,6 @@ while (i < SizeOf(input_list))
     SetWidth(500)
     glyphName = GlyphInfo("Name") # sups フィーチャ追加
     Select(0u0056) # V
-    AddPosSub(lookupSub, glyphName)
-
-    # 下付き
-    lookups = GetLookups("GSUB"); numlookups = SizeOf(lookups)
-    lookupName = "'subs' 下つき文字"
-    AddLookup(lookupName, "gsub_single", 0, [["subs",[["DFLT",["dflt"]]]]])
-    lookupSub = lookupName + "サブテーブル"
-    AddLookupSubtable(lookupName, lookupSub)
-
-    # ᵢ-ᵥ
-    orig = [0u0069, 0u0072, 0u0075, 0u0076]
-    j = 0
-    while (j < SizeOf(orig))
-        Select(orig[j]); Copy()
-        Select(0u1d62 + j); Paste()
-        Scale(${scale_super_sub}, 250, 0)
-        ChangeWeight(${weight_super_sub})
-        CorrectDirection()
-        Move(0, ${move_y_sub})
-        SetWidth(500)
-        glyphName = GlyphInfo("Name") # subs フィーチャ追加
-        Select(orig[j])
-        AddPosSub(lookupSub, glyphName)
-        j += 1
-    endloop
-
-    # ₀-₉
-    j = 0
-    while (j < 10)
-        Select(0u0030 + j); Copy()
-        Select(0u2080 + j); Paste()
-        Scale(${scale_super_sub}, 250, 0)
-        ChangeWeight(${weight_super_sub})
-        CorrectDirection()
-        Move(0, ${move_y_sub})
-        SetWidth(500)
-        glyphName = GlyphInfo("Name") # subs フィーチャ追加
-        Select(0u0030 + j)
-        AddPosSub(lookupSub, glyphName)
-        j += 1
-    endloop
-
-    # ₊-ₜ
-    orig = [0u002b, 0u2212, 0u003d, 0u0028, 0u0029, 0u0000,\
-            0u0061, 0u0065, 0u006f, 0u0078, 0u0259,\
-            0u0068, 0u006b, 0u006c, 0u006d,\
-            0u006e, 0u0070, 0u0073, 0u0074] # 0u0000はダミー
-    j = 0
-    while (j < SizeOf(orig))
-        if (orig[j] != 0u0000)
-            Select(orig[j]); Copy()
-            Select(0u208a + j); Paste()
-            Scale(${scale_super_sub}, 250, 0)
-            ChangeWeight(${weight_super_sub})
-            CorrectDirection()
-            Move(0, ${move_y_sub})
-            SetWidth(500)
-            glyphName = GlyphInfo("Name") # subs フィーチャ追加
-            Select(orig[j])
-            AddPosSub(lookupSub, glyphName)
-        endif
-        j += 1
-    endloop
-
-    # ₋
-    Select(0u208b) # ₋
-    glyphName = GlyphInfo("Name") # subs フィーチャ追加
-    Select(0u002d) # -
-    AddPosSub(lookupSub, glyphName)
-
-    # ⱼ
-    Select(0u006a); Copy() # j
-    Select(0u2c7c); Paste() # ⱼ
-    Scale(${scale_super_sub}, 250, 0)
-    ChangeWeight(${weight_super_sub})
-    CorrectDirection()
-    Move(0, ${move_y_sub})
-    SetWidth(500)
-    glyphName = GlyphInfo("Name") # subs フィーチャ追加
-    Select(0u006a) # j
     AddPosSub(lookupSub, glyphName)
 
 # 演算子を上下に移動
