@@ -27,6 +27,9 @@ dict="dict" # 略字をグリフ名に変換する辞書
 gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
 checkListName="checkList" # 設定の重複を避けるためのリストの名称
 tmpdir_name="calt_table_maker_tmpdir" # 一時保管フォルダ名
+karndir_name="karningSettings" # カーニング設定の保存フォルダ名
+karnsetdir_name="" # 各カーニング設定と calt_table_maker 情報の保存フォルダ名
+fileDataName="fileData" # calt_table_maker のサイズと変更日を保存するファイル名
 
 # lookup の IndexNo. (GSUBを変更すると変わる可能性あり)
 lookupIndex_calt="18" # caltテーブルのlookupナンバー
@@ -571,6 +574,7 @@ calt_table_maker_help()
     echo "Options:"
     echo "  -h         Display this information"
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
+    echo "  -X         Cleaning temporary files and saved kerning settings" # 一時作成ファイルとカーニング設定の消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -n number  Set glyph number of \"A moved left\""
     echo "  -k         Don't make calt settings for latin characters"
@@ -586,7 +590,7 @@ echo "- GSUB table [calt, LookupType 6] maker -"
 echo
 
 # Get options
-while getopts hxln:kbOo OPT
+while getopts hxXln:kbOo OPT
 do
     case "${OPT}" in
         "h" )
@@ -597,6 +601,15 @@ do
             echo "Option: Cleaning temporary files"
             echo "Remove temporary files"
             rm -rf ${tmpdir_name}.*
+            exit 0
+            ;;
+        "X" )
+            echo "Option: Cleaning temporary files and saved kerning settings"
+            echo "Remove temporary files"
+            rm -rf ${tmpdir_name}.*
+            echo "Remove kerning settings"
+            rm -f ${caltListName}*.txt
+            rm -rf "${karndir_name}"
             exit 0
             ;;
         "l" )
@@ -655,6 +668,35 @@ fi
 
 # txtファイルを削除
 rm -f ${caltListName}*.txt
+
+# calt_table_maker に変更が無く、すでに設定が作成されていた場合それを呼び出して終了
+output_data=$(wc -c calt_table_maker.sh | cut -d ' ' -f 3)"-"$(date -r calt_table_maker.sh "+%Y%m%d-%H%M%S")
+if [ "${symbol_only_flag}" = "true" ]; then
+  karnsetdir_name="k"
+fi
+if [ "${basic_only_flag}" = "true" ]; then
+  karnsetdir_name="${karnsetdir_name}b"
+fi
+if [ "${optimize_mode}" = "force" ]; then
+  karnsetdir_name="${karnsetdir_name}O"
+elif [ "${optimize_mode}" = "optional" ]; then
+  karnsetdir_name="${karnsetdir_name}o"
+fi
+karnsetdir_name="${karnsetdir_name}${glyphNo}"
+file_data_txt=$(find "./${karndir_name}/${karnsetdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
+if [ -n "${file_data_txt}" ]; then
+  input_data=$(head -n 1 "${karndir_name}/${karnsetdir_name}/${fileDataName}.txt")
+  if [ "${input_data}" = "${output_data}" ]; then
+    echo "calt_table_maker is unchanged"
+    echo "Use saved kerning settings"
+    cp -f ${karndir_name}/${karnsetdir_name}/${caltListName}_*.txt "."
+    echo
+    exit 0
+  fi
+fi
+echo "calt_table_maker is changed or kerning settings not exist"
+echo "Make new kerning settings"
+echo
 
 # 一時保管フォルダ作成
 tmpdir=$(mktemp -d ./"${tmpdir_name}".XXXXXX) || exit 2
@@ -6627,6 +6669,14 @@ lookAhead=(${figure3[@]} ${figureN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # ---
+
+# 作成した設定と calt_table_maker の情報を保存
+echo "Save kerning settings"
+rm -rf "${karndir_name}/${karnsetdir_name}"
+mkdir -p "${karndir_name}/${karnsetdir_name}"
+printf "${output_data}" > "${karndir_name}/${karnsetdir_name}/${fileDataName}.txt"
+cp -f ${caltListName}_*.txt "${karndir_name}/${karnsetdir_name}/."
+echo
 
 if [ "${leaving_tmp_flag}" = "false" ]; then
   echo "Remove temporary files"
