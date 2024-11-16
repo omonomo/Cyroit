@@ -670,7 +670,7 @@ fi
 rm -f ${caltListName}*.txt
 
 # calt_table_maker に変更が無く、すでに設定が作成されていた場合それを呼び出して終了
-output_data=$(wc -c calt_table_maker.sh | cut -d ' ' -f 3)"-"$(date -r calt_table_maker.sh "+%Y%m%d-%H%M%S")
+output_data=$(echo $(wc -c calt_table_maker.sh) | cut -d ' ' -f 1)"-"$(date -r calt_table_maker.sh "+%Y%m%d-%H%M%S")
 if [ "${symbol_only_flag}" = "true" ]; then
   karnsetdir_name="k"
 fi
