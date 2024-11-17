@@ -16718,6 +16718,7 @@ while (i < \$argc)
     SelectWorthOutputting()
     SelectFewer(0u0020) # 半角スペース
     SelectFewer(0u00a0) # ノーブレークスペース
+    SelectFewer(0u3000) # 全角スペース
  #    SelectFewer(0u2000, 0u2140) # 文字様記号
     SelectFewer(0u2102) # ℂ
     SelectFewer(0u210d) # ℍ
