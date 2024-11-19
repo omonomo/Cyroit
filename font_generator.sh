@@ -11915,6 +11915,24 @@ while (i < SizeOf(input_list))
     Move(-224, 0)
     SetWidth(512)
 
+# ⊢ (追加)
+    Select(0u22a5); Copy() # ⊥
+    Select(0u22a2); Paste() # ⊥
+    Rotate(-90)
+    SetWidth(1024)
+
+# ⊣ (追加)
+    Select(0u22a5); Copy() # ⊥
+    Select(0u22a3); Paste() # ⊣
+    Rotate(90)
+    SetWidth(1024)
+
+# ⊤ (追加)
+    Select(0u22a5); Copy() # ⊥
+    Select(0u22a4); Paste() # ⊤
+    Rotate(180)
+    SetWidth(1024)
+
 # ⌃ (追加)
     Select(0u25a0); Copy() # Black square
     Select(65552);  Paste() # Temporary glyph
@@ -16718,8 +16736,7 @@ while (i < \$argc)
     SelectWorthOutputting()
     SelectFewer(0u0020) # 半角スペース
     SelectFewer(0u00a0) # ノーブレークスペース
-    SelectFewer(0u3000) # 全角スペース
- #    SelectFewer(0u2000, 0u2140) # 文字様記号
+# SelectFewer(0u2000, 0u2140) # 文字様記号
     SelectFewer(0u2102) # ℂ
     SelectFewer(0u210d) # ℍ
     SelectFewer(0u2115) # ℕ
@@ -16730,7 +16747,7 @@ while (i < \$argc)
     SelectFewer(0u212e) # ℮
     SelectFewer(0u213c, 0u2140) # ℼℽℾℿ⅀
     SelectFewer(0u2145, 0u2149) # ⅅⅆⅇⅈⅉ
- #    SelectFewer(0u2190, 0u21ff) # 矢印
+# SelectFewer(0u2190, 0u21ff) # 矢印
     SelectFewer(0u2191) # ↑
     SelectFewer(0u2193) # ↓
     SelectFewer(0u2195, 0u2199) # ↕↖↗↘↙
@@ -16754,35 +16771,40 @@ while (i < \$argc)
     SelectFewer(0u21e9, 0u21ef) # ⇩⇪⇫⇬⇭⇮⇯
     SelectFewer(0u21f1, 0u21f3) # ⇱⇲⇳
     SelectFewer(0u21f5) # ⇵
- #    SelectFewer(0u2200, 0u22ff) # 数学記号
+# SelectFewer(0u2200, 0u22ff) # 数学記号
     SelectFewer(0u221f, 0u2222) # ∟∠∡∢
     SelectFewer(0u2225, 0u2226) # ∥∦
-    SelectFewer(0u2295, 0u22af) # ⊕ - ⊯
-    SelectFewer(0u22b6, 0u22b8) # ⊶ - ⊸
+ #    SelectFewer(0u2295, 0u22a1) # ⊕ - ⊡
+    SelectFewer(0u22a2, 0u22a5) # ⊢ - ⊥
+ #    SelectFewer(0u22a6, 0u22af) # ⊦ - ⊯
+ #    SelectFewer(0u22b6, 0u22b8) # ⊶ - ⊸
     SelectFewer(0u22be, 0u22bf) # ⊾⊿
-    SelectFewer(0u22c8, 0u22cc) # ⋈⋉⋊⋋⋌
-    SelectFewer(0u22ee, 0u22f1) # ⋮⋯⋰⋱
- #    SelectFewer(0u2300, 0u23ff) # その他の技術用記号
+ #    SelectFewer(0u22c8, 0u22cc) # ⋈⋉⋊⋋⋌
+ #    SelectFewer(0u22ee, 0u22f1) # ⋮⋯⋰⋱
+# SelectFewer(0u2300, 0u23ff) # その他の技術用記号
     SelectFewer(0u2300, 0u2307) # ⌀ - ⌇
+    SelectFewer(0u230c, 0u230f) # ⌌ - ⌏
     SelectFewer(0u2311, 0u2318) # ⌑ - ⌘
+    SelectFewer(0u231c, 0u231f) # ⌜ - ⌟
     SelectFewer(0u231a, 0u231b) # ⌚⌛
     SelectFewer(0u2320, 0u2328) # ⌠ - ⌨
-    SelectFewer(0u232b, 0u2372) # ⌫ - ⍲
-    SelectFewer(0u237b, 0u23ff) # ⍻ - ⏿
- #    SelectFewer(0u2400, 0u243f) # 制御機能用記号
-    SelectFewer(0u2423) # ␣
+    SelectFewer(0u232b, 0u23ff) # ⌫ - ⏿
+# SelectFewer(0u2400, 0u243f) # 制御機能用記号
+ #      SelectFewer(0u2423) # ␣
     SelectFewer(0u2425) # ␥
     SelectFewer(0u2440, 0u245f) # 光学的文字認識、OCR
     SelectFewer(0u2500, 0u259f) # 罫線素片・ブロック要素
- #    SelectFewer(0u25a0, 0u25ff) # 幾何学模様
+# SelectFewer(0u25a0, 0u25ff) # 幾何学模様
     SelectFewer(0u25a0, 0u25db) # ■ - ◛
+    SelectFewer(0u25dc, 0u25df) # ◜ - ◟
     SelectFewer(0u25e0, 0u25ff) # ◠ - ◿
     SelectFewer(0u2600, 0u26ff) # その他の記号
- #    SelectFewer(0u2700, 0u27bf) # 装飾記号
+# SelectFewer(0u2700, 0u27bf) # 装飾記号
     SelectFewer(0u2700, 0u2752) # ✀ - ❒
     SelectFewer(0u2756) # ❖
     SelectFewer(0u2758, 0u275a) # ❘ - ❚
-    SelectFewer(0u2761, 0u2767) # ❡ - ❧
+ #    SelectFewer(0u2761, 0u2763) # ❡ - ❣
+    SelectFewer(0u2764, 0u2767) # ❤ - ❧
     SelectFewer(0u2795, 0u2798) # ➕ - ➘
     SelectFewer(0u279a) # ➚
     SelectFewer(0u27b0) # ➰
@@ -16791,13 +16813,15 @@ while (i < \$argc)
     SelectFewer(0u27b6, 0u27b7) # ➶➷
     SelectFewer(0u27b9) # ➹
     SelectFewer(0u27bf) # ➿
- #    SelectFewer(0u27c0, 0u27ef) # その他の数学記号 A
-    SelectFewer(0u27c0, 0u27c2) # ⟀⟁⟂
-    SelectFewer(0u27d3, 0u27e5) # ⟓ - ⟥
- #    SelectFewer(0u27f0, 0u27ff) # 補助矢印 A
+# SelectFewer(0u27c0, 0u27ef) # その他の数学記号 A
+    SelectFewer(0u27c0) # ⟀
+ #    SelectFewer(0u27c1) # ⟁
+    SelectFewer(0u27c2) # ⟂
+ #    SelectFewer(0u27d3, 0u27e5) # ⟓ - ⟥
+# SelectFewer(0u27f0, 0u27ff) # 補助矢印 A
     SelectFewer(0u27f0, 0u27f1) # ⟰⟱
     SelectFewer(0u2800, 0u28ff) # 点字
- #    SelectFewer(0u2900, 0u2970) # 補助矢印 B
+# SelectFewer(0u2900, 0u2970) # 補助矢印 B
     SelectFewer(0u2908, 0u290b) # ⤈⤉⤊⤋
     SelectFewer(0u2912, 0u2913) # ⤒⤓
     SelectFewer(0u2921, 0u2932) # ⤡ - ⤲
@@ -16813,18 +16837,20 @@ while (i < \$argc)
     SelectFewer(0u2965) # ⥥
     SelectFewer(0u296e, 0u296f) # ⥮⥯
     SelectFewer(0u297e, 0u297f) # ⥾⥿
- #    SelectFewer(0u2980, 0u29ff) # その他の数学記号 B
-    SelectFewer(0u299b, 0u29d7) # ⦛ - ⧗
-    SelectFewer(0u29df, 0u29f3) # ⧟ - ⧳
- #    SelectFewer(0u2a00, 0u2aff) # 補助数学記号
-    SelectFewer(0u2a00, 0u2a02) # ⨀⨁⨂
-    SelectFewer(0u2a36, 0u2a3b) # ⨶⨷⨸⨹⨺⨻
-    SelectFewer(0u2ade, 0u2af1) # ⫞ - ⫱
- #    SelectFewer(0u2b00, 0u2bff) # その他の記号および矢印
+# SelectFewer(0u2980, 0u29ff) # その他の数学記号 B
+    SelectFewer(0u299b, 0u29af) # ⦛ - ⦯
+ #    SelectFewer(0u29b0, 0u29d7) # ⦰ - ⧗
+ #    SelectFewer(0u29df, 0u29f3) # ⧟ - ⧳
+# SelectFewer(0u2a00, 0u2aff) # 補助数学記号
+ #    SelectFewer(0u2a00, 0u2a02) # ⨀⨁⨂
+ #    SelectFewer(0u2a36, 0u2a3b) # ⨶⨷⨸⨹⨺⨻
+ #    SelectFewer(0u2ade, 0u2af1) # ⫞ - ⫱
+# SelectFewer(0u2b00, 0u2bff) # その他の記号および矢印
     SelectFewer(0u2b00, 0u2b03) # ⬀⬁⬂⬃
     SelectFewer(0u2b06, 0u2b0b) # ⬆⬇⬈⬉⬊⬋
-    SelectFewer(0u2b0d, 0u2b2f) # ⬍⬯
-    SelectFewer(0u2b4e, 0u2b5f) # ⭎⭟
+    SelectFewer(0u2b0d) # ⬍
+    SelectFewer(0u2b12, 0u2b2f) # ⬒ - ⬯
+    SelectFewer(0u2b4e, 0u2b5f) # ⭎ - ⭟
     SelectFewer(0u2b61) # ⭡
     SelectFewer(0u2b63) # ⭣
     SelectFewer(0u2b65, 0u2b69) # ⭥⭦⭧⭨⭩
@@ -16849,9 +16875,10 @@ while (i < \$argc)
     SelectFewer(0u2ff0, 0u2fff) # 漢字構成記述文字
     SelectFewer(0u3000) # 全角スペース
     SelectFewer(0u3004) # 〄
-    SelectFewer(0u3012) # 〒
+ #    SelectFewer(0u3012) # 〒
+    SelectFewer(0u3013) # 〓
     SelectFewer(0u3020) # 〠
-    SelectFewer(0u3036) # 〶
+ #    SelectFewer(0u3036) # 〶
     SelectFewer(0u31ef) # ㇯
     SelectFewer(0ufe17, 0ufe18) # 縦書き用括弧
     SelectFewer(0ufe19) # ︙
@@ -16884,6 +16911,11 @@ while (i < \$argc)
     SelectFewer("uni30FC.vert") # 縦書きのー
     SelectFewer("uniFFE4.vert") # 縦書きの￤
     SelectFewer("uni2702.vert", "uni30A0.vert") # 縦書きの✂‖〰゠
+
+    SelectFewer("uni3000.ss01") # ss01の全角スペース
+
+    SelectFewer("space.ss02") # ss02の半角スペース
+    SelectFewer("uni00A0.ss02") # ss02のノーブレークスペース
 
     SelectFewer("uniFF08.vert.ss06", "uniFF09.vert.ss06") # ss06の縦書きの（）
     SelectFewer("uniFF1A.vert.ss06", "uniFF60.vert.ss06") # ss06の縦書きの： - ｠
