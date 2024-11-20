@@ -14560,8 +14560,8 @@ while (i < \$argc)
     # ‼
     Select(0u0021); Copy() # !
     Select(0u203c); Paste() # ‼
-    Move(50, 0)
-    Select(0u203c); PasteWithOffset(484, 0) # ‼
+    Move(70, 0)
+    Select(0u203c); PasteWithOffset(464, 0) # ‼
     SetWidth(1024)
 
     # ⁇
