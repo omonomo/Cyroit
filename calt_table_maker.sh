@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# GSUB calt table maker
+# GSUB calt table maker for Cyroit and Meroit
 #
 # Copyright (c) 2023 omonomo
 #
