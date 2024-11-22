@@ -1,5 +1,5 @@
 Copyright (c) 2023, omonomo
-with Reserved Font Name "Cyroit" and "Meroit".
+with Reserved Font Name "Cyroit", "Meroit", "Jeroit" and "Ubroit".
 
 This Font Software is licensed under the SIL Open Font License, Version 1.1.
 This license is copied below, and is also available with a FAQ at:
