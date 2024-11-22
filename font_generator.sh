@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Custom font generator
+# Custom font generator for Cyroit
 #
 # Copyright (c) 2023 omonomo
 #
@@ -233,8 +233,8 @@ scale_width_hankaku="100" # 半角英数文字の横拡大率
 scale_height_hankaku="100" # 半角英数文字の縦拡大率
 width_hankaku="512" # 半角文字幅
 center_width=$((width_hankaku / 2)) # 半角文字X座標中心
-move_x_calt_latin="16" # ラテン文字のX座標移動量
-move_x_calt_symbol="32" # 記号のX座標移動量
+move_x_calt_latin="16" # ラテン文字のカーニングX座標移動量
+move_x_calt_symbol="32" # 記号のカーニングX座標移動量
 move_x_hankaku="0" # 半角文字移動量
 
 # Loose 版用
@@ -246,8 +246,8 @@ scale_width_hankaku_loose="104" # 半角英数文字の横拡大率 (Loose 版)
 scale_height_hankaku_loose="104" # 半角英数文字の縦拡大率 (Loose 版)
 width_hankaku_loose="576" # 半角文字幅 (Loose 版)
 center_width_loose=$((width_hankaku_loose / 2)) # 半角文字X座標中心 (Loose 版)
-move_x_calt_latin_loose="18" # ラテン文字のX座標移動量 (Loose 版)
-move_x_calt_symbol_loose="36" # 記号のX座標移動量 (Loose 版)
+move_x_calt_latin_loose="18" # ラテン文字のカーニングX座標移動量 (Loose 版)
+move_x_calt_symbol_loose="36" # 記号のカーニングX座標移動量 (Loose 版)
 move_x_hankaku_loose=$(((width_hankaku_loose - ${width_hankaku}) / 2)) # 半角文字移動量 (Loose 版)
 
 # デバッグ用
@@ -12542,7 +12542,7 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(math))
         Select(math[j]);
-        Move(0, ${move_y_math})
+        Move(0, ${move_y_math} - 17)
         SetWidth(1024)
         j += 1
     endloop
@@ -14486,6 +14486,11 @@ while (i < \$argc)
     CorrectDirection()
     SetWidth(512)
 
+# ＿ (latin フォントの _ に合わせる)
+    Select(0uff3f) # ＿
+    Move(0, 52)
+    SetWidth(1024)
+
 # --------------------------------------------------
 
 # 全角形加工 (半角英数記号を全角形にコピーし、下線を追加)
@@ -14496,7 +14501,7 @@ while (i < \$argc)
     Select(${address_store_underline} + 2); Paste() # 保管所 (後で使うために保管)
     Rotate(-90, 512, 315)
     Move(-13, 0)
-    SetWidth(${width_zenkaku})
+    SetWidth(1024)
 
 # 半角英数記号を全角形にコピー、加工
     # ! - }
@@ -16907,7 +16912,7 @@ while (i < \$argc)
     SelectFewer(${address_store_vert} + 102) # 保管した縦書きの縦線無し￤
     SelectFewer(${address_store_d_hyphen}) # 保管した縦書きの゠
 
-    SelectFewer("uni3008.vert", "uni301F.vert") # 縦書きの括弧類
+    SelectFewer("uni3008.vert", "uni301F.vert") # 縦書きの括弧、〓
     SelectFewer("uni30FC.vert") # 縦書きのー
     SelectFewer("uniFFE4.vert") # 縦書きの￤
     SelectFewer("uni2702.vert", "uni30A0.vert") # 縦書きの✂‖〰゠
