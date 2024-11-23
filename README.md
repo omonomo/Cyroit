@@ -13,7 +13,9 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - 点字の表示に対応しました (v2.4.0以降)。
 - 半角と全角の横幅の比率を9:16にしたバージョンを追加しました (v3.0.0以降)。
 - カラー絵文字フォントとの併用を前提に、絵文字のグリフを減らしたバージョンを追加しました (v3.2.0以降)。
-- [Meslo LG](https://github.com/andreberg/Meslo-Font) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降)。
+- Cyroit に [Meslo LG](https://github.com/andreberg/Meslo-Font) と [Hack](https://sourcefoundry.org/hack/) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降を使用)。
+- Cyroit に [JetBrains Mono NL](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
+- Cyroit に [Ubuntu Mono](https://design.ubuntu.com/font) を合成した姉妹フォント「[Ubroit](https://omonomo.github.io/Ubroit/)」を作成しました (v3.3.0以降を使用)。
 
 フォント生成用のスクリプトを利用すれば、必要な機能のみ実装したフォントを各自で作っていただくこともできます。
 
@@ -43,16 +45,17 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v3.2.6 (2024-11-03)
+最新版 v3.3.0 (2024-11-23)
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.2.6/Cyroit_v3.2.6.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.2.6/CyroitLoose_v3.2.6.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.2.6.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.3.0/Cyroit_v3.3.0.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.3.0/CyroitLoose_v3.3.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.3.0.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
-各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。
+各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
+[ライセンス](#ライセンス)に従ってのご使用をお願いいたします。
 
 ## その他の特徴
 
@@ -157,10 +160,10 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 Cyroit は以下の環境でビルドできることを確認しています。
 
-- OS: macOS Sequoia (version 15.1)
+- OS: macOS Sequoia (version 15.1.1)
 - Shell: GNU bash, version 5.2.37(1)-release (aarch64-apple-darwin23.4.0)
 - FontForge: 20230101
-- FontTools: 4.54.1
+- FontTools: 4.55.0
 
 ### 基本的な使い方
 
@@ -296,11 +299,13 @@ font_generator で合成したフォントの情報を FontTools の ttx コマ�
 #### 5. `calt_table_maker.sh`
 
 通常、直接実行する必要はありません。  
-calt テーブル (前後の文字によってグリフ置換を行う設定) を作成します。作成したデータは table_modificator で使用します。
+calt テーブル (前後の文字によってグリフ置換を行う設定) を作成します。作成したデータは table_modificator で使用します。  
+作成に時間がかかるため、通常はテーブルファイルが存在しないか calt_table_maker.sh を更新した場合、オプションやフォントのグリフ数を変更した時のみテーブルを作り直します。
 
 - オプション  
   `-h` ヘルプを表示します。  
   `-x` スクリプトと同じフォルダにある一時作成ファイルの削除のみ行って終了します。  
+  `-X` スクリプトと同じフォルダにある一時作成ファイルと、カーニング設定 (保存してある設定も含む) の削除のみ行って終了します。  
   `-l` 一時作成ファイルを残したままにします。  
   `-n number` calt で置換する先頭のグリフ (左に動いた A になります) を示す番号に _number_ を指定します。  
   &emsp; &emsp;先に uvs_table_maker を実行し、`gsubList.txt` が生成されていれば省略しても問題ありません。  
@@ -329,6 +334,8 @@ calt テーブル (前後の文字によってグリフ置換を行う設定) �
 ## リンク
 
 - [GitHubページ](https://github.com/omonomo/Cyroit): 過去のバージョンや更新履歴はこちらをご参照ください。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Meroit」](https://omonomo.github.io/Meroit/): Cyroit の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Meroit」](https://omonomo.github.io/Meroit/): Cyroit の一つ下の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Jeroit」](https://omonomo.github.io/Jeroit/): Cyroit の二つ下の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Ubroit」](https://omonomo.github.io/Ubroit/): Cyroit の三つ下の妹さんフォントです。
 - [小指の移動量が少ない日本語かな入力配列 「水草配列」](https://omonomo.github.io/Mizukusa/): オリジナル日本語かな入力配列を紹介しています。
 - [DefaultKeyBinding.dict サンプル](https://omonomo.github.io/DefaultKeyBinding/): タイトル通りです。
