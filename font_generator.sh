@@ -876,15 +876,16 @@ while (i < SizeOf(input_list))
 
 # スペースの width 変更
     Print("Modified space width")
-    Select(0u2000); SetWidth(500)
-    Select(0u2001); SetWidth(1000)
-    Select(0u2002); SetWidth(500)
-    Select(0u2003); SetWidth(1000)
-    Select(0u2004, 0u200a); SetWidth(500)
-    Select(0u200b); SetWidth(0)
-    Select(0u202f); SetWidth(500)
-    Select(0u205f); SetWidth(500)
-    Select(0ufeff); SetWidth(0)
+    Select(0u2000); SetWidth(500) # en quad
+    Select(0u2001); SetWidth(1000) # em quad
+    Select(0u2002); SetWidth(500) # en space
+    Select(0u2003); SetWidth(1000) # em space
+    Select(0u2004, 0u200a); SetWidth(500) # three-per-em space..hair space
+    Select(0u200b); SetWidth(0) # zero width space
+    Select(0u202f); SetWidth(500) # narrow no-break space
+    Select(0u205f); SetWidth(500) # medium mathematical space
+    Select(0u2060); SetWidth(0) # word joiner
+    Select(0ufeff); SetWidth(0) # zero width no-break space
 
     Print("Edit numbers")
 # 2 (全体を横に少し狭くして少し左に移動)
