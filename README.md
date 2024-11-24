@@ -6,6 +6,8 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、全角・半角の組み合わせになっている括弧や、誤って使われている全角チルダなどをすぐに見つけることができます。  
 全角スペースや半角・ノーブレークスペースを可視化したバージョンも用意してあり、使い分けて使用できます。
 
+フォント生成用のスクリプトを利用すれば、必要な機能のみ実装したフォントを各自で作っていただくこともできます。
+
 - [Commit Mono](https://commitmono.com) に影響を受け、calt を利用したカーニング機能を実装しました (v1.1.0以降)。
 - [mottainaiDTP](http://mottainaidtp.seesaa.net) さんの [3桁ごとにカンマが発生するフォント](http://mottainaidtp.seesaa.net/article/395328634.html) を応用し、桁区切りマークを表示するバージョンを追加しました (v1.6.0以降)。
 - スタイルセットに対応したことで、機能や見た目について柔軟にカスタマイズできるようになりました (v2.0.0以降)。
@@ -16,8 +18,6 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - Cyroit に [Meslo LG](https://github.com/andreberg/Meslo-Font) と [Hack](https://sourcefoundry.org/hack/) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降を使用)。
 - Cyroit に [JetBrains Mono NL](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
 - Cyroit に [Ubuntu Mono](https://design.ubuntu.com/font) を合成した姉妹フォント「[Ubroit](https://omonomo.github.io/Ubroit/)」を作成しました (v3.3.0以降を使用)。
-
-フォント生成用のスクリプトを利用すれば、必要な機能のみ実装したフォントを各自で作っていただくこともできます。
 
 ## フォントサンプル
 
