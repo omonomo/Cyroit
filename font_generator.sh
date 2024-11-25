@@ -13774,6 +13774,10 @@ while (i < SizeOf(latin_sfd_list))
     Select(0u2500, 0u259f)
     Move(0, ${move_y_em_revise})
     Scale(102, 100, 256, 0) # 横幅を少し拡大
+    if ("${loose_flag}" == "true") # Loose 版対応 (とりあえず拡大させておく)
+        Scale(113, 100, 256, ${center_height_hankaku})
+    endif
+    SetWidth(512)
 
 # --------------------------------------------------
 
@@ -14359,18 +14363,22 @@ while (i < \$argc)
     Move(0, ${move_y_pl})
 
     Select(0ue0d1); RemoveOverlap(); Copy() # 
+    Select(65552); Paste() # Temporary glyph
+    if ("${loose_flag}" == "true") # Loose 版対応
+        Scale(113, 100, 256, ${center_height_hankaku})
+    endif
+    Copy()
     j = 0
     while (j < 32)
         Select(0u2580 + j); PasteInto()
         if ("${draft_flag}" == "false")
             OverlapIntersect()
         endif
-        if ("${loose_flag}" == "true") # Loose 版対応 (とりあえず拡大させておく)
-            Scale(113, 100, 256, ${center_height_hankaku})
-        endif
         SetWidth(512)
         j += 1
     endloop
+
+    Select(65552); Clear() # Temporary glyph
 
 # 八卦
     Print("Edit bagua trigrams")
