@@ -13944,8 +13944,8 @@ while (i < SizeOf(fontstyle_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 0)
-                    SetWidth(500)
+                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 256, 0)
+                    SetWidth(512)
                 endif
             endif
         endloop
@@ -13966,8 +13966,8 @@ while (i < SizeOf(fontstyle_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 332)
-                    SetWidth(500)
+                    Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 256, 338)
+                    SetWidth(512)
                 endif
             endif
         endloop
@@ -13979,8 +13979,8 @@ while (i < SizeOf(fontstyle_list))
         foreach
             if (WorthOutputting())
                 if (GlyphInfo("Width") <= 700)
-                    Scale(${scale_width_hankaku}, 100, 250, 332)
-                    SetWidth(500)
+                    Scale(${scale_width_hankaku}, 100, 256, 338)
+                    SetWidth(512)
                 endif
             endif
         endloop
@@ -13989,8 +13989,8 @@ while (i < SizeOf(fontstyle_list))
         SelectMore(${address_store_zero}, ${address_store_zero} + 5) # 保管したスラッシュ無し0
         SelectMore(${address_store_visi_latin}, ${address_store_visi_latin} + 1) # 保管した ⁄|
         SelectMore(${address_store_visi_kana} + 2) # 保管した –
-        Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 250, 0)
-        SetWidth(500)
+        Scale(${scale_width_hankaku}, ${scale_height_hankaku}, 256, 0)
+        SetWidth(512)
     endif
 
 # --------------------------------------------------
