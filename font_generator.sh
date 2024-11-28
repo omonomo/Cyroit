@@ -14135,13 +14135,13 @@ while (i < SizeOf(input_list))
     Select(0ue0b5);         Scale(95,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
     Select(0ue0b6);         Scale(80,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 18, ${move_y_pl}); SetWidth(512)
     Select(0ue0b7);         Scale(95,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
-    Select(0ue0b8);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0b8);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(-8,  ${move_y_pl}); SetWidth(512)
     Select(0ue0b9);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
-    Select(0ue0ba);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0ba);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 + 8,  ${move_y_pl}); SetWidth(512)
     Select(0ue0bb);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
-    Select(0ue0bc);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0bc);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(-8,  ${move_y_pl}); SetWidth(512)
     Select(0ue0bd);         Scale(50,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0,  ${move_y_pl}); SetWidth(512)
-    Select(0ue0be);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 - 4,  ${move_y_pl}); SetWidth(512)
+    Select(0ue0be);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512 + 8,  ${move_y_pl}); SetWidth(512)
     Select(0ue0bf);         Scale(50,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(-512,      ${move_y_pl}); SetWidth(512)
     Select(0ue0c0, 0ue0c1); Scale(95,  ${scale_height_pl}, 0,    ${center_height_pl}); Move(0, ${move_y_pl2}); SetWidth(1024)
     Select(0ue0c2, 0ue0c3); Scale(95,  ${scale_height_pl}, 1024, ${center_height_pl}); Move(0, ${move_y_pl2}); SetWidth(1024)
@@ -14205,18 +14205,14 @@ while (i < SizeOf(input_list))
 
 # Seti-UI + Customs
     Print("Edit Seti-UI + Costoms")
-    Select(0ue5fa, 0ue6b5)
+    Select(0ue5fa, 0ue6b7)
     Scale(${scale_nerd})
     SetWidth(1024)
 
 # Devicons
     Print("Edit Devicons")
-    Select(0ue700, 0ue7bc)
-    SelectMore(0ue7c4, 0ue7c5)
+    Select(0ue700, 0ue8e3)
     Scale(${scale_nerd})
-    SetWidth(1024)
-
-    Select(0ue700, 0ue7c5)
     SetWidth(1024)
 
 # Codicons
@@ -14241,7 +14237,7 @@ while (i < SizeOf(input_list))
 
 # Font Logos
     Print("Edit Font Logos")
-    Select(0uf300, 0uf375)
+    Select(0uf300, 0uf381)
     Scale(${scale_nerd})
     SetWidth(1024)
 
