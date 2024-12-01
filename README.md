@@ -13,7 +13,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - スタイルセットに対応したことで、機能や見た目について柔軟にカスタマイズできるようになりました (v2.0.0以降)。
 - 変体仮名と小書き仮名拡張の表示に対応しました (v2.1.0以降)。
 - 点字の表示に対応しました (v2.4.0以降)。
-- 半角と全角の横幅の比率を9:16にしたバージョンを追加しました (v3.0.0以降)。
+- 英数文字の間隔にゆとりを持たせるために、半角と全角の横幅の比率を9:16にしたバージョンを追加しました (v3.0.0以降)。
 - カラー絵文字フォントとの併用を前提に、絵文字のグリフを減らしたバージョンを追加しました (v3.2.0以降)。
 - Cyroit に [Meslo LG](https://github.com/andreberg/Meslo-Font) と [Hack](https://sourcefoundry.org/hack/) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降を使用)。
 - Cyroit に [JetBrains Mono NL](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
@@ -45,13 +45,13 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v3.3.0 (2024-11-23)
+最新版 v3.4.0 (2024-12-01)
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.3.0/Cyroit_v3.3.0.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.3.0/CyroitLoose_v3.3.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.3.0.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.4.0/Cyroit_v3.4.0.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.4.0/CyroitLoose_v3.4.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.4.0.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
