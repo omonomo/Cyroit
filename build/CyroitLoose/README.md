@@ -65,7 +65,7 @@ Copyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 
 ([https://cid.ninjal.ac.jp/kana/font/](https://cid.ninjal.ac.jp/kana/font/))  
 変体仮名で使用しています。NINJAL 変体仮名フォントのライセンスは [Apache Lincense v2.0](https://cid.ninjal.ac.jp/kana/font/) です。
 
-[Symbols Nerd Font (Version 001.000;Nerd Fonts 3.2.1)]  
+[Symbols Nerd Font (Version 001.000;Nerd Fonts 3.3.0)]  
 Copyright (c) 2016, Ryan McIntyre  
 ([https://www.nerdfonts.com](https://www.nerdfonts.com))  
 サイズを調整して使用しています。Symbols Nerd Font のライセンスは [MIT](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/NerdFontsSymbolsOnly/LICENSE) です。
