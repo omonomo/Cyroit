@@ -16207,6 +16207,19 @@ while (i < \$argc)
         j += 1
     endloop
 
+ #    orig = [0u1d16, 0u1d17, 0u1d1d, 0u1d7b,\
+ #            0u1d85, 0u01ab] # ᴖᴗᴝᵻ ᶅƫ
+ #    supb = [0u1d54, 0u1d55, 0u1d59, 0u1da7,\
+ #            0u1daa, 0u1db5] # ᵔᵕᵙᶧ ᶪᶵ
+ #    j = 0
+ #    while (j < SizeOf(orig))
+ #        Select(supb[j])
+ #        glyphName = GlyphInfo("Name")
+ #        Select(orig[j])
+ #        AddPosSub(lookups[0][0],glyphName)
+ #        j += 1
+ #    endloop
+
 # aalt 複数
     Select(0u3402) # 㐂
     lookups = GetPosSub("*") # フィーチャを取り出す
