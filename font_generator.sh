@@ -13557,6 +13557,10 @@ while (i < SizeOf(latin_sfd_list))
     CorrectDirection()
     Move(0, ${move_y_super})
     SetWidth(500)
+    Select(0u02c1) # ˁ
+    glyphName = GlyphInfo("Name") # sups フィーチャ追加
+    Select(0u0295) # ʕ
+    AddPosSub(lookups[0][0],glyphName)
 
     # ˀ
     Select(0u0294); Copy() # ʔ
@@ -16185,8 +16189,9 @@ while (i < \$argc)
             0u0289, 0u028a, 0u028b, 0u028c,\
             0u0290, 0u0291, 0u0292, 0u029d,\
             0u029f, 0u0266, 0u0279, 0u027b,\
-            0u0281, 0u0294, 0u0295, 0u043d]
-            # ɐɑɒɔ ɕɛɜɟ ɡɥɨɩ ɪɭɯɰ ɱɲɳɴ ɵɸʂʃ ʉʊʋʌ ʐʑʒʝ ʟɦɹɻ ʁʔʕн
+            0u0281, 0u0294, 0u0295, 0u0263,\
+            0u043d]
+            # ɐɑɒɔ ɕɛɜɟ ɡɥɨɩ ɪɭɯɰ ɱɲɳɴ ɵɸʂʃ ʉʊʋʌ ʐʑʒʝ ʟɦɹɻ ʁʔʕɣ н
     supb = [0u1d44, 0u1d45, 0u1d9b, 0u1d53,\
             0u1d9d, 0u1d4b, 0u1d9f, 0u1da1,\
             0u1da2, 0u1da3, 0u1da4, 0u1da5,\
@@ -16196,8 +16201,9 @@ while (i < \$argc)
             0u1db6, 0u1db7, 0u1db9, 0u1dba,\
             0u1dbc, 0u1dbd, 0u1dbe, 0u1da8,\
             0u1dab, 0u02b1, 0u02b4, 0u02b5,\
-            0u02b6, 0u02c0, 0u02c1, 0u1d78]
-            # ᵄᵅᶛᵓ ᶝᵋᶟᶡ ᶢᶣᶤᶥ ᶦᶩᵚᶭ ᶬᶮᶯᶰ ᶱᶲᶳᶴ ᶶᶷᶹᶺ ᶼᶽᶾᶨ ᶫʱʴʵ ʶˀˁᵸ
+            0u02b6, 0u02c0, 0u02c1, 0u02e0,\
+           0u1d78]
+            # ᵄᵅᶛᵓ ᶝᵋᶟᶡ ᶢᶣᶤᶥ ᶦᶩᵚᶭ ᶬᶮᶯᶰ ᶱᶲᶳᶴ ᶶᶷᶹᶺ ᶼᶽᶾᶨ ᶫʱʴʵ ʶˀˁˠ ᵸ
     j = 0
     while (j < SizeOf(orig))
         Select(supb[j])
