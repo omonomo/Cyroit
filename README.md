@@ -1,3 +1,5 @@
+<img alt="Title" src="./images/Title.png" width="468">
+
 # 全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Cyroit」
 
 Cyroit (しろいと) はコーディングにもお使いいただける日本語等幅フォントです。  
@@ -6,7 +8,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 全角英数記号や半角カナ等にアンダーラインが引いてあるため、全角・半角の組み合わせになっている括弧や、誤って使われている全角チルダなどをすぐに見つけることができます。  
 全角スペースや半角・ノーブレークスペースを可視化したバージョンも用意してあり、使い分けて使用できます。
 
-フォント生成用のスクリプトを利用すれば、必要な機能のみ実装したフォントを各自で作っていただくこともできます。
+フォント生成用のスクリプトを利用すれば、必要な機能のみ実装したフォントを作っていただくこともできます。
 
 - [Commit Mono](https://commitmono.com) に影響を受け、calt を利用したカーニング機能を実装しました (v1.1.0以降)。
 - [mottainaiDTP](http://mottainaidtp.seesaa.net) さんの [3桁ごとにカンマが発生するフォント](http://mottainaidtp.seesaa.net/article/395328634.html) を応用し、桁区切りマークを表示するバージョンを追加しました (v1.6.0以降)。
@@ -18,6 +20,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - Cyroit に [Meslo LG](https://github.com/andreberg/Meslo-Font) と [Hack](https://sourcefoundry.org/hack/) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降を使用)。
 - Cyroit に [JetBrains Mono NL](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
 - Cyroit に [Ubuntu Mono](https://design.ubuntu.com/font) を合成した姉妹フォント「[Ubroit](https://omonomo.github.io/Ubroit/)」を作成しました (v3.3.0以降を使用)。
+- Cyroit に [Source Code Pro](https://adobe-fonts.github.io/source-code-pro/) を合成した姉妹フォント「[Soroit](https://omonomo.github.io/Soroit/)」を作成しました (v3.4.2以降を使用)。
 
 ## フォントサンプル
 
@@ -45,13 +48,13 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v3.4.1 (2024-12-03)
+最新版 v3.4.2 (2024-12-15)
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.4.1/Cyroit_v3.4.1.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.4.1/CyroitLoose_v3.4.1.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.4.1.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.4.2/Cyroit_v3.4.2.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.4.2/CyroitLoose_v3.4.2.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.4.2.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -94,6 +97,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - ダッシュや縦棒など、形状の似た記号と区別しやすいように実線を破線に改変している記号があります。
 - 点字や漢字構成記述文字、キーボードショートカット、製図記号などを少し追加しています。
 - Nerd Fonts は他の素材フォントとのバランスをとるために、一部を除いてサイズを調整しています。
+- また Nerd Fonts には、Ver.3.3.0 から [Fira Code](https://github.com/tonsky/FiraCode) 由来の[プログレスバー](https://github.com/tonsky/FiraCode/blob/master/extras/progress.png)のグリフが加わっていますが、独自に製作したのグリフに置き換えています。
 
 ### 機能的なものについて
 
@@ -132,7 +136,7 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 ### 通常版、絵文字減らした版のスタイルセットについて
 
-設定方法については、[Fira Code](https://github.com/tonsky/FiraCode) の[説明](https://github.com/tonsky/FiraCode/wiki/How-to-enable-stylistic-sets)が分かりやすいと思います。
+設定方法については、[Fira Code の説明](https://github.com/tonsky/FiraCode/wiki/How-to-enable-stylistic-sets)が分かりやすいと思います。
 
 | タグ名 | サンプル                                             | 内容                                                                                    |
 | ------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
@@ -160,10 +164,10 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 Cyroit は以下の環境でビルドできることを確認しています。
 
-- OS: macOS Sequoia (version 15.1.1)
+- OS: macOS Sequoia (version 15.2)
 - Shell: GNU bash, version 5.2.37(1)-release (aarch64-apple-darwin23.4.0)
 - FontForge: 20230101
-- FontTools: 4.55.1
+- FontTools: 4.55.3
 
 ### 基本的な使い方
 
@@ -335,7 +339,8 @@ calt テーブル (前後の文字によってグリフ置換を行う設定) �
 
 - [GitHubページ](https://github.com/omonomo/Cyroit): 過去のバージョンや更新履歴はこちらをご参照ください。
 - [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Meroit」](https://omonomo.github.io/Meroit/): Cyroit の一つ下の妹さんフォントです。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Jeroit」](https://omonomo.github.io/Jeroit/): Cyroit の二つ下の妹さんフォントです。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Ubroit」](https://omonomo.github.io/Ubroit/): Cyroit の三つ下の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Jeroit」](https://omonomo.github.io/Jeroit/): 二つ下の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Ubroit」](https://omonomo.github.io/Ubroit/): 三つ下の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Soroit」](https://omonomo.github.io/Soroit/): 末っ子の妹さんフォントです。
 - [小指の移動量が少ない日本語かな入力配列 「水草配列」](https://omonomo.github.io/Mizukusa/): オリジナル日本語かな入力配列を紹介しています。
 - [DefaultKeyBinding.dict サンプル](https://omonomo.github.io/DefaultKeyBinding/): タイトル通りです。
