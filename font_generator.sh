@@ -4650,24 +4650,19 @@ while (i < SizeOf(input_list))
 # その他のスペース用グリフ (ss 用) 作成
     Print("Make other space")
 
-    Select(0u3013); Copy() # 〓
-    Select(${address_store_otherspace}); Paste()
-    Rotate(90)
-    PasteInto()
-    OverlapIntersect()
-    Move(0, 4)
-    Scale(65, 100)
-
     Select(0u25a0); Copy() # ■
-    Select(65552);  Paste()
-    Select(65553);  Paste()
-    Scale(58, 70); HFlip(); Copy()
+    Select(${address_store_otherspace}); Paste()
+    Scale(100, 50, 0, 0)
+    Select(0u25a0); Copy() # ■
+    Select(65552, 65553);  Paste()
+    Select(65553)
+    Scale(55, 70); HFlip(); Copy()
     Select(65552);  PasteInto()
     Scale(65, 100)
     Copy()
-    Select(${address_store_otherspace}); PasteInto() # 〓
+    Select(${address_store_otherspace}); PasteInto()
     OverlapIntersect()
-    Move(-228, 0)
+    Move(-228, -208)
     SetWidth(500)
 
     Select(65552); Clear() # Temporary glyph
