@@ -5,7 +5,7 @@
 # コメントの前に # を入れていますが、形式的に入れているだけで # から後がコメントというわけではありません。
 
 # フォントのバージョン
-FONT_VERSION=3.4.2
+FONT_VERSION=3.5.0
 
 # フォント名
 FONT_FAMILYNAME=Cyroit
@@ -65,7 +65,3 @@ SCALE_DECIMAL=93
 MOVE_Y_MATH=-25
 # 上付き、下付きの縦移動量 (em/1024 * 半角文字の縦拡大・縮小率)
 MOVE_Y_S_MATH=-10
-
-# 括弧の設定
-# 縦移動量 (em/1024 * 半角文字の縦拡大・縮小率)
-MOVE_Y_BRACKET=0
