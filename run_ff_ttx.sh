@@ -24,7 +24,7 @@ font_familyname_suffix=""
 font_familyname_suffix_def=(BS SP FX HB DG) # バージョン違いの名称 (デフォルト設定)
 font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp) # 各バージョンのオプション (デフォルト設定)
 build_fonts_dir="build" # 完成品を保管するフォルダ
-illegal_opt_fg="hVxfNn" # font_generator に指定できないオプション
+illegal_opt_fg="hVxXfNn" # font_generator に指定できないオプション
 
 opt_fg="" # font_generator のオプション
 opt_tm="" # table_modificator のオプション
@@ -43,7 +43,7 @@ option_format_fg() { # font_generator 用のオプションを整形 (戻り値:
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
   local loose_flag # Loose 版にするか
-  local draft_flag= # 下書きモードか
+  local draft_flag # 下書きモードか
   opt="${2}"
   leaving_tmp_flag="${3}"
   loose_flag="${4}"
