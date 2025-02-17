@@ -17774,8 +17774,8 @@ if [ "${patch_only_flag}" = "false" ]; then
 
     # 下書きモード以外で font_generator に変更が無く、すでにパッチ前フォントが作成されていた場合それを呼び出す
     if [ "${draft_flag}" = "false" ]; then
-        output_data=$(echo $(wc -c font_generator.sh) | cut -d ' ' -f 1)"-"$(date -r font_generator.sh "+%Y%m%d-%H%M%S")
-        output_data=${output_data}"_"$(echo $(wc -c "${settings}.txt") | cut -d ' ' -f 1)"-"$(date -r "${settings}.txt" "+%Y%m%d-%H%M%S")
+        output_data=$(sha256sum font_generator.sh | cut -d ' ' -f 1)
+        output_data=${output_data}"_"$(sha256sum font_generator.sh | cut -d ' ' -f 1)
         if [ "${nerd_flag}" = "false" ]; then
             nopatchsetdir_name="e"
         fi
