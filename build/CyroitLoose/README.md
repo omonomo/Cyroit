@@ -69,7 +69,7 @@ Copyright(c) National Institute for Japanese Language and Linguistics (NINJAL), 
 [Symbols Nerd Font (Version 001.000;Nerd Fonts 3.3.0)]  
 Copyright (c) 2016, Ryan McIntyre  
 ([https://www.nerdfonts.com](https://www.nerdfonts.com))  
-サイズを調整して使用しています。Symbols Nerd Font のライセンスは [MIT](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/NerdFontsSymbolsOnly/LICENSE) です。
+サイズを調整して使用しています。Symbols Nerd Font のライセンスは [The MIT License](https://github.com/ryanoasis/nerd-fonts/blob/master/patched-fonts/NerdFontsSymbolsOnly/LICENSE) です。
 
 ## Cyroit のライセンス
 
