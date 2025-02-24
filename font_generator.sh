@@ -5,10 +5,11 @@
 # Copyright (c) 2023 omonomo
 #
 # [Original Script]
-# Ricty Generator (ricty_generator.sh)
+# Ricty Generator (ricty_generator-4.1.1.sh)
 #
 # Copyright (c) 2011-2017 Yasunori Yusa
 # All rights reserved.
+# (https://rictyfonts.github.io)
 
 
 # ログをファイル出力させる場合は有効にする (<< "#LOG" をコメントアウトさせる)
