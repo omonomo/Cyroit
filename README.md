@@ -22,6 +22,8 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - Cyroit に [Ubuntu Mono](https://design.ubuntu.com/font) を合成した姉妹フォント「[Ubroit](https://omonomo.github.io/Ubroit/)」を作成しました (v3.3.0以降を使用)。
 - Cyroit に [Source Code Pro](https://adobe-fonts.github.io/source-code-pro/) を合成した姉妹フォント「[Soroit](https://omonomo.github.io/Soroit/)」を作成しました (v3.4.2以降を使用)。
 - Cyroit に [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono) と [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono) を合成した姉妹フォント「[Roroit](https://omonomo.github.io/Roroit/)」を作成しました (v3.5.0以降を使用)。
+- Cyroit に [Victor Mono](https://rubjo.github.io/victor-mono/) を合成した姉妹フォント「[Viroit](https://omonomo.github.io/Viroit/)」を作成しました (v3.5.1以降を使用)。
+- Cyroit に [Monoid](https://larsenwork.com/monoid/) を合成した姉妹フォント「[Idroit](https://omonomo.github.io/Idroit/)」を作成しました (v3.5.1以降を使用)。
 
 ## フォントサンプル
 
@@ -341,8 +343,10 @@ calt テーブル (前後の文字によってグリフ置換を行う設定) �
 ## リンク
 
 - [GitHub リリースページ](https://github.com/omonomo/Cyroit/releases): 過去のバージョンや更新履歴はこちらをご参照ください。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Meroit」](https://omonomo.github.io/Meroit/): Cyroit の一つ下の妹さんフォントです。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Jeroit」](https://omonomo.github.io/Jeroit/): 二つ下の妹さんフォントです。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Ubroit」](https://omonomo.github.io/Ubroit/): 三つ下の妹さんフォントです。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Soroit」](https://omonomo.github.io/Soroit/): 四つ下の妹さんフォントです。
-- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Roroit」](https://omonomo.github.io/Roroit/): 末っ子の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Meroit」](https://omonomo.github.io/Meroit/): 一つ下の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Jeroit」](https://omonomo.github.io/Jeroit/): 三番目の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Ubroit」](https://omonomo.github.io/Ubroit/): 四番目の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Soroit」](https://omonomo.github.io/Soroit/): 五番目の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Roroit」](https://omonomo.github.io/Roroit/): 六番目の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Viroit」](https://omonomo.github.io/Viroit/): 七番目の妹さんフォントです。
+- [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Idroit」](https://omonomo.github.io/Idroit/): 末っ子の妹さんフォントです。
