@@ -17829,14 +17829,14 @@ if [ "${patch_only_flag}" = "false" ]; then
         if [ "${loose_flag}" != "false" ]; then
             nopatchsetdir_name="${nopatchsetdir_name}w"
         fi
-        nopatchsetdir_name="${font_familyname}${font_familyname_suffix}_${nopatchsetdir_name}"
+        nopatchsetdir_name="${font_familyname}_${nopatchsetdir_name}"
         file_data_txt=$(find "./${nopatchdir_name}/${nopatchsetdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
         if [ -n "${file_data_txt}" ]; then
             input_data=$(head -n 1 "${nopatchdir_name}/${nopatchsetdir_name}/${fileDataName}.txt")
             if [ "${input_data}" = "${output_data}" ]; then
                 echo "font_generator and settings file are unchanged"
                 echo "Use saved nopatch fonts"
-                cp -f ${nopatchdir_name}/${nopatchsetdir_name}/${font_familyname}${font_familyname_suffix}-*.nopatch.ttf "."
+                cp -f ${nopatchdir_name}/${nopatchsetdir_name}/${font_familyname}-*.nopatch.ttf "."
                 compose_flag="false"
                 echo
             fi
@@ -17913,7 +17913,7 @@ if [ "${patch_only_flag}" = "false" ]; then
             rm -rf "${nopatchdir_name}/${nopatchsetdir_name}"
             mkdir -p "${nopatchdir_name}/${nopatchsetdir_name}"
             printf "${output_data}" > "${nopatchdir_name}/${nopatchsetdir_name}/${fileDataName}.txt"
-            cp -f ${font_familyname}${font_familyname_suffix}-*.nopatch.ttf "${nopatchdir_name}/${nopatchsetdir_name}/."
+            cp -f ${font_familyname}-*.nopatch.ttf "${nopatchdir_name}/${nopatchsetdir_name}/."
             echo
         fi
     fi
