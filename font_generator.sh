@@ -2568,22 +2568,17 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     # 上
     Select(0u2588); Copy() # Full block
-    Select(0u006a); PasteWithOffset(0, 420) # j
+    Select(0u006a) # j
+    SelectMore(0u0135) # ĵ
+    SelectMore(0u0237) # ȷ
+    PasteWithOffset(0, 420)
     OverlapIntersect()
     # 合成
     Select(65552);  Copy()
-    Select(0u006a); PasteWithOffset(0, -23) # j
-
-    RemoveOverlap()
-    Simplify()
-    Move(-20, 0)
-    SetWidth(500)
-
-    Select(0u2588); Copy() # Full block
-    Select(0u0135); PasteWithOffset(0, 420) # ĵ
-    OverlapIntersect()
-    Select(65552);  Copy()
-    Select(0u0135); PasteWithOffset(0, -23) # ĵ
+    Select(0u006a) # j
+    SelectMore(0u0135) # ĵ
+    SelectMore(0u0237) # ȷ
+    PasteWithOffset(0, -23)
 
     RemoveOverlap()
     Simplify()
@@ -14526,7 +14521,15 @@ while (i < \$argc)
 # スペースの width 変更
     Print("Modified space width")
 
+    Select(0u115f) # hangul choseong filler
+    SelectMore(0u1160) # hangul jungseong filler
+    SelectMore(0u3164) # hangul filler
+    SetWidth(${width_zenkaku})
+
     Select(0u00ad) # soft hyphen
+    SelectMore(0u17b4) # khmer vowel inherent aq
+    SelectMore(0u17b5) # khmer vowel inherent aa
+    SelectMore(0u180e) # mongolian vowel separator
     SelectMore(0u2000) # en quad
     SelectMore(0u2001) # em quad
     SelectMore(0u2002) # en space
@@ -14538,18 +14541,23 @@ while (i < \$argc)
     SelectMore(0u2008) # punctuation space
     SelectMore(0u2009) # thin space
     SelectMore(0u200a) # hair space
-    SelectMore(0u2028) # line separator
-    SelectMore(0u2029) # paragraph separator
     SelectMore(0u202f) # narrow no-break space
     SelectMore(0u205f) # medium mathematical space
+    SelectMore(0uffa0) # halfwidth hangul filler
+    SelectMore(0ufffc) # object replacement character
+    SelectMore(0u133fc) # egyptian hieroglyph z015b
+    SelectMore(0u1d159) # musical symbol null notehead
     SetWidth(${width_hankaku})
 
     Select(0u034f) # combining grapheme joiner
+    SelectMore(0u061c) # arabic letter mark
     SelectMore(0u200b) # zero width space
     SelectMore(0u200c) # zero width non-joiner
     SelectMore(0u200d) # zero width joiner
     SelectMore(0u200e) # left-to-right mark
     SelectMore(0u200f) # right-to-left mark
+    SelectMore(0u2028) # line separator
+    SelectMore(0u2029) # paragraph separator
     SelectMore(0u202a) # left-to-right embedding
     SelectMore(0u202b) # right-to-left embedding
     SelectMore(0u202c) # pop directional formatting
@@ -14571,6 +14579,14 @@ while (i < \$argc)
     SelectMore(0u206e) # national digit shapes
     SelectMore(0u206f) # nominal digit shapes
     SelectMore(0ufeff) # zero width no-break space
+    SelectMore(0u1d173) # musical symbol begin beam
+    SelectMore(0u1d174) # musical symbol end beam
+    SelectMore(0u1d175) # musical symbol begin tie
+    SelectMore(0u1d176) # musical symbol end tie
+    SelectMore(0u1d177) # musical symbol begin slur
+    SelectMore(0u1d178) # musical symbol end slur
+    SelectMore(0u1d179) # musical symbol begin phrase
+    SelectMore(0u1d17a) # musical symbol end phrase
     SetWidth(0)
 
 # 記号のグリフを加工
@@ -16222,6 +16238,31 @@ while (i < \$argc)
     spc =[\
     0u00ad,\
     0u034f,\
+    0u061c,\
+    0u115f,\
+    0u1160,\
+    0u17b4,\
+    0u17b5,\
+    0u180e,\
+    0u200a,\
+    0u200b,\
+    0u200c,\
+    0u200d,\
+    0u200e,\
+    0u200f,\
+    0u202a,\
+    0u202b,\
+    0u202c,\
+    0u202d,\
+    0u202e,\
+    0u202f,\
+    0u205f,\
+    0u206a,\
+    0u206b,\
+    0u206c,\
+    0u206d,\
+    0u206e,\
+    0u206f,\
     0u2000,\
     0u2001,\
     0u2002,\
@@ -16232,21 +16273,8 @@ while (i < \$argc)
     0u2007,\
     0u2008,\
     0u2009,\
-    0u200a,\
-    0u200b,\
-    0u200c,\
-    0u200d,\
-    0u200e,\
-    0u200f,\
     0u2028,\
     0u2029,\
-    0u202a,\
-    0u202b,\
-    0u202c,\
-    0u202d,\
-    0u202e,\
-    0u202f,\
-    0u205f,\
     0u2060,\
     0u2061,\
     0u2062,\
@@ -16256,13 +16284,20 @@ while (i < \$argc)
     0u2067,\
     0u2068,\
     0u2069,\
-    0u206a,\
-    0u206b,\
-    0u206c,\
-    0u206d,\
-    0u206e,\
-    0u206f,\
-    0ufeff\
+    0u3164,\
+    0ufeff,\
+    0uffa0,\
+    0ufffc,\
+    0u133fc,\
+    0u1d159,\
+    0u1d173,\
+    0u1d174,\
+    0u1d175,\
+    0u1d176,\
+    0u1d177,\
+    0u1d178,\
+    0u1d179,\
+    0u1d17a\
     ]
     j = 0
     while (j < SizeOf(spc))
