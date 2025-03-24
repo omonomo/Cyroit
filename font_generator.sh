@@ -14527,8 +14527,6 @@ while (i < \$argc)
     SetWidth(${width_zenkaku})
 
     Select(0u00ad) # soft hyphen
-    SelectMore(0u17b4) # khmer vowel inherent aq
-    SelectMore(0u17b5) # khmer vowel inherent aa
     SelectMore(0u180e) # mongolian vowel separator
     SelectMore(0u2000) # en quad
     SelectMore(0u2001) # em quad
@@ -14541,33 +14539,34 @@ while (i < \$argc)
     SelectMore(0u2008) # punctuation space
     SelectMore(0u2009) # thin space
     SelectMore(0u200a) # hair space
+    SelectMore(0u2028) # line separator
+    SelectMore(0u2029) # paragraph separator
     SelectMore(0u202f) # narrow no-break space
     SelectMore(0u205f) # medium mathematical space
+    SelectMore(0u2061) # function application
+    SelectMore(0u2062) # invisible times
+    SelectMore(0u2063) # invisible separator
+    SelectMore(0u2064) # invisible plus
     SelectMore(0uffa0) # halfwidth hangul filler
     SelectMore(0ufffc) # object replacement character
-    SelectMore(0u133fc) # egyptian hieroglyph z015b
     SelectMore(0u1d159) # musical symbol null notehead
     SetWidth(${width_hankaku})
 
     Select(0u034f) # combining grapheme joiner
     SelectMore(0u061c) # arabic letter mark
+    SelectMore(0u17b4) # khmer vowel inherent aq
+    SelectMore(0u17b5) # khmer vowel inherent aa
     SelectMore(0u200b) # zero width space
     SelectMore(0u200c) # zero width non-joiner
     SelectMore(0u200d) # zero width joiner
     SelectMore(0u200e) # left-to-right mark
     SelectMore(0u200f) # right-to-left mark
-    SelectMore(0u2028) # line separator
-    SelectMore(0u2029) # paragraph separator
     SelectMore(0u202a) # left-to-right embedding
     SelectMore(0u202b) # right-to-left embedding
     SelectMore(0u202c) # pop directional formatting
     SelectMore(0u202d) # left-to-right override
     SelectMore(0u202e) # right-to-left override
     SelectMore(0u2060) # word joiner
-    SelectMore(0u2061) # function application
-    SelectMore(0u2062) # invisible times
-    SelectMore(0u2063) # invisible separator
-    SelectMore(0u2064) # invisible plus
     SelectMore(0u2066) # left-to-right isolate
     SelectMore(0u2067) # right-to-left isolate
     SelectMore(0u2068) # first strong isolate
@@ -16288,7 +16287,6 @@ while (i < \$argc)
     0ufeff,\
     0uffa0,\
     0ufffc,\
-    0u133fc,\
     0u1d159,\
     0u1d173,\
     0u1d174,\
