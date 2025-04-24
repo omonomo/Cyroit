@@ -1,0 +1,18 @@
+# ターミナルから直接実行する場合
+# docker compose run --rm font ./run_ff_ttx.sh -F [オプション]
+#
+# コンテナに入ってから実行する場合
+# docker compose run -it --rm font
+# exit で抜けます
+
+services:
+  font:
+    build: .
+    volumes:
+      - ./build:/app/build
+      - karningcash:/app/karningSettings
+      - fontcash:/app/nopatchFonts
+
+volumes:
+  karningcash:
+  fontcash:
