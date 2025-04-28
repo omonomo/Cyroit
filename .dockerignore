@@ -1,0 +1,15 @@
+*bak
+*ttx
+*ttf
+.git
+.gitignore
+build
+fontsCollector
+images
+karningSettings
+nopatchFonts
+README.md
+LICENSE.txt
+.dockerignore
+compose.yml
+Dockerfile
