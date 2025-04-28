@@ -14261,13 +14261,13 @@ while (i < SizeOf(input_list))
 
 # Seti-UI + Customs
     Print("Edit Seti-UI + Costoms")
-    Select(0ue5fa, 0ue6b7)
+    Select(0ue5fa, 0ue6b8)
     Scale(${scale_nerd})
     SetWidth(1024)
 
 # Devicons
     Print("Edit Devicons")
-    Select(0ue700, 0ue8e3)
+    Select(0ue700, 0ue8ef)
     Scale(${scale_nerd})
     SetWidth(1024)
 
