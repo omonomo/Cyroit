@@ -109,6 +109,7 @@ forge_ttx_help()
     echo "Option:"
     echo "  -h         Display this information"
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
+    echo "  -X         Cleaning temporary files, saved nopatch fonts and saved kerning settings" # 一時作成ファイルと保存したファイルの消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -n string  Set fontfamily suffix (\"string\")"
@@ -138,7 +139,7 @@ echo "*** FontForge and TTX runner ***"
 echo
 
 # オプションを取得
-while getopts hxlN:n:wkrdCpF OPT
+while getopts hxXlN:n:wkrdCpF OPT
 do
     case "${OPT}" in
         "h" )
@@ -149,6 +150,14 @@ do
             echo "Option: Cleaning temporary files"
             remove_temp
             rm -f *.ttf
+            exit 0
+            ;;
+        "X" )
+            echo "Option: Cleaning temporary files, saved nopatch fonts and saved kerning settings"
+            remove_temp
+            rm -f *.ttf
+            ./font_generator.sh -X
+            ./calt_table_maker.sh -X
             exit 0
             ;;
         "l" )
