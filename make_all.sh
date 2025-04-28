@@ -14,7 +14,18 @@ exec 2> >(tee -a $LOG_ERR)
 
 # 個別製作用 (絵文字減らした版は、グリフ数の違いにより calt 設定を作り直す必要があるため)
 font_familyname0="Cyroit"
-font_familyname1="CyroitLoose"
+
+# 設定読み込み
+settings="settings" # 設定ファイル名
+settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
+if [ -n "${settings_txt}" ]; then
+    S=$(grep -m 1 "^FONT_FAMILYNAME=" "${settings_txt}") # フォントファミリー名
+    if [ -n "${S}" ]; then
+        font_familyname0="${S#FONT_FAMILYNAME=}"
+    fi
+fi
+
+font_familyname1="${font_familyname0}Loose"
 font_familyname_suffix="EH"
 font_familyname_suffix_opt="Sjp"
 

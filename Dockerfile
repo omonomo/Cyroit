@@ -13,13 +13,13 @@ RUN apt update && \
   fontforge \
   fonttools \
   locales \
-  nano
+  nano \
+  && \
+  locale-gen ja_JP.UTF-8
 
-RUN locale-gen ja_JP.UTF-8
 ENV LANG=ja_JP.UTF-8
 ENV LANGUAGE=ja_JP:ja
 ENV LC_ALL=ja_JP.UTF-8
 
 WORKDIR /app
 COPY . /app
-

@@ -15,7 +15,7 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-font_familyname="Roroit"
+font_familyname="Cyroit"
 
 lookupIndex_calt="18" # caltテーブルのlookupナンバー
 listNo="0"
