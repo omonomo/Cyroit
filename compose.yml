@@ -10,9 +10,9 @@ services:
     build: .
     volumes:
       - ./build:/app/build
-      - karningcache:/app/karningSettings
-      - fontcache:/app/nopatchFonts
+      - karningcaches:/app/karningSettings
+      - fontcaches:/app/nopatchFonts
 
 volumes:
-  karningcache:
-  fontcache:
+  karningcaches:
+  fontcaches:
