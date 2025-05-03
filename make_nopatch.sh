@@ -30,7 +30,7 @@ font_familyname_suffix=""
 font_familyname_suffix_opt0="Poe"
 font_familyname_suffix_opt1="Poew"
 
-build_fonts_dir="Cyroit.nopatch" # フォントを保管するフォルダ
+build_fonts_dir="build/Cyroit.nopatch" # フォントを保管するフォルダ
 
 mkdir -p "${build_fonts_dir}"
 
