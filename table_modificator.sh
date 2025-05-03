@@ -388,11 +388,12 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       echo "Not compatible with calt feature." # フォントが対応していないか、すでにcaltがある場合
       calt_ok_flag="false"
     fi
-    # calt対応に関係なくスクリプトリストを変更
+
+    # calt対応に関係なくスクリプトリストを変更 (全ての用字の内容を同じにする)
     sed -i.bak -e '/FeatureIndex index=".." value=".."/d' "${P%%.ttf}.ttx" # 2桁のindexを削除
 
     sed -i.bak -e 's,FeatureIndex index="0" value=".",FeatureIndex index="0" value="0",' "${P%%.ttf}.ttx" # 始めの部分は上書き
-    sed -i.bak -e 's,FeatureIndex index="1" value=".",FeatureIndex index="1" value="3",' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,FeatureIndex index="1" value=".",FeatureIndex index="1" value="1",' "${P%%.ttf}.ttx"
     sed -i.bak -e 's,FeatureIndex index="2" value=".",FeatureIndex index="2" value="6",' "${P%%.ttf}.ttx"
     sed -i.bak -e 's,FeatureIndex index="3" value=".",FeatureIndex index="3" value="7",' "${P%%.ttf}.ttx"
     sed -i.bak -e 's,FeatureIndex index="4" value=".",FeatureIndex index="4" value="8",' "${P%%.ttf}.ttx"
@@ -436,15 +437,32 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       fi
     fi
 
+    # 言語 (具体的には JAN) を削除
     sed -i.bak -e '/<LangSys>/{n;d;}' "${P%%.ttf}.ttx" # LangSysタグとその間を削除
     sed -i.bak -e '/<LangSys>/{n;d;}' "${P%%.ttf}.ttx"
     sed -i.bak -e '/<LangSys>/{n;d;}' "${P%%.ttf}.ttx"
     sed -i.bak -e '/<LangSys>/{n;d;}' "${P%%.ttf}.ttx"
     sed -i.bak -e '/<LangSys>/d' "${P%%.ttf}.ttx"
     sed -i.bak -e '/<\/LangSys>/d' "${P%%.ttf}.ttx"
-
     sed -i.bak -e '/LangSysRecord/d' "${P%%.ttf}.ttx" # LangSysRecordタグを削除
     sed -i.bak -e '/LangSysTag/d' "${P%%.ttf}.ttx" # LangSysTagタグを削除
+
+    # macOS と Ubuntu では 合成後の ccmp に関するインデックス番号と内容が異なるため、対応策として内容を全て同じにする
+    sed -i.bak -e '\,<LookupListIndex index="1" value="4"/>,d' "${P%%.ttf}.ttx" # Index 1、2 を削除後、Index 0 を置換
+    sed -i.bak -e '\,<LookupListIndex index="1" value="17"/>,d' "${P%%.ttf}.ttx"
+    sed -i.bak -e '\,<LookupListIndex index="2" value="17"/>,d' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,<LookupListIndex index="0" value="2"/>,<LookupListIndex index="0" value="2"/>\
+    <LookupListIndex index="1" value="4"/>\
+    <LookupListIndex index="2" value="17"/>\
+    ,g' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,<LookupListIndex index="0" value="4"/>,<LookupListIndex index="0" value="2"/>\
+    <LookupListIndex index="1" value="4"/>\
+    <LookupListIndex index="2" value="17"/>\
+    ,g' "${P%%.ttf}.ttx"
+    sed -i.bak -e 's,<LookupListIndex index="0" value="17"/>,<LookupListIndex index="0" value="2"/>\
+    <LookupListIndex index="1" value="4"/>\
+    <LookupListIndex index="2" value="17"/>\
+    ,g' "${P%%.ttf}.ttx"
 
     # テーブル更新
     mv "$P" "${P%%.ttf}.orig.ttf"
