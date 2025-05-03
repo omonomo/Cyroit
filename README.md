@@ -51,13 +51,13 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v3.5.2 (2025-03-28)
+最新版 v3.6.0 (2025-05-04)
 
 | リンク                                                                                                      | 説明                                   |
 | ----------------------------------------------------------------------------------------------------------- | -------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.5.2/Cyroit_v3.5.2.zip)           | 通常版。半角幅が全角の1/2。            |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.5.2/CyroitLoose_v3.5.2.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.5.2.zip)                              | 使用方法は下の方にあります。           |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.6.0/Cyroit_v3.6.0.zip)           | 通常版。半角幅が全角の1/2。            |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.6.0/CyroitLoose_v3.6.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。 |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.6.0.zip)                              | 使用方法は下の方にあります。           |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -168,22 +168,45 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 Cyroit は以下の環境でビルドできることを確認しています。
 
-- OS: macOS Sequoia (version 15.3.2)
-- Shell: GNU bash, version 5.2.37(1)-release (aarch64-apple-darwin23.4.0)
-- FontForge: 20230101
-- FontTools: 4.56.0
+- macOS Sequoia 15.4.1
+- GNU bash, version 5.2.37(1)-release (aarch64-apple-darwin23.4.0)
+- FontForge 20230101
+- FontTools 4.57.0
+
+または上記 macOS 上にて
+
+- Docker Desktop 4.40.0(Engine 28.0.4, Compose v2.34.0-desktop.1)
+  - Ubuntu 24.04.2 LTS
+  - GNU bash, version 5.2.21(1)-release (aarch64-unknown-linux-gnu)
+  - FontForge 20230101
+  - FontTooles 4.46.0
 
 ### 基本的な使い方
+
+#### 1. [Docker (および Docker Compose)](https://www.docker.com) を使用する場合
+
+スクリプトのある場所をカレントディレクトリにして
+
+```
+docker compose run --rm font ./run_ff_ttx.sh -F S
+```
+
+異常なく完了した場合、直下の `build` フォルダに通常版のフォントが保存されます。
+
+- Docker 内に「fontcaches」「karningcaches」という名前を含むボリュームが作成されますのでご注意ください。
+- 「fontcaches」「karningcaches」には、コマンドを複数回実行する際にビルド時間を短縮するためのキャッシュファイルが保存されます。
+ 
+#### 2. Docker を使用しない場合
 
 あらかじめパッケージマネージャ等を利用して [FontForge](https://fontforge.org/en-US/) と [FontTools](https://github.com/fonttools/fonttools) をインストールし、使える状態にしておいてください。
 
 スクリプトのある場所をカレントディレクトリにして
 
 ```
-./run_ff_ttx.sh -F
+./run_ff_ttx.sh -F S
 ```
 
-異常なく完了した場合、直下の `build` フォルダにフォントが保存されます。
+異常なく完了した場合、直下の `build` フォルダに通常版のフォントが保存されます。
 
 ### 各スクリプトの説明
 
@@ -204,6 +227,7 @@ Cyroit の生成には、主に5つの Shell スクリプトと1つの設定フ�
 - オプション  
   `-h` ヘルプを表示します。  
   `-x` スクリプトと同じフォルダにあるフォントと一時作成フォルダ、ファイルの削除のみ行って終了します。  
+  `-X` スクリプトと同じフォルダにあるフォントと一時作成フォルダ、ファイルと保存してあるキャッシュファイルの削除のみ行って終了します。  
   `-l` 一時作成ファイルを残したままにします。`-d` `-C` `-p` の場合、`-l` に関係なく一時作成ファイルを残します。  
   `-N string` フォントファミリー名を _string_ にします。省略すると「Cyroit」になります。  
   `-n string` フォントファミリー名の接尾語 (「BS」や「SP」の部分) を _string_ にします。  
