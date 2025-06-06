@@ -4,6 +4,10 @@
 # コンテナに入ってから実行する場合
 # docker compose run -it --rm font
 # exit で抜けます
+#
+# ソースコードに変更があった場合、先に
+# docker compose build
+# を実行
 
 FROM ubuntu:latest
 
