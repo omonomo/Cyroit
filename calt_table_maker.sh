@@ -1348,14 +1348,14 @@ S="highSpaceR"; class+=("${S}"); eval ${S}=\(${highSpaceCapitalR[@]} ${highSpace
 
 # 中が開いている文字 --------------------
 
-S="midSpaceCapitalC"; class+=("${S}"); eval ${S}=\(_A_ _I_ _S_ _T_ _V_ _X_ _Y_ _Z_\) # 両側が開いている大文字
-S="midSpaceSmallC";   class+=("${S}"); eval ${S}=\(__i __l __x\) # 両側が開いている小文字
+S="midSpaceCapitalC"; class+=("${S}"); eval ${S}=\(_A_ _I_ _T_ _V_ _X_ _Y_ _Z_\) # 両側が開いている大文字
+S="midSpaceSmallC";   class+=("${S}"); eval ${S}=\(__f __i __l __x\) # 両側が開いている小文字
 
 S="midSpaceCapitalL"; class+=("${S}"); eval ${S}=\(_J_\) # 左側が開いている大文字
 S="midSpaceSmallL";   class+=("${S}"); eval ${S}=\(__j\) # 左側が開いている小文字
 
 S="midSpaceCapitalR"; class+=("${S}"); eval ${S}=\(_E_ _F_ _K_ _L_ _P_ _R_\) # 右側が開いている大文字
-S="midSpaceSmallR";   class+=("${S}"); eval ${S}=\(__f __k __r\) # 右側が開いている小文字
+S="midSpaceSmallR";   class+=("${S}"); eval ${S}=\(__k __r __t __kg\) # 右側が開いている小文字
 
 S="midSpaceC"; class+=("${S}"); eval ${S}=\(${midSpaceCapitalC[@]} ${midSpaceSmallC[@]}\) # 両側が開いている文字
 S="midSpaceL"; class+=("${S}"); eval ${S}=\(${midSpaceCapitalL[@]} ${midSpaceSmallL[@]}\) # 左側が開いている文字
@@ -5943,9 +5943,16 @@ input=(${_hyphenN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
-# ☆左が、右が開いている文字の場合 *+-= 左に移動
-backtrack=(${midSpaceRL[@]} ${midSpaceCL[@]} \
-${midSpaceRN[@]} ${midSpaceCN[@]})
+# ☆左が、右が開いている文字、狭い文字で 右が、左が開いている文字、狭い文字の場合 *+-= 左に移動しない
+backtrack=(${midSpaceRN[@]} ${midSpaceCN[@]} ${gravityCN[@]})
+input=(${operatorHN[@]})
+lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} ${gravityCR[@]} \
+${gravityCN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ☆左が、右が開いている文字、狭い文字の場合 *+-= 左に移動
+backtrack=(${midSpaceRL[@]} ${midSpaceCL[@]} ${gravityCL[@]} \
+${midSpaceRN[@]} ${midSpaceCN[@]} ${gravityCN[@]})
 input=(${operatorHN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
@@ -6126,7 +6133,7 @@ input=(${_lessN[@]})
 lookAhead=(${_lessR[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
-# *+-=~ に関する処理の続き ----------------------------------------
+# *+-= に関する処理の続き ----------------------------------------
 
 # ▽左が数字の場合 *+-= 右に移動しない
 backtrack=(${figureN[@]})
@@ -6134,10 +6141,10 @@ input=(${operatorHN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ▽右が、左が開いている文字の場合 *+-= 右に移動
+# ▽右が、左が開いている文字、狭い文字の場合 *+-= 右に移動
 backtrack=("")
 input=(${operatorHN[@]})
-lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} \
+lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} ${gravityCR[@]} \
 ${midSpaceLN[@]} ${midSpaceCN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
@@ -6147,11 +6154,18 @@ input=(${_hyphenL[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ▽右が、左が開いている文字、数字の場合 *+-= 元に戻る
+# ▽左が、右が開いている文字、狭い文字で 右が、左が開いている文字、狭い文字の場合 *+-= 元に戻らない
+backtrack=(${midSpaceRL[@]} ${midSpaceCL[@]} ${gravityCL[@]} \
+${gravityCN[@]})
+input=(${operatorHL[@]})
+lookAhead=(${midSpaceLN[@]} ${midSpaceCN[@]} ${gravityCN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ▽右が、左が開いている文字、狭い文字、数字の場合 *+-= 元に戻る
 backtrack=("")
 input=(${operatorHL[@]})
-lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} \
-${midSpaceLN[@]} ${midSpaceCN[@]} ${figureN[@]})
+lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} ${gravityCR[@]} \
+${midSpaceLN[@]} ${midSpaceCN[@]} ${gravityCN[@]} ${figureN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # _ に関する処理の続き ----------------------------------------
