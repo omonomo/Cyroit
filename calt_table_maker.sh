@@ -6135,8 +6135,8 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # *+-= に関する処理の続き ----------------------------------------
 
-# ▽左が数字の場合 *+-= 右に移動しない
-backtrack=(${figureN[@]})
+# ▽左が*+-=、数字の場合 *+-= 移動しない
+backtrack=(${operatorHN[@]} ${figureN[@]})
 input=(${operatorHN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
@@ -6161,11 +6161,11 @@ input=(${operatorHL[@]})
 lookAhead=(${midSpaceLN[@]} ${midSpaceCN[@]} ${gravityCN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ▽右が、左が開いている文字、狭い文字、数字の場合 *+-= 元に戻る
+# ▽右が、左が開いている文字、狭い文字、*+-=、数字の場合 *+-= 元に戻る
 backtrack=("")
 input=(${operatorHL[@]})
 lookAhead=(${midSpaceLR[@]} ${midSpaceCR[@]} ${gravityCR[@]} \
-${midSpaceLN[@]} ${midSpaceCN[@]} ${gravityCN[@]} ${figureN[@]})
+${midSpaceLN[@]} ${midSpaceCN[@]} ${gravityCN[@]} ${operatorHN[@]} ${figureN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
 
 # _ に関する処理の続き ----------------------------------------
