@@ -12,7 +12,6 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-# 個別製作用 (絵文字減らした版は、グリフ数の違いにより calt 設定を作り直す必要があるため)
 font_familyname0="Cyroit"
 
 # 設定読み込み
@@ -39,7 +38,6 @@ mv -f ${font_familyname0}${font_familyname_suffix}*.ttf "${build_fonts_dir}/."
 
 ./font_generator.sh -${font_familyname_suffix_opt1} -N "${font_familyname1}" -n "${font_familyname_suffix}" auto
 mv -f ${font_familyname1}${font_familyname_suffix}*.ttf "${build_fonts_dir}/."
-
 
 ./run_ff_ttx.sh -x
 
