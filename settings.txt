@@ -5,7 +5,7 @@
 # コメントの前に # を入れていますが、形式的に入れているだけで # から後がコメントというわけではありません。
 
 # フォントのバージョン
-FONT_VERSION=3.6.1
+FONT_VERSION=3.6.2
 
 # フォント名
 FONT_FAMILYNAME=Cyroit
@@ -28,20 +28,20 @@ COPYRIGHT_LICENSE=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
 # 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
 SCALE_WIDTH_HANKAKU=100
 SCALE_HEIGHT_HANKAKU=100
-# カーニング横移動量 (em/1024)
-# ラテン文字
+# カーニングの設定
+# ラテン文字の横移動量 (em/1024)
 MOVE_X_KERN_LATIN=16
-# 記号
+# 記号の横移動量 (em/1024)
 MOVE_X_KERN_SYMBOL=32
 
 # Loose 版の設定
 # 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
 SCALE_WIDTH_HANKAKU_LOOSE=104
 SCALE_HEIGHT_HANKAKU_LOOSE=104
-# カーニング横移動量 (em/1024)
-# ラテン文字
+# カーニングの設定
+# ラテン文字の横移動量 (em/1024)
 MOVE_X_KERN_LATIN_LOOSE=18
-# 記号
+# 記号の横移動量 (em/1024)
 MOVE_X_KERN_SYMBOL_LOOSE=36
 
 # オブリーク体の設定
@@ -61,7 +61,7 @@ MOVE_Y_POWERLINE=-10
 SCALE_DECIMAL=93
 
 # 演算子の設定
-# 通常の縦移動量 (em/1024 * 半角文字の縦拡大・縮小率)
+# 通常の大きさの縦移動量 (em/1024 * 半角文字の縦拡大・縮小率)
 MOVE_Y_MATH=-25
 # 上付き、下付きの縦移動量 (em/1024 * 半角文字の縦拡大・縮小率)
 MOVE_Y_S_MATH=-10
