@@ -32,25 +32,28 @@ karnsetdir_name="" # 各カーニング設定と calt_table_maker 情報の保�
 fileDataName="fileData" # calt_table_maker のサイズと変更日を保存するファイル名
 
 # lookup の IndexNo. (GSUBを変更すると変わる可能性あり)
-lookupIndex_calt="18" # caltテーブルのlookupナンバー
+lookupIndex_liga_end="0" # リガチャ用caltの最終lookupナンバー
+lookupIndex_calt="18" # caltテーブルのlookupナンバー (リガチャなし)
 num_calt_lookups="20" # calt のルックアップ数
-lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlookupナンバー
-lookupIndexRR=${lookupIndex_replace} # 変換先(右に移動させた記号のグリフ)
-lookupIndexLL=$((lookupIndexRR + 1)) # 変換先(左に移動させた記号のグリフ)
-lookupIndexUD=$((lookupIndexLL + 1)) # 変換先(上下に移動させた記号のグリフ)
-lookupIndex0=$((lookupIndexUD + 1)) # 変換先(小数のグリフ)
-lookupIndex2=$((lookupIndex0 + 1)) # 変換先(12桁マークを付けたグリフ)
-lookupIndex4=$((lookupIndex2 + 1)) # 変換先(4桁マークを付けたグリフ)
-lookupIndex3=$((lookupIndex4 + 1)) # 変換先(3桁マークを付けたグリフ)
-lookupIndexR=$((lookupIndex3 + 1)) # 変換先(右に移動させたグリフ)
-lookupIndexL=$((lookupIndexR + 1)) # 変換先(左に移動させたグリフ)
-lookupIndexN=$((lookupIndexL + 1)) # 変換先(ノーマルなグリフに戻す)
-
+lookupIndex_init() {
+  lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlookupナンバー
+  lookupIndexRR=${lookupIndex_replace} # 変換先(右に移動させた記号のグリフ)
+  lookupIndexLL=$((lookupIndexRR + 1)) # 変換先(左に移動させた記号のグリフ)
+  lookupIndexUD=$((lookupIndexLL + 1)) # 変換先(上下に移動させた記号のグリフ)
+  lookupIndex0=$((lookupIndexUD + 1)) # 変換先(小数のグリフ)
+  lookupIndex2=$((lookupIndex0 + 1)) # 変換先(12桁マークを付けたグリフ)
+  lookupIndex4=$((lookupIndex2 + 1)) # 変換先(4桁マークを付けたグリフ)
+  lookupIndex3=$((lookupIndex4 + 1)) # 変換先(3桁マークを付けたグリフ)
+  lookupIndexR=$((lookupIndex3 + 1)) # 変換先(右に移動させたグリフ)
+  lookupIndexL=$((lookupIndexR + 1)) # 変換先(左に移動させたグリフ)
+  lookupIndexN=$((lookupIndexL + 1)) # 変換先(ノーマルなグリフに戻す)
+}
 leaving_tmp_flag="false" # 一時ファイル残す
 basic_only_flag="false" # 基本ラテン文字のみ
 symbol_only_flag="false" # 記号、桁区切りのみ
 optimize_mode="void" # なんちゃって最適化ルーチンのモード (void: 実行しない、optional: 任意のみ、force: 強制)
 glyphNo_flag="false" # glyphナンバーの指定があるか
+liga_flag="false" # リガチャフラグ
 
 # エラー処理
 trap "exit 3" HUP INT QUIT
@@ -576,6 +579,7 @@ calt_table_maker_help()
     echo "  -x         Cleaning temporary files" # 一時作成ファイルの消去のみ
     echo "  -X         Cleaning temporary files and saved kerning settings" # 一時作成ファイルとカーニング設定の消去のみ
     echo "  -l         Leave (do NOT remove) temporary files"
+#    echo "  -L         Enable ligatures"
     echo "  -n number  Set glyph number of \"A moved left\""
     echo "  -k         Don't make calt settings for latin characters"
     echo "  -b         Make kerning settings for basic latin characters only"
@@ -590,6 +594,7 @@ echo "- GSUB table [calt, LookupType 6] maker -"
 echo
 
 # Get options
+#while getopts hxXlLn:kbOo OPT
 while getopts hxXln:kbOo OPT
 do
     case "${OPT}" in
@@ -616,6 +621,11 @@ do
             echo "Option: Leave (do NOT remove) temporary files"
             leaving_tmp_flag="true"
             ;;
+#        "L" )
+#            echo "Option: Enable ligatures"
+#            liga_flag="true"
+#            lookupIndex_calt=$((lookupIndex_calt + lookupIndex_liga_end)) # caltテーブルのlookupナンバー (リガチャあり)
+#            ;;
         "n" )
             echo "Option: Set glyph number of \"A moved left\": glyph${OPTARG}"
             glyphNo_flag="true"
@@ -644,6 +654,8 @@ do
     esac
 done
 echo
+
+lookupIndex_init
 
 if [ "${glyphNo_flag}" = "false" ]; then
   gsubList_txt=$(find . -maxdepth 1 -name "${gsubList}.txt" | head -n 1)
@@ -681,6 +693,9 @@ if [ "${optimize_mode}" = "force" ]; then
   karnsetdir_name="${karnsetdir_name}O"
 elif [ "${optimize_mode}" = "optional" ]; then
   karnsetdir_name="${karnsetdir_name}o"
+fi
+if [ "${liga_flag}" = "true" ]; then
+  karnsetdir_name="${karnsetdir_name}L"
 fi
 karnsetdir_name="${karnsetdir_name}${glyphNo}"
 file_data_txt=$(find "./${karndir_name}/${karnsetdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)

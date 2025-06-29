@@ -19,8 +19,6 @@ exec 2> >(tee -a $LOG_ERR)
 font_familyname="Cyroit"
 font_familyname_suffix=""
 
-#font_familyname_suffix_def=(BS SP FX HB DG DS TM TS)
-#font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp tp zp p)
 font_familyname_suffix_def=(BS SP FX HB DG) # バージョン違いの名称 (デフォルト設定)
 font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp) # 各バージョンのオプション (デフォルト設定)
 build_fonts_dir="build" # 完成品を保管するフォルダ
@@ -36,6 +34,7 @@ loose_flag="false" # Loose 版にする
 reuse_list_flag="false" # 生成済みのリストを使う
 table_modify_flag="true" # フィーチャテーブルを編集する
 symbol_only_flag="false" # カーニング設定を記号、桁区切りのみにする
+liga_flag="false" # リガチャ対応にする
 
 font_version="0.1.0"
 
@@ -44,10 +43,12 @@ option_format_fg() { # font_generator 用のオプションを整形 (戻り値:
   local leaving_tmp_flag # 一時作成ファイルを残すか
   local loose_flag # Loose 版にするか
   local draft_flag # 下書きモードか
+  local liga_flag # リガチャ対応にするか
   opt="${2}"
   leaving_tmp_flag="${3}"
   loose_flag="${4}"
   draft_flag="${5}"
+  liga_flag="${6}"
 
   if [ "${leaving_tmp_flag}" = "true" ]; then # 引数に l はないが、一時作成ファイルを残す場合
     opt="${opt}l"
@@ -58,26 +59,24 @@ option_format_fg() { # font_generator 用のオプションを整形 (戻り値:
   if [ "${draft_flag}" = "true" ]; then # 引数に d はないが、下書きモードで処理する場合
     opt="${opt}d"
   fi
+  if [ "${liga_flag}" = "true" ]; then # 引数に L はないが、リガチャ対応にする場合
+    opt="${opt}L"
+  fi
   eval "${1}=\${opt}" # 戻り値を入れる変数名を1番目の引数に指定する
 }
 
 option_format_tm() { # table_modificator 用のオプションを整形 (戻り値: 整形したオプション)
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
-  local loose_flag # Loose 版にするか
   local symbol_only_flag # カーニング設定を記号、桁区切りのみにするか
   local reuse_list_flag # 作成済みのリストを使用するか
   opt="${2}"
   leaving_tmp_flag="${3}"
-  loose_flag="${4}"
-  symbol_only_flag="${5}"
-  reuse_list_flag="${6}"
+  symbol_only_flag="${4}"
+  reuse_list_flag="${5}"
 
   if [ "${leaving_tmp_flag}" != "false" ]; then # -l オプションか 引数に l がある場合
     opt="${opt}l"
-  fi
-  if [ "${loose_flag}" != "false" ]; then # -w オプションか 引数に w がある場合
-    opt="${opt}w"
   fi
   if [ "${symbol_only_flag}" != "false" ]; then # -k オプションがある場合
     opt="${opt}k"
@@ -114,6 +113,7 @@ forge_ttx_help()
     echo "  -N string  Set fontfamily (\"string\")"
     echo "  -n string  Set fontfamily suffix (\"string\")"
     echo "  -w         Set the ratio of hankaku to zenkaku characters to 9:16"
+ #    echo "  -L         Enable ligatures"
     echo "  -k         Don't make calt settings for latin characters"
     echo "  -r         Reuse an existing list"
     echo "  -d         Draft mode (skip time-consuming processes)" # グリフ変更の確認用 (最後は通常モードで確認すること)
@@ -139,6 +139,7 @@ echo "*** FontForge and TTX runner ***"
 echo
 
 # オプションを取得
+ #while getopts hxXlN:n:wLkrdCpF OPT
 while getopts hxXlN:n:wkrdCpF OPT
 do
     case "${OPT}" in
@@ -176,6 +177,10 @@ do
             echo "Option: Set the ratio of hankaku to zenkaku characters to 9:16"
             loose_flag="true"
             ;;
+ #        "L" )
+ #            echo "Option: Enable ligatures"
+ #            liga_flag="true"
+ #            ;;
         "k" )
             echo "Option: Don't make calt settings for latin characters"
             symbol_only_flag="true"
@@ -242,6 +247,8 @@ if [ "${mode}" != "-p" ]; then # -p オプション以外は引数を取得
         draft_flag="true_arg"
       elif [ "${S}" = "P" ]; then # P が含まれていればテーブルを編集する前に終了
         table_modify_flag="false"
+      elif [ "${S}" = "L" ]; then # L が含まれていればリガチャ対応にする (-L オプションと区別)
+        liga_flag="true_arg"
       fi
     done
   elif [ $# -gt 1 ]; then
@@ -280,7 +287,7 @@ case ${mode} in
 esac
 
 if [ "${mode}" != "-p" ]; then # -p オプション以外はフォントを作成
-  option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}"
+  option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}" "${liga_flag}"
   if [ -n "${opt_fg}" ]; then
     ./font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}" auto
   else
@@ -297,7 +304,7 @@ if [ "${mode}" = "-F" ]; then
   if [ $# -eq 0 ] && [ -z "${font_familyname_suffix}" ]; then
     for i in ${!font_familyname_suffix_def[@]}; do # 引数が無く、suffix も無い場合、デフォルト設定でフォントにパッチを当てる
       opt_fg=${font_familyname_suffix_def_opt[${i}]}
-      option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}"
+      option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}" "${liga_flag}"
       if [ -n "${opt_fg}" ]; then
         ./font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix_def[${i}]}"
       else
@@ -307,7 +314,7 @@ if [ "${mode}" = "-F" ]; then
   fi
   if [ $# -eq 0 ]; then # 引き数がない場合、通常版を生成
     opt_fg="Sp"
-    option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}"
+    option_format_fg opt_fg "${opt_fg}" "${leaving_tmp_flag}" "${loose_flag}" "${draft_flag}" "${liga_flag}"
     if [ -n "${opt_fg}" ]; then
       ./font_generator.sh -"${opt_fg}" -N "${font_familyname}" -n "${font_familyname_suffix}"
     else
@@ -323,7 +330,7 @@ case ${mode} in
   "-F" ) opt_tm="o" ;;
      * ) opt_tm="b" ;;
 esac
-option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${loose_flag}" "${symbol_only_flag}" "${reuse_list_flag}"
+option_format_tm opt_tm "${opt_tm}" "${leaving_tmp_flag}" "${symbol_only_flag}" "${reuse_list_flag}"
 if [ -n "${opt_tm}" ]; then
   ./table_modificator.sh -"${opt_tm}" -N "${font_familyname}${font_familyname_suffix}"
 else
