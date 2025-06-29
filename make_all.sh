@@ -12,7 +12,6 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
-# 個別製作用 (絵文字減らした版は、グリフ数の違いにより calt 設定を作り直す必要があるため)
 font_familyname0="Cyroit"
 
 # 設定読み込み
@@ -26,26 +25,30 @@ if [ -n "${settings_txt}" ]; then
 fi
 
 font_familyname1="${font_familyname0}Loose"
-font_familyname_suffix="EH"
-font_familyname_suffix_opt="Sjp"
+font_familyname_suffix_def=(BS SP FX HB DG EH) # バージョン違いの名称
+font_familyname_suffix_def_opt=(zts ts ztc Zzubts zt Sj) # 各バージョンのオプション
+#font_familyname_suffix_def=(FX DG) # テスト用
+#font_familyname_suffix_def_opt=(ztc zt)
 
-build_fonts_dir="build" # 完成品を保管するフォルダ
+./run_ff_ttx.sh -F -N "${font_familyname0}" S
+for i in ${!font_familyname_suffix_def[@]}; do
+    ./run_ff_ttx.sh -F -N "${font_familyname0}" -n "${font_familyname_suffix_def[${i}]}" ${font_familyname_suffix_def_opt[${i}]}
+done
 
-./run_ff_ttx.sh -Fl -N "${font_familyname0}"
-./font_generator.sh -${font_familyname_suffix_opt} -N "${font_familyname0}" -n "${font_familyname_suffix}"
+./run_ff_ttx.sh -Fw -N "${font_familyname1}" S
+for i in ${!font_familyname_suffix_def[@]}; do
+    ./run_ff_ttx.sh -Fw -N "${font_familyname1}" -n "${font_familyname_suffix_def[${i}]}" ${font_familyname_suffix_def_opt[${i}]}
+done
 
-./run_ff_ttx.sh -Fwlr -N "${font_familyname1}"
-./font_generator.sh -${font_familyname_suffix_opt} -N "${font_familyname1}" -n "${font_familyname_suffix}"
-
-./table_modificator.sh -ol -N "${font_familyname0}${font_familyname_suffix}"
-mkdir -p "${build_fonts_dir}/${font_familyname0}/${font_familyname_suffix}"
-mv -f ${font_familyname0}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname0}/${font_familyname_suffix}/."
-
-./table_modificator.sh -owr -N "${font_familyname1}${font_familyname_suffix}"
-mkdir -p "${build_fonts_dir}/${font_familyname1}/${font_familyname_suffix}"
-mv -f ${font_familyname1}${font_familyname_suffix}*.ttf "${build_fonts_dir}/${font_familyname1}/${font_familyname_suffix}/."
-
-./run_ff_ttx.sh -x
+#./run_ff_ttx.sh -FL -N "${font_familyname0}" -n "LG" S
+#for i in ${!font_familyname_suffix_def[@]}; do
+#    ./run_ff_ttx.sh -FL -N "${font_familyname0}" -n "${font_familyname_suffix_def[${i}]}LG" ${font_familyname_suffix_def_opt[${i}]}
+#done
+#
+#./run_ff_ttx.sh -FwL -N "${font_familyname1}" -n "LG" S
+#for i in ${!font_familyname_suffix_def[@]}; do
+#    ./run_ff_ttx.sh -FwL -N "${font_familyname1}" -n "${font_familyname_suffix_def[${i}]}LG" ${font_familyname_suffix_def_opt[${i}]}
+#done
 
 echo
 echo "Succeeded in generating all custom fonts!"
