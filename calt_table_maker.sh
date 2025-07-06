@@ -31,6 +31,7 @@ karndir_name="karningSettings" # カーニング設定の保存フォルダ名
 karnsetdir_name="" # 各カーニング設定と calt_table_maker 情報の保存フォルダ名
 fileDataName="fileData" # calt_table_maker のサイズと変更日を保存するファイル名
 
+colonU_clock="1" # 両側数字の場合の : 移動量選択 (1: 演算子の高さに合わせる、2: 括弧の高さに合わせる)
 # lookup の IndexNo. (GSUBを変更すると変わる可能性あり)
 lookupIndex_liga_end="0" # リガチャ用caltの最終lookupナンバー
 lookupIndex_calt="18" # caltテーブルのlookupナンバー (リガチャなし)
@@ -134,29 +135,29 @@ chain_context() {
   S=${input: -1} # input と lookupIndex から文字がどちらに移動しようとしているか判定
   bt=(${backtrack[@]})
   la=(${lookAhead[@]})
-  if [ "${S}" == "N" ]; then
-    if [ "${lookupIndex}" == "${lookupIndexL}" ]; then
+  if [ "${S}" = "N" ]; then
+    if [ "${lookupIndex}" = "${lookupIndexL}" ]; then
       T="moveLeft"
-    elif [ "${lookupIndex}" == "${lookupIndexR}" ]; then
+    elif [ "${lookupIndex}" = "${lookupIndexR}" ]; then
       T="moveRight"
     else
       T="doNotMove"
     fi
-  elif [ "${S}" == "R" ]; then
-    if [ "${lookupIndex}" == "${lookupIndexL}" ] || [ "${lookupIndex}" == "${lookupIndexN}" ]; then
+  elif [ "${S}" = "R" ]; then
+    if [ "${lookupIndex}" = "${lookupIndexL}" ] || [ "${lookupIndex}" = "${lookupIndexN}" ]; then
       T="moveLeft"
     else
       T="doNotMove"
     fi
   else
-    if [ "${lookupIndex}" == "${lookupIndexN}" ] || [ "${lookupIndex}" == "${lookupIndexR}" ]; then
+    if [ "${lookupIndex}" = "${lookupIndexN}" ] || [ "${lookupIndex}" = "${lookupIndexR}" ]; then
       T="moveRight"
     else
       T="doNotMove"
     fi
   fi
 
-  if [ "${T}" == "moveLeft" ]; then # 左に移動する場合、L と N を追加
+  if [ "${T}" = "moveLeft" ]; then # 左に移動する場合、L と N を追加
     if [ -n "${backtrack}" ]; then
       U=(${backtrack[@]/%R/N})
       V=(${U[@]/%N/L})
@@ -167,7 +168,7 @@ chain_context() {
       V=(${U[@]/%N/L})
       lookAhead=(${lookAhead[@]} ${U[@]} ${V[@]})
     fi
-  elif [ "${T}" == "moveRight" ]; then # 右に移動する場合 R と N を追加
+  elif [ "${T}" = "moveRight" ]; then # 右に移動する場合 R と N を追加
     if [ -n "${backtrack}" ]; then
       U=(${backtrack[@]/%L/N})
       V=(${U[@]/%N/R})
@@ -210,8 +211,8 @@ chain_context() {
 # 重複している設定を削除 ====================
 
   if [ ${listNo} -le ${optimizeListNo} ]; then # 指定の listNo 以下で
-    if [ "${optimize_mode}" == "force" ] || \
-      [[ "${optimize_mode}" == "optional" && ${optim} -le 1 ]]; then # 最適化を実行する場合
+    if [ "${optimize_mode}" = "force" ] || \
+      [[ "${optimize_mode}" = "optional" && ${optim} -le 1 ]]; then # 最適化を実行する場合
       optimCheck=0
 
 # input --------------------
@@ -225,7 +226,7 @@ chain_context() {
         bt=${bt// /,}
         if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
         la=${la// /,}
-        if [ "${optimize_mode}" == "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
+        if [ "${optimize_mode}" = "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
           eval echo ${S}{${bt}}"@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.backOnly.tmp.txt" # lookAhead が無い設定のチェック用に保存
           eval echo ${S}"@"{${la}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.short.aheadOnly.tmp.txt" # backtrack が無い設定のチェック用に保存
         fi
@@ -240,7 +241,7 @@ chain_context() {
           eval echo ${S}{${bt}}{${la}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.long.tmp.txt" # 前後2文字以上も含めた文字列を保存
         fi
 
-        if [ "${optimize_mode}" == "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
+        if [ "${optimize_mode}" = "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
           overlap="false" # 無条件でチェックリストに追加
           if [ -e "${tmpdir}/${checkListName}.long.tmp.txt" ]; then
             cat "${tmpdir}/${checkListName}.long.tmp.txt" >> "${tmpdir}/${checkListName}Long${S}.txt"
@@ -248,7 +249,7 @@ chain_context() {
             cat "${tmpdir}/${checkListName}.short.tmp.txt" >> "${tmpdir}/${checkListName}Short${S}.txt"
           fi
 
-        else # "${optimize_mode}" == "optional" && ${optim} -ne 0
+        else # "${optimize_mode}" = "optional" && ${optim} -ne 0
           if [[ ! -e "${tmpdir}/${checkListName}Short${S}.txt" ]]; then # 既設定ファイルがない場合は空のファイルを作成
             :>| "${tmpdir}/${checkListName}Short${S}.txt"
           fi
@@ -264,7 +265,7 @@ chain_context() {
             fi # -z "${grep (lookAhead 無し)
           done < "${tmpdir}/${checkListName}.short.backOnly.tmp.txt" # backtrack か lookAhead 無しの設定のいずれかが全て重複していた場合、スルー
 
-          if [ "${overlap}" == "false" ]; then # backtrack と lookAhead 両方の設定に抜けがあった場合追試
+          if [ "${overlap}" = "false" ]; then # backtrack と lookAhead 両方の設定に抜けがあった場合追試
             overlap="true"
             while read line0; do
               if [ -z "$(grep -x -m 1 "${line0}" "${tmpdir}/${checkListName}Short${S}.txt")" ]; then # 前後1文字のみで重複する設定がないかチェック
@@ -288,12 +289,12 @@ chain_context() {
             done < "${tmpdir}/${checkListName}.short.tmp.txt" # 重複する設定がない場合、スルー
           fi
 
-          if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、input から重複したグリフを削除
+          if [ "${overlap}" = "true" ]; then # すでに設定が全て存在していた場合、input から重複したグリフを削除
             input=(${input[@]/${S}/})
             removeIp+=" ${S}"
           fi
 
-        fi # "${optimize_mode}" == "optional" && ${optim} -ne 0
+        fi # "${optimize_mode}" = "optional" && ${optim} -ne 0
       done # S
 
       if [ -n "${removeIp}" ]; then
@@ -316,7 +317,7 @@ chain_context() {
 
           ip="${input[@]}"
           ip=${ip// /,}
-          if [ "${optimize_mode}" == "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
+          if [ "${optimize_mode}" = "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
             eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.backOnly.tmp.txt" # lookAhead がない設定のチェック用に保存
           fi
           if [ -n "${lookAhead}" ]; then la="${lookAhead[@]}"; else la="@"; fi
@@ -329,11 +330,11 @@ chain_context() {
           laX=${laX// /,}
           eval echo ${S}{${ip}}{${la}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.back.tmp.txt" # 前後2文字以上も含めた文字列を保存
 
-          if [ "${optimize_mode}" == "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
+          if [ "${optimize_mode}" = "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
             overlap="false" # 無条件でチェックリストに追加
             cat "${tmpdir}/${checkListName}.back.tmp.txt" >> "${tmpdir}/${checkListName}Back${S}.txt"
 
-          else # "${optimize_mode}" == "optional" && ${optim} -ne 0
+          else # "${optimize_mode}" = "optional" && ${optim} -ne 0
             if [[ ! -e "${tmpdir}/${checkListName}Back${S}.txt" ]]; then # 既設定ファイルが無い場合は空のファイルを作成
               :>| "${tmpdir}/${checkListName}Back${S}.txt"
             fi
@@ -350,17 +351,17 @@ chain_context() {
               fi # -z "${grep (lookAhead が無い)
             done < "${tmpdir}/${checkListName}.backOnly.tmp.txt" # すでに lookAhead が無い設定が全て存在した場合、スルー
 
-            if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、backtrack から重複したグリフを削除
+            if [ "${overlap}" = "true" ]; then # すでに設定が全て存在していた場合、backtrack から重複したグリフを削除
               backtrack=(${backtrack[@]/${S}/})
               removeBt+=" ${S}"
             fi
 
-          fi # "${optimize_mode}" == "optional" && ${optim} -ne 0
+          fi # "${optimize_mode}" = "optional" && ${optim} -ne 0
         done # S
 
         if [ -n "${removeBt}" ]; then
           echo "Remove backtrack setting${removeBt//_/}"
-          if [ " ${addBt}" == "${removeBt} " ]; then # 設定漏れ補完で追加したグリフと最適化で除去したグリフが同じ場合
+          if [ " ${addBt}" = "${removeBt} " ]; then # 設定漏れ補完で追加したグリフと最適化で除去したグリフが同じ場合
             echo "Added and removed backtrack settings are the same"
           elif [ -n "${addBt}" ]; then # 異なる場合
             for S in ${removeBt}; do
@@ -387,7 +388,7 @@ chain_context() {
 
           ip="${input[@]}"
           ip=${ip// /,}
-          if [ "${optimize_mode}" == "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
+          if [ "${optimize_mode}" = "force" ] || [ ${optim} -eq 0 ]; then # 最適化処理を実行する場合
             eval echo ${S}{${ip}}"@@@@" | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # backtrack が無い設定のチェック用に保存
           fi
           if [ -n "${backtrack}" ]; then bt="${backtrack[@]}"; else bt="@"; fi
@@ -400,11 +401,11 @@ chain_context() {
           laX=${laX// /,}
           eval echo ${S}{${ip}}{${bt}}{${bt1}}{${la1}}{${laX}} | tr -d '{}' | tr ' ' '\n' >> "${tmpdir}/${checkListName}.ahead.tmp.txt" # 前後2文字以上も含めた文字列を保存
 
-          if [ "${optimize_mode}" == "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
+          if [ "${optimize_mode}" = "optional" ] && [ ${optim} -ne 0 ]; then # 最適化処理をスキップする場合
             overlap="false" # 無条件でチェックリストに追加
             cat "${tmpdir}/${checkListName}.ahead.tmp.txt" >> "${tmpdir}/${checkListName}Ahead${S}.txt"
 
-          else # "${optimize_mode}" == "optional" && ${optim} -ne 0
+          else # "${optimize_mode}" = "optional" && ${optim} -ne 0
             if [[ ! -e "${tmpdir}/${checkListName}Ahead${S}.txt" ]]; then # 既設定ファイルが無い場合は空のファイルを作成
               :>| "${tmpdir}/${checkListName}Ahead${S}.txt"
             fi
@@ -421,17 +422,17 @@ chain_context() {
               fi # -z "${grep (lookAhead が無い)
             done < "${tmpdir}/${checkListName}.aheadOnly.tmp.txt" # すでに backtrack が無い設定が全て存在した場合、スルー
 
-            if [ "${overlap}" == "true" ]; then # すでに設定が全て存在していた場合、lookAhead から重複したグリフを削除
+            if [ "${overlap}" = "true" ]; then # すでに設定が全て存在していた場合、lookAhead から重複したグリフを削除
               lookAhead=(${lookAhead[@]/${S}/})
               removeLa+=" ${S}"
             fi
 
-          fi # "${optimize_mode}" == "optional" && ${optim} -ne 0
+          fi # "${optimize_mode}" = "optional" && ${optim} -ne 0
         done # S
 
         if [ -n "${removeLa}" ]; then
           echo "Remove lookAhead setting${removeLa//_/}"
-          if [ " ${addLa}" == "${removeLa} " ]; then # 設定漏れ補完で追加したグリフと最適化で除去したグリフが同じ場合
+          if [ " ${addLa}" = "${removeLa} " ]; then # 設定漏れ補完で追加したグリフと最適化で除去したグリフが同じ場合
             echo "Added and removed lookAhead settings are the same"
           elif [ -n "${addLa}" ]; then # 異なる場合
             for S in ${removeLa}; do
@@ -456,7 +457,7 @@ chain_context() {
         echo "Attention: Optimization flag is set to true" # スキップしないように設定してある場合、注意を表示
       fi
 
-    fi # "${optimize_mode}" == "force" || "${optimize_mode}" == "optional"
+    fi # "${optimize_mode}" = "force" || "${optimize_mode}" = "optional"
   fi # ${listNo} -le ${optimizeListNo}
 
 # 設定追加 ====================
@@ -1015,9 +1016,19 @@ word=(${colon} ${asterisk} ${plus} ${hyphen} ${equal} ${bar}) # :*+-=|
 
 for S in ${word[@]}; do
   echo "$i ${S}U glyph${i}" >> "${tmpdir}/${dict}.txt"
-  if [ "${S}" == "${colon}" ] || [ "${S}" == "${bar}" ] ; then # :| は左右にも動くため追加
+  if [ "${S}" = "${colon}" ] || [ "${S}" = "${bar}" ] ; then # :| は左右にも動くため追加
     echo "$i ${S}UN glyph${i}" >> "${tmpdir}/${dict}.txt"
   fi
+  i=$((i + 1))
+done
+
+# 上に移動した記号2 ----------------------------------------
+
+word=(${colon}) # :
+
+for S in ${word[@]}; do
+  echo "$i ${S}U2 glyph${i}" >> "${tmpdir}/${dict}.txt"
+  echo "$i ${S}U2N glyph${i}" >> "${tmpdir}/${dict}.txt" # : は左右にも動くため追加
   i=$((i + 1))
 done
 
@@ -1026,7 +1037,7 @@ done
 word=(${asterisk} ${plus} ${hyphen} ${equal} ${underscore} ${solidus} ${rSolidus} ${less} ${greater} \
 ${parenLeft} ${parenRight} ${bracketLeft} ${bracketRight} ${braceLeft} ${braceRight} ${exclam} \
 ${quotedbl} ${quote} ${comma} ${fullStop} ${colon} ${semicolon} ${question} ${grave} ${bar} \
-"${bar}D" "${tilde}D" "${colon}U" "${bar}U") # 上下に動いた後、左右にも動く |~:| を追加
+"${bar}D" "${tilde}D" "${colon}U" "${bar}U" "${colon}U2") # 上下に動いた後、左右にも動く |~:| を追加
 
 for S in ${word[@]}; do
   echo "$i ${S}L glyph${i}" >> "${tmpdir}/${dict}.txt"
@@ -1530,6 +1541,9 @@ for S in ${class[@]}; do
     eval ${S}U+=\("${T}U"\)
     eval ${S}L+=\("${T}L"\)
     eval ${S}R+=\("${T}R"\)
+    if [ "${S}" = "_colon" ]; then
+      eval ${S}U2+=\("${T}U2"\) # : は上に移動したグリフが2種類あるため
+    fi
   done
 done
 
@@ -1592,7 +1606,8 @@ S="_grave_";        class+=("${S}"); eval ${S}=\("${grave}"\) # `
 S="_barD_";         class+=("${S}"); eval ${S}=\("${bar}D"\) # 下に移動した |
 S="_tildeD_";       class+=("${S}"); eval ${S}=\("${tilde}D"\) # 下に移動した ~
 S="_colonU_";       class+=("${S}"); eval ${S}=\("${colon}U"\) # 上に移動した :
-S="_barU_";         class+=("${S}"); eval ${S}=\("${bar}U"\) # 上に移動した |
+S="_barU_";         class+=("${S}"); eval ${S}=\("${bar}U"\) # 上に移動した (括弧用) |
+S="_colonU2_";      class+=("${S}"); eval ${S}=\("${colon}U2"\) # 上に移動した (括弧用) :
 
 # 記号単独 (左右移動あり、ここで定義した変数を使う) ====================
 
@@ -1618,7 +1633,8 @@ S="_grave";        class+=("${S}"); eval ${S}=\(_grave_\) # `
 S="_barD";         class+=("${S}"); eval ${S}=\(_barD_\) # 下に移動した |
 S="_tildeD";       class+=("${S}"); eval ${S}=\(_tildeD_\) # 下に移動した ~
 S="_colonU";       class+=("${S}"); eval ${S}=\(_colonU_\) # 上に移動した :
-S="_barU";         class+=("${S}"); eval ${S}=\(_barU_\) # 上に移動した |
+S="_barU";         class+=("${S}"); eval ${S}=\(_barU_\) # 上に移動した (括弧用) |
+S="_colonU2";      class+=("${S}"); eval ${S}=\(_colonU2_\) # 上に移動した (括弧用) :
 
 # 記号グループ (左右移動あり、ここで定義した変数を使う) ====================
 
@@ -1626,7 +1642,7 @@ S="operatorH";   class+=("${S}"); eval ${S}=\(_asterisk_ _plus_ _hyphen_ _equal_
 S="bracketL";    class+=("${S}"); eval ${S}=\(_parenleft_ _bracketleft_ _braceleft_\) # 左括弧
 S="bracketR";    class+=("${S}"); eval ${S}=\(_parenright_ _bracketright_ _braceright_\) # 右括弧
 S="barDotComma"; class+=("${S}"); eval ${S}=\(_question_ _exclam_ _fullStop_ _colon_ \
-                                              _comma_ _semicolon_ _bar_ _barD_ _colonU_\) # ?!.:,;||:
+                                              _comma_ _semicolon_ _bar_ _barD_ _colonU_ _barU_ _colonU2_\) # ?!.:,;||:|:
 
 # 略号生成 (N: 通常、L: 左移動後、R: 右移動後)
 
@@ -4471,18 +4487,22 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 backtrack=(${figureN[@]})
 input=(${_colonN[@]})
 lookAhead=(${figureN[@]})
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
-
-# ○左が左括弧の場合 | 上に移動
-backtrack=(${bracketLR[@]} \
+if [ "${colonU_clock}" = "1" ]; then
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
+else
+  chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
+fi
+# ○左が左括弧、|: の場合 |: 上に移動
+backtrack=(${_barU[@]} ${_colonU2[@]} \
+${bracketLR[@]} \
 ${bracketLN[@]})
-input=(${_barN[@]})
+input=(${_barN[@]} ${_colonN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
 
-# ○右が右括弧の場合 | 上に移動
+# ○右が右括弧の場合 |: 上に移動
 backtrack=("")
-input=(${_barN[@]})
+input=(${_barN[@]} ${_colonN[@]})
 lookAhead=(${bracketRN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
 
@@ -4503,36 +4523,36 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # 括弧に関する処理の始め ----------------------------------------
 
-# ○左が左丸括弧、左波括弧、| の場合 左丸括弧、左波括弧 左に移動
+# ○左が左丸括弧、左波括弧、|: の場合 左丸括弧、左波括弧 左に移動
 backtrack=(${_parenrightL[@]} ${_bracerightL[@]} \
 ${_parenrightN[@]} ${_bracerightN[@]} \
-${_barUN[@]})
+${_barUN[@]} ${_colonU2N[@]})
 input=(${_parenrightN[@]} ${_bracerightN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
-# ○左が括弧、| の場合 左角括弧 左に移動
+# ○左が括弧、|: の場合 左角括弧 左に移動
 backtrack=(${bracketRL[@]} \
 ${bracketRN[@]} \
-${_barUN[@]})
+${_barUN[@]} ${_colonU2N[@]})
 input=(${_bracketrightN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
 # ---
 
-# ○右が右丸括弧、右波括弧、| の場合 右丸括弧、右波括弧 右に移動
+# ○右が右丸括弧、右波括弧、|: の場合 右丸括弧、右波括弧 右に移動
 backtrack=("")
 input=(${_parenleftN[@]} ${_braceleftN[@]})
 lookAhead=(${_parenleftN[@]} ${_braceleftN[@]} \
-${_barN[@]})
+${_barN[@]} ${_colonN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
-# ○右が左括弧、| の場合 左角括弧 右に移動
+# ○右が左括弧、|: の場合 左角括弧 右に移動
 backtrack=("")
 input=(${_bracketleftN[@]})
 lookAhead=(${bracketLN[@]} \
-${_barN[@]})
+${_barN[@]} ${_colonN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
 #CALT0
@@ -5325,6 +5345,12 @@ input=(${_barN[@]} ${_tildeN[@]} ${_colonN[@]})
 lookAhead=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
 
+# △右が |: の場合 |: 上に移動
+backtrack=("")
+input=(${_barN[@]} ${_colonN[@]})
+lookAhead=(${_barU[@]} ${_colonU2[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
+
 # < に関する処理 ----------------------------------------
 
 # △右が -=|~ の場合 < 右に移動
@@ -5906,6 +5932,12 @@ input=(${_barN[@]} ${_tildeN[@]} ${_colonN[@]})
 lookAhead=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
 
+# □右が |: の場合 |: 上に移動
+backtrack=("")
+input=(${_barN[@]} ${_colonN[@]})
+lookAhead=(${_barU[@]} ${_colonU2[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
+
 # < に関する処理 2回目----------------------------------------
 
 # □右が < の場合 < 右に移動
@@ -5969,6 +6001,12 @@ backtrack=("")
 input=(${_barN[@]} ${_tildeN[@]} ${_colonN[@]})
 lookAhead=(${_barD[@]} ${_tildeD[@]} ${_colonU[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
+
+# ☆右が |: の場合 |: 上に移動
+backtrack=("")
+input=(${_barN[@]} ${_colonN[@]})
+lookAhead=(${_barU[@]} ${_colonU2[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
 
 # < に関する処理 3回目----------------------------------------
 
@@ -6135,20 +6173,20 @@ done
 
 # ---
 
-# ☆左が *+-=< の場合 ?!.:,;| 移動しない
+# ☆左が左括弧、*+-=< の場合 ?!.:,;| 移動しない
 backtrack=(${_hyphenL[@]} \
-${_lessR[@]} \
-${_lessN[@]} ${operatorHN[@]})
+${bracketLR[@]} ${_lessR[@]} \
+${bracketLN[@]} ${_lessN[@]} ${operatorHN[@]})
 input=(${barDotCommaN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ☆右が *+-=> の場合 ?!.:,;| 移動しない
+# ☆右が右括弧、*+-=> の場合 ?!.:,;| 移動しない
 backtrack=("")
 input=(${barDotCommaN[@]})
-lookAhead=(${_greaterL[@]} \
+lookAhead=(${bracketRL[@]} ${_greaterL[@]} \
 ${_hyphenR[@]} \
-${_greaterN[@]} ${operatorHN[@]})
+${bracketRN[@]} ${_greaterN[@]} ${operatorHN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ---
@@ -6494,13 +6532,13 @@ pre_add_lookup
 
 # 記号類 ++++++++++++++++++++++++++++++++++++++++
 
-# *+-:= に関する処理 ----------------------------------------
+# *+-= に関する処理 ----------------------------------------
 
-# ◆左右が括弧の場合 *+-:= 上に移動
+# ◆左右が括弧の場合 *+-= 上に移動
 backtrack=(${bracketLN[@]})
-input=(${_asteriskN[@]} ${_plusN[@]} ${_hyphenN[@]} ${_colonN[@]} ${_equalN[@]})
+input=(${_asteriskN[@]} ${_plusN[@]} ${_hyphenN[@]} ${_equalN[@]})
 lookAhead=(${bracketRN[@]})
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
 
 # *+-=~ に関する処理 ----------------------------------------
 
