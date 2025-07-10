@@ -366,7 +366,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
   find . -maxdepth 1 -not -name "*.*.ttf" | \
   grep -e "${font_familyname}.*\.ttf$" | while read P
   do
-    calt_ok_flag="true" # calt不対応の場合は後でfalse
+    calt_ok_flag="true" # calt非対応の場合は後でfalse
     ttx -t GSUB -t OS/2 "$P"
 
     if [ -n "$(grep -m 1 -A 1 'FeatureRecord index="1"' "${P%%.ttf}.ttx" | grep 'calt')" ]; then # FeatureRecord index 1 が calt だと リガチャ対応
@@ -384,18 +384,32 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
       echo "Compatible with calt feature." # フォントがcaltフィーチャに対応していた場合
       # caltテーブル加工用ファイルの作成
       if [ "${calt_insert_flag}" = "true" ]; then
+        # gsubListが無ければ作成(calt_table_maker で使用するため)
         gsublist_txt=$(find . -maxdepth 1 -name "${gsubList}.txt" | head -n 1)
-        if [ -z "${gsublist_txt}" ]; then # gsubListが無ければ作成(calt_table_maker で使用するため)
+        if [ -z "${gsublist_txt}" ]; then
           if [ "${leaving_tmp_flag}" = "true" ]; then
             ./uvs_table_maker.sh -l -N "${font_familyname}"
           else
             ./uvs_table_maker.sh -N "${font_familyname}"
           fi
         fi
+        # caltListが無ければ作成
         caltlist_txt=$(find . -maxdepth 1 -name "${caltListName}*.txt" | head -n 1)
-        if [ -z "${caltlist_txt}" ]; then # caltListが無ければ作成
+        if [ -z "${caltlist_txt}" ]; then
           option_format_cm opt_fg "" "${leaving_tmp_flag}" "${symbol_only_flag}" "${basic_only_flag}" "${optimize_flag}" "${liga_flag}"
           ./calt_table_maker.sh -"${opt_fg}"
+        fi
+        # リガチャ対応の場合、calt を1つのフィーチャーレコードに集める
+        if [ "${liga_flag}" = "true" ]; then
+          org=$(grep -m 1 "LookupListIndex index=.* value=\"${lookupIndex_liga_calt_end}" "${P%%.ttf}.ttx")
+          tmp=${org#*index=\"}
+          tmp=${tmp%\" value*}
+          add=""
+          for i in $(seq 1 ${num_calt_lookups})
+          do
+            add="${add}<LookupListIndex index=\"$((tmp + i))\" value=\"$((lookupIndex_liga_end + lookupIndex_liga2calt + i))\"/>"
+          done
+          sed -i.bak -e "s,${org},${org}${add}," "${P%%.ttf}.ttx"
         fi
         # フィーチャリストを変更
         sed -i.bak -e "s,usMaxContext value=\".*\",usMaxContext value=\"13\"," "${P%%.ttf}.ttx" # OS/2の先読み文字数を変更
@@ -420,7 +434,7 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     fi
 
     # calt対応に関係なくスクリプトリストを変更 (全ての用字の内容を同じにする)
-    sed -i.bak -e '/FeatureIndex index=".." value=".."/d' "${P%%.ttf}.ttx" # 2桁のindexを削除
+    sed -i.bak -e '/FeatureIndex index=".." value=".*"/d' "${P%%.ttf}.ttx" # 2桁のindexを削除
 
     sed -i.bak -e 's,FeatureIndex index="0" value=".*",FeatureIndex index="0" value="0",' "${P%%.ttf}.ttx" # 始めの部分は上書き
     sed -i.bak -e 's,FeatureIndex index="1" value=".*",FeatureIndex index="1" value="1",' "${P%%.ttf}.ttx" # ←リガチャあり: calt、なし: ccmp
@@ -496,20 +510,6 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
           ,' "${P%%.ttf}.ttx"
         fi
       fi
-    fi
-
-    # リガチャ対応の場合、calt を1つのフィーチャーレコードに集める
-    if [ "${liga_flag}" = "true" ]; then
-      org=$(grep -m 1 "LookupListIndex index=.* value=\"${lookupIndex_liga_calt_end}" "${P%%.ttf}.ttx")
-      tmp=${org#*index=\"}
-      tmp=${tmp%\" value*}
-      add=""
-      for i in $(seq 1 ${num_calt_lookups})
-      do
-        add="${add}<LookupListIndex index=\"$((tmp + i))\" value=\"$((lookupIndex_liga_end + lookupIndex_liga2calt + i))\"/>"
-      done
-      
-      sed -i.bak -e "s,${org},${org}${add}," "${P%%.ttf}.ttx"
     fi
 
     # 言語 (JAN 他) を削除
