@@ -3470,7 +3470,7 @@ while (i < SizeOf(input_list))
 # ⎋ (全角にする)
     Select(0u238b) # ⎋
     Scale(150)
-    Move(250, 50)
+    Move(250, 18)
     SetWidth(1000)
 
 # ⏎ (全角にする)
