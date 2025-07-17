@@ -1988,9 +1988,10 @@ input=(${_jN[@]})
 lookAhead=("")
 chain_context 1 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ○左が Cc 以外の右寄りの文字、均等、中間の大文字、EKR で、右が il の場合 j 移動しない
-backtrack=(${outcgravitySmallRR[@]} ${gravityCapitalER[@]} ${gravityCapitalMR[@]} \
-${_ER[@]} ${_KR[@]} ${_RR[@]})
+# ○左が幅広、右寄り、均等、中間、FLP以外の左寄りの文字 で、右が il の場合 j 移動しない
+backtrack=(${gravityRR[@]} ${gravityER[@]} ${gravityMR[@]} \
+${_BR[@]} ${_DR[@]} ${_ER[@]} ${_KR[@]} ${_RR[@]} ${_THR[@]} ${gravitySmallLR[@]} \
+${gravityWN[@]})
 input=(${_jN[@]})
 lookAhead=(${_iN[@]} ${_lN[@]})
 chain_context 0 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
@@ -4483,6 +4484,21 @@ input=(${_colonN[@]})
 lookAhead=(${_barN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD}"
 
+# ○左が括弧、|: の場合 |: 上に移動
+backtrack=(${_barU[@]} ${_colonU2[@]} \
+${bracketRL[@]} \
+${bracketLR[@]} \
+${bracketLN[@]} ${bracketRN[@]})
+input=(${_barN[@]} ${_colonN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
+
+# ○右が括弧の場合 |: 上に移動
+backtrack=("")
+input=(${_barN[@]} ${_colonN[@]})
+lookAhead=(${bracketLN[@]} ${bracketRN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
+
 # ○両側が数字の場合 : 上に移動
 backtrack=(${figureN[@]})
 input=(${_colonN[@]})
@@ -4492,20 +4508,6 @@ if [ "${colonU_clock}" = "1" ]; then
 else
   chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
 fi
-# ○左が左括弧、|: の場合 |: 上に移動
-backtrack=(${_barU[@]} ${_colonU2[@]} \
-${bracketLR[@]} \
-${bracketLN[@]})
-input=(${_barN[@]} ${_colonN[@]})
-lookAhead=("")
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
-
-# ○右が右括弧の場合 |: 上に移動
-backtrack=("")
-input=(${_barN[@]} ${_colonN[@]})
-lookAhead=(${bracketRN[@]})
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexUD2}"
-
 # ~ に関する処理 ----------------------------------------
 
 # ○左が <>|~: の場合 ~ 下に移動
@@ -4526,7 +4528,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左が左丸括弧、左波括弧、|: の場合 左丸括弧、左波括弧 左に移動
 backtrack=(${_parenrightL[@]} ${_bracerightL[@]} \
 ${_parenrightN[@]} ${_bracerightN[@]} \
-${_barUN[@]} ${_colonU2N[@]})
+${_barD[@]} ${_barU[@]} ${_colonU[@]} ${_colonU2[@]})
 input=(${_parenrightN[@]} ${_bracerightN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
@@ -4534,7 +4536,7 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ○左が括弧、|: の場合 左角括弧 左に移動
 backtrack=(${bracketRL[@]} \
 ${bracketRN[@]} \
-${_barUN[@]} ${_colonU2N[@]})
+${_barD[@]} ${_barU[@]} ${_colonU[@]} ${_colonU2[@]})
 input=(${_bracketrightN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
@@ -6544,24 +6546,24 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ◇左が !.:|/\ で 右が !.:|/\ の場合 *+-=~ 移動しない
 backtrack=(${_rSolidusL[@]} ${_solidusL[@]} \
-${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
-input=(${operatorHN[@]} ${_tildeDN[@]})
+${_exclamN[@]} ${_fullStopN[@]} ${_colonU[@]} ${_barD[@]})
+input=(${operatorHN[@]} ${_tildeD[@]})
 lookAhead=(${_rSolidusR[@]} ${_solidusR[@]} \
-${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
+${_exclamN[@]} ${_fullStopN[@]} ${_colonU[@]} ${_barD[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ◇左が !.:|/\ の場合 *+-=~ 左に移動
 backtrack=(${_rSolidusL[@]} ${_solidusL[@]} \
-${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
-input=(${operatorHN[@]} ${_tildeDN[@]})
+${_exclamN[@]} ${_fullStopN[@]} ${_colonU[@]} ${_barD[@]})
+input=(${operatorHN[@]} ${_tildeD[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
 # ◇右が !.:|/\ の場合 *+-=~ 右に移動
 backtrack=("")
-input=(${operatorHN[@]} ${_tildeDN[@]})
+input=(${operatorHN[@]} ${_tildeD[@]})
 lookAhead=(${_rSolidusR[@]} ${_solidusR[@]} \
-${_exclamN[@]} ${_fullStopN[@]} ${_colonUN[@]} ${_barDN[@]})
+${_exclamN[@]} ${_fullStopN[@]} ${_colonU[@]} ${_barD[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
 # ., に関する処理の続き ----------------------------------------
