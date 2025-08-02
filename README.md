@@ -20,7 +20,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - Cyroit に [Meslo LG](https://github.com/andreberg/Meslo-Font) と [Hack](https://sourcefoundry.org/hack/) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降を使用)。
 - Cyroit に [JetBrains Mono NL](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
 - Cyroit に [Ubuntu Mono](https://design.ubuntu.com/font) を合成した姉妹フォント「[Ubroit](https://omonomo.github.io/Ubroit/)」を作成しました (v3.3.0以降を使用)。
-- Cyroit に [Source Code Pro](https://adobe-fonts.github.io/source-code-pro/) を合成した姉妹フォント「[Soroit](https://omonomo.github.io/Soroit/)」を作成しました (v3.4.2以降を使用)。
+- Cyroit に [Source Code Pro](https://adobe-fonts.github.io/source-code-pro/) と [Hasklig](https://github.com/i-tu/Hasklig) を合成した姉妹フォント「[Soroit](https://omonomo.github.io/Soroit/)」を作成しました (v3.4.2以降を使用)。
 - Cyroit に [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono) と [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono) を合成した姉妹フォント「[Roroit](https://omonomo.github.io/Roroit/)」を作成しました (v3.5.0以降を使用)。
 - Cyroit に [Victor Mono](https://rubjo.github.io/victor-mono/) を合成した姉妹フォント「[Viroit](https://omonomo.github.io/Viroit/)」を作成しました (v3.5.1以降を使用)。
 - Cyroit に [Monoid](https://larsenwork.com/monoid/) を合成した姉妹フォント「[Idroit](https://omonomo.github.io/Idroit/)」を作成しました (v3.5.1以降を使用)。
@@ -51,13 +51,13 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v3.6.2 (2025-07-12)
+最新版 v3.6.3 (2025-08-02)
 
 | リンク                                                                                                      | 説明                                            |
 | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.6.2/Cyroit_v3.6.2.zip)           | 通常版。半角幅が全角の1/2。                     |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.6.2/CyroitLoose_v3.6.2.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.6.2.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.6.3/Cyroit_v3.6.3.zip)           | 通常版。半角幅が全角の1/2。                     |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.6.3/CyroitLoose_v3.6.3.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.6.3.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -130,7 +130,7 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 | 名称      | サンプル                                                 | 説明                                                                                                                    |
 | --------- | -------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------- |
 | Cyroit    | <img alt="Normal" src="./images/Normal.png" width="268"> | 通常版。スタイルセット対応。<br> 内容については後述。                                                                   |
-| Cyroit EH | <img alt="Normal" src="./images/EH.png" width="268">     | 絵文字減らした版。スタイルセット対応。別の絵文字フォントとの併用推奨。<br>(サンプルの㊙は Apple Color Emoji のものです) |
+| Cyroit EH | <img alt="EH" src="./images/EH.png" width="268">         | 絵文字減らした版。スタイルセット対応。別の絵文字フォントとの併用推奨。<br>(サンプルの㊙は Apple Color Emoji のものです) |
 | Cyroit BS | <img alt="BS" src="./images/BS.png" width="268">         | 基本版。Ver.1.x.x までの通常版。<br> 全角スペースを可視化しています。                                                   |
 | Cyroit SP | <img alt="SP" src="./images/SP.png" width="268">         | スペシャルスペース版。<br> 半角スペース、ノーブレークスペースも可視化したバージョン。                                   |
 | Cyroit DG | <img alt="DG" src="./images/DG.png" width="268">         | 桁区切り表示版。<br> たくさん並んだ数字とにらめっこする時間を短縮できます。                                             |
@@ -168,14 +168,14 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 Cyroit は以下の環境でビルドできることを確認しています。
 
-- macOS Sequoia 15.5
-- GNU bash, version 5.3.0(1)-release (aarch64-apple-darwin24.4.0)
+- macOS Sequoia 15.6
+- GNU bash, version 5.3.3(1)-release (aarch64-apple-darwin24.4.0)
 - FontForge 20230101
-- FontTools 4.58.5
+- FontTools 4.59.0
 
 または上記 macOS 上にて
 
-- Docker Desktop 4.43.1 (Engine 28.3.0, Compose v2.38.1-desktop.1)
+- Docker Desktop 4.43.2 (Engine 28.3.2, Compose v2.38.2-desktop.1)
   - Ubuntu 24.04.2 LTS
   - GNU bash, version 5.2.21(1)-release (aarch64-unknown-linux-gnu)
   - FontForge 20230101
