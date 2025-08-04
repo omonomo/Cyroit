@@ -18,7 +18,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - 英数文字の間隔にゆとりを持たせるために、半角と全角の横幅の比率を9:16にしたバージョンを追加しました (v3.0.0以降)。
 - カラー絵文字フォントとの併用を前提に、絵文字のグリフを減らしたバージョンを追加しました (v3.2.0以降)。
 - Cyroit に [Meslo LG](https://github.com/andreberg/Meslo-Font) と [Hack](https://sourcefoundry.org/hack/) を合成した姉妹フォント「[Meroit](https://omonomo.github.io/Meroit/)」を作成しました (v3.2.6以降を使用)。
-- Cyroit に [JetBrains Mono NL](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
+- Cyroit に [JetBrains Mono](https://www.jetbrains.com/ja-jp/lp/mono/) を合成した姉妹フォント「[Jeroit](https://omonomo.github.io/Jeroit/)」を作成しました (v3.3.0以降を使用)。
 - Cyroit に [Ubuntu Mono](https://design.ubuntu.com/font) を合成した姉妹フォント「[Ubroit](https://omonomo.github.io/Ubroit/)」を作成しました (v3.3.0以降を使用)。
 - Cyroit に [Source Code Pro](https://adobe-fonts.github.io/source-code-pro/) と [Hasklig](https://github.com/i-tu/Hasklig) を合成した姉妹フォント「[Soroit](https://omonomo.github.io/Soroit/)」を作成しました (v3.4.2以降を使用)。
 - Cyroit に [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono) と [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono) を合成した姉妹フォント「[Roroit](https://omonomo.github.io/Roroit/)」を作成しました (v3.5.0以降を使用)。
