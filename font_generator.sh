@@ -183,6 +183,9 @@ scale_height_triangle="94.8" # 直角二等辺三角形のY座標拡大率
 move_y_upper_triangle="-39" # 直角二等辺三角形のY座標移動量 (上側)
 move_y_lower_triangle="10" # 直角二等辺三角形のY座標移動量 (下側)
 
+# 全角から半角に変換する場合の拡大率
+scale_zenkaku2hankaku="70"
+
 # 上付き、下付き、ルート、分数用
 scale_super_sub="75" # 拡大率
 weight_super_sub="12" # ウェイト調整
@@ -339,6 +342,7 @@ mode="" # 生成モード
 compose_flag="true" # フォントを合成 (既に同じ設定で作成したパッチ前フォントがない)
 leaving_tmp_flag="false" # 一時ファイル残す
 loose_flag="false" # Loose 版にする
+term_flag="false" # あいまい文字等を半角にする
 visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
 improve_visibility_flag="true" # ダッシュ破線化
@@ -503,6 +507,7 @@ font_generator_help()
     echo "  -N string              Set fontfamily (\"string\")"
     echo "  -n string              Set fontfamily suffix (\"string\")"
     echo "  -w                     Set the ratio of hankaku to zenkaku characters to 9:16"
+    echo "  -a                     Set neutral and ambiguous characters to hankaku (excluding private use areas)"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
     echo "  -u                     Disable zenkaku hankaku underline"
@@ -521,7 +526,7 @@ font_generator_help()
 }
 
 # Get options
-while getopts hVxXf:vlN:n:wZzubtOsceojSdPp OPT
+while getopts hVxXf:vlN:n:waZzubtOsceojSdPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -578,6 +583,10 @@ do
             move_x_hankaku=${move_x_hankaku_loose} # 半角文字移動量
             move_x_calt_latin=${move_x_calt_latin_loose} # ラテン文字のX座標移動量
             move_x_calt_symbol=${move_x_calt_symbol_loose} # 記号のX座標移動量
+            ;;
+        "a" )
+            echo "Option: Set neutral and ambiguous characters to hankaku (excluding private use areas)"
+            term_flag="true"
             ;;
         "Z" )
             echo "Option: Disable visible zenkaku space"
@@ -15038,6 +15047,575 @@ while (i < \$argc)
         endloop
     endif
 
+# --------------------------------------------------
+
+# あいまい文字等を半角に変換
+    if ("${term_flag}" == "true")
+        Print("Set neutral and ambiguous characters to hankaku")
+
+        Select(0u2014) # —
+        SelectMore(${address_store_visi_kana} + 4) # 保管所
+        Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+        Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        Copy()
+        Move(-6 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+        PasteWithOffset(6 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+        OverlapIntersect()
+        SetWidth(${width_hankaku})
+
+        Select(0u0021); Copy() # !
+        Select(0u203c); Paste() # ‼
+        Move(-150 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+        Select(0u2049); Paste() # ⁉
+        Move(-150 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+
+        Select(0u003f); Copy() # ?
+        Select(0u2047); Paste() # ⁇
+        Move(-150 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+        Select(0u2048); Paste() # ⁈
+        Move(-150 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+
+        Select(0u0021); Copy() # !
+        Select(0u203c); PasteWithOffset(150 * ${width_hankaku_loose} / ${width_hankaku}, 0) # ‼
+        Scale(${scale_zenkaku2hankaku}, 100, ${width_hankaku} / 2, 0)
+        SetWidth(${width_hankaku})
+        Select(0u2048); PasteWithOffset(150 * ${width_hankaku_loose} / ${width_hankaku}, 0) # ⁈
+        Scale(${scale_zenkaku2hankaku}, 100, ${width_hankaku} / 2, 0)
+        SetWidth(${width_hankaku})
+
+        Select(0u003f); Copy() # ?
+        Select(0u2047); PasteWithOffset(150 * ${width_hankaku_loose} / ${width_hankaku}, 0) # ⁇
+        Scale(${scale_zenkaku2hankaku}, 100, ${width_hankaku} / 2, 0)
+        SetWidth(${width_hankaku})
+        Select(0u2049); PasteWithOffset(150 * ${width_hankaku_loose} / ${width_hankaku}, 0) # ⁉
+        Scale(${scale_zenkaku2hankaku}, 100, ${width_hankaku} / 2, 0)
+        SetWidth(${width_hankaku})
+
+        Select(0u2025) # ‥
+        SelectMore(0u2026) # …
+        SelectMore(0u22ef) # ⋯
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    Copy()
+                    PasteWithOffset(-10 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+                    PasteWithOffset( 10 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+                    RemoveOverlap()
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2042) # ⁂
+        SelectMore(0u2103) # ℃
+        SelectMore(0u2109) # ℉
+        SelectMore(0u2669, 0u266a) # ♩♪
+        SelectMore(0u266b) # ♫
+        SelectMore(0u266c, 0u266d) # ♬♭
+        SelectMore(0u266e) # ♮
+        SelectMore(0u266f) # ♯
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.2, 100, ${width_zenkaku} / 2, 0)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2051) # ⁑
+        SelectMore(0u22ee) # ⋮
+        SelectMore(0u2307) # ⌇
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2460, 0u2487) # ①-⒇
+        SelectMore(0u249c, 0u24e9) # ⒜-ⓩ
+        SelectMore(0u24ea) # ⓪
+        SelectMore(0u24eb, 0u24ff) # ⓫-⓿
+        SelectMore(0u2776, 0u277f) # ❶-❿
+        SelectMore(0u2780, 0u2793) # ➀-➓
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 0.95, 100, ${width_zenkaku} / 2, 0)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2660, 0u2661) # ♠♡
+        SelectMore(0u2662) # ♢
+        SelectMore(0u2663, 0u2665) # ♣♤♥
+        SelectMore(0u2666) # ♦
+        SelectMore(0u2667) # ♧
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, 100, ${width_zenkaku} / 2, 0)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u25e2) # ◢
+        SelectMore(0u25e5) # ◥
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku}, 0)
+                    Move(-(${width_zenkaku} - ${width_hankaku}), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u25e3) # ◣
+        SelectMore(0u25e4) # ◤
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, 0, 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u00bc, 0u00be) # ¼½¾
+
+        SelectMore(0u2000, 0u200a) # スペース
+        SelectMore(0u200b, 0u200f) # スペース
+        SelectMore(0u2010) # ‐
+        SelectMore(0u2011, 0u2012) # ‑‒
+        SelectMore(0u2013, 0u2015) # –—―
+        SelectMore(0u2016) # ‖
+        SelectMore(0u2017) # ‗
+        SelectMore(0u2018) # ‘
+        SelectMore(0u2019) # ’
+        SelectMore(0u201a) # ‚
+        SelectMore(0u201b) # ‛
+        SelectMore(0u201c) # “
+        SelectMore(0u201d) # ”
+        SelectMore(0u201e) # „
+        SelectMore(0u201f) # ‟
+        SelectMore(0u2020, 0u2022) # †‡•
+        SelectMore(0u2023) # ‣
+        SelectMore(0u2024) # ․
+        SelectMore(0u2027) # ‧
+        SelectMore(0u202f) # narrow no-break space
+        SelectMore(0u2030) # ‰
+        SelectMore(0u2031) # ‱
+        SelectMore(0u2032, 0u2033) # ′″
+        SelectMore(0u2034) # ‴
+        SelectMore(0u2035) # ‵
+        SelectMore(0u2036, 0u2038) # ‶‷‸
+        SelectMore(0u2039) # ‹
+        SelectMore(0u203a) # ›
+        SelectMore(0u203b) # ※
+        SelectMore(0u203d) # ‽
+        SelectMore(0u203e) # ‾
+        SelectMore(0u203f, 0u2040) # ‿⁀
+        SelectMore(0u2041) # ⁁
+        SelectMore(0u2043) # ⁃
+        SelectMore(0u2044) # ⁄
+        SelectMore(0u2045) # ⁅
+        SelectMore(0u2046) # ⁆
+        SelectMore(0u2050) # ⁐
+        SelectMore(0u2052) # ⁒
+        SelectMore(0u2053) # ⁓
+        SelectMore(0u2054) # ⁔
+        SelectMore(0u2055, 0u205e) # ⁕
+        SelectMore(0u205f) # medium mathematical space
+        SelectMore(0u20a0, 0u20a8) # ₠-₨
+        SelectMore(0u20aa, 0u20ab) # ₪₫
+        SelectMore(0u20ac) # €
+        SelectMore(0u20ad, 0u20c0) # ₭-⃀
+
+        SelectMore(0u2100, 0u2101) # ℀℁
+        SelectMore(0u2102) # ℂ
+        SelectMore(0u2104) # ℄
+        SelectMore(0u2105) # ℅
+        SelectMore(0u2106) # ℆
+        SelectMore(0u2107) # ℇ
+        SelectMore(0u2108) # ℈
+        SelectMore(0u210a, 0u2112) # ℊ-ℒ
+        SelectMore(0u2113) # ℓ
+        SelectMore(0u2114) # ℔
+        SelectMore(0u2115) # ℕ
+        SelectMore(0u2116) # №
+        SelectMore(0u2117) # ℗
+        SelectMore(0u2118) # ℘
+        SelectMore(0u2119, 0u211d) # ℙ-ℝ
+        SelectMore(0u211e, 0u2120) # ℞-℠
+        SelectMore(0u2121, 0u2122) # ℡-™
+        SelectMore(0u2123) # ℣
+        SelectMore(0u2124) # ℤ
+        SelectMore(0u2125) # ℥
+        SelectMore(0u2126) # Ω
+        SelectMore(0u2127) # ℧
+        SelectMore(0u2128) # ℨ
+        SelectMore(0u2129) # ℩
+        SelectMore(0u212a) # K
+        SelectMore(0u212b) # Å
+        SelectMore(0u212c, 0u212d) # ℬℭ
+        SelectMore(0u212e) # ℮
+        SelectMore(0u212f, 0u2134) # ℯ
+        SelectMore(0u2135, 0u2138) # ℵ-ℸ
+        SelectMore(0u2139) # ℹ
+        SelectMore(0u213a, 0u213b) # ℺℻
+        SelectMore(0u213c, 0u213f) # ℼℿ
+        SelectMore(0u2140, 0u2144) # ⅀-⅄
+        SelectMore(0u2145, 0u2149) # ⅅ-ⅉ
+        SelectMore(0u214a) # ⅊
+        SelectMore(0u214b) # ⅋
+        SelectMore(0u214c, 0u214d) # ⅌⅍
+        SelectMore(0u214e) # ⅎ
+        SelectMore(0u214f) # ⅏
+        SelectMore(0u2150, 0u2152) # ⅐⅑⅒
+        SelectMore(0u2153, 0u2154) # ⅓⅔
+        SelectMore(0u2155, 0u215a) # ⅕-⅚
+        SelectMore(0u215b, 0u215e) # ⅛-⅞
+        SelectMore(0u215f) # ⅟
+        SelectMore(0u2160, 0u216b) # Ⅰ-Ⅻ
+        SelectMore(0u216c, 0u216f) # Ⅼ-Ⅿ
+        SelectMore(0u2170, 0u2179) # ⅰ-ⅹ
+        SelectMore(0u217a, 0u2182) # ⅺ-ↂ
+        SelectMore(0u2183, 0u2184) # Ↄↄ
+        SelectMore(0u2185, 0u2188) # ↅ-ↈ
+        SelectMore(0u2189) # ↉
+        SelectMore(0u218a, 0u218b) # ↊↋
+
+        SelectMore(0u2200) # ∀
+        SelectMore(0u2201) # ∁
+        SelectMore(0u2202, 0u2203) # ∂∃
+        SelectMore(0u2204, 0u2206) # ∄∅∆
+        SelectMore(0u2207, 0u2208) # ∇∈
+        SelectMore(0u2209, 0u220a) # ∉∊
+        SelectMore(0u220b) # ∋
+        SelectMore(0u220c, 0u220e) # ∌∍∎
+        SelectMore(0u220f) # ∏
+        SelectMore(0u2210) # ∐
+        SelectMore(0u2211) # ∑
+        SelectMore(0u2212, 0u2214) # −∓∔
+        SelectMore(0u2215) # ∕
+        SelectMore(0u2216, 0u2219) # ∖-∙
+        SelectMore(0u221a) # √
+        SelectMore(0u221b, 0u221c) # ∛∜
+        SelectMore(0u221d, 0u221e) # ∝∞
+        SelectMore(0u2223) # ∣
+        SelectMore(0u2224) # ∤
+        SelectMore(0u2225) # ∥
+        SelectMore(0u2226) # ∦
+        SelectMore(0u2227, 0u222c) # ∧-∬
+        SelectMore(0u222d) # ∭
+        SelectMore(0u222e) # ∮
+        SelectMore(0u222f, 0u2233) # ∯-∳
+        SelectMore(0u2234, 0u2237) # ∴-∷
+        SelectMore(0u2238, 0u223b) # ∸-∻
+        SelectMore(0u223c, 0u223d) # ∼∽
+        SelectMore(0u223e, 0u2247) # ∾-≇
+        SelectMore(0u2248) # ≈
+        SelectMore(0u2249, 0u224b) # ≉≊≋
+        SelectMore(0u224c) # ≌
+        SelectMore(0u224d, 0u2251) # ≍-≑
+        SelectMore(0u2252) # ≒
+        SelectMore(0u2253, 0u225f) # ≓-≟
+        SelectMore(0u2260, 0u2261) # ≠≡
+        SelectMore(0u2262, 0u2263) # ≢≣
+        SelectMore(0u2264, 0u2267) # ≤≧
+        SelectMore(0u2268, 0u2269) # ≨≩
+        SelectMore(0u226a, 0u226b) # ≪≫
+        SelectMore(0u226c, 0u226d) # ≬≭
+        SelectMore(0u226e, 0u226f) # ≮≯
+        SelectMore(0u2270, 0u2281) # ≰-⊁
+        SelectMore(0u2282, 0u2283) # ⊂⊃
+        SelectMore(0u2284, 0u2285) # ⊄⊅
+        SelectMore(0u2286, 0u2287) # ⊆⊇
+        SelectMore(0u2288, 0u2294) # ⊈-⊔
+        SelectMore(0u22c0, 0u22ed) # ⋀-⋭
+        SelectMore(0u22f0, 0u22ff) # ⋰-⋿
+
+        SelectMore(0u2301) # ⌁
+        SelectMore(0u2308) # ⌈
+        SelectMore(0u2309) # ⌉
+        SelectMore(0u230a) # ⌊
+        SelectMore(0u230b) # ⌋
+        SelectMore(0u230c, 0u2311) # ⌌-⌑
+        SelectMore(0u2319) # ⌙
+        SelectMore(0u231c, 0u231f) # ⌜-⌟
+        SelectMore(0u2320, 0u2321) # ⌠⌡
+        SelectMore(0u237c) # ⍼
+        SelectMore(0u239b, 0u23b3) # ⎛-⎳
+        SelectMore(0u23b4, 0u23bd) # ⎴-⎽
+        SelectMore(0u23d0, 0u23db) # ⏐-⏛
+        SelectMore(0u23dc, 0u23e1) # ⏜-⏡
+
+        SelectMore(0u2400, 0u2426) # ␀-␦
+        SelectMore(0u2440, 0u244a) # ⑀-⑊
+        SelectMore(0u2488, 0u249b) # ⒈-⒛
+
+        SelectMore(0u2500, 0u254b) # ─-╋
+        SelectMore(0u254c, 0u254f) # ╌╎╏
+        SelectMore(0u2550, 0u2573) # ═-╳
+        SelectMore(0u2574, 0u257f) # ╴-╿
+        SelectMore(0u2580, 0u258f) # ▀-▏
+        SelectMore(0u2590, 0u2591) # ▐░
+        SelectMore(0u2592, 0u2595) # ▒▕
+        SelectMore(0u2596, 0u259f) # ▖-▟
+
+        SelectMore(0u260e, 0u260f) # ☎☏
+        SelectMore(0u2613) # ☓
+        SelectMore(0u2616, 0u2617) # ☖☗
+        SelectMore(0u2620) # ☠
+        SelectMore(0u2630, 0u2637) # ☰-☷
+        SelectMore(0u2668) # ♨
+        SelectMore(0u2672, 0u267b) # ♲-♻
+        SelectMore(0u268a, 0u268f) # ⚌-⚏
+        SelectMore(0u2690, 0u2691) # ⚐⚑
+        SelectMore(0u26a0) # ⚠
+        SelectMore(0u26c9, 0u26ca) # ⛉⛊
+
+        SelectMore(0u2756) # ❖
+        SelectMore(0u2758, 0u2763) # ❘-❣
+        SelectMore(0u2768) # ❨
+        SelectMore(0u2769) # ❩
+        SelectMore(0u276a) # ❪
+        SelectMore(0u276b) # ❫
+        SelectMore(0u276c) # ❬
+        SelectMore(0u276d) # ❭
+        SelectMore(0u276e) # ❮
+        SelectMore(0u276f) # ❯
+        SelectMore(0u2770) # ❰
+        SelectMore(0u2771) # ❱
+        SelectMore(0u2772) # ❲
+        SelectMore(0u2773) # ❳
+        SelectMore(0u2774) # ❴
+        SelectMore(0u2775) # ❵
+        SelectMore(0u27c0, 0u27c4) # ⟀-⟄
+        SelectMore(0u27c5) # ⟅
+        SelectMore(0u27c6) # ⟆
+        SelectMore(0u27c7, 0u27e5) # ⟇-⟥
+        SelectMore(0u27ee) # ⟮
+        SelectMore(0u27ef) # ⟯
+
+        SelectMore(0u2800, 0u28ff) # ⠀-⣿
+
+        SelectMore(0u2980, 0u2982) # ⦀⦁⦂
+        SelectMore(0u2983) # ⦃
+        SelectMore(0u2984) # ⦄
+        SelectMore(0u2987) # ⦇
+        SelectMore(0u2988) # ⦈
+        SelectMore(0u2989) # ⦉
+        SelectMore(0u298a) # ⦊
+        SelectMore(0u298b) # ⦋
+        SelectMore(0u298c) # ⦌
+        SelectMore(0u298d) # ⦍
+        SelectMore(0u298e) # ⦎
+        SelectMore(0u298f) # ⦏
+        SelectMore(0u2990) # ⦐
+        SelectMore(0u2991) # ⦑
+        SelectMore(0u2992) # ⦒
+        SelectMore(0u2993) # ⦓
+        SelectMore(0u2994) # ⦔
+        SelectMore(0u2995) # ⦕
+        SelectMore(0u2996) # ⦖
+        SelectMore(0u2997) # ⦗
+        SelectMore(0u2998) # ⦘
+        SelectMore(0u2999, 0u29d7) # ⦙-⧗
+        SelectMore(0u29d8) # ⧘
+        SelectMore(0u29d9) # ⧙
+        SelectMore(0u29da) # ⧚
+        SelectMore(0u29db) # ⧛
+        SelectMore(0u29dc, 0u29fb) # ⧜-⧻
+        SelectMore(0u29fc) # ⧼
+        SelectMore(0u29fd) # ⧽
+        SelectMore(0u29fe, 0u29ff) # ⧾⧿
+
+        SelectMore(0u2a00, 0u2aff) # ⨀-⫿
+
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2190, 0u2194) # ←-↔
+        SelectMore(0u2195, 0u2199) # ↕-↙
+        SelectMore(0u219a, 0u219b) # ↚↛
+        SelectMore(0u219c, 0u219f) # ↜-↟
+        SelectMore(0u21a0) # ↠
+        SelectMore(0u21a1, 0u21a2) # ↡↢
+        SelectMore(0u21a3) # ↣
+        SelectMore(0u21a4, 0u21a5) # ↤↥
+        SelectMore(0u21a6) # ↦
+        SelectMore(0u21a7, 0u21ad) # ↧-↭
+        SelectMore(0u21ae) # ↮
+        SelectMore(0u21af, 0u21b7) # ↯-↷
+        SelectMore(0u21b8) # ↸
+        SelectMore(0u21b9) # ↹
+        SelectMore(0u21ba, 0u21cd) # ↺-⇍
+        SelectMore(0u21ce, 0u21cf) # ⇎⇏
+        SelectMore(0u21d0, 0u21d1) # ⇐⇑
+        SelectMore(0u21d2) # ⇒
+        SelectMore(0u21d3) # ⇓
+        SelectMore(0u21d4) # ⇔
+        SelectMore(0u21d5, 0u21e6) # ⇕-⇦
+        SelectMore(0u21e7) # ⇧
+        SelectMore(0u21e8, 0u21f3) # ⇨
+        SelectMore(0u21f4, 0u21ff) # ⇴
+
+        SelectMore(0u221f, 0u2220) # ∟∠
+        SelectMore(0u2221, 0u2222) # ∡∢
+        SelectMore(0u2295) # ⊕
+        SelectMore(0u2296, 0u2298) # ⊖⊗⊘
+        SelectMore(0u2299) # ⊙
+        SelectMore(0u229a, 0u22a4) # ⊚-⊤
+        SelectMore(0u22a5) # ⊥
+        SelectMore(0u22a6, 0u22be) # ⊦-⊾
+        SelectMore(0u22bf) # ⊿
+        SelectMore(0u2300) # ⌀
+        SelectMore(0u2302) # ⌂
+        SelectMore(0u2303, 0u2306) # ⌃-⌆
+        SelectMore(0u2312) # ⌒
+        SelectMore(0u2313, 0u2318) # ⌓-⌘
+        SelectMore(0u2322, 0u2328) # ⌢-⌨
+        SelectMore(0u232b, 0u237b) # ⌫-⍻
+        SelectMore(0u237d, 0u239a) # ⍽-⎚
+        SelectMore(0u23be, 0u23cc) # ⎾-⏌
+        SelectMore(0u23cd, 0u23cf) # ⏍⏎⏏
+        SelectMore(0u23e2, 0u23e8) # ⏢-⏨
+        SelectMore(0u23ed, 0u23ef) # ⏭⏯
+        SelectMore(0u23f1, 0u23f2) # ⏱⏲
+        SelectMore(0u23f4, 0u23ff) # ⏴-⏿
+
+        SelectMore(0u25a0, 0u25a1) # ■□
+        SelectMore(0u25a2) # ▢
+        SelectMore(0u25a3, 0u25a9) # ▣-▩
+        SelectMore(0u25aa, 0u25b1) # ▪-▱
+        SelectMore(0u25b2, 0u25b3) # ▲△
+        SelectMore(0u25b4, 0u25b5) # ▴▵
+        SelectMore(0u25b6) # ▶
+        SelectMore(0u25b7) # ▷
+        SelectMore(0u25b8, 0u25bb) # ▸-▻
+        SelectMore(0u25bc, 0u25bd) # ▼▽
+        SelectMore(0u25be, 0u25bf) # ▾▿
+        SelectMore(0u25c0) # ◀
+        SelectMore(0u25c1) # ◁
+        SelectMore(0u25c2, 0u25c5) # ◂-◅
+        SelectMore(0u25c6, 0u25c8) # ◆◇◈
+        SelectMore(0u25c9, 0u25ca) # ◉◊
+        SelectMore(0u25cb) # ○
+        SelectMore(0u25cc, 0u25cd) # ◌◍
+        SelectMore(0u25ce, 0u25d1) # ◎-◑
+        SelectMore(0u25d2, 0u25e1) # ◒-◡
+        SelectMore(0u25e6, 0u25ee) # ◦-◮
+        SelectMore(0u25ef) # ◯
+        SelectMore(0u25f0, 0u25f7) # ◰-◷
+        SelectMore(0u25f8, 0u25fc) # ◸-◼
+        SelectMore(0u25ff) # ◿
+
+        SelectMore(0u2600, 0u2604) # ☀-☄
+        SelectMore(0u2605, 0u2606) # ★☆
+        SelectMore(0u2607, 0u2608) # ☇☈
+        SelectMore(0u2609) # ☉
+        SelectMore(0u260a, 0u260d) # ☊-☍
+        SelectMore(0u2610, 0u2612) # ☐☑☒
+        SelectMore(0u2618, 0u2619) # ☘☙
+        SelectMore(0u261a, 0u261b) # ☚☛
+        SelectMore(0u261c) # ☜
+        SelectMore(0u261d) # ☝
+        SelectMore(0u261e) # ☞
+        SelectMore(0u261f) # ☟
+        SelectMore(0u2621, 0u262f) # ☡-☯
+        SelectMore(0u2638, 0u263b) # ☸-☻
+        SelectMore(0u263c) # ☼
+        SelectMore(0u263d, 0u263f) # ☽☾☿
+        SelectMore(0u2640) # ♀
+        SelectMore(0u2641) # ♁
+        SelectMore(0u2642) # ♂
+        SelectMore(0u2643, 0u2647) # ♃-♇
+        SelectMore(0u2654, 0u265f) # ♔-♟
+        SelectMore(0u2670, 0u2671) # ♰♱
+        SelectMore(0u267c, 0u267e) # ♼♽♾
+        SelectMore(0u2680, 0u2689) # ⚀-⚉
+        SelectMore(0u2692) # ⚒
+        SelectMore(0u2694, 0u269d) # ⚔-⚝
+        SelectMore(0u269e, 0u269f) # ⚞⚟
+        SelectMore(0u26a2, 0u26a9) # ⚢-⚩
+        SelectMore(0u26ac, 0u26bc) # ⚬-⚼
+        SelectMore(0u26bf) # ⚿
+        SelectMore(0u26c0, 0u26c3) # ⛀-⛃
+        SelectMore(0u26c6, 0u26c8) # ⛆⛇⛈
+        SelectMore(0u26cb, 0u26cd) # ⛋-⛍
+        SelectMore(0u26cf, 0u26d3) # ⛏-⛓
+        SelectMore(0u26d5, 0u26e1) # ⛕-⛡
+        SelectMore(0u26e2) # ⛢
+        SelectMore(0u26e3) # ⛣
+        SelectMore(0u26e4, 0u26e7) # ⛤-⛧
+        SelectMore(0u26e8, 0u26e9) # ⛨⛩
+        SelectMore(0u26eb, 0u26f1) # ⛫-⛱
+        SelectMore(0u26f4) # ⛴
+        SelectMore(0u26f6, 0u26f9) # ⛶-⛹
+        SelectMore(0u26fb, 0u26fc) # ⛻-⛼
+        SelectMore(0u26fe, 0u26ff) # ⛾⛿
+
+        SelectMore(0u2700, 0u2704) # ✀-✄
+        SelectMore(0u2708, 0u2709) # ✈✉
+        SelectMore(0u2706, 0u2707) # ✆✇
+        SelectMore(0u270c, 0u2727) # ✌-✧
+        SelectMore(0u2729, 0u273c) # ✩-✼
+        SelectMore(0u273d) # ✽
+        SelectMore(0u273e, 0u274b) # ✾-❋
+        SelectMore(0u274d) # ❍
+        SelectMore(0u274f, 0u2752) # ❏-❒
+        SelectMore(0u2764, 0u2767) # ❤-❧
+        SelectMore(0u2794) # ➔
+        SelectMore(0u2798, 0u27af) # ➘-➯
+        SelectMore(0u27b1, 0u27be) # ➱-➾
+        SelectMore(0u27f0, 0u27ff) # ⟰-⟿
+
+        SelectMore(0u2900, 0u297f) # ⤀-⥿
+        SelectMore(0u2b00, 0u2b1a) # ⬀-⬚
+        SelectMore(0u2b1d, 0u2b2f) # ⬝-⬯
+        SelectMore(0u2b30, 0u2b44) # ⬰-⭄
+        SelectMore(0u2b45, 0u2b46) # ⭅⭆
+        SelectMore(0u2b47, 0u2b4c) # ⭇-⭌
+        SelectMore(0u2b4d, 0u2b4f) # ⭍⭎⭏
+        SelectMore(0u2b51, 0u2b54) # ⭑-⭔
+        SelectMore(0u2b56, 0u2b59) # ⭖-⭙
+        SelectMore(0u2b5a, 0u2b73) # ⭚-⭳
+        SelectMore(0u2b76, 0u2b95) # ⭶-⮕
+        SelectMore(0u2b97, 0u2bff) # ⮗-⯿
+
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+    endif
+
+# --------------------------------------------------
+
 # 失われたLookupを追加
     # vert
     Print("Add vert lookups")
@@ -15802,9 +16380,15 @@ while (i < \$argc)
             0u2048, 0u2049] # ゛゜‼⁇ ⁈⁉
     j = 0
     while (j < SizeOf(orig))
-        Select(${address_store_vert} + l); Copy()
-        Select(k); Paste()
-        SetWidth(1024)
+        if (2 <= j && "${term_flag}" == "true")
+            Select(orig[j]); Copy()
+            Select(k); Paste()
+            SetWidth(${width_hankaku})
+        else
+            Select(${address_store_vert} + l); Copy()
+            Select(k); Paste()
+            SetWidth(1024)
+        endif
         glyphName = GlyphInfo("Name")
         Select(orig[j])
         AddPosSub(lookupSub, glyphName)
@@ -15893,7 +16477,11 @@ while (i < \$argc)
  #    while (j < SizeOf(orig))
  #        Select(orig[j]); Copy()
  #        Select(k); Paste()
- #        SetWidth(1024)
+ #        if (2 <= j && "${term_flag}" == "true")
+ #            SetWidth(${width_hankaku})
+ #        else
+ #            SetWidth(1024)
+ #        endif
  #        glyphName = GlyphInfo("Name")
  #        Select(orig[j])
  #        AddPosSub(lookupSub, glyphName)
@@ -15926,6 +16514,8 @@ while (i < \$argc)
         Select(${address_store_visi_latin} + l); Copy()
         Select(k); Paste()
         if (j <= 1 || j == 4)
+            SetWidth(${width_hankaku})
+        elseif (j == 6 && "${term_flag}" == "true")
             SetWidth(${width_hankaku})
         else
             SetWidth(1024)
@@ -17884,6 +18474,9 @@ if [ "${patch_only_flag}" = "false" ]; then
         fi
         if [ "${loose_flag}" != "false" ]; then
             nopatchsetdir_name="${nopatchsetdir_name}w"
+        fi
+        if [ "${term_flag}" != "false" ]; then
+            nopatchsetdir_name="${nopatchsetdir_name}a"
         fi
         nopatchsetdir_name="${font_familyname}_${nopatchsetdir_name}"
         file_data_txt=$(find "./${nopatchdir_name}/${nopatchsetdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
