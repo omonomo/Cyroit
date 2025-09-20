@@ -29,7 +29,7 @@ checkListName="checkList" # 設定の重複を避けるためのリストの名�
 tmpdir_name="calt_table_maker_tmpdir" # 一時保管フォルダ名
 karndir_name="karningSettings" # カーニング設定の保存フォルダ名
 karnsetdir_name="" # 各カーニング設定と calt_table_maker 情報の保存フォルダ名
-fileDataName="fileData" # calt_table_maker のサイズと変更日を保存するファイル名
+fileDataName="fileData" # calt_table_maker のハッシュ値を保存するファイル名
 
 colonU_clock="1" # 両側数字の場合の : 移動量選択 (1: 演算子の高さに合わせる、2: 括弧の高さに合わせる)
 # lookup の IndexNo. (GSUBを変更すると変わる可能性あり)
