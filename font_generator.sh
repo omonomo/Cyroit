@@ -29,7 +29,7 @@ vendor_id="PfEd"
 tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 nopatchdir_name="nopatchFonts" # パッチ前フォントの保存フォルダ名
 nopatchsetdir_name="" # 各パッチ前フォントの設定と font_generator 情報の保存フォルダ名
-fileDataName="fileData" # calt_table_maker のサイズと変更日を保存するファイル名
+fileDataName="fileData" # font_generator と 設定ファイルのハッシュ値を保存するファイル名
 
 # グリフ保管アドレス
 num_mod_glyphs="4" # -t オプションで改変するグリフ数
@@ -93,7 +93,8 @@ address_ss_arrow=$((address_ss_line + 32)) # ss置換の矢印アドレス
 address_ss_zero=$((address_ss_arrow + 4)) # ss置換のスラッシュ無し0アドレス
 address_ss_otherspace=$((address_ss_zero + 10)) # ss置換のその他のスペースアドレス
 address_ss_liga=$((address_ss_otherspace + 2)) # ss置換のリガチャアドレス
-address_ss_end=$((address_ss_liga + 2 - 1)) # ss置換の最終アドレス
+address_ss_ambiguous=$((address_ss_liga + 2)) # ss置換のあいまい文字アドレス
+address_ss_end=$((address_ss_ambiguous + 115 - 1)) # ss置換の最終アドレス
 num_ss_glyphs_former=$((address_ss_braille - address_ss_start)) # ss置換のグリフ数(点字の前まで)
 num_ss_glyphs_latter=$((address_ss_end + 1 - address_ss_braille)) # ss置換のグリフ数(点字から後)
 num_ss_glyphs=$((address_ss_end + 1 - address_ss_start)) # ss置換の総グリフ数
@@ -105,7 +106,7 @@ lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlo
 num_replace_lookups="11" # 単純置換のルックアップ数 (lookupの数を変えた場合はcalt_table_makerも変更すること)
 
 lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブルのlookupナンバー
-num_ss_lookups="11" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
+num_ss_lookups="12" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 
 # 著作権
 copyright="Copyright (c) 2023 omonomo\n\n"
@@ -15049,7 +15050,7 @@ while (i < \$argc)
 
 # --------------------------------------------------
 
-# あいまい文字等を半角に変換
+# あいまい文字等を半角に変換 (ss12のグリフと同じにすること)
     if ("${term_flag}" == "true")
         Print("Set neutral and ambiguous characters to hankaku")
 
@@ -15144,6 +15145,7 @@ while (i < \$argc)
         SelectMore(0u24eb, 0u24ff) # ⓫-⓿
         SelectMore(0u2776, 0u277f) # ❶-❿
         SelectMore(0u2780, 0u2793) # ➀-➓
+        SelectMore(${address_store_visi_kana} + 6, ${address_store_visi_kana} + 25) # 保管所
         foreach
             if (WorthOutputting())
                 if (600 <= GlyphInfo("Width"))
@@ -15443,6 +15445,8 @@ while (i < \$argc)
         SelectMore(0u29fe, 0u29ff) # ⧾⧿
 
         SelectMore(0u2a00, 0u2aff) # ⨀-⫿
+
+        SelectMore(0u1f100) # 🄀
 
         foreach
             if (WorthOutputting())
@@ -16532,7 +16536,11 @@ while (i < \$argc)
     while (j < 20) # ➀-➓
         Select(${address_store_visi_latin} + l); Copy()
         Select(k); Paste()
-        SetWidth(1024)
+        if ("${term_flag}" == "true")
+            SetWidth(${width_hankaku})
+        else
+            SetWidth(1024)
+        endif
         glyphName = GlyphInfo("Name")
         Select(0u2780 + j)
         AddPosSub(lookupSub, glyphName)
@@ -16927,6 +16935,253 @@ while (i < \$argc)
         j += 1
     endloop
     k += 1
+
+    ss += 1
+# ss12 一部のあいまい文字等を半角化
+    lookupName = "'ss" + ToString(ss) + "' スタイルセット" + ToString(ss)
+    lookupSub = lookupName + "サブテーブル"
+
+    orig = [0u2025, 0u2026] # ‥…
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+            Copy()
+            PasteWithOffset(-10 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+            PasteWithOffset( 10 * ${width_hankaku_loose} / ${width_hankaku}, 0)
+            RemoveOverlap()
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    orig = [0u203b] # ※
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    orig = [0u2103, 0u2109] # ℃℉
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.2, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 12)
+        Select(0u2160 + j); Copy() # Ⅰ-Ⅻ
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2160 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 12)
+        Select(0u2170 + j); Copy() # ⅰ-ⅻ
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2170 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 6)
+        Select(0u2190 + j); Copy() # ←-↕
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2190 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 6)
+        Select(0u21d0 + j); Copy() # ⇐-⇕
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u21d0 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 20)
+        Select(0u2460 + j); Copy() # ①-⑳
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 0.95, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2460 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 11)
+        Select(0u24ea + j); Copy() # ⓪-⓴
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 0.95, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u24ea + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    orig = [0u24ff] # ⓿
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 0.95, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    orig = [0u25a0, 0u25a1,\
+            0u25b2, 0u25b3,\
+            0u25b6, 0u25b7,\
+            0u25bc, 0u25bd,\
+            0u25c0, 0u25c1,\
+            0u25c6, 0u25c7,\
+            0u25cb,\
+            0u25ce, 0u25cf,\
+            0u2605, 0u2606\
+            ] # ■□ ▲△ ▶▷ ▼▽ ◀◁ ◆◇ ○ ◎● ★☆
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j]); Copy()
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 8)
+        Select(0u2660 + j); Copy() # ♠-♧
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2660 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 7)
+        Select(0u2669 + j); Copy() # ♩-♯
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.2, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2669 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
+
+    j = 0
+    while (j < 10)
+        Select(0u2776 + j); Copy() # ❶-❿
+        Select(k); Paste()
+        if (600 <= GlyphInfo("Width"))
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 0.95, 100, ${width_zenkaku} / 2, 0)
+            Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+        endif
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(0u2776 + j)
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+        k += 1
+    endloop
 
     ss += 1
 
@@ -17779,6 +18034,14 @@ while (i < \$argc)
     SelectFewer("uni2001.ss11") # ss11の全角スペース
     SelectFewer("uni034F.ss11") # ss11の半角スペース
 
+    SelectFewer("arrowup.ss12") # ss12の↑
+    SelectFewer("arrowdown.ss12") # ss12の↓
+    SelectFewer("arrowupdn.ss12") # ss12の↕
+    SelectFewer("arrowdblup.ss12") # ss12の⇑
+    SelectFewer("arrowdbldown.ss12") # ss12の⇓
+    SelectFewer("uni21D5.ss12") # ss12の⇕
+    SelectFewer("filledbox.ss12", "uni266F.ss12") # ss12の■-♯
+
     Transform(100, 0, ${tan_oblique}, 100, ${move_x_oblique}, 0)
     RemoveOverlap()
     RoundToInt()
@@ -18441,7 +18704,7 @@ while (i < \$argc)
 
 # --------------------------------------------------
 
-    SetGasp(65535, 15)
+    SetGasp(65535, 15) # Windows のジャギー対策
 # Save patched font
     Print("Save " + fontfamily + fontfamilysuffix + "-" + output_style + ".ttf")
     Generate(fontfamily + fontfamilysuffix + "-" + output_style + ".ttf", "", 0x04)
@@ -18465,7 +18728,7 @@ if [ "${patch_only_flag}" = "false" ]; then
     # 下書きモード、一時作成ファイルを残す以外で font_generator に変更が無く、すでにパッチ前フォントが作成されていた場合それを呼び出す
     if [ "${draft_flag}" = "false" ] && [ "${leaving_tmp_flag}" = "false" ]; then
         output_data=$(sha256sum font_generator.sh | cut -d ' ' -f 1)
-        output_data=${output_data}"_"$(sha256sum font_generator.sh | cut -d ' ' -f 1)
+        output_data=${output_data}"_"$(sha256sum "${settings}.txt" | cut -d ' ' -f 1)
         if [ "${nerd_flag}" = "false" ]; then
             nopatchsetdir_name="e"
         fi
@@ -18494,7 +18757,7 @@ if [ "${patch_only_flag}" = "false" ]; then
 
     # 下書きモードかパッチ前フォントが作成されていなかった場合フォントを合成し直す
     if [ "${compose_flag}" = "true" ]; then
-        if [ "${draft_flag}" = "false" ]; then
+        if [ "${draft_flag}" = "false" ] && [ "${leaving_tmp_flag}" = "false" ]; then
             echo "font_generator settings are changed or nopatch fonts not exist"
             echo "Make new nopatch fonts"
             echo
