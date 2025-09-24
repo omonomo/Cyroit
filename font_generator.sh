@@ -15112,6 +15112,7 @@ while (i < \$argc)
         Select(0u2042) # ⁂
         SelectMore(0u2103) # ℃
         SelectMore(0u2109) # ℉
+        SelectMore(0u226a, 0u226b) # ≪≫
         SelectMore(0u2669, 0u266a) # ♩♪
         SelectMore(0u266b) # ♫
         SelectMore(0u266c, 0u266d) # ♬♭
@@ -15156,7 +15157,9 @@ while (i < \$argc)
             endif
         endloop
 
-        Select(0u2660, 0u2661) # ♠♡
+        Select(0u221d, 0u221e) # ∝∞
+        SelectMore(0u223d) # ∽
+        SelectMore(0u2660, 0u2661) # ♠♡
         SelectMore(0u2662) # ♢
         SelectMore(0u2663, 0u2665) # ♣♤♥
         SelectMore(0u2666) # ♦
@@ -15189,6 +15192,134 @@ while (i < \$argc)
             if (WorthOutputting())
                 if (600 <= GlyphInfo("Width"))
                     Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, 100, 0, 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u22a2, 0u22a4) # ⊢-⊤
+        SelectMore(0u22a5) # ⊥
+        SelectMore(0u232d) # ⌭
+        SelectMore(0u2330) # ⌰
+        SelectMore(0u23be, 0u23cc) # ⎾-⏌
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    ChangeWeight(12)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2190, 0u2194) # ←-↔
+        SelectMore(0u2195, 0u2199) # ↕-↙
+        SelectMore(0u21a4, 0u21a5) # ↤↥
+        SelectMore(0u21a6) # ↦
+        SelectMore(0u21a7, 0u21a8) # ↧↨
+        SelectMore(0u21a9, 0u21aa) # ↩↪
+        SelectMore(0u21b0, 0u21b5) # ↰-↵
+        SelectMore(0u21b9) # ↹
+        SelectMore(0u21c4, 0u21ca) # ⇄-⇊
+        SelectMore(0u21d0, 0u21d1) # ⇐⇑
+        SelectMore(0u21d2) # ⇒
+        SelectMore(0u21d3) # ⇓
+        SelectMore(0u21d4) # ⇔
+        SelectMore(0u21d5, 0u21d9) # ⇕-⇙
+        SelectMore(0u21de, 0u21df) # ⇞⇟
+        SelectMore(0u21e0, 0u21e5) # ⇠-⇥
+        SelectMore(0u21e6) # ⇦
+        SelectMore(0u21e7) # ⇧
+        SelectMore(0u21e8, 0u21ed) # ⇨-⇭
+        SelectMore(0u21f5) # ⇵
+        SelectMore(0u221f, 0u2220) # ∟∠
+        SelectMore(0u22bf) # ⊿
+        SelectMore(0u2312) # ⌒
+        SelectMore(0u2313) # ⌓
+        SelectMore(0u2325) # ⌥
+        SelectMore(0u2332, 0u2333) # ⌲⌳
+        SelectMore(0u2335) # ⌵
+        SelectMore(0u2387) # ⎇
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    ChangeWeight(9)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u23e5) # ⏥
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, ${width_zenkaku} / 2, 340)
+                    Copy()
+                    Scale(98, ${width_zenkaku} / 2, 340)
+                    PasteInto()
+                    RemoveOverlap()
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2225) # ∥
+        SelectMore(0u2226) # ∦
+        SelectMore(0u2300) # ⌀
+        SelectMore(0u2302) # ⌂
+        SelectMore(0u2303) # ⌃
+        SelectMore(0u2324) # ⌤
+        SelectMore(0u2334) # ⌴
+        SelectMore(0u238b) # ⎋
+        SelectMore(0u2425) # ␥
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.2, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    ChangeWeight(6)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u23fc) # ⏼
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 0.9, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2600) # ☀
+        SelectMore(0u263c) # ☼
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+                    SetWidth(${width_hankaku})
+                endif
+            endif
+        endloop
+
+        Select(0u2316, 0u2318) # ⌖-⌘
+        SelectMore(0u2326, 0u2327) # ⌦⌧
+        SelectMore(0u232b) # ⌫
+        SelectMore(0u2388) # ⎈
+        SelectMore(0u23ce, 0u23cf) # ⏎⏏
+        foreach
+            if (WorthOutputting())
+                if (600 <= GlyphInfo("Width"))
+                    Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.2, ${width_zenkaku} / 2, 340)
+                    Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
                     SetWidth(${width_hankaku})
                 endif
             endif
@@ -15314,18 +15445,15 @@ while (i < \$argc)
         SelectMore(0u2216, 0u2219) # ∖-∙
         SelectMore(0u221a) # √
         SelectMore(0u221b, 0u221c) # ∛∜
-        SelectMore(0u221d, 0u221e) # ∝∞
         SelectMore(0u2223) # ∣
         SelectMore(0u2224) # ∤
-        SelectMore(0u2225) # ∥
-        SelectMore(0u2226) # ∦
         SelectMore(0u2227, 0u222c) # ∧-∬
         SelectMore(0u222d) # ∭
         SelectMore(0u222e) # ∮
         SelectMore(0u222f, 0u2233) # ∯-∳
         SelectMore(0u2234, 0u2237) # ∴-∷
         SelectMore(0u2238, 0u223b) # ∸-∻
-        SelectMore(0u223c, 0u223d) # ∼∽
+        SelectMore(0u223c) # ∼
         SelectMore(0u223e, 0u2247) # ∾-≇
         SelectMore(0u2248) # ≈
         SelectMore(0u2249, 0u224b) # ≉≊≋
@@ -15337,7 +15465,6 @@ while (i < \$argc)
         SelectMore(0u2262, 0u2263) # ≢≣
         SelectMore(0u2264, 0u2267) # ≤≧
         SelectMore(0u2268, 0u2269) # ≨≩
-        SelectMore(0u226a, 0u226b) # ≪≫
         SelectMore(0u226c, 0u226d) # ≬≭
         SelectMore(0u226e, 0u226f) # ≮≯
         SelectMore(0u2270, 0u2281) # ≰-⊁
@@ -15357,13 +15484,16 @@ while (i < \$argc)
         SelectMore(0u2319) # ⌙
         SelectMore(0u231c, 0u231f) # ⌜-⌟
         SelectMore(0u2320, 0u2321) # ⌠⌡
+        SelectMore(0u232f) # ⌯
         SelectMore(0u237c) # ⍼
         SelectMore(0u239b, 0u23b3) # ⎛-⎳
         SelectMore(0u23b4, 0u23bd) # ⎴-⎽
         SelectMore(0u23d0, 0u23db) # ⏐-⏛
         SelectMore(0u23dc, 0u23e1) # ⏜-⏡
+        SelectMore(0u23e4) # ⏤
 
-        SelectMore(0u2400, 0u2426) # ␀-␦
+        SelectMore(0u2400, 0u2424) # ␀-␤
+        SelectMore(0u2426) # ␦
         SelectMore(0u2440, 0u244a) # ⑀-⑊
         SelectMore(0u2488, 0u249b) # ⒈-⒛
 
@@ -15458,54 +15588,52 @@ while (i < \$argc)
             endif
         endloop
 
-        Select(0u2190, 0u2194) # ←-↔
-        SelectMore(0u2195, 0u2199) # ↕-↙
-        SelectMore(0u219a, 0u219b) # ↚↛
+        Select(0u219a, 0u219b) # ↚↛
         SelectMore(0u219c, 0u219f) # ↜-↟
         SelectMore(0u21a0) # ↠
         SelectMore(0u21a1, 0u21a2) # ↡↢
         SelectMore(0u21a3) # ↣
-        SelectMore(0u21a4, 0u21a5) # ↤↥
-        SelectMore(0u21a6) # ↦
-        SelectMore(0u21a7, 0u21ad) # ↧-↭
+        SelectMore(0u21ab, 0u21ad) # ↫-↭
         SelectMore(0u21ae) # ↮
-        SelectMore(0u21af, 0u21b7) # ↯-↷
+        SelectMore(0u21af) # ↯
+        SelectMore(0u21b6, 0u21b7) # ↶↷
         SelectMore(0u21b8) # ↸
-        SelectMore(0u21b9) # ↹
-        SelectMore(0u21ba, 0u21cd) # ↺-⇍
+        SelectMore(0u21ba, 0u21c3) # ↺-⇃
+        SelectMore(0u21cb, 0u21cd) # ⇋⇌⇍
         SelectMore(0u21ce, 0u21cf) # ⇎⇏
-        SelectMore(0u21d0, 0u21d1) # ⇐⇑
-        SelectMore(0u21d2) # ⇒
-        SelectMore(0u21d3) # ⇓
-        SelectMore(0u21d4) # ⇔
-        SelectMore(0u21d5, 0u21e6) # ⇕-⇦
-        SelectMore(0u21e7) # ⇧
-        SelectMore(0u21e8, 0u21f3) # ⇨
-        SelectMore(0u21f4, 0u21ff) # ⇴
+        SelectMore(0u21da, 0u21dd) # ⇚-⇝
+        SelectMore(0u21ee, 0u21f3) # ⇮-⇳
+        SelectMore(0u21f4) # ⇴
+        SelectMore(0u21f6, 0u21ff) # ⇶-⇿
 
-        SelectMore(0u221f, 0u2220) # ∟∠
-        SelectMore(0u2221, 0u2222) # ∡∢
         SelectMore(0u2295) # ⊕
         SelectMore(0u2296, 0u2298) # ⊖⊗⊘
         SelectMore(0u2299) # ⊙
-        SelectMore(0u229a, 0u22a4) # ⊚-⊤
-        SelectMore(0u22a5) # ⊥
+        SelectMore(0u229a, 0u22a1) # ⊚-⊡
+        SelectMore(0u2221, 0u2222) # ∡∢
         SelectMore(0u22a6, 0u22be) # ⊦-⊾
-        SelectMore(0u22bf) # ⊿
-        SelectMore(0u2300) # ⌀
-        SelectMore(0u2302) # ⌂
-        SelectMore(0u2303, 0u2306) # ⌃-⌆
-        SelectMore(0u2312) # ⌒
-        SelectMore(0u2313, 0u2318) # ⌓-⌘
-        SelectMore(0u2322, 0u2328) # ⌢-⌨
-        SelectMore(0u232b, 0u237b) # ⌫-⍻
-        SelectMore(0u237d, 0u239a) # ⍽-⎚
-        SelectMore(0u23be, 0u23cc) # ⎾-⏌
-        SelectMore(0u23cd, 0u23cf) # ⏍⏎⏏
-        SelectMore(0u23e2, 0u23e8) # ⏢-⏨
+
+        SelectMore(0u2304, 0u2306) # ⌄-⌆
+        SelectMore(0u2314, 0u2315) # ⌔⌕
+        SelectMore(0u2322, 0u2323) # ⌢⌣
+        SelectMore(0u2328) # ⌨
+        SelectMore(0u232c) # ⌬
+        SelectMore(0u232e) # ⌮
+        SelectMore(0u2331) # ⌱
+        SelectMore(0u2336, 0u237a) # ⌶-⍺
+        SelectMore(0u237b) # ⍻
+        SelectMore(0u237d, 0u2386) # ⍽-⎆
+        SelectMore(0u2389, 0u238a) # ⎉⎊
+        SelectMore(0u238c, 0u239a) # ⎌-⎚
+        SelectMore(0u23cd) # ⏍
+        SelectMore(0u23e2, 0u23e3) # ⏢⏣
+        SelectMore(0u23e6, 0u23e8) # ⏦⏧⏨
         SelectMore(0u23ed, 0u23ef) # ⏭⏯
         SelectMore(0u23f1, 0u23f2) # ⏱⏲
-        SelectMore(0u23f4, 0u23ff) # ⏴-⏿
+        SelectMore(0u23f4, 0u23fa) # ⏴-⏺
+        SelectMore(0u23fb) # ⏻
+        SelectMore(0u23fd, 0u23fe) # ⏽⏾
+        SelectMore(0u23ff) # ⏿
 
         SelectMore(0u25a0, 0u25a1) # ■□
         SelectMore(0u25a2) # ▢
@@ -15533,7 +15661,7 @@ while (i < \$argc)
         SelectMore(0u25f8, 0u25fc) # ◸-◼
         SelectMore(0u25ff) # ◿
 
-        SelectMore(0u2600, 0u2604) # ☀-☄
+        SelectMore(0u2601, 0u2604) # ☁-☄
         SelectMore(0u2605, 0u2606) # ★☆
         SelectMore(0u2607, 0u2608) # ☇☈
         SelectMore(0u2609) # ☉
@@ -15547,7 +15675,6 @@ while (i < \$argc)
         SelectMore(0u261f) # ☟
         SelectMore(0u2621, 0u262f) # ☡-☯
         SelectMore(0u2638, 0u263b) # ☸-☻
-        SelectMore(0u263c) # ☼
         SelectMore(0u263d, 0u263f) # ☽☾☿
         SelectMore(0u2640) # ♀
         SelectMore(0u2641) # ♁
@@ -17033,8 +17160,9 @@ while (i < \$argc)
         Select(0u2190 + j); Copy() # ←-↕
         Select(k); Paste()
         if (600 <= GlyphInfo("Width"))
-            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, ${width_zenkaku} / 2, 340)
             Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+            ChangeWeight(9)
         endif
         SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
@@ -17049,8 +17177,9 @@ while (i < \$argc)
         Select(0u21d0 + j); Copy() # ⇐-⇕
         Select(k); Paste()
         if (600 <= GlyphInfo("Width"))
-            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+            Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose} * 1.1, ${width_zenkaku} / 2, 340)
             Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+            ChangeWeight(9)
         endif
         SetWidth(${width_hankaku})
         glyphName = GlyphInfo("Name")
