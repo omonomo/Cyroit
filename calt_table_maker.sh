@@ -38,7 +38,8 @@ lookupIndex_calt="18" # caltテーブルのlookupナンバー (リガチャな�
 num_calt_lookups="20" # calt のルックアップ数
 lookupIndex_init() {
   lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlookupナンバー
-  lookupIndexRR=${lookupIndex_replace} # 変換先(右に移動させた記号のグリフ)
+  lookupIndexESC=${lookupIndex_replace} # 変換先(エスケープ文字のグリフ)
+  lookupIndexRR=$((lookupIndexESC + 1)) # 変換先(右に移動させた記号のグリフ)
   lookupIndexLL=$((lookupIndexRR + 1)) # 変換先(左に移動させた記号のグリフ)
   lookupIndexUD2=$((lookupIndexLL + 1)) # 変換先(上下に移動させた記号のグリフ 2)
   lookupIndexUD=$((lookupIndexUD2 + 1)) # 変換先(上下に移動させた記号のグリフ)
@@ -1016,7 +1017,7 @@ word=(${colon} ${asterisk} ${plus} ${hyphen} ${equal} ${bar}) # :*+-=|
 
 for S in ${word[@]}; do
   echo "$i ${S}U glyph${i}" >> "${tmpdir}/${dict}.txt"
-  if [ "${S}" = "${colon}" ] || [ "${S}" = "${bar}" ] ; then # :| は左右にも動くため追加
+  if [ "${S}" = "${colon}" ] || [ "${S}" = "${bar}" ] ; then # :| は左右にも動くため追加 (同じグリフに別名を付ける)
     echo "$i ${S}UN glyph${i}" >> "${tmpdir}/${dict}.txt"
   fi
   i=$((i + 1))
@@ -1050,6 +1051,17 @@ for S in ${word[@]}; do
   echo "$i ${S}R glyph${i}" >> "${tmpdir}/${dict}.txt"
   i=$((i + 1))
 done
+
+# エスケープ文字 (reverse solidus) ----------------------------------------
+
+S=${rSolidus}
+
+echo "$i ${S}ESCN glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
+echo "$i ${S}ESCL glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
+echo "$i ${S}ESCR glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
 
 # 略号のグループ作成 ||||||||||||||||||||||||||||||||||||||||
 
@@ -1608,6 +1620,7 @@ S="_tildeD_";       class+=("${S}"); eval ${S}=\("${tilde}D"\) # 下に移動し
 S="_colonU_";       class+=("${S}"); eval ${S}=\("${colon}U"\) # 上に移動した :
 S="_barU_";         class+=("${S}"); eval ${S}=\("${bar}U"\) # 上に移動した (括弧用) |
 S="_colonU2_";      class+=("${S}"); eval ${S}=\("${colon}U2"\) # 上に移動した (括弧用) :
+S="_rSolidusESC_";  class+=("${S}"); eval ${S}=\("${rSolidus}ESC"\) # エスケープ文字 (reverse solidus)
 
 # 記号単独 (左右移動あり、ここで定義した変数を使う) ====================
 
@@ -1635,6 +1648,7 @@ S="_tildeD";       class+=("${S}"); eval ${S}=\(_tildeD_\) # 下に移動した 
 S="_colonU";       class+=("${S}"); eval ${S}=\(_colonU_\) # 上に移動した :
 S="_barU";         class+=("${S}"); eval ${S}=\(_barU_\) # 上に移動した (括弧用) |
 S="_colonU2";      class+=("${S}"); eval ${S}=\(_colonU2_\) # 上に移動した (括弧用) :
+S="_rSolidusESC";  class+=("${S}"); eval ${S}=\(_rSolidusESC_\) # エスケープ文字 (reverse solidus)
 
 # 記号グループ (左右移動あり、ここで定義した変数を使う) ====================
 
@@ -6118,6 +6132,22 @@ lookAhead=(${gravityLL[@]} ${gravityRL[@]} ${gravityWL[@]} ${gravityEL[@]} ${gra
 ${gravityWN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
 
+# "'` に関する処理の始め ----------------------------------------
+
+# ☆左が >\ の場合 "'` 移動しない
+backtrack=(${_greaterL[@]} ${_rSolidusL[@]} \
+${_greaterN[@]} ${_rSolidusN[@]})
+input=(${_quotedblN[@]} ${_quoteN[@]} ${_graveN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ☆右が </ の場合 "'` 移動しない
+backtrack=("")
+input=(${_quotedblN[@]} ${_quoteN[@]} ${_graveN[@]})
+lookAhead=(${_lessR[@]} ${_solidusR[@]} \
+${_lessN[@]} ${_solidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
 # ., に関する処理の始め ----------------------------------------
 
 # ☆左が >/ の場合 ., 移動しない
@@ -6552,6 +6582,30 @@ lookAhead=(${_rSolidusR[@]} ${_solidusR[@]} \
 ${_exclamN[@]} ${_fullStopN[@]} ${_colonU[@]} ${_barD[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
+# "'` に関する処理の続き ----------------------------------------
+
+# ◇左が >\ で 右が </ の場合 "'` 移動しない
+backtrack=(${_greaterL[@]} ${_rSolidusL[@]} \
+${_greaterN[@]} ${_rSolidusN[@]})
+input=(${_quotedblN[@]} ${_quoteN[@]} ${_graveN[@]})
+lookAhead=(${_lessR[@]} ${_solidusR[@]} \
+${_lessN[@]} ${_solidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexN}"
+
+# ◇左が >\ の場合 "'` 左に移動
+backtrack=(${_greaterL[@]} ${_rSolidusL[@]} \
+${_greaterN[@]} ${_rSolidusN[@]})
+input=(${_quotedblN[@]} ${_quoteN[@]} ${_graveN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexLL}"
+
+# ◇右が </ の場合 "'` 右に移動
+backtrack=("")
+input=(${_quotedblN[@]} ${_quoteN[@]} ${_graveN[@]})
+lookAhead=(${_lessR[@]} ${_solidusR[@]} \
+${_lessN[@]} ${_solidusN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
 # ., に関する処理の続き ----------------------------------------
 
 # ◇左が >/ で 右が <\ の場合 ., 移動しない
@@ -6575,6 +6629,14 @@ input=(${_fullStopN[@]} ${_commaN[@]})
 lookAhead=(${_lessR[@]} ${_rSolidusR[@]} \
 ${_lessN[@]} ${_rSolidusN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
+
+# \ のエスケープ文字にしない処理 ----------------------------------------
+
+# ◇左が \ の場合 \ を通常文字とする
+backtrack=(${_rSolidusL[@]} ${_rSolidusR[@]} ${_rSolidusN[@]})
+input=(${_rSolidusL[@]} ${_rSolidusR[@]} ${_rSolidusN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
 
 #CALT5
 # 桁区切り設定作成 ||||||||||||||||||||||||||||||||||||||||
