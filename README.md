@@ -24,6 +24,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - Cyroit に [Roboto Mono](https://fonts.google.com/specimen/Roboto+Mono) と [Noto Sans Mono](https://fonts.google.com/noto/specimen/Noto+Sans+Mono) を合成した姉妹フォント「[Roroit](https://omonomo.github.io/Roroit/)」を作成しました (v3.5.0以降を使用)。
 - Cyroit に [Victor Mono](https://rubjo.github.io/victor-mono/) を合成した姉妹フォント「[Viroit](https://omonomo.github.io/Viroit/)」を作成しました (v3.5.1以降を使用)。
 - Cyroit に [Monoid](https://larsenwork.com/monoid/) を合成した姉妹フォント「[Idroit](https://omonomo.github.io/Idroit/)」を作成しました (v3.5.1以降を使用)。
+- 私用領域以外の中立・曖昧幅の文字を半角にしたターミナル版を追加しました (v3.7.0以降)。
 
 ## フォントサンプル
 
@@ -43,7 +44,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 <img alt="ScreenShot" src="./images/SS_4.gif" width="165">
 
 半角幅の違いサンプル (上: 1/2、下: 9/16)  
-<img alt="ScreenShot" src="./images/SS_5.png" width="602">  
+<img alt="ScreenShot" src="./images/SS_5.png" width="602"><br>
 <img alt="ScreenShot" src="./images/SS_6.png" width="602">
 
 追加した記号等のコードポイント  
@@ -51,17 +52,19 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v3.6.4 (2025-08-31)
+最新版 v3.7.0 (2025-10-01)
 
 | リンク                                                                                                      | 説明                                            |
 | ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.6.4/Cyroit_v3.6.4.zip)           | 通常版。半角幅が全角の1/2。                     |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.6.4/CyroitLoose_v3.6.4.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.6.4.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v3.7.0/Cyroit_v3.7.0.zip)           | 通常版。半角幅が全角の1/2。                     |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v3.7.0/CyroitLoose_v3.7.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v3.7.0.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
 [ライセンス](#ライセンス)に従ってのご使用をお願いいたします。
+
+過去のバージョンや更新履歴は[こちら](https://github.com/omonomo/Cyroit/releases)をご参照ください。
 
 ## その他の特徴
 
@@ -136,24 +139,27 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 | Cyroit DG | <img alt="DG" src="./images/DG.png" width="268">         | 桁区切り表示版。<br> たくさん並んだ数字とにらめっこする時間を短縮できます。                                             |
 | Cyroit FX | <img alt="TS" src="./images/FX.png" width="268">         | 文字間隔固定版。calt と相性が悪いソフト用。<br> また他のバージョンよりも軽快に動作します。                              |
 | Cyroit HB | <img alt="HB" src="./images/HB.png" width="268">         | 平凡版。全てのスペースが不可視でグリフ改変も抑えたバージョン。<br> プリントアウト用にどうぞ。                           |
+| Cyroit TM | <img alt="TM" src="./images/TM.png" width="268">         | ターミナル版。<br>私用領域以外の中立・曖昧幅の文字を半角にしたバージョン。                                              |
 
 ### 通常版、絵文字減らした版のスタイルセットについて
 
 設定方法については、[Fira Code の説明](https://github.com/tonsky/FiraCode/wiki/How-to-enable-stylistic-sets)が分かりやすいと思います。
 
-| タグ名 | サンプル                                             | 内容                                                                                      |
-| ------ | ---------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| ss01   | <img alt="ss01" src="./images/ss01.png" width="268"> | 全角スペース可視化                                                                        |
-| ss02   | <img alt="ss02" src="./images/ss02.png" width="268"> | 半角スペース可視化                                                                        |
-| ss03   | <img alt="ss03" src="./images/ss03.png" width="268"> | 3桁区切りマーク表示                                                                       |
-| ss04   | <img alt="ss04" src="./images/ss04.png" width="268"> | 4桁区切りマーク表示                                                                       |
-| ss05   | <img alt="ss05" src="./images/ss05.png" width="268"> | 小数小文字化                                                                              |
-| ss06   | <img alt="ss06" src="./images/ss06.png" width="268"> | 全角・半角形の下線、点字の外枠消去                                                        |
-| ss07   | <img alt="ss07" src="./images/ss07.png" width="268"> | 識別性向上グリフ無効                                                                      |
-| ss08   | <img alt="ss08" src="./images/ss08.png" width="268"> | DQVZ のグリフ変更                                                                         |
-| ss09   | <img alt="ss09" src="./images/ss09.png" width="268"> | JIS に含まれる罫線を全角化、矢印を細線化<br> (環境によって全角にならないことがあります)   |
-| ss10   | <img alt="ss10" src="./images/ss10.png" width="268"> | 0のスラッシュ消去                                                                         |
-| ss11   | <img alt="ss11" src="./images/ss11.png" width="268"> | ss01、ss02で表示される以外のスペース可視化<br> (環境によって可視化されないことがあります) |
+| タグ名 | サンプル                                             | 内容                                                                                        |
+| ------ | ---------------------------------------------------- | ------------------------------------------------------------------------------------------- |
+| ss01   | <img alt="ss01" src="./images/ss01.png" width="268"> | 全角スペース可視化                                                                          |
+| ss02   | <img alt="ss02" src="./images/ss02.png" width="268"> | 半角スペース可視化                                                                          |
+| ss03   | <img alt="ss03" src="./images/ss03.png" width="268"> | 3桁区切りマーク表示                                                                         |
+| ss04   | <img alt="ss04" src="./images/ss04.png" width="268"> | 4桁区切りマーク表示                                                                         |
+| ss05   | <img alt="ss05" src="./images/ss05.png" width="268"> | 小数小文字化                                                                                |
+| ss06   | <img alt="ss06" src="./images/ss06.png" width="268"> | 全角・半角形の下線、点字の外枠消去                                                          |
+| ss07   | <img alt="ss07" src="./images/ss07.png" width="268"> | 識別性向上グリフ無効                                                                        |
+| ss08   | <img alt="ss08" src="./images/ss08.png" width="268"> | DQVZ のグリフ変更                                                                           |
+| ss09   | <img alt="ss09" src="./images/ss09.png" width="268"> | JIS に含まれる罫線を全角化、矢印を細線化<br> (環境によって全角にならないことがあります)     |
+| ss10   | <img alt="ss10" src="./images/ss10.png" width="268"> | 0のスラッシュ消去                                                                           |
+| ss11   | <img alt="ss11" src="./images/ss11.png" width="268"> | ss01、ss02で表示される以外のスペース可視化<br> (環境によって可視化されないことがあります)   |
+| ss12   | <img alt="ss12" src="./images/ss12.png" width="268"> | ファイル名に使われがちな曖昧幅の文字を半角化<br> (環境によって半角にならないことがあります) |
+| ss13   | <img alt="ss13" src="./images/ss13.png" width="268"> | バックスラッシュ細線化<br> (2つ並んだ場合、右側は通常の太さになります)                      |
 
 ## ライセンス
 
@@ -168,15 +174,15 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 Cyroit は以下の環境でビルドできることを確認しています。
 
-- macOS Sequoia 15.6.1
+- macOS Sequoia 15.7
 - GNU bash, version 5.3.3(1)-release (aarch64-apple-darwin24.4.0)
 - FontForge 20230101
-- FontTools 4.59.2
+- FontTools 4.60.0
 
 または上記 macOS 上にて
 
-- Docker Desktop 4.45.0 (Engine 28.3.3, Compose v2.38.2-desktop.1)
-  - Ubuntu 24.04.2 LTS
+- Docker Desktop 4.46.0 (Engine 28.4.0, Compose v2.39.2-desktop.1)
+  - Ubuntu 24.04.3 LTS
   - GNU bash, version 5.2.21(1)-release (aarch64-unknown-linux-gnu)
   - FontForge 20230101
   - FontTooles 4.46.0
@@ -245,7 +251,7 @@ Cyroit の生成には、主に5つの Shell スクリプトと1つの設定フ�
   &emsp; &emsp;カーニング設定はラテン文字拡張 A までになります。  
   &emsp; &emsp;・パラメータ有りの場合、パラメータに応じたフォントのみ生成します。  
   &emsp; &emsp;・パラメータ無し、`-n` 有りの場合、スタイルセットに対応した (`S` を有効にした) フォントのみ生成します。  
-  &emsp; &emsp;・パラメータ無し、`-n` 無しの場合、デフォルトの全てのバージョンから絵文字減らした版以外を生成します。  
+  &emsp; &emsp;・パラメータ無し、`-n` 無しの場合、デフォルトの全てのバージョンから絵文字減らした版、ターミナル版以外を生成します。  
   `オプション無し`  
   &emsp; &emsp;カーニング設定は基本ラテン文字限定になります。パラメータ無しの場合 `lo` を有効にしたフォントを生成します。
 
@@ -275,6 +281,7 @@ FontForge のスクリプト機能を利用してフォントの合成とグリ�
   `-N string` フォントファミリー名を _string_ にします。省略すると「Cyroit」になります。  
   `-n string` フォントファミリー名の接尾語 (「BS」や「SP」の部分) を _string_ にします。  
   `-w` 合成フォントを Loose 版にします。  
+  `-a` 私用領域以外の中立・曖昧な幅の文字を半角にします。  
   `-Z` 全角スペースを可視化しません。  
   `-z` 半角スペースを可視化しません。  
   `-u` 全角・半角形に下線を付けません。また点字に外枠を付けません。  
