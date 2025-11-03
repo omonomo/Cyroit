@@ -6150,19 +6150,19 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 
 # ., に関する処理の始め ----------------------------------------
 
-# ☆左が >/ の場合 ., 移動しない
-backtrack=(${_greaterL[@]} ${_solidusL[@]} \
-${_greaterN[@]} ${_solidusN[@]})
-input=(${_fullStopN[@]} ${_commaN[@]})
-lookAhead=("")
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+ # 左が >/ の場合 ., 移動しない
+ #backtrack=(${_greaterL[@]} ${_solidusL[@]} \
+ #${_greaterN[@]} ${_solidusN[@]})
+ #input=(${_fullStopN[@]} ${_commaN[@]})
+ #lookAhead=("")
+ #chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
-# ☆右が <\ の場合 ., 移動しない
-backtrack=("")
-input=(${_fullStopN[@]} ${_commaN[@]})
-lookAhead=(${_lessR[@]} ${_rSolidusR[@]} \
-${_lessN[@]} ${_rSolidusN[@]})
-chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+ # 右が <\ の場合 ., 移動しない
+ #backtrack=("")
+ #input=(${_fullStopN[@]} ${_commaN[@]})
+ #lookAhead=(${_lessR[@]} ${_rSolidusR[@]} \
+ #${_lessN[@]} ${_rSolidusN[@]})
+ #chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
 
 # ?!.:,;|"'` に関する処理の始め ----------------------------------------
 
