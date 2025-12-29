@@ -18,6 +18,7 @@ exec 1> >(tee -a $LOG_OUT)
 exec 2> >(tee -a $LOG_ERR)
 #LOG
 
+skip=0 # 重複などでスキップした設定の数
 glyphNo="15000" # calt用異体字の先頭glyphナンバー (仮)
 listNo="-1"
 optimizeListNo="4" # -o -O オプションが設定してある場合、指定の listNo 以下は最適化ルーチンを実行する
@@ -303,7 +304,11 @@ chain_context() {
         optimCheck=$((optimCheck + 1)) # 最適化が有効なので + 1
       fi
       if [ -z "${input}" ]; then # input のグリフが全て重複していた場合、設定を追加せず ruturn
-        echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
+        if [ -z "${lookupIndex}" ]; then
+          lookupIndex="none"
+        fi
+        skip=$((${skip} + 1))
+        echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex} : ${skip}"
         eval "${2}=\${substIndex}" # 戻り値を入れる変数名を1番目の引数に指定する
         return
       fi
@@ -373,7 +378,11 @@ chain_context() {
           optimCheck=$((optimCheck + 1)) # 最適化が有効なので + 1
         fi
         if [ "${bt}" != "|" ] && [ -z "${backtrack}" ]; then # backtrack のグリフが全て重複していた場合、設定を追加せず ruturn
-          echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
+          if [ -z "${lookupIndex}" ]; then
+            lookupIndex="none"
+          fi
+          skip=$((${skip} + 1))
+          echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex} : ${skip}"
           eval "${2}=\${substIndex}" # 戻り値を入れる変数名を1番目の引数に指定する
           return
         fi
@@ -444,7 +453,11 @@ chain_context() {
           optimCheck=$((optimCheck + 1)) # 最適化が有効なので + 1
         fi
         if [ "${la}" != "|" ] && [ -z "${lookAhead}" ]; then # lookAhead のグリフが全て重複していた場合、設定を追加せず ruturn
-          echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex}"
+          if [ -z "${lookupIndex}" ]; then
+            lookupIndex="none"
+          fi
+          skip=$((${skip} + 1))
+          echo "Removed all settings, skip ${caltList} index ${substIndex}: Lookup = ${lookupIndex} : ${skip}"
           eval "${2}=\${substIndex}" # 戻り値を入れる変数名を1番目の引数に指定する
           return
         fi
@@ -453,7 +466,7 @@ chain_context() {
 # ---
 
       if [ ${optim} -ge 1 ] && [ ${optimCheck} -ge 1 ]; then # input、backtrack、lookAhead のいずれかで最適化が有効な条件なのに
-          echo "Attention: Optimization flag is set to false" # スキップするように設定してある場合、注意を表示
+        echo "Attention: Optimization flag is set to false" # スキップするように設定してある場合、注意を表示
       elif [ ${optim} -eq 0 ] && [ ${optimCheck} -eq 0 ]; then # input、backtrack、lookAhead の全てで最適化が有効ではない条件なのに
         echo "Attention: Optimization flag is set to true" # スキップしないように設定してある場合、注意を表示
       fi
