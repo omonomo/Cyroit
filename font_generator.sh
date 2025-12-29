@@ -4668,7 +4668,6 @@ while (i < SizeOf(input_list))
     Select(0u25a1); Copy() # White square
     Select(0u0020); PasteInto() # Space
     OverlapIntersect()
-    if ("${draft_flag}" == "false"); Move(-${move_x_zenkaku_kana}, 0); endif
     Scale(34, 100); Move(-228, 0)
 
     Select(0u25a0); Copy() # Black square
@@ -10066,7 +10065,7 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     SetWidth(1000)
 
-    Select(0u2ff0, 0u2ffb) # ⿰-⿻
+    Select(0u2ff0, 0u2ffd) # ⿰-⿽
     Move(-${move_x_zenkaku_kana}, -52)
     SetWidth(1000)
 
@@ -10117,6 +10116,7 @@ while (i < SizeOf(input_list))
     RemoveOverlap()
     Copy()
     Select(0u2ffe); PasteWithOffset(22, 28) # ⿾
+    Move(-${move_x_zenkaku_kana}, -52)
     SetWidth(1000)
 
     # 回転矢印
@@ -10137,6 +10137,7 @@ while (i < SizeOf(input_list))
     RemoveOverlap()
     Copy()
     Select(0u2fff); PasteWithOffset(150, 80) # ⿿
+    Move(-${move_x_zenkaku_kana}, -52)
     SetWidth(1000)
 
 # 回
@@ -10180,6 +10181,7 @@ while (i < SizeOf(input_list))
     Scale(56, 62)
     Copy()
     Select(0u31ef); PasteWithOffset(22, 32) # ㇯
+    Move(-${move_x_zenkaku_kana}, -52)
     SetWidth(1000)
 
     Select(65552); Clear() # Temporary glyph
@@ -11095,7 +11097,8 @@ while (i < SizeOf(input_list))
         if (${scale_width_kana} != 100 || ${scale_height_kana} != 100)
             Print("Edit hankaku aspect ratio")
 
-            Select(0u0020, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+            Select(0u0021, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+            SelectFewer(0u00a0) # ノーブレークスペースを除外
             SelectMore(0u2010, 0u218f) # 一般句読点 - 数字の形
             SelectMore(0u2200, 0u22ff) # 数学記号
             SelectMore(0u27c0, 0u27ef) # その他の数学記号 A
@@ -11147,6 +11150,7 @@ while (i < SizeOf(input_list))
                     endif
                 endif
             endloop
+
         endif
     endif
 
@@ -14036,7 +14040,8 @@ while (i < SizeOf(fontstyle_list))
     if (${scale_width_hankaku} != 100 || ${scale_height_hankaku} != 100)
         Print("Edit hankaku aspect ratio")
 
-        Select(0u0020, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+        Select(0u0021, 0u1fff) # 基本ラテン - ギリシャ文字拡張
+        SelectFewer(0u00a0) # ノーブレークスペースを除外
         SelectMore(0u2010, 0u218f) # 一般句読点 - 数字の形
         SelectMore(0u2200, 0u22ff) # 数学記号
         SelectMore(0u27c0, 0u27ef) # その他の数学記号 A
