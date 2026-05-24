@@ -26,7 +26,7 @@ fi
 
 font_familyname1="${font_familyname0}Loose"
 font_familyname_suffix_def=(BS SP DG FX HB TM EH) # バージョン違いの名称
-font_familyname_suffix_def_opt=(zts ts zt ztc Zzubts ztsa Sj) # 各バージョンのオプション
+font_familyname_suffix_def_opt=(zyts ts zyt zytc Zzyubts zytsa Sj) # 各バージョンのオプション
 #font_familyname_suffix_def=(FX DG) # テスト用
 #font_familyname_suffix_def_opt=(ztc zt)
 
