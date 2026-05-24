@@ -46,10 +46,11 @@ address_store_visi_kanzi=$((address_store_visi_kana + 25)) # 漢字フォント�
 address_store_line=$((address_store_visi_kanzi + 12)) # 保管した罫線アドレス
 address_store_arrow=$((address_store_line + 32)) # 保管した矢印アドレス
 address_store_vert=$((address_store_arrow + 4)) # 保管した縦書きアドレス(縦書きの縦線無し（ - 縦書きの縦線無し⁉)
-address_store_zenhan=$((address_store_vert + 109)) # 保管した全角半角アドレス(！゠⁉)
-address_store_d_hyphen=$((address_store_zenhan + 172)) # 保管した縦書き゠アドレス
+address_store_zenhan=$((address_store_vert + 109)) # 保管した全角半角アドレス(！-゜)
+address_store_zenhan_eq=$((address_store_zenhan + 168)) # 保管した全角半角アドレス(‼-⁉)
+address_store_d_hyphen=$((address_store_zenhan_eq + 4)) # 保管した縦書き゠アドレス
 address_store_otherspace=$((address_store_d_hyphen + 1)) # 保管したその他のスペースアドレス
-address_store_escape=$((address_store_otherspace + 2)) # 保管したエスケープ文字アドレス
+address_store_escape=$((address_store_otherspace + 3)) # 保管したエスケープ文字アドレス
 address_store_liga=$((address_store_escape + 1)) # 保管したリガチャアドレス
 address_store_end=$((address_store_liga + 2 - 1)) # 保管したグリフの最終アドレス
 
@@ -57,61 +58,61 @@ address_vert_start_kana="1114129" # 仮名フォントのvert置換の先頭ア�
  #address_vert_start_latinkana="65682" # latin仮名フォントのvert置換の先頭アドレス （ (𛀁を残した場合)
 address_vert_start_latinkana="65681" # latin仮名フォントのvert置換の先頭アドレス （ (𛀁を削除した場合)
 address_vert_start="1114179" # 合成後のvert置換の先頭アドレス
-address_vert_bracket=${address_vert_start} # vert置換アドレス （
-address_vert_X=$((address_vert_bracket + 109)) # vert置換アドレス ✂
-address_vert_dh=$((address_vert_X + 3)) # vert置換アドレス ゠
-address_vert_mm=$((address_vert_dh + 75)) # vert置換アドレス ㍉
-address_vert_kabu=$((address_vert_mm + 333)) # vert置換アドレス ㍿
-address_vert_end=$((address_vert_kabu + 7 - 1)) # vert置換の最終アドレス ㋿
-
+lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
+num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
 address_calt_start_kanzi="1114841" # 漢字フォントのcalt置換の先頭アドレス (既存のグリフを避けるため収納場所を分割)
 address_calt_start2_kanzi="1115493" # 漢字フォントのcalt置換の先頭アドレス2
 address_calt_start3_kanzi="1115623" # 漢字フォントのcalt置換の先頭アドレス3
 address_calt_start4_kanzi="1115776" # 漢字フォントのcalt置換の先頭アドレス4
 address_ss_start_kanzi=$((address_calt_start4_kanzi + 70)) # 漢字フォントのss置換の先頭アドレス
 address_ss_start_dummy="1114336" # ダミーフォントのss置換の先頭アドレス (変体仮名の最終アドレス + 1)
-
-address_calt_start=$((address_vert_end + 1)) # calt置換の先頭アドレス
-address_calt_AL=${address_calt_start} # calt置換アドレス(左に移動した A)
-address_calt_AR=$((address_calt_AL + 239)) # calt置換アドレス(右に移動した A)
-address_calt_figure=$((address_calt_AR + 239)) # calt置換アドレス(桁区切り付きの数字)
-address_calt_barD=$((address_calt_figure + 40)) # calt置換アドレス(下に移動した |)
-address_calt_hyphenL=$((address_calt_barD + 9)) # calt置換アドレス(左に移動した *、数を変更した場合スロットの確保数を変更すること)
-address_calt_hyphenR=$((address_calt_hyphenL + 30)) # calt置換アドレス(右に移動した *)
-address_calt_escape=$((address_calt_hyphenR + 30)) # calt置換アドレス (エスケープ文字)
-address_calt_end=$((address_calt_escape + 3 - 1)) # calt置換の最終アドレス (右に移動した 2つ並んだ時用のバックスラッシュ)
-address_calt_barDLR="24" # calt置換アドレス(左右に移動した * から、左右に移動した | までの増分)
-
-address_ss_start=$((address_calt_end + 1)) # ss置換の先頭アドレス
-address_ss_space=${address_ss_start} # ss置換アドレス(全角スペース)
-address_ss_figure=$((address_ss_space + 3)) # ss置換アドレス(桁区切り付きの数字)
-address_ss_vert=$((address_ss_figure + 50)) # ss置換の縦書き全角アドレス(縦書きの（)
-address_ss_zenhan=$((address_ss_vert + 109)) # ss置換の横書き全角半角アドレス(！)
-address_ss_braille=$((address_ss_zenhan + 172)) # ss置換の点字アドレス(点なし)
-address_ss_visibility=$((address_ss_braille + 256)) # ss置換の識別性向上アドレス(/)
-address_ss_liga=$((address_ss_visibility + 48)) # ss置換の識別性向上リガチャアドレス(フォントによってはダミースペース)
-address_ss_mod=$((address_ss_liga + 2)) # ss置換のDQVZアドレス(ストローク D)
-address_ss_line=$((address_ss_mod + num_mod_glyphs * 6)) # ss置換の罫線アドレス(全角─)
-address_ss_arrow=$((address_ss_line + 32)) # ss置換の矢印アドレス(←)
-address_ss_zero=$((address_ss_arrow + 4)) # ss置換のスラッシュ無し0アドレス
-address_ss_otherspace=$((address_ss_zero + 10)) # ss置換のその他のスペースアドレス
-address_ss_ambiguous=$((address_ss_otherspace + 2)) # ss置換のあいまい文字アドレス(半角‥)
-address_ss_escape=$((address_ss_ambiguous + 116)) # ss置換のエスケープ文字アドレス(細いバックスラッシュ)
-address_ss_zero2=$((address_ss_escape + 3)) # ss置換のドット0アドレス
-address_ss_end=$((address_ss_zero2 + 10 - 1)) # ss置換の最終アドレス
-num_ss_glyphs_former=$((address_ss_braille - address_ss_start)) # ss置換のグリフ数(点字の前まで)
-num_ss_glyphs_latter=$((address_ss_end + 1 - address_ss_braille)) # ss置換のグリフ数(点字から後)
-num_ss_glyphs=$((address_ss_end + 1 - address_ss_start)) # ss置換の総グリフ数
-
-lookupIndex_calt="18" # caltテーブルのlookupナンバー (lookupの種類を増やした場合変更)
-num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる。table_modificatorも変更すること)
-
-lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlookupナンバー
-num_replace_lookups="12" # 単純置換のルックアップ数 (lookupの数を変えた場合はcalt_table_makerも変更すること)
-
-lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブルのlookupナンバー
-num_ss_lookups="14" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
-
+address_init() {
+    address_vert_bracket=${address_vert_start} # vert置換アドレス （
+    address_vert_X=$((address_vert_bracket + 109)) # vert置換アドレス ✂
+    address_vert_dh=$((address_vert_X + 3)) # vert置換アドレス ゠
+    address_vert_mm=$((address_vert_dh + 75)) # vert置換アドレス ㍉
+    address_vert_kabu=$((address_vert_mm + 333)) # vert置換アドレス ㍿
+    address_vert_end=$((address_vert_kabu + 7 - 1)) # vert置換の最終アドレス ㋿
+    
+    address_calt_start=$((address_vert_end + 1)) # calt置換の先頭アドレス
+    address_calt_AL=${address_calt_start} # calt置換アドレス(左に移動した A)
+    address_calt_AR=$((address_calt_AL + 239)) # calt置換アドレス(右に移動した A)
+    address_calt_figure=$((address_calt_AR + 239)) # calt置換アドレス(桁区切り付きの数字)
+    address_calt_barD=$((address_calt_figure + 40)) # calt置換アドレス(下に移動した |)
+    address_calt_hyphenL=$((address_calt_barD + 9)) # calt置換アドレス(左に移動した *、数を変更した場合スロットの確保数を変更すること)
+    address_calt_hyphenR=$((address_calt_hyphenL + 30)) # calt置換アドレス(右に移動した *)
+    address_calt_escape=$((address_calt_hyphenR + 30)) # calt置換アドレス (エスケープ文字)
+    address_calt_end=$((address_calt_escape + 3 - 1)) # calt置換の最終アドレス (右に移動した 2つ並んだ時用のバックスラッシュ)
+    address_calt_barDLR="24" # calt置換アドレス(左右に移動した * から、左右に移動した | までの増分)
+    
+    address_ss_start=$((address_calt_end + 1)) # ss置換の先頭アドレス
+    address_ss_space=${address_ss_start} # ss置換アドレス(全角スペース)
+    address_ss_figure=$((address_ss_space + 3)) # ss置換アドレス(桁区切り付きの数字)
+    address_ss_vert=$((address_ss_figure + 50)) # ss置換の縦書き全角アドレス(縦書きの（)
+    address_ss_zenhan=$((address_ss_vert + 109)) # ss置換の横書き全角半角アドレス(！)
+    address_ss_braille=$((address_ss_zenhan + 172)) # ss置換の点字アドレス(点なし)
+    address_ss_visibility=$((address_ss_braille + 256)) # ss置換の識別性向上アドレス(/)
+    address_ss_liga=$((address_ss_visibility + 48)) # ss置換の識別性向上リガチャアドレス(フォントによってはダミースペース)
+    address_ss_mod=$((address_ss_liga + 2)) # ss置換のDQVZアドレス(ストローク D)
+    address_ss_line=$((address_ss_mod + num_mod_glyphs * 6)) # ss置換の罫線アドレス(全角─)
+    address_ss_arrow=$((address_ss_line + 32)) # ss置換の矢印アドレス(←)
+    address_ss_zero=$((address_ss_arrow + 4)) # ss置換のスラッシュ無し0アドレス
+    address_ss_otherspace=$((address_ss_zero + 10)) # ss置換のその他のスペースアドレス
+    address_ss_ambiguous=$((address_ss_otherspace + 5)) # ss置換のあいまい文字アドレス(半角‥)
+    address_ss_escape=$((address_ss_ambiguous + 116)) # ss置換のエスケープ文字アドレス(細いバックスラッシュ)
+    address_ss_zero2=$((address_ss_escape + 3)) # ss置換のドット0アドレス
+    address_ss_end=$((address_ss_zero2 + 10 - 1)) # ss置換の最終アドレス
+    num_ss_glyphs_former=$((address_ss_braille - address_ss_start)) # ss置換のグリフ数(点字の前まで)
+    num_ss_glyphs_latter=$((address_ss_end + 1 - address_ss_braille)) # ss置換のグリフ数(点字から後)
+    num_ss_glyphs=$((address_ss_end + 1 - address_ss_start)) # ss置換の総グリフ数
+    num_ss_correct="3" # ss用スロット確保時の補正値(変体仮名の異体字が全て収まらない場合変更)
+    
+    lookupIndex_replace=$((lookupIndex_calt + num_calt_lookups)) # 単純置換のlookupナンバー
+    num_replace_lookups="12" # 単純置換のルックアップ数 (lookupの数を変えた場合はcalt_table_makerも変更すること)
+    
+    lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブルのlookupナンバー
+    num_ss_lookups="14" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
+}
 # 著作権
 copyright="Copyright (c) 2023 omonomo\n\n"
 copyright="${copyright}\" + \"[Inconsolata]\nCopyright 2006 The Inconsolata Project Authors (https://github.com/cyrealtype/Inconsolata)\n\n"
@@ -351,6 +352,7 @@ loose_flag="false" # Loose 版にする
 term_flag="false" # あいまい文字等を半角にする
 visible_zenkaku_space_flag="true" # 全角スペース可視化
 visible_hankaku_space_flag="true" # 半角スペース可視化
+visible_other_space_flag="true" # その他のスペース可視化
 improve_visibility_flag="true" # ダッシュ破線化
 underline_flag="true" # 全角半角に下線
 mod_flag="true" # DVQZ改変
@@ -516,6 +518,7 @@ font_generator_help()
     echo "  -a                     Set neutral and ambiguous characters to hankaku (excluding private use areas)"
     echo "  -Z                     Disable visible zenkaku space"
     echo "  -z                     Disable visible hankaku space"
+    echo "  -y                     Disable visible other space"
     echo "  -u                     Disable zenkaku hankaku underline"
     echo "  -b                     Disable glyphs with improved visibility"
     echo "  -t                     Disable modified D,Q,V and Z"
@@ -533,7 +536,7 @@ font_generator_help()
 }
 
 # Get options
-while getopts hVxXf:vlN:n:waZzubtsOQceojSdPp OPT
+while getopts hVxXf:vlN:n:waZzyubtsOQceojSdPp OPT
 do
     case "${OPT}" in
         "h" )
@@ -603,6 +606,10 @@ do
             echo "Option: Disable visible hankaku space"
             visible_hankaku_space_flag="false"
             ;;
+        "y" )
+            echo "Option: Disable visible other space"
+            visible_other_space_flag="false"
+            ;;
         "u" )
             echo "Option: Disable zenkaku hankaku underline"
             if [ "${ss_flag}" = "true" ]; then
@@ -667,6 +674,7 @@ do
             echo "Option: Enable ss feature"
             visible_zenkaku_space_flag="false"
             visible_hankaku_space_flag="false"
+            visible_other_space_flag="false"
             underline_flag="true"
  #            underline_flag="false" # デフォルトで下線無しにする場合
             improve_visibility_flag="true"
@@ -703,6 +711,7 @@ do
 done
 echo
 
+address_init
 calt_init
 shift $(($OPTIND - 1))
 
@@ -811,6 +820,18 @@ if [ "${patch_only_flag}" = "false" ]; then
         echo
         font_generator_help
     fi
+
+    output_data=$({\
+        sha256sum "$input_latin_regular";\
+        sha256sum "$input_latin_bold";\
+        sha256sum "$input_kana_regular";\
+        sha256sum "$input_kana_bold";\
+        sha256sum "$input_kanzi_regular";\
+        sha256sum "$input_kanzi_bold";\
+        sha256sum "$input_hentai_kana";\
+        sha256sum "$input_nerd";\
+        } | sha256sum | cut -d ' ' -f 1\
+    )
 fi
 
 # Check fontforge existance
@@ -4751,19 +4772,19 @@ while (i < SizeOf(input_list))
 
     Select(65552); Clear() # Temporary glyph
 
-# その他のスペース用グリフ (ss 用) 作成
+# その他のスペース用グリフ作成
     Print("Make other space")
 
 # 全角
     Select(0u25a0); Copy() # ■
     Select(${address_store_otherspace}); Paste()
-    Scale(100, 50, 0, 0)
+    Scale(160, 50, 0, 0); Move(-300, -124)
     Select(0u25a0); Copy() # ■
     Select(65552, 65553);  Paste()
     Select(65553)
-    Scale(68, 70); HFlip(); Copy()
+    Scale(79, 70); HFlip(); Copy()
     Select(65552);  PasteInto()
-    Scale(92, 100)
+    Scale(139.9, 100)
     Copy()
     Select(${address_store_otherspace}); PasteInto()
     OverlapIntersect()
@@ -4776,7 +4797,7 @@ while (i < SizeOf(input_list))
 # 半角
     Select(0u25a0); Copy() # ■
     Select(${address_store_otherspace} + 1); Paste()
-    Scale(100, 50, 0, 0)
+    Scale(100, 50, 0, 0); Move(0, -124)
     Select(0u25a0); Copy() # ■
     Select(65552, 65553);  Paste()
     Select(65553)
@@ -4788,6 +4809,12 @@ while (i < SizeOf(input_list))
     OverlapIntersect()
     Move(-228, -208)
     SetWidth(500)
+
+# 幅無し
+    Copy()
+    Select(${address_store_otherspace} + 2); Paste()
+    Move(-250, 0)
+    SetWidth(0)
 
     Select(65552); Clear() # Temporary glyph
     Select(65553); Clear() # Temporary glyph
@@ -9275,6 +9302,15 @@ while (i < SizeOf(input_list))
 
 # 記号のグリフを加工
     Print("Edit symbols")
+# ․ (追加)
+    Select(0u2026); Copy() # …
+    Select(0u2024); Paste() # ․
+    Select(0u2503); Copy() # ┃
+    Select(0u2024); PasteInto() # ․
+    OverlapIntersect()
+    Move(-228, 0)
+    SetWidth(500)
+
 # ‖ (上に移動)
     Select(0u2016) # ‖
     Move(0, 60)
@@ -9756,6 +9792,20 @@ while (i < SizeOf(input_list))
     Scale(102)
     SetWidth(1000)
 
+# ⛉ (追加)
+    Select(0u2616); Copy() # ☖
+    Select(0u26c9); Paste() # ⛉
+    VFlip()
+    CorrectDirection()
+    SetWidth(1000)
+
+# ⛊ (追加)
+    Select(0u2617); Copy() # ☗
+    Select(0u26ca); Paste() # ⛊
+    VFlip()
+    CorrectDirection()
+    SetWidth(1000)
+
 # ✂ (縦書き用ダミー、後でグリフ上書き)
     Select(0u0020); Copy() # スペース
     Select(0u2702); Paste() # ✂
@@ -10235,6 +10285,25 @@ while (i < SizeOf(input_list))
     Select(65553); Clear() # Temporary glyph
     Select(65554); Clear() # Temporary glyph
     Select(65555); Clear() # Temporary glyph
+
+# object replacement character
+    Select(${address_store_otherspace} + 1); Copy() # 保管したその他の半角スペース
+    Select(0ufffc); Paste()
+    VFlip()
+    CorrectDirection()
+    Move(0, 808)
+    Select(${address_store_otherspace} + 1); Copy() # 保管したその他の半角スペース
+    Select(0ufffc); PasteInto()
+    Select(0u2503); Copy() # ┃
+    Select(65552); Paste() # Temporary glyph
+    Scale(55, 45); Copy()
+    Select(0ufffc); PasteWithOffset(-228, 69)
+    Select(0u2503); Copy() # ┃
+    Select(65552); Paste() # Temporary glyph
+    Scale(55, 12); Copy()
+    Select(0ufffc); PasteWithOffset(-228, -273)
+    SetWidth(500)
+    Select(65552); Clear() # Temporary glyph
 
 # 演算子を上下に移動
     math = [0u223c] # ∼
@@ -11081,7 +11150,7 @@ while (i < SizeOf(input_list))
         if (input_list[i] == "${input_kana_bold}")
             Print("Edit kana weight of glyphs")
  #            Select(0u2013, 0u2014) # –—
-            Select(0u2025, 0u2026) # ‥…
+            Select(0u2024, 0u2026) # ․‥…
             SelectMore(0u2e80, 0u2fdf) # 部首
             SelectMore(0u3001, 0u3002) # 、。
             SelectMore(0u3008, 0u3011) # 括弧
@@ -13442,7 +13511,7 @@ while (i < SizeOf(input_list))
 # ss 対応 (スロットの確保、後でグリフ上書き)
     k = ${address_ss_start_kanzi}
     j = 0
-    while (j < ${num_ss_glyphs_former})
+    while (j < ${num_ss_glyphs_former} + ${num_ss_correct})
         Select(0u0073); Copy() # 保管したグリフのダミー
         Select(k); Paste()
         k += 1
@@ -13546,7 +13615,7 @@ while (i < SizeOf(input_list))
     k = 0
 
     j = 0
-    while (j < ${num_ss_glyphs_latter} - 2) # 計算が合っているはずなのに余りが出るので-2
+    while (j < ${num_ss_glyphs_latter} - ${num_ss_correct})
         Select(${address_ss_start_dummy} + k); SetWidth(512) # 保管したグリフのダミー
         j += 1
         k += 1
@@ -15017,13 +15086,15 @@ while (i < \$argc)
 
 # --------------------------------------------------
 
-# スペースの width 変更
+# スペースの width 変更 (その他のスペースにグリフをペースト)
     Print("Modified space width")
 
+    Select(${address_store_otherspace}); Copy() # その他の全角スペース
     Select(0u2001) # em quad
     SelectMore(0u2003) # em space
-    SetWidth(${width_zenkaku})
+    Paste(); SetWidth(${width_zenkaku})
 
+    Select(${address_store_otherspace} + 1); Copy() # その他の半角スペース
     Select(0u2000) # en quad
     SelectMore(0u2002) # en space
     SelectMore(0u2004) # three-per-em space
@@ -15035,15 +15106,69 @@ while (i < \$argc)
     SelectMore(0u200a) # hair space
     SelectMore(0u202f) # narrow no-break space
     SelectMore(0u205f) # medium mathematical space
+    Paste(); SetWidth(${width_hankaku})
+
+    Select(0u2007) # figure space
+    SelectMore(0u202f) # narrow no-break space
+    VFlip(); CorrectDirection()
     SetWidth(${width_hankaku})
 
+    Select(${address_store_otherspace} + 2); Copy() # 幅無しスペース
     Select(0u034f) # combining grapheme joiner
-    SelectMore(0u200b) # zero width space
     SelectMore(0u200c) # zero width non-joiner
     SelectMore(0u200d) # zero width joiner
-    SelectMore(0u2060) # word joiner
-    SelectMore(0ufeff) # zero width no-break space
+    Paste(); SetWidth(0)
+
+    Select(0u200d) # zero width joiner
+    VFlip(); CorrectDirection()
     SetWidth(0)
+
+    # 元々表示されない見えないグリフを削除 (別のフォントに頼る)
+    Select(0u061c) # arabic letter mark
+    SelectMore(0u115f) # hangul choseong filler
+    SelectMore(0u1160) # hangul jungseong filler
+    SelectMore(0u1680) # ogham space mark
+    SelectMore(0u17b4) # khmer vowel inherent aq
+    SelectMore(0u17b5) # khmer vowel inherent aa
+    SelectMore(0u180b) # mongolian free variation selector one
+    SelectMore(0u180c) # mongolian free variation selector two
+    SelectMore(0u180d) # mongolian free variation selector three
+    SelectMore(0u180e) # mongolian vowel separator
+    SelectMore(0u180f) # mongolian free variation selector four
+    SelectMore(0u200b) # zero width space
+    SelectMore(0u200e) # left-to-right mark
+    SelectMore(0u200f) # right-to-left mark
+    SelectMore(0u2028) # line separator
+    SelectMore(0u2029) # paragraph separator
+    SelectMore(0u202a) # left-to-right embedding
+    SelectMore(0u202b) # right-to-left embedding
+    SelectMore(0u202c) # pop directional formatting
+    SelectMore(0u202d) # left-to-right override
+    SelectMore(0u202e) # right-to-left override
+    SelectMore(0u2060) # word joiner
+    SelectMore(0u2061) # function application
+    SelectMore(0u2062) # invisible times
+    SelectMore(0u2063) # invisible separator
+    SelectMore(0u2064) # invisible plus
+    SelectMore(0u2065) # invisible operators - undefined
+    SelectMore(0u2066) # left-to-right isolate
+    SelectMore(0u2067) # right-to-left isolate
+    SelectMore(0u2068) # first strong isolate
+    SelectMore(0u2069) # pop directional isolate
+    SelectMore(0u206a) # inhibit symmetric swapping
+    SelectMore(0u206b) # activate symmetric swapping
+    SelectMore(0u206c) # inhibit arabic form shaping
+    SelectMore(0u206d) # activate arabic form shaping
+    SelectMore(0u206e) # national digit shapes
+    SelectMore(0u206f) # nominal digit shapes
+    SelectMore(0u2d7f) # tifinagh consonant joiner
+    SelectMore(0u3164) # hangul filler
+    SelectMore(0ufeff) # zero width no-break space
+    SelectMore(0uffa0) # halfwidth hangul filler
+    SelectMore(0ufff9) # interlinear annotation anchor
+    SelectMore(0ufffa) # interlinear annotation separator
+    SelectMore(0ufffb) # interlinear annotation terminator
+    Clear(); DetachAndRemoveGlyphs()
 
 # 記号のグリフを加工
     Print("Edit symbols")
@@ -15567,6 +15692,11 @@ while (i < \$argc)
         Scale(${scale_zenkaku2hankaku}, 100, ${width_hankaku} / 2, 0)
         SetWidth(${width_hankaku})
 
+        Select(0u203c); Copy(); Select(${address_store_zenhan_eq}); Paste(); SetWidth(${width_hankaku}) # 保管した‼
+        Select(0u2047); Copy(); Select(${address_store_zenhan_eq} + 1); Paste(); SetWidth(${width_hankaku}) # 保管した⁇
+        Select(0u2048); Copy(); Select(${address_store_zenhan_eq} + 2); Paste(); SetWidth(${width_hankaku}) # 保管した⁈
+        Select(0u2049); Copy(); Select(${address_store_zenhan_eq} + 3); Paste(); SetWidth(${width_hankaku}) # 保管した⁉
+
         Select(0u2025) # ‥
         SelectMore(0u2026) # …
         SelectMore(0u22ef) # ⋯
@@ -15603,7 +15733,8 @@ while (i < \$argc)
             endif
         endloop
 
-        Select(0u2051) # ⁑
+        Select(0u2024) # ․
+        SelectMore(0u2051) # ⁑
         SelectMore(0u22ee) # ⋮
         SelectMore(0u2307) # ⌇
         foreach
@@ -15819,7 +15950,6 @@ while (i < \$argc)
         SelectMore(0u201f) # ‟
         SelectMore(0u2020, 0u2022) # †‡•
         SelectMore(0u2023) # ‣
-        SelectMore(0u2024) # ․
         SelectMore(0u2027) # ‧
         SelectMore(0u202f) # narrow no-break space
         SelectMore(0u2030) # ‰
@@ -16217,6 +16347,13 @@ while (i < \$argc)
                 endif
             endif
         endloop
+
+        Select(0u2000); Copy() # en quad
+        Select(0u2001) # em quad
+        SelectMore(0u2003) # em space
+        SelectMore(${address_store_otherspace}) # 保管したその他の全角スペース
+        Paste()
+        SetWidth(${width_hankaku})
 
     endif
 
@@ -17546,6 +17683,20 @@ while (i < \$argc)
     lookupName = "'ss" + ToString(ss) + "' スタイルセット" + ToString(ss)
     lookupSub = lookupName + "サブテーブル"
 
+    orig = [0u00a0] # no-break space
+    j = 0
+ #    while (j < SizeOf(orig))
+ #        Select(orig[j]); Copy()
+ #        Select(k); Paste()
+ #        SetWidth(${width_hankaku})
+        Select(${address_ss_space} + 2)
+        glyphName = GlyphInfo("Name")
+        Select(orig[j])
+        AddPosSub(lookupSub, glyphName)
+ #        j += 1
+ #        k += 1
+ #    endloop
+
     Select(${address_store_otherspace}); Copy() # その他の全角スペース
     Select(k); Paste()
 
@@ -17563,27 +17714,73 @@ while (i < \$argc)
     endloop
     k += 1
 
-    Select(${address_store_otherspace} + 1); Copy() # その他の半角・幅無しスペース
+    Select(${address_store_otherspace} + 1); Copy() # その他の半角スペース
     Select(k); Paste()
 
     spc =[\
-    0u034f,\
     0u2000,\
     0u2002,\
     0u2004,\
     0u2005,\
     0u2006,\
-    0u2007,\
     0u2008,\
     0u2009,\
     0u200a,\
-    0u200b,\
-    0u200c,\
-    0u200d,\
-    0u202f,\
-    0u205f,\
-    0u2060,\
-    0ufeff\
+    0u205f\
+    ]
+    j = 0
+    while (j < SizeOf(spc))
+        Select(k)
+        glyphName = GlyphInfo("Name")
+        Select(spc[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+    endloop
+    k += 1
+
+    Select(${address_store_otherspace} + 1); Copy() # その他の半角スペース
+    Select(k); Paste()
+    VFlip(); CorrectDirection() # 反転
+    SetWidth(${width_hankaku})
+
+    spc =[\
+    0u2007,\
+    0u202f\
+    ]
+    j = 0
+    while (j < SizeOf(spc))
+        Select(k)
+        glyphName = GlyphInfo("Name")
+        Select(spc[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+    endloop
+    k += 1
+
+    Select(${address_store_otherspace} + 2); Copy() # 幅無しスペース
+    Select(k); Paste()
+
+    spc =[\
+    0u034f,\
+    0u200c\
+    ]
+    j = 0
+    while (j < SizeOf(spc))
+        Select(k)
+        glyphName = GlyphInfo("Name")
+        Select(spc[j])
+        AddPosSub(lookupSub, glyphName)
+        j += 1
+    endloop
+    k += 1
+
+    Select(${address_store_otherspace} + 2); Copy() # 幅無しスペース
+    Select(k); Paste()
+    VFlip(); CorrectDirection() # 反転
+    SetWidth(0)
+
+    spc =[\
+    0u200d\
     ]
     j = 0
     while (j < SizeOf(spc))
@@ -17844,6 +18041,18 @@ while (i < \$argc)
         j += 1
         k += 1
     endloop
+
+    Select(0u2000) # en quad
+    glyphName = GlyphInfo("Name")
+    Select(0u2001) # em quad
+    AddPosSub(lookupSub, glyphName)
+    Select(0u2003) # em space
+    AddPosSub(lookupSub, glyphName)
+
+    Select(${address_ss_otherspace} + 1) # ss置換のその他の半角スペース
+    glyphName = GlyphInfo("Name")
+    Select(${address_ss_otherspace}) # ss置換のその他の全角スペース
+    AddPosSub(lookupSub, glyphName)
 
     ss += 1
 # ss13 エスケープ文字を細線化
@@ -18806,8 +19015,29 @@ while (i < \$argc)
  #    SelectFewer(0u1d538, 0u1d56b) # 数学用英数字記号
     SelectFewer(0u1f310) # 🌐
     SelectFewer(0u1f3a4) # 🎤
-    SelectFewer("uniFFFD") # Replacement Character
+    SelectFewer("uniFFFC") # object replacement character
+    SelectFewer("uniFFFD") # replacement character
     SelectFewer(".notdef") # notdef
+
+    SelectFewer(0u2001) # em quad
+    SelectFewer(0u2003) # em space
+
+    SelectFewer(0u2000) # en quad
+    SelectFewer(0u2002) # en space
+    SelectFewer(0u2004) # three-per-em space
+    SelectFewer(0u2005) # four-per-em space
+    SelectFewer(0u2006) # six-per-em space
+    SelectFewer(0u2007) # figure space
+    SelectFewer(0u2008) # punctuation space
+    SelectFewer(0u2009) # thin space
+    SelectFewer(0u200a) # hair space
+    SelectFewer(0u202f) # narrow no-break space
+    SelectFewer(0u205f) # medium mathematical space
+
+    SelectFewer(0u034f) # combining grapheme joiner
+    SelectFewer(0u200c) # zero width non-joiner
+    SelectFewer(0u200d) # zero width joiner
+
     if ("${nerd_flag}" == "true")
         SelectFewer(0ue000, 0uf8ff) # NerdFonts
         SelectFewer(0uf0001, 0uf1af0) # NerdFonts
@@ -18824,7 +19054,7 @@ while (i < \$argc)
     SelectFewer(${address_store_vert} + 22, ${address_store_vert} + 23) # 保管した縦書きの縦線無し／＼
     SelectFewer(${address_store_vert} + 102) # 保管した縦書きの縦線無し￤
     SelectFewer(${address_store_d_hyphen}) # 保管した縦書きの゠
-    SelectFewer(${address_store_otherspace}, ${address_store_otherspace} + 1) # 保管したその他のスペース
+    SelectFewer(${address_store_otherspace}, ${address_store_otherspace} + 2) # 保管したその他のスペース
 
     SelectFewer("uni3008.vert", "uni301F.vert") # 縦書きの括弧、〓
     SelectFewer("uni30FC.vert") # 縦書きのー
@@ -18849,7 +19079,10 @@ while (i < \$argc)
     SelectFewer("SF100000.ss09", "arrowdown.ss09") # ss09の罫線、矢印
 
     SelectFewer("uni2001.ss11") # ss11の全角スペース
-    SelectFewer("uni034F.ss11") # ss11の半角スペース
+    SelectFewer("uni2000.ss11") # ss11の半角スペース
+    SelectFewer("uni2007.ss11") # ss11のノーブレーク半角スペース
+    SelectFewer("uni034F.ss11") # ss11の幅無しスペース
+    SelectFewer("uni200D.ss11") # ss11のノーブレーク幅無しスペース
 
     SelectFewer("arrowup.ss12") # ss12の↑
     SelectFewer("arrowdown.ss12") # ss12の↓
@@ -19114,7 +19347,48 @@ while (i < \$argc)
     if ("${visible_hankaku_space_flag}" == "false")
         Print("Option: Disable visible hankaku space")
         Select(0u0020); Clear(); SetWidth(${width_hankaku}) # 半角スペース
+    endif
+
+# ノーブレークスペース消去
+    if ("${visible_hankaku_space_flag}" == "false" && "${visible_other_space_flag}" == "false")
         Select(0u00a0); Clear(); SetWidth(${width_hankaku}) # ノーブレークスペース
+    endif
+
+# その他のスペース消去
+    if ("${visible_other_space_flag}" == "false")
+        Print("Option: Disable visible other space")
+
+        Select(0u2001) # em quad
+        SelectMore(0u2003) # em space
+        Clear()
+        if ("${term_flag}" == "true")
+            SetWidth(${width_hankaku})
+        else
+            SetWidth(${width_zenkaku})
+        endif
+
+        Select(0u2000) # en quad
+        SelectMore(0u2002) # en space
+        SelectMore(0u2004) # three-per-em space
+        SelectMore(0u2005) # four-per-em space
+        SelectMore(0u2006) # six-per-em space
+        SelectMore(0u2007) # figure space
+        SelectMore(0u2008) # punctuation space
+        SelectMore(0u2009) # thin space
+        SelectMore(0u200a) # hair space
+        SelectMore(0u202f) # narrow no-break space
+        SelectMore(0u205f) # medium mathematical space
+        Clear(); SetWidth(${width_hankaku})
+
+        Select(0u034f) # combining grapheme joiner
+        SelectMore(0u200c) # zero width non-joiner
+        SelectMore(0u200d) # zero width joiner
+        Clear()
+        if ("${ss_flag}" == "false") # ss 非対応の場合グリフを完全消去
+            DetachAndRemoveGlyphs()
+        else
+            SetWidth(0)
+        endif
     endif
 
 # 下線付きの全角・半角形を元に戻す
@@ -19160,13 +19434,18 @@ while (i < \$argc)
             j += 1
             k += 1
         endloop
+
         orig = [0u309b, 0u309c, 0u203c, 0u2047,\
                 0u2048, 0u2049] # ゛゜‼⁇ ⁈⁉
         j = 0
         while (j < SizeOf(orig))
             Select(${address_store_vert} + k); Copy()
             Select(orig[j]); Paste()
-            SetWidth(${width_zenkaku})
+            if (2 <= j && "${term_flag}" == "true")
+                SetWidth(${width_hankaku})
+            else
+                SetWidth(${width_zenkaku})
+            endif
             j += 1
             k += 1
         endloop
@@ -19611,7 +19890,7 @@ if [ "${patch_only_flag}" = "false" ]; then
 
     # 下書きモード、一時作成ファイルを残す以外で font_generator に変更が無く、すでにパッチ前フォントが作成されていた場合それを呼び出す
     if [ "${draft_flag}" = "false" ] && [ "${leaving_tmp_flag}" = "false" ]; then
-        output_data=$(sha256sum font_generator.sh | cut -d ' ' -f 1)
+        output_data=${output_data}"_"$(sha256sum font_generator.sh | cut -d ' ' -f 1)
         output_data=${output_data}"_"$(sha256sum "${settings}.txt" | cut -d ' ' -f 1)
         if [ "${nerd_flag}" = "false" ]; then
             nopatchsetdir_name="e"

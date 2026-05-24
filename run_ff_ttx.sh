@@ -20,7 +20,7 @@ font_familyname="Cyroit"
 font_familyname_suffix=""
 
 font_familyname_suffix_def=(BS SP FX HB DG) # バージョン違いの名称 (デフォルト設定)
-font_familyname_suffix_def_opt=(ztsp tsp ztcp Zzubtsp ztp) # 各バージョンのオプション (デフォルト設定)
+font_familyname_suffix_def_opt=(zytsp tsp zytcp Zzyubtsp zytp) # 各バージョンのオプション (デフォルト設定)
 build_fonts_dir="build" # 完成品を保管するフォルダ
 illegal_opt_fg="hVxXfNn" # font_generator に指定できないオプション
 
