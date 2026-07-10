@@ -1076,6 +1076,17 @@ i=$((i + 1))
 echo "$i ${S}ESCR glyph${i}" >> "${tmpdir}/${dict}.txt"
 i=$((i + 1))
 
+# 太字イコール ----------------------------------------
+
+S=${equal}
+
+echo "$i ${S}BLDN glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
+echo "$i ${S}BLDL glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
+echo "$i ${S}BLDR glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
+
 # 略号のグループ作成 ||||||||||||||||||||||||||||||||||||||||
 
 # ラテン文字 (ここで定義した変数は直接使用しないこと) ====================
@@ -1634,6 +1645,7 @@ S="_colonU_";       class+=("${S}"); eval ${S}=\("${colon}U"\) # 上に移動し
 S="_barU_";         class+=("${S}"); eval ${S}=\("${bar}U"\) # 上に移動した (括弧用) |
 S="_colonU2_";      class+=("${S}"); eval ${S}=\("${colon}U2"\) # 上に移動した (括弧用) :
 S="_rSolidusESC_";  class+=("${S}"); eval ${S}=\("${rSolidus}ESC"\) # エスケープ文字 (reverse solidus)
+S="_equalBLD_";     class+=("${S}"); eval ${S}=\("${equal}BLD"\) # 太字イコール
 
 # 記号単独 (左右移動あり、ここで定義した変数を使う) ====================
 
@@ -1662,6 +1674,7 @@ S="_colonU";       class+=("${S}"); eval ${S}=\(_colonU_\) # 上に移動した 
 S="_barU";         class+=("${S}"); eval ${S}=\(_barU_\) # 上に移動した (括弧用) |
 S="_colonU2";      class+=("${S}"); eval ${S}=\(_colonU2_\) # 上に移動した (括弧用) :
 S="_rSolidusESC";  class+=("${S}"); eval ${S}=\(_rSolidusESC_\) # エスケープ文字 (reverse solidus)
+S="_equalBLD";     class+=("${S}"); eval ${S}=\(_equalBLD_\) # 太字イコール
 
 # 記号グループ (左右移動あり、ここで定義した変数を使う) ====================
 
@@ -6651,20 +6664,52 @@ lookAhead=(${_lessR[@]} ${_rSolidusR[@]} \
 ${_lessN[@]} ${_rSolidusN[@]})
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexRR}"
 
+#CALT5
+#<< "#CALT6" # 記号・小数 ||||||||||||||||||||||||||||||||||||||||
+
+pre_add_lookup
+
+# 記号類 ++++++++++++++++++++++++++++++++++++++++
+
 # \ のエスケープ文字にしない処理 ----------------------------------------
 
-# ◇左が \ の場合 \ を通常文字とする
+# ♥左が \ の場合 \ を通常文字とする
 backtrack=(${_rSolidusL[@]} ${_rSolidusR[@]} ${_rSolidusN[@]})
 input=(${_rSolidusL[@]} ${_rSolidusR[@]} ${_rSolidusN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
 
-#CALT5
+# = を太字にする処理 ----------------------------------------
+
+# ♡右が = で その右が = の場合 = を太字に変換可能にしない
+backtrack1=("")
+backtrack=("")
+input=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+lookAhead=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+lookAhead1=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "" "${backtrack1[*]}" "${lookAhead1[*]}"
+
+# ♡左右が = の場合 = を太字に変換可能にしない
+backtrack=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+input=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+lookAhead=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" ""
+
+# ♡右が = の場合 = を太字に変換可能にする
+backtrack=("")
+input=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+lookAhead=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
+
+# ♡左が = の場合 = を太字に変換可能にする
+backtrack=(${_equalBLDL[@]} ${_equalBLDR[@]} ${_equalBLDN[@]})
+input=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
+
 # 桁区切り設定作成 ||||||||||||||||||||||||||||||||||||||||
 
 # 小数の処理 ----------------------------------------
-
-pre_add_lookup
 
 backtrack=(${_fullStopN[@]})
 input=(${figureN[@]})
@@ -6676,6 +6721,7 @@ input=(${figureN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndex0}"
 
+#CALT6
 # 12桁マークを付ける処理 1 ----------------------------------------
 
 pre_add_lookup

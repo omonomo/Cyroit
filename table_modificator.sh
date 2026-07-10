@@ -468,6 +468,9 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         <FeatureIndex index="25" value="29"/>\
         <FeatureIndex index="26" value="30"/>\
         <FeatureIndex index="27" value="31"/>\
+        <FeatureIndex index="28" value="32"/>\
+        <FeatureIndex index="29" value="33"/>\
+        <FeatureIndex index="30" value="34"/>\
         ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(13 + ss フィーチャの数)、value(index + 4) を追加、caltは後でリガチャ用caltと統合
       else # ss非対応の場合
         sed -i.bak -e 's,<FeatureIndex index="9" value=".*"/>,<FeatureIndex index="9" value="13"/>\
@@ -498,10 +501,13 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         <FeatureIndex index="24" value="28"/>\
         <FeatureIndex index="25" value="29"/>\
         <FeatureIndex index="26" value="30"/>\
+        <FeatureIndex index="27" value="31"/>\
+        <FeatureIndex index="28" value="32"/>\
+        <FeatureIndex index="29" value="33"/>\
         ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(12 + ss フィーチャの数)、value(index + 4) を追加
         if [ "${calt_ok_flag}" = "true" ]; then # calt対応であればさらに1つ index 追加
-          sed -i.bak -e 's,<FeatureIndex index="26" value=".*"/>,<FeatureIndex index="26" value="30"/>\
-          <FeatureIndex index="27" value="31"/>\
+          sed -i.bak -e 's,<FeatureIndex index="29" value=".*"/>,<FeatureIndex index="29" value="33"/>\
+          <FeatureIndex index="30" value="34"/>\
           ,' "${P%%.ttf}.ttx"
         fi
       else # ss非対応の場合
