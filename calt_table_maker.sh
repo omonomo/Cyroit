@@ -736,7 +736,8 @@ tmpdir=$(mktemp -d ./"${tmpdir_name}".XXXXXX) || exit 2
 
 # 略号と名前 ----------------------------------------
 
-exclam=("EXC") # 直接扱えない記号があるため略号を使用
+space=("SPC") # 直接扱えない記号があるため略号を使用
+exclam=("EXC")
 quotedbl=("QTD")
 number=("NUM")
 dollar=("DOL")
@@ -751,9 +752,9 @@ fullStop=("DOT")
 solidus=("SLH")
 parenLeft=("LPN")
 parenRight=("RPN")
-symbol2x=("${exclam}" "${quotedbl}" "${number}" "${dollar}" "${percent}" "${and}" "${quote}" \
+symbol2x=("${space}" "${exclam}" "${quotedbl}" "${number}" "${dollar}" "${percent}" "${and}" "${quote}" \
 "${parenLeft}" "${parenRight}" "${asterisk}" "${plus}" "${comma}" "${hyphen}" "${fullStop}" "${solidus}")
-symbol2x_name=("exclam" "quotedbl" "numbersign" "dollar" "percent" "ampersand" "quotesingle" \
+symbol2x_name=("space" "exclam" "quotedbl" "numbersign" "dollar" "percent" "ampersand" "quotesingle" \
 "parenleft" "parenright" "asterisk" "plus" "comma" "hyphen" "period" "slash")
 
 figure=(0 1 2 3 4 5 6 7 8 9)
@@ -788,6 +789,10 @@ symbol5x_name=("bracketleft" "backslash" "bracketright" "asciicircum" "underscor
 
 latin67=(a b c d e f g h i j k l m n o p q r s t u v w x y z) # 略号の始めの文字
 latin67_name=(${latin67[@]})
+
+uni00A0=("NBS")
+symbolAx=("${uni00A0}")
+symbolAx_name=("uni00A0")
 
 braceLeft=("LBC")
 bar=("BAR")
@@ -905,6 +910,13 @@ done
 
 word=(${symbol7x[@]}) # 記号
 name=(${symbol7x_name[@]})
+for j in ${!word[@]}; do
+  echo "$i ${word[j]}N ${name[j]}" >> "${tmpdir}/${dict}.txt"
+  i=$((i + 1))
+done
+
+word=(${symbolAx[@]}) # 記号
+name=(${symbolAx_name[@]})
 for j in ${!word[@]}; do
   echo "$i ${word[j]}N ${name[j]}" >> "${tmpdir}/${dict}.txt"
   i=$((i + 1))
@@ -1085,6 +1097,13 @@ i=$((i + 1))
 echo "$i ${S}BLDL glyph${i}" >> "${tmpdir}/${dict}.txt"
 i=$((i + 1))
 echo "$i ${S}BLDR glyph${i}" >> "${tmpdir}/${dict}.txt"
+i=$((i + 1))
+
+# 2つ以上並んだスペース ----------------------------------------
+
+S=${space}
+
+echo "$i ${S}PLN glyph${i}" >> "${tmpdir}/${dict}.txt"
 i=$((i + 1))
 
 # 略号のグループ作成 ||||||||||||||||||||||||||||||||||||||||
@@ -1698,21 +1717,27 @@ done
 # 記号 (通常のみ、ここで定義した変数は直接使用しないこと) ====================
 class=("")
 
+S="_space_";      class+=("${S}"); eval ${S}=\("${space}"\) # space
+S="_nbSpace_";    class+=("${S}"); eval ${S}=\("${uni00A0}"\) # no-break space
 S="_number_";     class+=("${S}"); eval ${S}=\("${number}"\) # #
 S="_dollar_";     class+=("${S}"); eval ${S}=\("${dollar}"\) # $
 S="_percent_";    class+=("${S}"); eval ${S}=\("${percent}"\) # %
 S="_ampersand_";  class+=("${S}"); eval ${S}=\("${and}"\) # &
 S="_at_";         class+=("${S}"); eval ${S}=\("${at}"\) # @
 S="_circum_";     class+=("${S}"); eval ${S}=\("${circum}"\) # ^
+S="_spacePL_";    class+=("${S}"); eval ${S}=\("${space}PL"\) # 2つ以上並んだ space
 
 # 記号単独 (通常のみ、ここで定義した変数を使う) ====================
 
+S="_space";      class+=("${S}"); eval ${S}=\(_space_\) # space
+S="_nbSpace";    class+=("${S}"); eval ${S}=\(_nbSpace_\) # no-break space
 S="_number";     class+=("${S}"); eval ${S}=\(_number_\) # #
 S="_dollar";     class+=("${S}"); eval ${S}=\(_dollar_\) # $
 S="_percent";    class+=("${S}"); eval ${S}=\(_percent_\) # %
 S="_ampersand";  class+=("${S}"); eval ${S}=\(_ampersand_\) # &
 S="_at";         class+=("${S}"); eval ${S}=\(_at_\) # @
 S="_circum";     class+=("${S}"); eval ${S}=\(_circum_\) # ^
+S="_spacePL";    class+=("${S}"); eval ${S}=\(_spacePL_\) # 2つ以上並んだ space
 
 # 数字・記号グループ (通常のみ、ここで定義した変数を使う) ====================
 
@@ -6704,6 +6729,20 @@ chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]
 # ♡左が = の場合 = を太字に変換可能にする
 backtrack=(${_equalBLDL[@]} ${_equalBLDR[@]} ${_equalBLDN[@]})
 input=(${_equalL[@]} ${_equalR[@]} ${_equalN[@]})
+lookAhead=("")
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
+
+# 2つ並んだスペースを可視する処理 ----------------------------------------
+
+# ♡右が space の場合 space を可視可能にする
+backtrack=("")
+input=(${_spaceN[@]})
+lookAhead=(${_spaceN[@]})
+chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
+
+# ♡左が space の場合 space を可視可能にする
+backtrack=(${_spacePLN[@]})
+input=(${_spaceN[@]})
 lookAhead=("")
 chain_context 2 index "${index}" "${backtrack[*]}" "${input[*]}" "${lookAhead[*]}" "${lookupIndexESC}"
 

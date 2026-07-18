@@ -84,7 +84,8 @@ address_init() {
     address_calt_asteriskR=$((address_calt_asteriskL + 30)) # calt置換アドレス(右に移動した *)
     address_calt_escape=$((address_calt_asteriskR + 30)) # calt置換アドレス (エスケープ文字)
     address_calt_equal=$((address_calt_escape + 3)) # calt置換アドレス (太字=)
-    address_calt_end=$((address_calt_equal + 3 - 1)) # calt置換の最終アドレス (右に移動した 太字=)
+    address_calt_space=$((address_calt_equal + 3)) # calt置換アドレス (2つ以上並んだスペース)
+    address_calt_end=$((address_calt_space + 1 - 1)) # calt置換の最終アドレス (右に移動した 太字=)
     address_calt_barDLR="24" # calt置換アドレス(左右に移動した * から、左右に移動した | までの増分)
 
     address_ss_start=$((address_calt_end + 1)) # ss置換の先頭アドレス
@@ -117,7 +118,7 @@ address_init() {
     num_replace_lookups="12" # 単純置換のルックアップ数 (lookupの数を変えた場合はcalt_table_makerも変更すること)
 
     lookupIndex_ss=$((lookupIndex_replace + num_replace_lookups)) # ssテーブルのlookupナンバー
-    num_ss_lookups="17" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
+    num_ss_lookups="18" # ssのルックアップ数 (lookupの数を変えた場合はtable_modificatorも変更すること)
 }
 # 著作権
 copyright="Copyright (c) 2023 omonomo\n\n"
@@ -13582,6 +13583,10 @@ while (i < SizeOf(input_list))
         k += 1
     endloop
 
+    Select(0u0020);Copy() # space
+    Select(k); Paste()
+    k += 1
+    
 # ss 対応 (スロットの確保、後でグリフ上書き)
     k = ${address_ss_start_kanzi}
     j = 0
@@ -17085,6 +17090,17 @@ while (i < \$argc)
     AddPosSub(lookupSub1, glyphName) # 変換前→後
     k += 1
 
+
+    Select(0u0020); Copy() # space
+    glyphName = GlyphInfo("Name")
+    Select(k); Paste()
+    SetWidth(${width_hankaku})
+ #    AddPosSub(lookupSub0, glyphName) # 変換前←後
+    glyphName = GlyphInfo("Name")
+    Select(0u0020) # space
+    AddPosSub(lookupSub1, glyphName) # 変換前→後
+    k += 1
+
     # calt をスクリプトで扱う方法が分からないので一旦ダミーをセットしてttxで上書きする
     j = 0
     while (j < ${num_calt_lookups}) # caltルックアップの数だけ確保する
@@ -17157,6 +17173,11 @@ while (i < \$argc)
         j += 1
         k += 1
     endloop
+
+    Select(${address_ss_space} + 1); # 可視化した space
+    glyphName = GlyphInfo("Name")
+    Select(${address_calt_space}) # 2つ以上並んだ、偽装した space (ss15用)
+    AddPosSub(lookupSub, glyphName)
 
     ss += 1
 # ss03・ss04・ss05 桁区切りマーク、小数
@@ -17653,7 +17674,7 @@ while (i < \$argc)
         k += 1
     endloop
 
-    small = [0u0076, 0u007a] # vz (ss15で上線を付けない)
+    small = [0u0076, 0u007a] # vz (ss17で上線を付けない)
     j = 0
     while (j < SizeOf(small))
         Select(small[j]); Copy()
@@ -18301,48 +18322,15 @@ while (i < \$argc)
     k += 1
 
     ss += 1
-# ss15 大文字と同じ形状の小文字に上線
+# ss15 スペースが2つ以上並んだ場合可視化
     Print("ss15")
     lookupName = "'ss" + ToString(ss) + "' スタイルセット" + ToString(ss)
     lookupSub = lookupName + "サブテーブル"
 
-    small = [0u0063, 0u006f, 0u0073, 0u0076,\
-             0u0077, 0u0078, 0u007a] # cosv wxz
-    j = 0
-    while (j < SizeOf(small))
-        Select(${address_store_underline}); Copy() # 保管した全角下線
-        Select(k); Paste()
-        Move(-250, ${move_y_small})
-        Select(0u2588); Copy() # Full block
-        Select(k); PasteInto()
-        OverlapIntersect(); Scale(${scale_width_small}, 100)
-        Select(small[j]); Copy()
-        Select(k); PasteInto()
-        SetWidth(${width_hankaku})
-        Copy()
-        glyphName = GlyphInfo("Name")
-        Select(small[j])
-        AddPosSub(lookupSub, glyphName)
-        k += 1
-
-        Select(k); Paste()
-        Move(-${move_x_calt_latin}, 0)
-        SetWidth(${width_hankaku})
-        glyphName = GlyphInfo("Name")
-        Select(${address_calt_AL} + small[j] - 71)
-        AddPosSub(lookupSub, glyphName)
-        k += 1
-
-        Select(k); Paste()
-        Move(${move_x_calt_latin}, 0)
-        SetWidth(${width_hankaku})
-        glyphName = GlyphInfo("Name")
-        Select(${address_calt_AR} + small[j] - 71)
-        AddPosSub(lookupSub, glyphName)
-        k += 1
-
-        j += 1
-    endloop
+    Select(${address_ss_space} + 1); # 可視化した space (ss02 のグリフ)
+    glyphName = GlyphInfo("Name")
+    Select(${address_calt_space}) # 2つ以上並んだ、偽装した space
+    AddPosSub(lookupSub, glyphName)
 
     ss += 1
 # ss16 ハイフン、ダッシュ、マイナスを判別しやすくする
@@ -18399,6 +18387,50 @@ while (i < \$argc)
     Select(0u2212) # minus sign
     AddPosSub(lookupSub, glyphName)
     k += 1
+
+    ss += 1
+# ss17 大文字と同じ形状の小文字に上線
+    Print("ss17")
+    lookupName = "'ss" + ToString(ss) + "' スタイルセット" + ToString(ss)
+    lookupSub = lookupName + "サブテーブル"
+
+    small = [0u0063, 0u006f, 0u0073, 0u0076,\
+             0u0077, 0u0078, 0u007a] # cosv wxz
+    j = 0
+    while (j < SizeOf(small))
+        Select(${address_store_underline}); Copy() # 保管した全角下線
+        Select(k); Paste()
+        Move(-250, ${move_y_small})
+        Select(0u2588); Copy() # Full block
+        Select(k); PasteInto()
+        OverlapIntersect(); Scale(${scale_width_small}, 100)
+        Select(small[j]); Copy()
+        Select(k); PasteInto()
+        SetWidth(${width_hankaku})
+        Copy()
+        glyphName = GlyphInfo("Name")
+        Select(small[j])
+        AddPosSub(lookupSub, glyphName)
+        k += 1
+
+        Select(k); Paste()
+        Move(-${move_x_calt_latin}, 0)
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(${address_calt_AL} + small[j] - 71)
+        AddPosSub(lookupSub, glyphName)
+        k += 1
+
+        Select(k); Paste()
+        Move(${move_x_calt_latin}, 0)
+        SetWidth(${width_hankaku})
+        glyphName = GlyphInfo("Name")
+        Select(${address_calt_AR} + small[j] - 71)
+        AddPosSub(lookupSub, glyphName)
+        k += 1
+
+        j += 1
+    endloop
 
     ss = 20
 # ss20 ドット0
@@ -19176,7 +19208,9 @@ while (i < \$argc)
 
 # Transform
     Print("Transform glyphs (it may take a few minutes)")
+    Select("uni3000.ss01"); k = GlyphInfo("Encoding")
     SelectWorthOutputting()
+    SelectFewer(k - 1) # ss15用のダミー半角スペース
     SelectFewer(0u0020) # 半角スペース
     SelectFewer(0u00a0) # ノーブレークスペース
 # SelectFewer(0u2000, 0u2140) # 文字様記号
@@ -19587,7 +19621,7 @@ while (i < \$argc)
     small = [0u0063, 0u006f, 0u0073, 0u0076,\
              0u0077, 0u0078, 0u007a] # cosv wxz
 
-    Select("c.ss15"); k = GlyphInfo("Encoding")
+    Select("c.ss17"); k = GlyphInfo("Encoding")
     j = 0
     while (j < SizeOf(small))
         Select(${address_store_underline}); Copy() # 保管した全角下線
@@ -19758,6 +19792,7 @@ while (i < \$argc)
     if ("${visible_hankaku_space_flag}" == "false")
         Print("Option: Disable visible hankaku space")
         Select(0u0020); Clear(); SetWidth(${width_hankaku}) # 半角スペース
+        Select(${address_calt_space}); Clear(); SetWidth(${width_hankaku}) # ss15用のダミー半角スペース
     endif
 
 # ノーブレークスペース消去
