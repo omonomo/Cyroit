@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 # 通常版、Loose 版のパッチ前のフォント (Nerd Fonts なし、派生フォントの素) を生成させるプログラム
