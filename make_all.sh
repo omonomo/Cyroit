@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -e
 
 # 通常版、Loose 版両方の全バージョンを一度に生成させるプログラム
