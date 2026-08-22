@@ -1,6 +1,7 @@
 *bak
 *ttx
 *ttf
+.DS_Store
 .git
 .gitignore
 build
