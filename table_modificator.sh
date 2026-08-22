@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Table modificator
 #
@@ -16,30 +16,31 @@ exec 2> >(tee -a $LOG_ERR)
 #LOG
 
 font_familyname="Cyroit"
+font_version="0.1.0"
 
 lookupIndex_liga_end="0" # リガチャ用calt+単純置換の最終lookupナンバー
-lookupIndex_liga_calt_end="0" # リガチャ用caltの最終lookupナンバー
-lookupIndex_liga2calt="17" # リガチャ用calt+単純置換の最終からcaltの一つ前までのlookupナンバー加算値
-lookupIndex_calt_normal="18" # caltテーブルのlookupナンバー (リガチャなし)
-num_calt_lookups="20" # caltのルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる)
+lookupIndex_liga_calt_search="0" # リガチャ用caltの検索用lookupナンバー
+lookupIndex_addition="18" # フォント生成時に追加したlookupナンバー (リガチャなし)
+num_replace_lookups="13" # 単純置換のルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる。calt_table_makerの内容も変更すること)
+num_ss_lookups="19" # ssのルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる)
+num_cv_lookups="40" # cvのルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる)
+featureIndex_end=$((lookupIndex_addition + num_ss_lookups + num_cv_lookups - 6)) # FeatureIndexの最大値
 ccmp1="2" # 先頭のccmpのlookupナンバー (リガチャなし)
 ccmp2=$((ccmp1 + 2))
 ccmp3=$((ccmp2 + 13))
 ccmp1_liga=$((lookupIndex_liga_end + ccmp1)) # 先頭のccmpのlookupナンバー (リガチャあり)
 ccmp2_liga=$((ccmp1_liga + 2))
 ccmp3_liga=$((ccmp2_liga + 13))
-listNo="0"
 caltListName="caltList" # caltテーブルリストの名称
-caltList="${caltListName}_${listNo}" # Lookupごとのcaltテーブルリスト
 cmapList="cmapList" # 異体字セレクタリスト
 extList="extList" # 異体字のglyphナンバーリスト
 gsubList="gsubList" # 作成フォントのGSUBから抽出した置き換え用リスト
 
-zero_width="0" # 文字幅ゼロ
-hankaku_width_normal="512" # 半角文字幅
-hankaku_width_Loose="576" # 半角文字幅 (Loose 版)
-xAvg_char_width=${hankaku_width_normal} # フォントの半角文字幅は常に1:2とする
-zenkaku_width="1024" # 全角文字幅
+width_zero="0" # 文字幅ゼロ
+width_hankaku_normal="512" # 半角文字幅
+width_hankaku_Loose="576" # 半角文字幅 (Loose 版)
+width_xAvg_char=${width_hankaku_normal} # フォントの半角文字幅は常に1:2とする
+width_zenkaku="1024" # 全角文字幅
 underline="-80" # アンダーライン位置
 #vhea_ascent1024="994"
 #vhea_descent1024="256"
@@ -140,6 +141,8 @@ table_modificator_help()
 settings="settings" # 設定ファイル名
 settings_txt=$(find . -maxdepth 1 -name "${settings}.txt" | head -n 1)
 if [ -n "${settings_txt}" ]; then
+    S=$(grep -m 1 "^FONT_VERSION=" "${settings_txt}") # フォントバージョン
+    if [ -n "${S}" ]; then font_version="${S#FONT_VERSION=}"; fi
     S=$(grep -m 1 "^FONT_FAMILYNAME=" "${settings_txt}") # フォントファミリー名
     if [ -n "${S}" ]; then font_familyname="${S#FONT_FAMILYNAME=}"; fi
 fi
@@ -255,9 +258,9 @@ if [ "${other_flag}" = "true" ]; then
     tmp=${tmp#*width=\"}
     tmp=${tmp%\" lsb*}
     if [ $tmp -gt 540 ]; then
-        hankaku_width="${hankaku_width_Loose}"
+        width_hankaku="${width_hankaku_Loose}"
     else
-        hankaku_width="${hankaku_width_normal}"
+        width_hankaku="${width_hankaku_normal}"
     fi
 
     # head, OS/2 (フォントスタイルを修正、Oblique の場合 Italic のフラグも立てた方がよい)
@@ -276,10 +279,11 @@ if [ "${other_flag}" = "true" ]; then
     fi
 
     # head (フォントの情報を修正)
+    sed -i.bak -e "s,fontRevision value=\".*\",fontRevision value=\"${font_version%.*}\"," "${P%%.ttf}.ttx"
     sed -i.bak -e 's,flags value="........ ........",flags value="00000000 00000011",' "${P%%.ttf}.ttx"
 
     # OS/2 (全体のWidthの修正)
-    sed -i.bak -e "s,xAvgCharWidth value=\".*\",xAvgCharWidth value=\"${xAvg_char_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,xAvgCharWidth value=\".*\",xAvgCharWidth value=\"${width_xAvg_char}\"," "${P%%.ttf}.ttx"
 
     # post (アンダーラインの位置を指定、等幅フォントであることを示す)
     sed -i.bak -e "s,underlinePosition value=\".*\",underlinePosition value=\"${underline}\"," "${P%%.ttf}.ttx"
@@ -291,18 +295,18 @@ if [ "${other_flag}" = "true" ]; then
 #    sed -i.bak -e "s,lineGap value=\"...\",lineGap value=\"${vhea_linegap1024}\"," "${P%%.ttf}.ttx"
 
     # hmtx (Widthのブレを修正)
-    sed -i.bak -e "s,width=\".\",width=\"${zero_width}\"," "${P%%.ttf}.ttx" # zero width
-    sed -i.bak -e "s,width=\"3..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx" # .notdef
-    sed -i.bak -e "s,width=\"4..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx" # 半角
-    sed -i.bak -e "s,width=\"5..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"6..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"7..\",width=\"${hankaku_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"8..\",width=\"${zenkaku_width}\"," "${P%%.ttf}.ttx" # 全角
-    sed -i.bak -e "s,width=\"9..\",width=\"${zenkaku_width}\"," "${P%%.ttf}.ttx"
-    sed -i.bak -e "s,width=\"1...\",width=\"${zenkaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\".\",width=\"${width_zero}\"," "${P%%.ttf}.ttx" # zero width
+    sed -i.bak -e "s,width=\"3..\",width=\"${width_hankaku}\"," "${P%%.ttf}.ttx" # .notdef
+    sed -i.bak -e "s,width=\"4..\",width=\"${width_hankaku}\"," "${P%%.ttf}.ttx" # 半角
+    sed -i.bak -e "s,width=\"5..\",width=\"${width_hankaku}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"6..\",width=\"${width_hankaku}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"7..\",width=\"${width_hankaku}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"8..\",width=\"${width_zenkaku}\"," "${P%%.ttf}.ttx" # 全角
+    sed -i.bak -e "s,width=\"9..\",width=\"${width_zenkaku}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,width=\"1...\",width=\"${width_zenkaku}\"," "${P%%.ttf}.ttx"
 
     # hhea (最大Widthの修正)
-    sed -i.bak -e "s,advanceWidthMax value=\".*\",advanceWidthMax value=\"${zenkaku_width}\"," "${P%%.ttf}.ttx"
+    sed -i.bak -e "s,advanceWidthMax value=\".*\",advanceWidthMax value=\"${width_zenkaku}\"," "${P%%.ttf}.ttx"
 
     # テーブル更新
     mv "$P" "${P%%.ttf}.orig.ttf"
@@ -371,10 +375,10 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
 
     if [ -n "$(grep -m 1 -A 1 'FeatureRecord index="1"' "${P%%.ttf}.ttx" | grep 'calt')" ]; then # FeatureRecord index 1 が calt だと リガチャ対応
       liga_flag="true"
-      lookupIndex_calt=$((lookupIndex_calt_normal + lookupIndex_liga_end)) # caltテーブルのlookupナンバー
+      lookupIndex_calt=$((lookupIndex_addition + num_replace_lookups + lookupIndex_liga_end)) # caltテーブルのlookupナンバー
     else
       liga_flag="false"
-      lookupIndex_calt=${lookupIndex_calt_normal} # caltテーブルのlookupナンバー
+      lookupIndex_calt=$((lookupIndex_addition + num_replace_lookups)) # caltテーブルのlookupナンバー
     fi
 
     # GSUB (用字、言語全て共通に変更)
@@ -399,23 +403,28 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
           option_format_cm opt_fg "" "${leaving_tmp_flag}" "${symbol_only_flag}" "${basic_only_flag}" "${optimize_flag}" "${liga_flag}"
           ./calt_table_maker.sh -"${opt_fg}"
         fi
+        # 設定できるcalt設定の数(2行下にある)を取得
+        tmp=$(grep -A2 'FeatureTag value="zero"' "${P%%.ttf}.ttx" | tail -n1)
+        tmp=${tmp#*LookupCount=}
+        num_calt_lookups=${tmp%% *}
         # リガチャ対応の場合、calt を1つのフィーチャーレコードに集める
         if [ "${liga_flag}" = "true" ]; then
-          org=$(grep -m 1 "LookupListIndex index=.* value=\"${lookupIndex_liga_calt_end}" "${P%%.ttf}.ttx")
+          org=$(grep -m 1 "LookupListIndex index=.* value=\"${lookupIndex_liga_calt_search}" "${P%%.ttf}.ttx") # リガチャ用caltの検索用Indexを取得
           tmp=${org#*index=\"}
           tmp=${tmp%\" value*}
           add=""
           for i in $(seq 1 ${num_calt_lookups})
           do
-            add="${add}<LookupListIndex index=\"$((tmp + i))\" value=\"$((lookupIndex_liga_end + lookupIndex_liga2calt + i))\"/>"
+            add="${add}<LookupListIndex index=\"$((tmp + i))\" value=\"$((lookupIndex_liga_end + lookupIndex_addition + num_replace_lookups + i - 1))\"/>"
           done
-          sed -i.bak -e "s,${org},${org}${add}," "${P%%.ttf}.ttx"
+          sed -i.bak -e "s,${org},${org}${add}," "${P%%.ttf}.ttx" # リガチャ用caltの検索用Indexリストに追加したcaltの検索用Indexを付け加える
         fi
         # フィーチャリストを変更
         sed -i.bak -e "s,usMaxContext value=\".*\",usMaxContext value=\"13\"," "${P%%.ttf}.ttx" # OS/2の先読み文字数を変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
-        find . -maxdepth 1 -name "${caltListName}*.txt" | while read line # caltList(caltルックアップ)の数だけループ
+        for i in $(seq 0 $((num_calt_lookups - 1)))
         do
+          caltList="${caltListName}_${i}" # Lookupごとのcaltテーブルリスト
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の中を削除
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
@@ -424,8 +433,6 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/{n;d;}" "${P%%.ttf}.ttx"
           sed -i.bak -e "/Lookup index=\"${lookupIndex_calt}\"/r ${caltList}.txt" "${P%%.ttf}.ttx" # Lookup index="${lookupIndex_calt}"〜の後に挿入
           lookupIndex_calt=$((lookupIndex_calt + 1))
-          listNo=$((listNo + 1))
-          caltList="${caltListName}_${listNo}"
         done
       fi
     else
@@ -434,6 +441,17 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     fi
 
     # calt対応に関係なくスクリプトリストを変更 (全ての用字の内容を同じにする)
+    # 上書き、追加用のxmlタグ作成
+    featureIndex_list=""
+    for i in $(seq 9 ${featureIndex_end})
+    do
+      featureIndex_list="${featureIndex_list}<FeatureIndex index=\"$i\" value=\"$((i + 4))\"/>" # リガチャなし、caltなし
+    done
+    featureIndex_list_liga="${featureIndex_list}<FeatureIndex index=\"$((i + 1))\" value=\"$((i + 5))\"/>" # リガチャあり、caltあり・なし兼用
+    featureIndex_list_end="<FeatureIndex index=\"$i\" value=\"$((i + 4))\"/>" # ラストのタグ
+    featureIndex_list_calt="${featureIndex_list_end}<FeatureIndex index=\"$((i + 1))\" value=\"$((i + 5))\"/>" # リガチャなし、caltあり(さらに追加する)
+
+    # 内容改変
     sed -i.bak -e '/FeatureIndex index=".." value=".*"/d' "${P%%.ttf}.ttx" # 2桁のindexを削除
 
     sed -i.bak -e 's,FeatureIndex index="0" value=".*",FeatureIndex index="0" value="0",' "${P%%.ttf}.ttx" # 始めの部分は上書き
@@ -449,68 +467,23 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
     if [ "${liga_flag}" = "true" ]; then # リガチャ対応の場合
       sed -i.bak -e 's,FeatureIndex index="2" value=".*",FeatureIndex index="2" value="2",' "${P%%.ttf}.ttx" # ccmp
       if [ -n "$(grep -m 1 'FeatureTag value="ss01"' "${P%%.ttf}.ttx")" ]; then # ssフィーチャがあるか判定、ss対応の場合
-        sed -i.bak -e 's,<FeatureIndex index="9" value=".*"/>,<FeatureIndex index="9" value="13"/>\
-        <FeatureIndex index="10" value="14"/>\
-        <FeatureIndex index="11" value="15"/>\
-        <FeatureIndex index="12" value="16"/>\
-        <FeatureIndex index="13" value="17"/>\
-        <FeatureIndex index="14" value="18"/>\
-        <FeatureIndex index="15" value="19"/>\
-        <FeatureIndex index="16" value="20"/>\
-        <FeatureIndex index="17" value="21"/>\
-        <FeatureIndex index="18" value="22"/>\
-        <FeatureIndex index="19" value="23"/>\
-        <FeatureIndex index="20" value="24"/>\
-        <FeatureIndex index="21" value="25"/>\
-        <FeatureIndex index="22" value="26"/>\
-        <FeatureIndex index="23" value="27"/>\
-        <FeatureIndex index="24" value="28"/>\
-        <FeatureIndex index="25" value="29"/>\
-        <FeatureIndex index="26" value="30"/>\
-        <FeatureIndex index="27" value="31"/>\
-        <FeatureIndex index="28" value="32"/>\
-        <FeatureIndex index="29" value="33"/>\
-        <FeatureIndex index="30" value="34"/>\
-        <FeatureIndex index="31" value="35"/>\
-        ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(13 + ss フィーチャの数)、value(index + 4) を追加、caltは後でリガチャ用caltと統合
+        # index9を上書き、以降 index(13 + ss フィーチャの数 + cv フィーチャの数)、value(index + 4) を追加、caltはリガチャ用caltと統合
+        sed -i.bak -e "s,<FeatureIndex index=\"9\" value=\".*\"/>,${featureIndex_list_liga}," "${P%%.ttf}.ttx"
       else # ss非対応の場合
         sed -i.bak -e 's,<FeatureIndex index="9" value=".*"/>,<FeatureIndex index="9" value="13"/>\
         <FeatureIndex index="10" value="14"/>\
         <FeatureIndex index="11" value="15"/>\
         <FeatureIndex index="12" value="16"/>\
         <FeatureIndex index="13" value="17"/>\
-        ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index13 まで追加、caltは後でリガチャ用caltと統合
+        ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index13 まで追加、caltはリガチャ用caltと統合
       fi
     else # リガチャ非対応の場合
       sed -i.bak -e 's,FeatureIndex index="2" value=".*",FeatureIndex index="2" value="6",' "${P%%.ttf}.ttx" # expt
       if [ -n "$(grep -m 1 'FeatureTag value="ss01"' "${P%%.ttf}.ttx")" ]; then # ssフィーチャがあるか判定、ss対応の場合
-        sed -i.bak -e 's,<FeatureIndex index="9" value=".*"/>,<FeatureIndex index="9" value="13"/>\
-        <FeatureIndex index="10" value="14"/>\
-        <FeatureIndex index="11" value="15"/>\
-        <FeatureIndex index="12" value="16"/>\
-        <FeatureIndex index="13" value="17"/>\
-        <FeatureIndex index="14" value="18"/>\
-        <FeatureIndex index="15" value="19"/>\
-        <FeatureIndex index="16" value="20"/>\
-        <FeatureIndex index="17" value="21"/>\
-        <FeatureIndex index="18" value="22"/>\
-        <FeatureIndex index="19" value="23"/>\
-        <FeatureIndex index="20" value="24"/>\
-        <FeatureIndex index="21" value="25"/>\
-        <FeatureIndex index="22" value="26"/>\
-        <FeatureIndex index="23" value="27"/>\
-        <FeatureIndex index="24" value="28"/>\
-        <FeatureIndex index="25" value="29"/>\
-        <FeatureIndex index="26" value="30"/>\
-        <FeatureIndex index="27" value="31"/>\
-        <FeatureIndex index="28" value="32"/>\
-        <FeatureIndex index="29" value="33"/>\
-        <FeatureIndex index="30" value="34"/>\
-        ,' "${P%%.ttf}.ttx" # index9を上書き、以降 index(12 + ss フィーチャの数)、value(index + 4) を追加
+        # index9を上書き、以降 index(12 + ss フィーチャの数 + cv フィーチャの数)、value(index + 4) を追加
+        sed -i.bak -e "s,<FeatureIndex index=\"9\" value=\".*\"/>,${featureIndex_list}," "${P%%.ttf}.ttx"
         if [ "${calt_ok_flag}" = "true" ]; then # calt対応であればさらに1つ index 追加
-          sed -i.bak -e 's,<FeatureIndex index="30" value=".*"/>,<FeatureIndex index="30" value="34"/>\
-          <FeatureIndex index="31" value="35"/>\
-          ,' "${P%%.ttf}.ttx"
+          sed -i.bak -e "s,${featureIndex_list_end},${featureIndex_list_calt}," "${P%%.ttf}.ttx"
         fi
       else # ss非対応の場合
         sed -i.bak -e 's,<FeatureIndex index="9" value=".*"/>,<FeatureIndex index="9" value="13"/>\
