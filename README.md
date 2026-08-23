@@ -26,7 +26,7 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 - Cyroit に [Monoid](https://larsenwork.com/monoid/) を合成した姉妹フォント「[Idroit](https://omonomo.github.io/Idroit/)」を作成しました (v3.5.1以降を使用)。
 - 私用領域以外の中立・曖昧幅の文字を半角にしたターミナル版を追加しました (v3.7.0以降)。
 - Cyroit に [iA Writer Quattro](https://github.com/iaolo/iA-Fonts) と [IBM Plex Mono](https://github.com/IBM/plex) を合成した姉妹フォント「[Awroit](https://omonomo.github.io/Awroit/)」を作成しました (v3.7.3以降を使用)。
-- cv フィーチャによる異体字に対応したことで、より細かく見た目のカスタマイズが出来るようになりました。(v4.0.0以降)。
+- cv フィーチャによる異体字表示に対応したことで、より細かく見た目のカスタマイズが出来るようになりました。(v4.0.0以降)。
 
 ## フォントサンプル
 
