@@ -5,13 +5,13 @@
 # コメントの前に # を入れていますが、形式的に入れているだけで # から後がコメントというわけではありません。
 
 # フォントのバージョン
-FONT_VERSION=3.11.0
+FONT_VERSION=4.0.0
 
 # フォント名
 FONT_FAMILYNAME=Cyroit
 FONT_FAMILYNAME_SUFFIX=
 
-# ベンダー ID
+# 製造元 ID
 VENDOR_ID=PfEd
 
 # 著作権
@@ -23,6 +23,14 @@ COPYRIGHT=[NINJAL Hentaigana]\nCopyright(c) National Institute for Japanese Lang
 
 COPYRIGHT_NERD_FONTS=[Symbols Nerd Font]\nCopyright (c) 2016, Ryan McIntyre
 COPYRIGHT_LICENSE=SIL Open Font License Version 1.1 (http://scripts.sil.org/ofl)
+
+# name タグ用 (製造元、供給元、デザイナー、ライセンス)
+NAME_MANUFACTURER=omonomo
+NAME_VENDOR_URL=https://github.com/omonomo/Cyroit
+NAME_DESIGNER=
+NAME_DESIGNER_URL=
+NAME_LICENSE=SIL Open Font License Version 1.1
+NAME_LICENSE_URL=https://scripts.sil.org/OFL
 
 # 通常版の設定
 # 半角ｶﾅを除いた半角文字の拡大・縮小率 (%)
