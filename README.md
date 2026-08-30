@@ -396,3 +396,4 @@ calt テーブル (前後の文字によってグリフ置換を行う設定) �
 - [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Viroit」](https://omonomo.github.io/Viroit/): 七番目の妹さんフォントです。
 - [全角英数や半角カナが判別しやすい、文字間隔調整機能付き等幅フォント「Idroit」](https://omonomo.github.io/Idroit/): 八番目の妹さんフォントです。
 - [全角英数や半角カナが判別しやすいプロポーショナルフォント「Awroit」](https://omonomo.github.io/Awroit/): 末っ子の妹さんフォントです。
+- [日本語フォント開発用途化計画](https://github.com/omonomo/JPMonoFonts): Google Fonts で配布中の日本語フォントを開発用途向けにカスタマイズ。
