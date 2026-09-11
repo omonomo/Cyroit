@@ -22,8 +22,9 @@ lookupIndex_liga_end="0" # リガチャ用calt+単純置換の最終lookupナン
 lookupIndex_liga_calt_search="0" # リガチャ用caltの検索用lookupナンバー
 lookupIndex_addition="18" # フォント生成時に追加したlookupナンバー (リガチャなし)
 num_replace_lookups="13" # 単純置換のルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる。calt_table_makerの内容も変更すること)
+num_calt_lookups_max="21" # caltの最大ルックアップ数 (calt_table_makerでlookupを変更した場合、それに合わせる)
 num_ss_lookups="19" # ssのルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる)
-num_cv_lookups="40" # cvのルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる)
+num_cv_lookups="41" # cvのルックアップ数 (font_generatorでlookupの数を変えた場合、それに合わせる)
 featureIndex_end=$((lookupIndex_addition + num_ss_lookups + num_cv_lookups - 6)) # FeatureIndexの最大値
 ccmp1="2" # 先頭のccmpのlookupナンバー (リガチャなし)
 ccmp2=$((ccmp1 + 2))
@@ -407,6 +408,11 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
         tmp=$(grep -A2 'FeatureTag value="zero"' "${P%%.ttf}.ttx" | tail -n1)
         tmp=${tmp#*LookupCount=}
         num_calt_lookups=${tmp%% *}
+        if [ ${num_calt_lookups} -lt $((num_calt_lookups_max - 1)) ]; then # OS/2の先読み文字数を変更
+            sed -i.bak -e "s,usMaxContext value=\".*\",usMaxContext value=\"4\"," "${P%%.ttf}.ttx" # 文字、記号カーニング対応のみの場合
+        else
+            sed -i.bak -e "s,usMaxContext value=\".*\",usMaxContext value=\"12\"," "${P%%.ttf}.ttx" # SS対応か桁区切り表示ありの場合
+        fi
         # リガチャ対応の場合、calt を1つのフィーチャーレコードに集める
         if [ "${liga_flag}" = "true" ]; then
           org=$(grep -m 1 "LookupListIndex index=.* value=\"${lookupIndex_liga_calt_search}" "${P%%.ttf}.ttx") # リガチャ用caltの検索用Indexを取得
@@ -420,7 +426,6 @@ if [ "${gsub_flag}" = "true" ]; then # caltListを作り直す場合は今ある
           sed -i.bak -e "s,${org},${org}${add}," "${P%%.ttf}.ttx" # リガチャ用caltの検索用Indexリストに追加したcaltの検索用Indexを付け加える
         fi
         # フィーチャリストを変更
-        sed -i.bak -e "s,usMaxContext value=\".*\",usMaxContext value=\"13\"," "${P%%.ttf}.ttx" # OS/2の先読み文字数を変更
         sed -i.bak -e 's,FeatureTag value="zero",FeatureTag value="calt",' "${P%%.ttf}.ttx" # caltダミー(zero)を変更
         for i in $(seq 0 $((num_calt_lookups - 1)))
         do
