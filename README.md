@@ -54,13 +54,13 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 
 ## ダウンロード
 
-最新版 v4.0.0 (2026-08-23)
+最新版 v4.0.1 (2026-09-12)
 
 | リンク                                                                                                      | 説明                                            |
 | ------------------------------------------------------------------------------------------------------------| ----------------------------------------------- |
-| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v4.0.0/Cyroit_v4.0.0.zip)           | 通常版。半角幅が全角の1/2。                     |
-| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v4.0.0/CyroitLoose_v4.0.0.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
-| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v4.0.0.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
+| [フォント (Cyroit)](https://github.com/omonomo/Cyroit/releases/download/v4.0.1/Cyroit_v4.0.1.zip)           | 通常版。半角幅が全角の1/2。                     |
+| [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v4.0.1/CyroitLoose_v4.0.1.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
+| [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v4.0.1.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
 
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
@@ -171,7 +171,7 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 
 cv タグを有効にすることでより細かく見た目をカスタマイズできます。
 
-<img alt="ScreenShot" src="./images/SS_8.png" width="452">
+<img alt="ScreenShot" src="./images/SS_8.png" width="516">
 
 ## ライセンス
 
@@ -189,11 +189,11 @@ Cyroit は以下の環境でビルドできることを確認しています。
 - macOS Tahoe 26.6.2
 - GNU bash, version 5.3.15(1)-release (aarch64-apple-darwin25.4.0)
 - FontForge 20251009
-- FontTools 4.63.0
+- FontTools 4.64.0
 
 または上記 macOS 上にて
 
-- Docker Desktop 4.87.0 (Engine 29.7.2, Compose v5.3.1)
+- Docker Desktop 4.90.0 (Engine 29.7.2, Compose v5.5.0)
   - Ubuntu 26.04 LTS
   - GNU bash, version 5.3.9(1)-release (aarch64-unknown-linux-gnu)
   - FontForge 20230101
