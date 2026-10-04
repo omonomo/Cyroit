@@ -62,6 +62,8 @@ Cyroit (しろいと) はコーディングにもお使いいただける日本�
 | [フォント (CyroitLoose)](https://github.com/omonomo/Cyroit/releases/download/v4.0.2/CyroitLoose_v4.0.2.zip) | 文字間隔ゆるい版。半角幅が全角の9/16。          |
 | [ソースコード](https://github.com/omonomo/Cyroit/archive/refs/tags/v4.0.2.zip)                              | 使用方法は[下の方](#基本的な使い方)にあります。 |
 
+[Homebrew](https://brew.sh/ja/) でもインストールできます。[こちら](https://github.com/omonomo/homebrew-tap)をご参照下さい。
+
 フォントやスクリプトの使用は自己責任にてお願いいたします。  
 各ファイルを使用することで生じた不具合・損害等について omonomo は責任を負いません。  
 [ライセンス](#ライセンス)に従ってのご使用をお願いいたします。
