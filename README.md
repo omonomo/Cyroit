@@ -168,7 +168,7 @@ Loose 版は名称が 「CyroitLoose...」 になります。
 | ss15   | <img alt="ss15" src="./images/ss15.png" width="266"> | 2つ以上並んだ半角スペース可視化<br> (ss02が優先されます)                                    |
 | ss16   | <img alt="ss16" src="./images/ss16.png" width="266"> | ハイフン、ノーブレークハイフン、マイナスサインや<br> フィギュアダッシュに判別マーク表示     |
 | ss17   | <img alt="ss17" src="./images/ss17.png" width="266"> | 大文字とほぼ同じ形状の小文字に判別マーク表示<br> (基本ラテン文字のみ)                       |
-| ss18   | <img alt="ss18" src="./images/ss18.png" width="266"> | アロー演算子とパイプライン演算子にリガチャを適用します                                      |
+| ss18   | <img alt="ss18" src="./images/ss18.png" width="266"> | アロー演算子とパイプライン演算子にリガチャを適用                                            |
 | ss20   | <img alt="ss20" src="./images/ss20.png" width="266"> | ドット0に置き換え<br> (ss10が優先されます)                                                  |
 
 cv タグを有効にすることでより細かく見た目をカスタマイズできます。
