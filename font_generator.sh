@@ -21103,7 +21103,7 @@ while (i < \$argc)
         SelectMore(0u270d)         # ✍
         SelectMore(0u270f)         # ✏
         SelectMore(0u2712)         # ✒
-        SelectMore(0u2714)         # ✔
+ #        SelectMore(0u2714)         # ✔
         SelectMore(0u2716)         # ✖
         SelectMore(0u271d)         # ✝
         SelectMore(0u2721)         # ✡
