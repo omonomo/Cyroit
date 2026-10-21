@@ -38,6 +38,9 @@ liga_flag="false" # リガチャ対応にする
 
 font_version="0.1.0"
 
+# エラー処理
+trap "exit 3" HUP INT QUIT
+
 option_format_fg() { # font_generator 用のオプションを整形 (戻り値: 整形したオプション)
   local opt # 整形前のオプション
   local leaving_tmp_flag # 一時作成ファイルを残すか
