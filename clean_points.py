@@ -15,7 +15,7 @@ TrueType（static）フォントのグリフから無駄なポイントを除去
   3. 暗黙オンカーブ点の除去（オフカーブ2点の厳密な中点にあるオンカーブ点）
 
 使い方:
-  python clean_points.py in.ttf out.ttf [--tol 0] [--allow-half] [--spikes] [--fix-cracks] [--force] [-v]
+  python clean_points.py in.ttf out.ttf [--tol 0] [--allow-half] [--spikes] [--fix-cracks] [--force] [-v] [--report FILE]
 
 注意:
 デフォルト設定（--tol 0、--allow-half なし）では描画結果は完全に同じになります。
@@ -39,6 +39,11 @@ GPOS の AnchorFormat2、GDEF の CaretValue Format2（点番号指定）があ�
 within tolerance、Skipped (bounding box would change)、LSB adjusted）を1行ずつ表示します。
 付けない場合は最後のまとめ（件数）だけを表示します。
 
+--report FILE を付けると、亀裂を修正したグリフとスパイクを除去したグリフを
+文字として並べたテキストファイル（UTF-8）を書き出します。出力フォントで開けば
+修正結果を目視で確認できます。コードポイントのないグリフや、空白・制御文字のように
+表示できない文字はグリフ名で列挙します。
+
 カレントディレクトリに除外リスト（exclusions.txt）があった場合、
 記載されたコードポイントのグリフは処理しません。
 
@@ -52,6 +57,7 @@ import copy
 import math
 import os
 import sys
+import unicodedata
 
 # 除外リストのファイル名（カレントディレクトリから探す）。
 # 記載されたコードポイントのグリフは処理しない。ファイルがなければ何も除外しない。
@@ -661,6 +667,43 @@ def excluded_glyphs(font, codes):
     return names
 
 
+# ---------- 修正したグリフの一覧（--report） ----------
+
+REPORT_PER_LINE = 40  # 1行に並べる文字数
+
+# 表示しても見えない（または改行などになる）文字の一般カテゴリ
+_INVISIBLE = {"Cc", "Cf", "Cs", "Zs", "Zl", "Zp"}
+
+
+def write_report(font, path, sections):
+    """sections: [(見出し, グリフ名の集合)]。各グリフを文字として並べたテキストを書き出す"""
+    rev = {}  # グリフ名 → 割り当てられた最小のコードポイント
+    for cp, name in (font.getBestCmap() or {}).items():
+        if name not in rev or cp < rev[name]:
+            rev[name] = cp
+    lines = []
+    for title, names in sections:
+        lines.append(f"# {title}: {len(names)} glyphs")
+        chars, others = [], []
+        for cp, name in sorted((rev[n], n) for n in names if n in rev):
+            cat = unicodedata.category(chr(cp))
+            if cat in _INVISIBLE:
+                others.append(f"U+{cp:04X} {name}")
+            elif cat.startswith("M"):
+                chars.append(" " + chr(cp))  # 結合文字は NBSP に乗せて表示
+            else:
+                chars.append(chr(cp))
+        others += sorted(n for n in names if n not in rev)
+        for i in range(0, len(chars), REPORT_PER_LINE):
+            lines.append("".join(chars[i:i + REPORT_PER_LINE]))
+        if others:
+            lines.append("## Not displayable / no code point:")
+            lines += others
+        lines.append("")
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines))
+
+
 # ---------- メイン ----------
 
 def main():
@@ -699,6 +742,9 @@ def main():
                     help="continue even if GPOS/GDEF reference point numbers")
     ap.add_argument("-v", "--verbose", action="store_true",
                     help="print the result for each glyph")
+    ap.add_argument("--report", metavar="FILE",
+                    help="write a UTF-8 text file listing the glyphs whose "
+                         "cracks were fixed or spikes were removed, as characters")
     args = ap.parse_args()
 
     font = TTFont(args.input)
@@ -868,6 +914,21 @@ def main():
 
     font.save(args.output)
 
+    if args.report:
+        sections = []
+        if args.fix_cracks:
+            sections.append(("Cracks fixed", merged))
+        if args.spikes or spiked:
+            sections.append(("Spikes removed", set(spiked)))
+        if args.fix_cracks or args.spikes:
+            sections.append(("All (cracks or spikes)", merged | set(spiked)))
+        write_report(font, args.report, sections)
+
+    if args.fix_cracks:
+        print(f"Cracks fixed (contours merged): {len(merged)} glyphs")
+        if skipped_crack:
+            print(f"Skipped (cracks, bounding box would change): "
+                  f"{len(skipped_crack)} glyphs")
     if args.spikes:
         print(f"Spike points removed:               {n_spike} "
               f"({len(spiked)} glyphs)")
@@ -881,11 +942,6 @@ def main():
     if protected:
         print(f"Skipped (referenced by point-matched components): "
               f"{len(protected)} glyphs")
-    if args.fix_cracks:
-        print(f"Cracks fixed (contours merged): {len(merged)} glyphs")
-        if skipped_crack:
-            print(f"Skipped (cracks, bounding box would change): "
-                  f"{len(skipped_crack)} glyphs")
     if n_tol_bbox:
         print(f"Bounding box changed within tolerance: {n_tol_bbox} glyphs")
     if skipped_bbox:
@@ -893,6 +949,8 @@ def main():
     if n_lsb:
         print(f"LSB adjusted: {n_lsb} glyphs")
     print(f"Saved: {args.output}")
+    if args.report:
+        print(f"Report: {args.report}")
 
 
 if __name__ == "__main__":
