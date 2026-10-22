@@ -9,17 +9,23 @@
 # docker compose build
 # を実行
 
-FROM ubuntu:latest
+FROM ubuntu:24.04
 
 RUN apt update && \
   DEBIAN_FRONTEND=noninteractive apt install -y \
   bc \
   fontforge \
-  fonttools \
+  python3-venv \
   locales \
-  nano \
+  micro \
   && \
   locale-gen ja_JP.UTF-8
+
+RUN python3 -m venv /opt/venv && \
+  /opt/venv/bin/pip install --no-cache-dir fonttools skia-pathops
+
+ENV PATH="/opt/venv/bin:$PATH"
+ENV VIRTUAL_ENV="/opt/venv"
 
 ENV LANG=ja_JP.UTF-8
 ENV LANGUAGE=ja_JP:ja
