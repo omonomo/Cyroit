@@ -745,7 +745,9 @@ karnsetdir_name="${karnsetdir_name}${glyphNo}"
 file_data_txt=$(find "./${karndir_name}/${karnsetdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
 if [ -n "${file_data_txt}" ]; then
   input_data=$(head -n 1 "${karndir_name}/${karnsetdir_name}/${fileDataName}.txt")
-  if [ "${input_data}" = "${output_data}" ]; then
+  if [ "${input_data}" = "${output_data}" ] \
+  && compgen -G "${karndir_name}/${karnsetdir_name}/${caltListName}_*.txt" > /dev/null
+    then
     echo "calt_table_maker is unchanged"
     echo "Use saved kerning settings"
     cp -f ${karndir_name}/${karnsetdir_name}/${caltListName}_*.txt "."
