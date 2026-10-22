@@ -29,6 +29,7 @@ vendor_id="PfEd"
 tmpdir_name="font_generator_tmpdir" # 一時保管フォルダ名
 nopatchdir_name="nopatchFonts" # パッチ前フォントの保存フォルダ名
 set_nopatchdir_name="" # 各パッチ前フォントの設定と font_generator 情報の保存フォルダ名
+exc_list="exclusions" # グリフ修正除外リスト名 (clean_points.py 内のファイル名に合わせる)
 fileDataName="fileData" # font_generator と 設定ファイルのハッシュ値を保存するファイル名
 
 # グリフ保管アドレス
@@ -61,11 +62,7 @@ address_vert_start_kana="1114129" # 仮名フォントのvert置換の先頭ア�
 address_vert_start_latinkana="65681" # latin仮名フォントのvert置換の先頭アドレス （ (𛀁を削除した場合)
 address_vert_start="1114179" # 合成後のvert置換の先頭アドレス
 lookupIndex_addition="18" # 追加するテーブルのlookupナンバー (lookupの種類を増やした場合変更)
-address_calt_start_kanzi="1114841" # 漢字フォントのcalt置換の先頭アドレス (既存のグリフを避けるため収納場所を分割)
-address_calt_start2_kanzi="1115493" # 漢字フォントのcalt置換の先頭アドレス2
-address_calt_start3_kanzi="1115623" # 漢字フォントのcalt置換の先頭アドレス3
-address_calt_start4_kanzi="1115776" # 漢字フォントのcalt置換の先頭アドレス4
-address_ss_start_kanzi=$((address_calt_start4_kanzi + 80)) # 漢字フォントのss置換の先頭アドレス
+address_calt_start_kanzi="1114841" # 漢字フォントのcalt置換の先頭アドレス (その後ss置換が続く)
 address_ss_start_dummy="1114336" # ダミーフォントのss置換の先頭アドレス (変体仮名の最終アドレス + 1)
 address_init() {
     address_vert_bracket=${address_vert_start} # vert置換アドレス （
@@ -106,7 +103,7 @@ address_init() {
     address_ss_escape=$((address_ss_ambiguous + 128)) # ss置換のエスケープ文字アドレス(細いバックスラッシュ) ※リガチャ用1スロット
     address_ss_equal=$((address_ss_escape + 4)) # ss置換の太字=アドレス ※リガチャ用1スロット
     address_ss_hyphen=$((address_ss_equal + 4)) # ss置換の横棒アドレス(ハイフン)
-    address_ss_small=$((address_ss_hyphen + 4)) # ss置換の大文字と同じ形状の小文字アドレス
+    address_ss_small=$((address_ss_hyphen + 4 + 74)) # ss置換の大文字と同じ形状の小文字アドレス
     address_ss_katakana=$((address_ss_small + 45)) # ss置換のヘベペアドレス
     address_ss_liga=$((address_ss_katakana + 3)) # ss置換の独自リガチャアドレス
     address_ss_zero2=$((address_ss_liga + 8)) # ss置換のドット0アドレス
@@ -114,7 +111,7 @@ address_init() {
     num_ss_glyphs_former=$((address_ss_braille - address_ss_start)) # ss置換のグリフ数(点字の前まで)
     num_ss_glyphs_latter=$((address_ss_end + 1 - address_ss_braille)) # ss置換のグリフ数(点字から後)
     num_ss_glyphs=$((address_ss_end + 1 - address_ss_start)) # ss置換の総グリフ数
-    num_ss_correct="86" # ss用スロット確保時の補正値(変体仮名の異体字が全て収まらない場合変更)
+    num_ss_correct="160" # ss用スロット確保時の補正値(変体仮名の異体字が全て収まらない場合変更)
 
     lookupIndex_replace=${lookupIndex_addition} # 単純置換のlookupナンバー
     num_replace_lookups="13" # 単純置換のルックアップ数 (lookupの数を変えた場合はtable_modificatorの値とcalt_table_makerの内容も変更すること)
@@ -161,7 +158,7 @@ em_descent1024="197" # win_descent - (設定したい typo_linegap) / 2 が適�
 typo_ascent1024="${em_ascent1024}" # typo_ascent + typo_descent = em値にしないと縦書きで文字間隔が崩れる
 typo_descent1024="${em_descent1024}" # 縦書きに対応させない場合、linegap = 0で typo、win、hhea 全てを同じにするのが無難
  #typo_linegap1024="224" # 本来設定したい値 (win_ascent + win_descent = typo_ascent + typo_descent + typo_linegap)
-typo_linegap1024="150" # 数値が大きすぎると Excel (Windows版) で文字コード 80h 以上 (おそらく) の文字がずれる (Mac版については不明) 
+typo_linegap1024="150" # 数値が大きすぎると Excel (Windows版) で文字コード 80h 以上 (おそらく) の文字がずれる (Mac版については不明)
 win_ascent1024="939"
 win_descent1024="309"
 hhea_ascent1024="${win_ascent1024}"
@@ -11905,6 +11902,21 @@ while (i < SizeOf(input_list))
     Open(input_list[i])
     SelectWorthOutputting()
     UnlinkReference()
+
+# Clear instructions, hints
+    Print("Clear instructions, hints")
+    SelectWorthOutputting()
+    ClearInstrs()
+    ClearHints()
+
+# Proccess before editing
+    if ("${draft_flag}" == "false")
+        Print("Process before editing (it may take a few minutes)")
+        SelectWorthOutputting()
+        RemoveOverlap()
+        CorrectDirection()
+    endif
+
     ScaleToEm(${em_ascent1024}, ${em_descent1024}) # OS/2テーブルを書き換えないと指定したem値にならない
     SetOS2Value("WinAscent",             ${win_ascent1024}) # WindowsGDI用 (この範囲外は描画されない)
     SetOS2Value("WinDescent",            ${win_descent1024})
@@ -12148,20 +12160,6 @@ while (i < SizeOf(input_list))
     Select(0u91d1); RemovePosSub("*") # 金
     AddPosSub(lookups[0][0],glyphName)
     AddPosSub(lookups[1][0],glyphName)
-
-# Clear instructions, hints
-    Print("Clear instructions, hints")
-    SelectWorthOutputting()
-    ClearInstrs()
-    ClearHints()
-
-# Proccess before editing
-    if ("${draft_flag}" == "false")
-        Print("Process before editing (it may take a few minutes)")
-        SelectWorthOutputting()
-        RemoveOverlap()
-        CorrectDirection()
-    endif
 
 # --------------------------------------------------
 
@@ -13680,22 +13678,26 @@ while (i < SizeOf(input_list))
 
 # calt 対応 (スロットの確保、後でグリフ上書き)
     j = 0
-    k = ${address_calt_start3_kanzi} # 完成時の最後の異体字のアドレスより大きなアドレスを再利用しないとエラーが出る
+    k = ${address_calt_start_kanzi} # 完成時の最後の異体字のアドレスより大きなアドレスを再利用しないとエラーが出る
     while (j < 52)
         Select(0u0041 + j % 26); Copy() # A
-        Select(k); Paste()
-        j += 1
-        k += 1
-    endloop
-    j = 0
-    while (j < 52)
-        Select(0u0061 + j % 26); Copy() # a
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         j += 1
         k += 1
     endloop
 
-    k = ${address_calt_start2_kanzi}
+    j = 0
+    while (j < 52)
+        Select(0u0061 + j % 26); Copy() # a
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
+        j += 1
+        k += 1
+    endloop
+
     j = 0
     while (j < 128)
         l = 0u00c0 + j % 64
@@ -13704,13 +13706,14 @@ while (i < SizeOf(input_list))
          && l != 0u00e6\
          && l != 0u00f7)
             Select(l); Copy() # Á
-            Select(k); Paste()
+            Select(k)
+            while (WorthOutputting()); k += 1; Select(k); endloop
+            Paste()
             k += 1
         endif
         j += 1
     endloop
 
-    k = ${address_calt_start_kanzi}
     j = 0
     while (j < 256)
         l = 0u0100 + j % 128
@@ -13721,7 +13724,9 @@ while (i < SizeOf(input_list))
          && l != 0u0153\
          && l != 0u017f)
             Select(l); Copy() # Ā
-            Select(k); Paste()
+            Select(k)
+            while (WorthOutputting()); k += 1; Select(k); endloop
+            Paste()
             k += 1
         endif
         j += 1
@@ -13730,15 +13735,22 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < 8)
         Select(0u0063); Copy() # Ș-ț のダミー
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         k += 1
         j += 1
     endloop
 
     Select(0u0063); Copy() # ẞ のダミー
-    Select(k); Paste()
+    Select(k)
+    while (WorthOutputting()); k += 1; Select(k); endloop
+    Paste()
     k += 1
-    Select(k); Paste()
+
+    Select(k)
+    while (WorthOutputting()); k += 1; Select(k); endloop
+    Paste()
     k += 1
 
     symb = [0u007c, 0u007e,\
@@ -13747,7 +13759,9 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(symb))
         Select(symb[j]); Copy()
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         j += 1
         k += 1
     endloop
@@ -13763,16 +13777,19 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(symb) * 2)
         Select(symb[j % SizeOf(symb)]); Copy()
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         j += 1
         k += 1
     endloop
 
-    k = ${address_calt_start4_kanzi}
     j = 0
     while (j < 40)
         Select(0u0030 + j % 10); Copy() # 0-9
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         k += 1
         j += 1
     endloop
@@ -13782,13 +13799,17 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(symb))
         Select(symb[j]); Copy()
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         j += 1
         k += 1
     endloop
 
     Select(0u0020);Copy() # space
-    Select(k); Paste()
+    Select(k)
+    while (WorthOutputting()); k += 1; Select(k); endloop
+    Paste()
     k += 1
 
     symb = [0u003c, 0u003e,\
@@ -13797,17 +13818,20 @@ while (i < SizeOf(input_list))
     j = 0
     while (j < SizeOf(symb))
         Select(symb[j]); Copy()
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         j += 1
         k += 1
     endloop
 
 # ss 対応 (スロットの確保、後でグリフ上書き)
-    k = ${address_ss_start_kanzi}
     j = 0
     while (j < ${num_ss_glyphs_former} + ${num_ss_correct})
         Select(0u0073); Copy() # 保管したグリフのダミー
-        Select(k); Paste()
+        Select(k)
+        while (WorthOutputting()); k += 1; Select(k); endloop
+        Paste()
         k += 1
         j += 1
     endloop
@@ -18713,7 +18737,7 @@ while (i < \$argc)
     AddPosSub(lookupSub, glyphName)
 
     ss += 1
-# ss16 ハイフン、ダッシュ、マイナスを判別しやすくする
+# ss16 ハイフン、ダッシュ、マイナス、ギリシア文字、キリル文字を判別しやすくする
     Print("ss16")
     lookupName = "'ss" + ToString(ss) + "' スタイルセット" + ToString(ss)
     lookupSub = lookupName + "サブテーブル"
@@ -18767,6 +18791,61 @@ while (i < \$argc)
     Select(0u2212) # minus sign
     AddPosSub(lookupSub, glyphName)
     k += 1
+
+    orig = [0u037f, 0u0391, 0u0392, 0u0395,\
+            0u0396, 0u0397, 0u0399, 0u039a,\
+            0u039c, 0u039d, 0u039f, 0u03a1,\
+            0u03a4, 0u03a5, 0u03a7, 0u03b3,\
+            0u03bd, 0u03bf, 0u03c1, 0u03c3,\
+            0u03c5, 0u03c7, 0u03d2, 0u03dc,\
+            0u03dd, 0u03f2, 0u03f3, 0u03f9,\
+            0u03fa] # ギリシア文字
+
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j])
+        if (WorthOutputting())
+            Select(${address_store_underline} + 1); Copy()
+            Select(k); Paste()
+            Select(orig[j]); Copy()
+            Select(k); PasteInto()
+            glyphName = GlyphInfo("Name")
+            Select(orig[j])
+            AddPosSub(lookupSub, glyphName)
+        endif
+        j += 1
+        k += 1
+    endloop
+
+    orig = [0u0405, 0u0406, 0u0408, 0u0410,\
+            0u0412, 0u0415, 0u0417, 0u041a,\
+            0u041c, 0u041d, 0u041e, 0u0420,\
+            0u0421, 0u0422, 0u0423, 0u0425,\
+            0u042c, 0u0430, 0u0431, 0u0433,\
+            0u0435, 0u043e, 0u043f, 0u0440,\
+            0u0441, 0u0443, 0u0445, 0u0455,\
+            0u0456, 0u0458, 0u0474, 0u0475,\
+            0u04ae, 0u04af, 0u04ba, 0u04bb,\
+            0u04c0, 0u04cf, 0u0501, 0u050c,\
+            0u051a, 0u051b, 0u051c, 0u051d,\
+            0u1d26] # キリル文字
+
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j])
+        if (WorthOutputting())
+            Select(${address_store_underline} + 1); Copy()
+            Select(k); Paste()
+            VFlip(); CorrectDirection()
+            Select(orig[j]); Copy()
+            Select(k); PasteInto()
+            glyphName = GlyphInfo("Name")
+            Select(orig[j])
+            AddPosSub(lookupSub, glyphName)
+        endif
+        j += 1
+        k += 1
+    endloop
 
     ss += 1
 # ss17 大文字と同じ形状の小文字に上線
@@ -20357,8 +20436,6 @@ while (i < \$argc)
     SelectFewer("filledbox.ss12", "uni266F.ss12") # ss12の■-♯
 
     Transform(100, 0, ${tan_oblique}, 100, ${move_x_oblique}, 0)
-    RemoveOverlap()
-    RoundToInt()
 
 # 半角・全角形、縦書き用を作り直し
     Print("Edit hankaku kana, zenkaku eisuu and vert glyphs")
@@ -20522,6 +20599,100 @@ while (i < \$argc)
         endloop
     endif
 
+# 下線等の付いたハイフン、ダッシュ、マイナスを作り直し
+    Print("Edit hypen, dash and minus sign")
+
+    Select("uni2010.ss16"); k = GlyphInfo("Encoding")
+    Select(${address_store_otherspace} + 1); Copy() # 保管したその他の半角スペース
+    Select(k); Paste()
+    Select(0u2010); Copy() # hyphen
+    Select(k); PasteInto()
+    SetWidth(${width_hankaku})
+    k += 1
+
+    Select(${address_store_otherspace} + 1); Copy() # 保管したその他の半角スペース
+    Select(k); Paste()
+    VFlip(); CorrectDirection()
+    Select(0u2011); Copy() # non-breaking hyphen
+    Select(k); PasteInto()
+    SetWidth(${width_hankaku})
+    k += 1
+
+    # Select(0u2800); Copy() # 点字の枠
+    # Select(k); Paste()
+    # Select(0u2012); Copy() # figure dash
+    # Select(k); PasteInto()
+    # RemoveOverlap()
+    # SetWidth(${width_hankaku})
+    k += 1
+
+    Select(0u25b2); Copy() # ▲
+    Select(k); Paste()
+    Scale(95); Move(0, -6)
+    HFlip()
+    PasteInto()
+    if (600 <= GlyphInfo("Width"))
+        Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
+        Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
+    endif
+    Select(0u2212); Copy() # minus sign
+    Select(k); PasteInto()
+    RemoveOverlap()
+    SetWidth(${width_hankaku})
+    k += 1
+
+# 下線の付いたギリシア文字、キリル文字を作り直し
+    Print("Edit underlined Greek and Cyrillic glyphs")
+
+    orig = [0u037f, 0u0391, 0u0392, 0u0395,\
+            0u0396, 0u0397, 0u0399, 0u039a,\
+            0u039c, 0u039d, 0u039f, 0u03a1,\
+            0u03a4, 0u03a5, 0u03a7, 0u03b3,\
+            0u03bd, 0u03bf, 0u03c1, 0u03c3,\
+            0u03c5, 0u03c7, 0u03d2, 0u03dc,\
+            0u03dd, 0u03f2, 0u03f3, 0u03f9,\
+            0u03fa] # ギリシア文字
+
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j])
+        if (WorthOutputting())
+            Select(${address_store_underline} + 1); Copy()
+            Select(k); Paste()
+            Select(orig[j]); Copy()
+            Select(k); PasteInto()
+        endif
+        j += 1
+        k += 1
+    endloop
+
+    orig = [0u0405, 0u0406, 0u0408, 0u0410,\
+            0u0412, 0u0415, 0u0417, 0u041a,\
+            0u041c, 0u041d, 0u041e, 0u0420,\
+            0u0421, 0u0422, 0u0423, 0u0425,\
+            0u042c, 0u0430, 0u0431, 0u0433,\
+            0u0435, 0u043e, 0u043f, 0u0440,\
+            0u0441, 0u0443, 0u0445, 0u0455,\
+            0u0456, 0u0458, 0u0474, 0u0475,\
+            0u04ae, 0u04af, 0u04ba, 0u04bb,\
+            0u04c0, 0u04cf, 0u0501, 0u050c,\
+            0u051a, 0u051b, 0u051c, 0u051d,\
+            0u1d26] # キリル文字
+
+    j = 0
+    while (j < SizeOf(orig))
+        Select(orig[j])
+        if (WorthOutputting())
+            Select(${address_store_underline} + 1); Copy()
+            Select(k); Paste()
+            VFlip(); CorrectDirection()
+            Select(orig[j]); Copy()
+            Select(k); PasteInto()
+        endif
+        j += 1
+        k += 1
+    endloop
+
 # 上線の付いた小文字を作り直し
     Print("Edit lowercase with overline")
 
@@ -20577,48 +20748,6 @@ while (i < \$argc)
 
         j += 1
     endloop
-
-# 下線等の付いたハイフン、ダッシュ、マイナスを作り直し
-    Print("Edit hypen, dash and minus sign")
-
-    Select("uni2010.ss16"); k = GlyphInfo("Encoding")
-    Select(${address_store_otherspace} + 1); Copy() # 保管したその他の半角スペース
-    Select(k); Paste()
-    Select(0u2010); Copy() # hyphen
-    Select(k); PasteInto()
-    SetWidth(${width_hankaku})
-    k += 1
-
-    Select(${address_store_otherspace} + 1); Copy() # 保管したその他の半角スペース
-    Select(k); Paste()
-    VFlip(); CorrectDirection()
-    Select(0u2011); Copy() # non-breaking hyphen
-    Select(k); PasteInto()
-    SetWidth(${width_hankaku})
-    k += 1
-
-    # Select(0u2800); Copy() # 点字の枠
-    # Select(k); Paste()
-    # Select(0u2012); Copy() # figure dash
-    # Select(k); PasteInto()
-    # RemoveOverlap()
-    # SetWidth(${width_hankaku})
-    k += 1
-
-    Select(0u25b2); Copy() # ▲
-    Select(k); Paste()
-    Scale(95); Move(0, -6)
-    HFlip()
-    PasteInto()
-    if (600 <= GlyphInfo("Width"))
-        Scale(${scale_zenkaku2hankaku} * ${width_hankaku} / ${width_hankaku_loose}, ${width_zenkaku} / 2, 340)
-        Move(-(${width_zenkaku} / 2 - ${width_hankaku} / 2), 0)
-    endif
-    Select(0u2212); Copy() # minus sign
-    Select(k); PasteInto()
-    RemoveOverlap()
-    SetWidth(${width_hankaku})
-    k += 1
 
 # --------------------------------------------------
 
@@ -21292,6 +21421,8 @@ if [ "${patch_only_flag}" = "false" ]; then
     if [ "${draft_flag}" = "false" ] && [ "${leaving_tmp_flag}" = "false" ]; then
         output_data=${output_data}"_"$(sha256sum font_generator.sh | cut -d ' ' -f 1)
         output_data=${output_data}"_"$(sha256sum "${settings}.txt" | cut -d ' ' -f 1)
+        output_data=${output_data}"_"$(sha256sum "clean_points.py" | cut -d ' ' -f 1)
+        output_data=${output_data}"_"$(sha256sum "${exc_list}.txt" | cut -d ' ' -f 1)
         if [ "${nerd_flag}" = "false" ]; then
             set_nopatchdir_name="e"
         fi
@@ -21308,7 +21439,9 @@ if [ "${patch_only_flag}" = "false" ]; then
         file_data_txt=$(find "./${nopatchdir_name}/${set_nopatchdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
         if [ -n "${file_data_txt}" ]; then
             input_data=$(head -n 1 "${nopatchdir_name}/${set_nopatchdir_name}/${fileDataName}.txt")
-            if [ "${input_data}" = "${output_data}" ]; then
+            if [ "${input_data}" = "${output_data}" ] \
+            && compgen -G "${nopatchdir_name}/${set_nopatchdir_name}/${font_familyname}-*.nopatch.ttf" > /dev/null
+            then
                 echo "font_generator and settings file are unchanged"
                 echo "Use saved nopatch fonts"
                 cp -f ${nopatchdir_name}/${set_nopatchdir_name}/${font_familyname}-*.nopatch.ttf "."
@@ -21337,7 +21470,10 @@ if [ "${patch_only_flag}" = "false" ]; then
             file_data_txt=$(find "./${nopatchdir_name}/${set_customdir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
             if [ -n "${file_data_txt}" ]; then
                 input_data=$(head -n 1 "${nopatchdir_name}/${set_customdir_name}/${fileDataName}.txt")
-                if [ "${input_data}" = "${output_data_custom}" ]; then
+                if [ "${input_data}" = "${output_data_custom}" ] \
+                && compgen -G "${nopatchdir_name}/${set_customdir_name}/${font_familyname}-Regular.ttf" \
+                && compgen -G "${nopatchdir_name}/${set_customdir_name}/${font_familyname}-Bold.ttf" > /dev/null
+                then
                     echo "font_generator and settings file are unchanged"
                     echo "Use saved custom fonts"
                     cp -f ${nopatchdir_name}/${set_customdir_name}/${font_familyname}*.ttf "."
@@ -21394,7 +21530,9 @@ if [ "${patch_only_flag}" = "false" ]; then
                 file_data_txt=$(find "./${nopatchdir_name}/${set_nerddir_name}" -maxdepth 1 -name "${fileDataName}.txt" | head -n 1)
                 if [ -n "${file_data_txt}" ]; then
                     input_data=$(head -n 1 "${nopatchdir_name}/${set_nerddir_name}/${fileDataName}.txt")
-                    if [ "${input_data}" = "${output_data_nerd}" ]; then
+                    if [ "${input_data}" = "${output_data_nerd}" ] \
+                    && compgen -G "${nopatchdir_name}/${set_nerddir_name}/${modified_nerd}" > /dev/null
+                    then
                         echo "font_generator and settings file are unchanged"
                         echo "Use saved modified Nerd fonts"
                         cp -f ${nopatchdir_name}/${set_nerddir_name}/${modified_nerd} "${tmpdir}/."
@@ -21449,13 +21587,23 @@ if [ "${patch_only_flag}" = "false" ]; then
             2> $redirection_stderr || exit 4
         fi
 
-        # ファイル名を変更
+        # 無駄なポイントを削除し、ファイル名を変更 (clean_points.py 実行)
         find . -maxdepth 1 -not -name "*.*.ttf" | \
         grep -e "${font_familyname}${font_familyname_suffix}-.*\.ttf$" | while read line
         do
             style_ttf=${line#*-}; style=${style_ttf%%.ttf}
-            echo "Rename to ${font_familyname}-${style}.nopatch.ttf"
-            mv "${line}" "${font_familyname}-${style}.nopatch.ttf"
+            if [ "${draft_flag}" = "true" ]; then
+                echo "Rename to ${font_familyname}-${style}.nopatch.ttf"
+                mv "${line}" "${font_familyname}-${style}.nopatch.ttf"
+            else
+                echo "Clean up glyph points (it may take a few minutes)"
+                echo "${line}"
+                python clean_points.py "${line}" "${font_familyname}-${style}.nopatch.ttf" \
+                                       --tol 1 --allow-half --fix-cracks --spikes #--report "${style}.txt"
+                if [ $? -eq 0 ]; then
+                    rm -f "${line}"
+                fi
+            fi
             echo
         done
 
