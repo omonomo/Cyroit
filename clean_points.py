@@ -28,9 +28,14 @@ TrueType（static）フォントのグリフから無駄なポイントを除去
 
 --spikes 指定でウェイト変更時などに発生したヒゲ状のゴミを除去しまが、輪郭が変わります。
 具体的には、幅ほぼゼロの「行って戻る」突起と、面積ほぼゼロの輪郭を削除します。
+--spike-width でヒゲと判定する平均幅を指定できます。指定値より太いヒゲは残します。
+--spike-max-width でヒゲと判定するの最大幅を指定できます。指定値より太いヒゲは残します。
+--spike-join でヒゲと判定するの出発点と到着点の距離を指定できます。指定値より離れているヒゲは残します。
+--spike-min-reach でヒゲと判定するの長さを指定できます。指定値より短いヒゲは残します。
 
 --fix-cracks 指定時で、わずかにずれた辺で接している輪郭（亀裂）を、点を吸着させてから
 合体させます（skia-pathops が必要）。合体させたグリフは --spikes と同じ削除処理も行います。
+--crack-snap で吸着させる点までの最大距離を指定できます。
 
 GPOS の AnchorFormat2、GDEF の CaretValue Format2（点番号指定）があれば中断するします。
 --force を付けると強制的に実行します。
@@ -45,12 +50,14 @@ within tolerance、Skipped (bounding box would change)、LSB adjusted）を1行�
 表示できない文字はグリフ名で列挙します。
 
 カレントディレクトリに除外リスト（exclusions.txt）があった場合、
-記載されたコードポイントのグリフは処理しません。
+記載されたコードポイント・グリフ名のグリフは処理しません。
 
 exclusions.txtの書式:
 行頭が # か空行は無視。
 コードポイントのみ(XXXX)で単独指定。
 XXXX..XXXXで範囲指定。
+/グリフ名 でグリフ名指定（例: /A.alt）。コードポイントのないグリフも除外できます。
+フォントにないグリフ名は警告を表示して無視します。
 """
 import argparse
 import copy
@@ -133,7 +140,6 @@ def drop_exact_implied(g):
 
 # ---------- スパイク（行って戻る突起）の除去 ----------
 
-MIN_REACH = 8.0    # 突起の長さの下限
 MERGE_DIST = 1.0   # これ以下なら出発点と戻り点を1点にまとめる
 
 def _expand(coords, flags):
@@ -336,11 +342,11 @@ def _seg_metrics(ex, k):
     return a2, ln
 
 
-def _find_spike(ex, join_tol, mean_tol, max_tol):
+def _find_spike(ex, join_tol, mean_tol, max_tol, min_reach):
     """オンカーブ点 a から外へ出て、同じ線をたどって b に戻ってくる部分を探す。
     条件: |ab| <= join_tol、経路長 >= 3|ab|、
           行きと帰りの経路の距離が平均 mean_tol 以下・最大 max_tol 以下、
-          突起の長さ（経路長の半分）>= MIN_REACH かつ >= 平均幅の 5 倍（細長い）
+          突起の長さ（経路長の半分）>= min_reach かつ >= 平均幅の 5 倍（細長い）
     点の多い輪郭でも速く動くよう、区間ごとの面積・長さを累積和にしておき、
     候補の組は格子で近傍だけを探す。"""
     m = len(ex)
@@ -390,7 +396,7 @@ def _find_spike(ex, join_tol, mean_tol, max_tol):
                     if width > max_tol:
                         continue  # 前判定: 面積から見て幅がある（本物の形状）
                     reach = length / 2
-                    if reach < MIN_REACH or reach < 5 * width:
+                    if reach < min_reach or reach < 5 * width:
                         continue  # 細長くない（小さな凹凸は残す）
                     if all(ex[(a + k) % m][3] is None for k in range(1, span)):
                         continue  # 間に削除できる点がない
@@ -402,7 +408,7 @@ def _find_spike(ex, join_tol, mean_tol, max_tol):
     return best
 
 
-def remove_spikes(g, join_tol, mean_tol, max_tol):
+def remove_spikes(g, join_tol, mean_tol, max_tol, min_reach):
     """単純グリフからスパイクと、面積がほぼゼロの輪郭を取り除く。削除した点の数を返す"""
     coords, flags = list(g.coordinates), list(g.flags)
     kept = []  # (座標, フラグ) の輪郭ごとのリスト
@@ -412,7 +418,7 @@ def remove_spikes(g, join_tol, mean_tol, max_tol):
         start = end + 1
         while len(c) >= 3:
             ex = _expand(c, f)
-            sp = _find_spike(ex, join_tol, mean_tol, max_tol)
+            sp = _find_spike(ex, join_tol, mean_tol, max_tol, min_reach)
             if sp is None:
                 break
             a, b, span = sp
@@ -636,14 +642,21 @@ def has_point_anchors(font):
 # ---------- 除外リスト ----------
 
 def load_exclude_list(path):
-    """除外リストを読み、コードポイントの集合を返す。
+    """除外リストを読み、(コードポイントの集合, グリフ名の集合) を返す。
     書式: 1行に1項目。"0020"（単独）または "0021..0023"（範囲、両端を含む）。16進数。
+    "/グリフ名" でグリフ名を指定（コードポイントのないグリフも指定できる）。
     行頭が # の行と空行は無視する。"""
-    codes = set()
+    codes, names = set(), set()
     with open(path, encoding="utf-8-sig") as f:
         for lineno, raw in enumerate(f, 1):
             line = raw.strip()
             if not line or line.startswith("#"):
+                continue
+            if line.startswith("/"):
+                name = line[1:].strip()
+                if not name:
+                    sys.exit(f"error: {path} line {lineno}: empty glyph name")
+                names.add(name)
                 continue
             try:
                 if ".." in line:
@@ -655,7 +668,7 @@ def load_exclude_list(path):
                     codes.add(int(line, 16))
             except ValueError:
                 sys.exit(f"error: {path} line {lineno}: invalid entry: {line}")
-    return codes
+    return codes, names
 
 
 def excluded_glyphs(font, codes):
@@ -731,6 +744,10 @@ def main():
     ap.add_argument("--spike-join", type=float, default=32.0,
                     help="max distance between the point where a spike leaves "
                          "the outline and the point where it returns (default 32)")
+    ap.add_argument("--spike-min-reach", type=float, default=8.0,
+                    help="min length of a spike (half the length of the path "
+                         f"out and back), in font units (default 8); "
+                         "shorter protrusions are kept")
     ap.add_argument("--fix-cracks", action="store_true",
                     help="merge contours whose edges almost coincide, removing "
                          "hairline cracks (requires skia-pathops; also removes "
@@ -746,6 +763,8 @@ def main():
                     help="write a UTF-8 text file listing the glyphs whose "
                          "cracks were fixed or spikes were removed, as characters")
     args = ap.parse_args()
+    if args.spike_min_reach < 0:
+        sys.exit("error: --spike-min-reach must be 0 or greater")
 
     font = TTFont(args.input)
     if "glyf" not in font:
@@ -768,10 +787,16 @@ def main():
 
     excluded = set()
     if os.path.exists(EXCLUDE_LIST_FILE):
-        codes = load_exclude_list(EXCLUDE_LIST_FILE)
-        excluded = excluded_glyphs(font, codes)
+        codes, ex_names = load_exclude_list(EXCLUDE_LIST_FILE)
+        order = set(font.getGlyphOrder())
+        missing = sorted(ex_names - order)
+        excluded = excluded_glyphs(font, codes) | (ex_names & order)
         print(f"Exclude list: {EXCLUDE_LIST_FILE} "
-              f"({len(codes)} code points, {len(excluded)} glyphs)", flush=True)
+              f"({len(codes)} code points, {len(ex_names)} glyph names, "
+              f"{len(excluded)} glyphs)", flush=True)
+        if missing:
+            print(f"warning: glyph names in {EXCLUDE_LIST_FILE} not found in "
+                  f"the font: {', '.join(missing)}", flush=True)
 
     # 亀裂の修正（--fix-cracks）: 他の処理の前に、対象グリフの輪郭を合体させておく
     merged, skipped_crack = set(), []
@@ -831,7 +856,7 @@ def main():
         if args.spikes or name in merged:  # 合体させたグリフは細い切れ端も取り除く
             src = copy.deepcopy(g)
             ns = remove_spikes(src, args.spike_join, args.spike_width,
-                               args.spike_max_width)
+                               args.spike_max_width, args.spike_min_reach)
 
         # 1 + 2: 重複点・直線上の点
         rec = RecordingPen()
